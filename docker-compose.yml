@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: chana9
+      POSTGRES_USER: chana9
+      POSTGRES_PASSWORD: chana9
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  backend:
+    build: ./backend
+    ports:
+      - "8080:8080"
+    environment:
+      JWT_SECRET: change_me_in_production
+    depends_on:
+      - postgres
+
+volumes:
+  pgdata:

@@ -1,0 +1,8 @@
+backend/target/
+backend/**/*.class
+backend/.env
+mobile/.dart_tool/
+mobile/build/
+mobile/.flutter-plugins
+.DS_Store
+*.env
