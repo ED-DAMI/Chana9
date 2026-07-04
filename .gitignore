@@ -6,3 +6,4 @@ mobile/build/
 mobile/.flutter-plugins
 .DS_Store
 *.env
+.idea

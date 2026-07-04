@@ -23,18 +23,13 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import ma.chana9.modules.user.User;
+import ma.chana9.shared.enums.StatutAnnonce;
 
 @Entity
 @Table(name = "annonces")
 @Getter
 @Setter
 public class Annonce {
-
-    public enum Statut {
-        ACTIVE,
-        VENDUE,
-        SUSPENDUE
-    }
 
     @Id
     @UuidGenerator
@@ -61,7 +56,7 @@ public class Annonce {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Statut statut;
+    private StatutAnnonce statut;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "eleveur_id", nullable = false)

@@ -9,6 +9,8 @@ spring:
     show-sql: false
   flyway:
     enabled: true
+  messages:
+    basename: messages
 
 app:
   jwt:

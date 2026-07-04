@@ -7,6 +7,15 @@ create table users (
     created_at timestamp not null default now()
 );
 
+create table otp_codes (
+    id uuid primary key,
+    phone varchar(32) not null,
+    code varchar(8) not null,
+    used boolean not null default false,
+    expires_at timestamp not null,
+    created_at timestamp not null default now()
+);
+
 create table annonces (
     id uuid primary key,
     title varchar(255) not null,

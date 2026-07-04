@@ -14,17 +14,13 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import ma.chana9.shared.enums.Role;
 
 @Entity
 @Table(name = "users")
 @Getter
 @Setter
 public class User {
-
-    public enum Role {
-        ELEVEUR,
-        ACHETEUR
-    }
 
     @Id
     @UuidGenerator

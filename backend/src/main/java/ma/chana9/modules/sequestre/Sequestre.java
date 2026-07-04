@@ -20,19 +20,13 @@ import lombok.Getter;
 import lombok.Setter;
 import ma.chana9.modules.annonce.Annonce;
 import ma.chana9.modules.user.User;
+import ma.chana9.shared.enums.StatutSequestre;
 
 @Entity
 @Table(name = "sequestres")
 @Getter
 @Setter
 public class Sequestre {
-
-    public enum Statut {
-        EN_ATTENTE,
-        BLOQUE,
-        LIBERE,
-        REMBOURSE
-    }
 
     @Id
     @UuidGenerator
@@ -51,7 +45,7 @@ public class Sequestre {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Statut statut;
+    private StatutSequestre statut;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
