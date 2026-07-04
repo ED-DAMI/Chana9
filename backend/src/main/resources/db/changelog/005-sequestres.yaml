@@ -1,0 +1,69 @@
+databaseChangeLog:
+  - changeSet:
+      id: 005-create-sequestres-table
+      author: chana9
+      changes:
+        - createTable:
+            tableName: sequestres
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: annonce_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_sequestres_annonce
+                    references: annonces(id)
+              - column:
+                  name: acheteur_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_sequestres_acheteur
+                    references: users(id)
+              - column:
+                  name: montant
+                  type: numeric(10,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: commission
+                  type: numeric(10,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: statut
+                  type: varchar(20)
+                  defaultValue: EN_ATTENTE
+              - column:
+                  name: reference_paiement
+                  type: varchar(100)
+              - column:
+                  name: confirmed_by_acheteur
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: confirmed_by_eleveur
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: litige_description
+                  type: text
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: NOW()
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  defaultValueComputed: NOW()
+        - addCheckConstraint:
+            tableName: sequestres
+            constraintName: chk_sequestres_statut
+            checkCondition: "statut IN ('EN_ATTENTE','BLOQUE','LIBERE','REMBOURSE','LITIGE')"

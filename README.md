@@ -15,7 +15,7 @@ Chana9 - plateforme de commercialisation du bétail au Maroc.
 3. Run the mobile app from `mobile/` with `flutter run`.
 
 ## Architecture overview
-- `backend/` - Spring Boot 3 API with security, JPA, Flyway, and PostgreSQL.
+- `backend/` - Spring Boot 3 API with security, JPA, Liquibase, and PostgreSQL.
 - `mobile/` - Flutter client using BLoC, Dio, secure storage, and GoRouter.
 - `docker-compose.yml` - local PostgreSQL and backend stack.
 

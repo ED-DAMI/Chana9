@@ -20,4 +20,13 @@ public class EntityFields {
         public static final String ROLE = "role";
         public static final String KYC_VERIFIED = "kycVerified";
     }
+
+    @UtilityClass
+    public static class AuditLog {
+        public static final String USER = "user";
+        public static final String ACTION = "action";
+        public static final String ENTITY_TYPE = "entityType";
+        public static final String ENTITY_ID = "entityId";
+        public static final String CREATED_AT = "createdAt";
+    }
 }

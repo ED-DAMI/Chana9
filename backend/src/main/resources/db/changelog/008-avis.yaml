@@ -1,0 +1,50 @@
+databaseChangeLog:
+  - changeSet:
+      id: 008-create-avis-table
+      author: chana9
+      changes:
+        - createTable:
+            tableName: avis
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: sequestre_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_avis_sequestre
+                    references: sequestres(id)
+              - column:
+                  name: auteur_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_avis_auteur
+                    references: users(id)
+              - column:
+                  name: cible_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_avis_cible
+                    references: users(id)
+              - column:
+                  name: note
+                  type: int
+              - column:
+                  name: commentaire
+                  type: text
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: NOW()
+        - addCheckConstraint:
+            tableName: avis
+            constraintName: chk_avis_note
+            checkCondition: "note BETWEEN 1 AND 5"

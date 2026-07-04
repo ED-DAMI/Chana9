@@ -1,7 +1,7 @@
 # Chana9 — Backend API
 
 > Plateforme numérique de commercialisation du bétail au Maroc  
-> Spring Boot 3 · Java 21 · PostgreSQL · JWT · Flyway
+> Spring Boot 3 · Java 21 · PostgreSQL · JWT · Liquibase
 
 ---
 
@@ -50,7 +50,7 @@ plafonnée à **200 DH par tête**, incluse dans le séquestre.
 | Framework | Spring Boot | 3.x |
 | ORM | Spring Data JPA / Hibernate | — |
 | Base de données | PostgreSQL | 16 |
-| Migrations | Flyway | — |
+| Migrations | Liquibase | — |
 | Sécurité | Spring Security + JWT | — |
 | Build | Maven | 3.9+ |
 | Conteneur | Docker / Docker Compose | — |
@@ -441,17 +441,26 @@ avis
  └── commentaire
 ```
 
-### Migrations Flyway
+### Migrations Liquibase
 
-Les migrations sont versionnées dans `resources/db/migration/` :
+Les migrations sont versionnées dans `resources/db/changelog/` :
 
 | Fichier | Contenu |
 |---|---|
-| `V1__init_schema.sql` | Création de toutes les tables + index |
-| `V2__seed_admin.sql` | Insertion de l'utilisateur admin par défaut |
+| `db.changelog-master.yaml` | Fichier maître qui inclut tous les changelogs |
+| `001-users.yaml` | Création de la table `users` |
+| `002-otp-codes.yaml` | Création de la table `otp_codes` |
+| `003-annonces.yaml` | Création de la table `annonces` |
+| `004-annonce-photos.yaml` | Création de la table `annonce_photos` |
+| `005-sequestres.yaml` | Création de la table `sequestres` |
+| `006-messages.yaml` | Création de la table `messages` |
+| `007-notifications.yaml` | Création de la table `notifications` |
+| `008-avis.yaml` | Création de la table `avis` |
+| `009-indexes.yaml` | Création des index |
+| `010-seed-admin.yaml` | Insertion de l'utilisateur admin par défaut |
 
 > ⚠️ Ne jamais modifier un fichier de migration existant en production.
-> Toute modification passe par un nouveau fichier `V3__...sql`.
+> Toute modification passe par un nouveau changelog.
 
 ---
 
@@ -701,7 +710,7 @@ test/java/ma/chana9/
 feat/     → nouvelle fonctionnalité
 fix/      → correction de bug
 refactor/ → refactoring sans changement de comportement
-migration/→ nouvelle migration Flyway
+migration/→ nouvelle migration Liquibase
 ```
 
 Exemples :

@@ -25,6 +25,13 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error(resolve(exception.getMessageKey(), locale)));
     }
 
+    @ExceptionHandler(SecurityException.class)
+    public ResponseEntity<ApiResponse<Void>> handleSecurityException(SecurityException exception, WebRequest request) {
+        Locale locale = request.getLocale();
+        return ResponseEntity.status(401)
+                .body(ApiResponse.error(resolve(ErrorKeys.Auth.DEVICE_FINGERPRINT_MISMATCH, locale)));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleGenericException(Exception exception, WebRequest request) {
         Locale locale = request.getLocale();

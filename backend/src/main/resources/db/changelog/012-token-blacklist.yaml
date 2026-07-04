@@ -1,0 +1,51 @@
+databaseChangeLog:
+  - changeSet:
+      id: 012-create-token-blacklist-table
+      author: chana9
+      changes:
+        - createTable:
+            tableName: token_blacklist
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: token_hash
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    foreignKeyName: fk_blacklist_user
+                    references: users(id)
+              - column:
+                  name: reason
+                  type: varchar(100)
+              - column:
+                  name: blacklisted_at
+                  type: timestamp
+                  defaultValueComputed: NOW()
+              - column:
+                  name: expires_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+        - createIndex:
+            tableName: token_blacklist
+            indexName: idx_blacklist_token_hash
+            columns:
+              - column:
+                  name: token_hash
+        - createIndex:
+            tableName: token_blacklist
+            indexName: idx_blacklist_expires_at
+            columns:
+              - column:
+                  name: expires_at

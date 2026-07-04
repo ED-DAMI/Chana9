@@ -1,0 +1,66 @@
+databaseChangeLog:
+  - changeSet:
+      id: 011-create-refresh-tokens-table
+      author: chana9
+      changes:
+        - createTable:
+            tableName: refresh_tokens
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_refresh_tokens_user
+                    references: users(id)
+                    deleteCascade: true
+              - column:
+                  name: token_hash
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: device_fingerprint
+                  type: varchar(255)
+              - column:
+                  name: user_agent
+                  type: varchar(500)
+              - column:
+                  name: ip_address
+                  type: varchar(45)
+              - column:
+                  name: is_revoked
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: expires_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: NOW()
+              - column:
+                  name: last_used_at
+                  type: timestamp
+        - createIndex:
+            tableName: refresh_tokens
+            indexName: idx_refresh_tokens_user
+            columns:
+              - column:
+                  name: user_id
+        - createIndex:
+            tableName: refresh_tokens
+            indexName: idx_refresh_tokens_hash
+            columns:
+              - column:
+                  name: token_hash

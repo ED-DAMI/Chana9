@@ -7,7 +7,8 @@ spring:
     hibernate:
       ddl-auto: validate
     show-sql: false
-  flyway:
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
     enabled: true
   messages:
     basename: messages
@@ -15,6 +16,15 @@ spring:
 app:
   jwt:
     secret: ${JWT_SECRET}
-    expiration: 86400000
+    access-expiration: 86400000
+    refresh-expiration: 604800000
+    algorithm: HS512
+  security:
+    max-refresh-tokens-per-user: 5
+    cleanup-cron: "0 0 2 * * *"
+    refresh-cleanup-cron: "0 0 3 * * *"
+  audit:
+    async: true
+    retain-days: 90
   otp:
     expiration-minutes: 5

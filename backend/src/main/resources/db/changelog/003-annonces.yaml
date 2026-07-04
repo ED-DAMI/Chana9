@@ -1,0 +1,71 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-create-annonces-table
+      author: chana9
+      changes:
+        - createTable:
+            tableName: annonces
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: varchar(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: text
+              - column:
+                  name: race
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: poids_estime
+                  type: numeric(6,2)
+              - column:
+                  name: prix
+                  type: numeric(10,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: region
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: statut
+                  type: varchar(20)
+                  defaultValue: ACTIVE
+              - column:
+                  name: is_top_lot
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: top_lot_expires_at
+                  type: timestamp
+              - column:
+                  name: eleveur_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_annonces_eleveur
+                    references: users(id)
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: NOW()
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  defaultValueComputed: NOW()
+        - addCheckConstraint:
+            tableName: annonces
+            constraintName: chk_annonces_statut
+            checkCondition: "statut IN ('ACTIVE','VENDUE','SUSPENDUE','EXPIREE')"

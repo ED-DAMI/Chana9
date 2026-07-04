@@ -1,0 +1,48 @@
+databaseChangeLog:
+  - changeSet:
+      id: 006-create-messages-table
+      author: chana9
+      changes:
+        - createTable:
+            tableName: messages
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: annonce_id
+                  type: uuid
+                  constraints:
+                    foreignKeyName: fk_messages_annonce
+                    references: annonces(id)
+              - column:
+                  name: sender_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_messages_sender
+                    references: users(id)
+              - column:
+                  name: receiver_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_messages_receiver
+                    references: users(id)
+              - column:
+                  name: content
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_read
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: sent_at
+                  type: timestamp
+                  defaultValueComputed: NOW()

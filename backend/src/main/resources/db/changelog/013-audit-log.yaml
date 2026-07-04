@@ -1,0 +1,77 @@
+databaseChangeLog:
+  - changeSet:
+      id: 013-create-audit-log-table
+      author: chana9
+      changes:
+        - createTable:
+            tableName: audit_logs
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    foreignKeyName: fk_audit_user
+                    references: users(id)
+              - column:
+                  name: action
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: entity_type
+                  type: varchar(100)
+              - column:
+                  name: entity_id
+                  type: varchar(255)
+              - column:
+                  name: old_value
+                  type: text
+              - column:
+                  name: new_value
+                  type: text
+              - column:
+                  name: ip_address
+                  type: varchar(45)
+              - column:
+                  name: user_agent
+                  type: varchar(500)
+              - column:
+                  name: status
+                  type: varchar(20)
+                  defaultValue: SUCCESS
+              - column:
+                  name: error_message
+                  type: text
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: NOW()
+        - addCheckConstraint:
+            tableName: audit_logs
+            constraintName: chk_audit_status
+            checkCondition: "status IN ('SUCCESS','FAILURE','WARNING')"
+        - createIndex:
+            tableName: audit_logs
+            indexName: idx_audit_user_id
+            columns:
+              - column:
+                  name: user_id
+        - createIndex:
+            tableName: audit_logs
+            indexName: idx_audit_action
+            columns:
+              - column:
+                  name: action
+        - createIndex:
+            tableName: audit_logs
+            indexName: idx_audit_created_at
+            columns:
+              - column:
+                  name: created_at

@@ -1,0 +1,64 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-users-table
+      author: chana9
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: phone
+                  type: varchar(15)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: full_name
+                  type: varchar(100)
+              - column:
+                  name: role
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: kyc_verified
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: kyc_cin
+                  type: varchar(20)
+              - column:
+                  name: kyc_cin_photo_url
+                  type: text
+              - column:
+                  name: kyc_selfie_url
+                  type: text
+              - column:
+                  name: profile_photo_url
+                  type: text
+              - column:
+                  name: region
+                  type: varchar(100)
+              - column:
+                  name: is_active
+                  type: boolean
+                  defaultValueBoolean: true
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: NOW()
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  defaultValueComputed: NOW()
+        - addCheckConstraint:
+            tableName: users
+            constraintName: chk_users_role
+            checkCondition: "role IN ('ELEVEUR', 'ACHETEUR', 'ADMIN')"

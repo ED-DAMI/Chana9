@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: 010-seed-admin-user
+      author: chana9
+      context: "!test"
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: phone
+                  value: "+212600000000"
+              - column:
+                  name: full_name
+                  value: "Admin Chana9"
+              - column:
+                  name: role
+                  value: "ADMIN"
+              - column:
+                  name: kyc_verified
+                  valueBoolean: true
+              - column:
+                  name: is_active
+                  valueBoolean: true
