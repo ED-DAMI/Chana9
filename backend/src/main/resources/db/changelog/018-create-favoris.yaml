@@ -1,0 +1,48 @@
+databaseChangeLog:
+  - changeSet:
+      id: 008-create-favoris
+      author: chana9
+      changes:
+        - createTable:
+            tableName: favoris
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: acheteur_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_favoris_acheteur
+                    references: users(id)
+                    deleteCascade: true
+              - column:
+                  name: annonce_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_favoris_annonce
+                    references: annonces(id)
+                    deleteCascade: true
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: NOW()
+
+  - changeSet:
+      id: 008-favoris-unique
+      author: chana9
+      changes:
+        - sql:
+            sql: >
+              CREATE UNIQUE INDEX idx_favoris_unique
+              ON favoris (acheteur_id, annonce_id);
+            remarks: "Un acheteur ne peut mettre en favori une annonce qu'une seule fois"
+      rollback:
+        - sql:
+            sql: DROP INDEX IF EXISTS idx_favoris_unique;

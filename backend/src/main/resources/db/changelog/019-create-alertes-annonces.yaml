@@ -1,0 +1,51 @@
+databaseChangeLog:
+  - changeSet:
+      id: 009-create-alertes-annonces
+      author: chana9
+      changes:
+        - createTable:
+            tableName: alertes_annonces
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: acheteur_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_alerte_acheteur
+                    references: users(id)
+                    deleteCascade: true
+              - column:
+                  name: race
+                  type: varchar(100)
+                  remarks: "Filtre race (optionnel)"
+              - column:
+                  name: region
+                  type: varchar(100)
+                  remarks: "Filtre région (optionnel)"
+              - column:
+                  name: rayon_km
+                  type: integer
+                  remarks: "Rayon de recherche autour de la position de l'acheteur"
+              - column:
+                  name: prix_max
+                  type: numeric(10,2)
+                  remarks: "Prix maximum souhaité (optionnel)"
+              - column:
+                  name: age_mois_min
+                  type: integer
+                  remarks: "Âge minimum en mois (optionnel)"
+              - column:
+                  name: is_active
+                  type: boolean
+                  defaultValueBoolean: true
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: NOW()

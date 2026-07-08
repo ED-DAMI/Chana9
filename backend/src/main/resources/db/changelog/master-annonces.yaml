@@ -1,0 +1,30 @@
+databaseChangeLog:
+  # ── Existant (ne pas modifier) ──────────────────────────────────────────────
+  # 001 - create users table
+  # 002 - ...
+  # 003 - create annonces table (base)
+
+  # ── Nouveaux changesets module Annonces ─────────────────────────────────────
+  - include:
+      file: 014-postgis-extension.yaml
+      relativeToChangelogFile: true
+
+  - include:
+      file: 015-alter-annonces-add-columns.yaml
+      relativeToChangelogFile: true
+
+  - include:
+      file: 016-create-annonce-medias.yaml
+      relativeToChangelogFile: true
+
+  - include:
+      file: 017-create-annonce-signalements.yaml
+      relativeToChangelogFile: true
+
+  - include:
+      file: 018-create-favoris.yaml
+      relativeToChangelogFile: true
+
+  - include:
+      file: 019-create-alertes-annonces.yaml
+      relativeToChangelogFile: true
