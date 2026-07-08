@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 008-create-favoris
+      id: 018-create-favoris
       author: chana9
       changes:
         - createTable:

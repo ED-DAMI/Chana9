@@ -7,3 +7,7 @@ mobile/.flutter-plugins
 .DS_Store
 *.env
 .idea
+.mvn
+mobile/.idea
+
+

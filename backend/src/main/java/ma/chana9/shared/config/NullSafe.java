@@ -1,4 +1,4 @@
-package ma.chana9.shared.util;
+package ma.chana9.shared.config;
 
 import lombok.experimental.UtilityClass;
 

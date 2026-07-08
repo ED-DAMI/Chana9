@@ -107,7 +107,7 @@ public class TokenService {
             throw new SecurityException(ErrorKeys.Auth.DEVICE_FINGERPRINT_MISMATCH);
         }
 
-        refreshToken.setIsRevoked(true);
+        refreshToken.setRevoked(true);
         refreshToken.setLastUsedAt(LocalDateTime.now());
         refreshTokenRepository.save(refreshToken);
 
@@ -125,7 +125,7 @@ public class TokenService {
         }
         RefreshToken refreshToken = refreshTokenRepository.findByTokenHashAndIsRevokedFalse(hashToken(rawToken))
                 .orElseThrow(InvalidTokenException::new);
-        refreshToken.setIsRevoked(true);
+        refreshToken.setRevoked(true);
         refreshToken.setLastUsedAt(LocalDateTime.now());
         refreshTokenRepository.save(refreshToken);
         auditService.logSuccess(AuditAction.TOKEN_REVOKED, userId, AuditConstants.REFRESH_TOKEN_ENTITY, reason.name());
@@ -237,7 +237,7 @@ public class TokenService {
                 .sorted(java.util.Comparator.comparing(RefreshToken::getCreatedAt))
                 .limit(tokens.size() - maxActiveTokens)
                 .forEach(token -> {
-                    token.setIsRevoked(true);
+                    token.setRevoked(true);
                     token.setLastUsedAt(LocalDateTime.now());
                     refreshTokenRepository.save(token);
                 });

@@ -1,10 +1,43 @@
 databaseChangeLog:
-  # ── Existant (ne pas modifier) ──────────────────────────────────────────────
-  # 001 - create users table
-  # 002 - ...
-  # 003 - create annonces table (base)
-
-  # ── Nouveaux changesets module Annonces ─────────────────────────────────────
+  - include:
+      file: db/changelog/001-users.yaml
+      relativeToChangelogFile: false
+  - include:
+      file: db/changelog/002-otp-codes.yaml
+      relativeToChangelogFile: false
+  - include:
+      file: db/changelog/003-annonces.yaml
+      relativeToChangelogFile: false
+  - include:
+      file: db/changelog/004-annonce-photos.yaml
+      relativeToChangelogFile: false
+  - include:
+      file: db/changelog/005-sequestres.yaml
+      relativeToChangelogFile: false
+  - include:
+      file: db/changelog/006-messages.yaml
+      relativeToChangelogFile: false
+  - include:
+      file: db/changelog/007-notifications.yaml
+      relativeToChangelogFile: false
+  - include:
+      file: db/changelog/008-avis.yaml
+      relativeToChangelogFile: false
+  - include:
+      file: db/changelog/009-indexes.yaml
+      relativeToChangelogFile: false
+  - include:
+      file: db/changelog/010-seed-admin.yaml
+      relativeToChangelogFile: false
+  - include:
+      file: db/changelog/011-refresh-tokens.yaml
+      relativeToChangelogFile: false
+  - include:
+      file: db/changelog/012-token-blacklist.yaml
+      relativeToChangelogFile: false
+  - include:
+      file: db/changelog/013-audit-log.yaml
+      relativeToChangelogFile: false
   - include:
       file: 014-postgis-extension.yaml
       relativeToChangelogFile: true
@@ -16,11 +49,9 @@ databaseChangeLog:
   - include:
       file: 016-create-annonce-medias.yaml
       relativeToChangelogFile: true
-
   - include:
       file: 017-create-annonce-signalements.yaml
       relativeToChangelogFile: true
-
   - include:
       file: 018-create-favoris.yaml
       relativeToChangelogFile: true

@@ -22,9 +22,6 @@ public class AnnonceAlert {
 
     @Column(name = "acheteur_id", nullable = false)
     private UUID buyerId;
-
-    // ── Filter criteria ──────────────────────────────────────────────────────
-
     @Column(length = 100)
     private String breed;
 
@@ -39,9 +36,6 @@ public class AnnonceAlert {
 
     @Column(name = "age_mois_min")
     private Integer minAgeMonths;
-
-    // ── State ────────────────────────────────────────────────────────────────
-
     @Column(name = "is_active")
     @Builder.Default
     private Boolean active = true;
@@ -54,10 +48,6 @@ public class AnnonceAlert {
         createdAt = LocalDateTime.now();
         if (active == null) active = true;
     }
-
-    /**
-     * Returns true if the given annonce matches this alert's criteria.
-     */
     public boolean matches(Annonce annonce) {
         if (breed != null && !breed.equalsIgnoreCase(annonce.getBreed())) return false;
         if (region != null && !region.equalsIgnoreCase(annonce.getRegion())) return false;

@@ -1,7 +1,7 @@
 
 package ma.chana9.shared.enums;
 
-public enum SexeAnimal {
+public enum AnimalGender {
     MALE,
-    FEMELLE
+    FEMALE
 }

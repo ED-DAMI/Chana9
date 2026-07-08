@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: 010-seed-admin-user
-      author: chana9
+      author: ED-DAMI
       context: "!test"
       changes:
         - insert:

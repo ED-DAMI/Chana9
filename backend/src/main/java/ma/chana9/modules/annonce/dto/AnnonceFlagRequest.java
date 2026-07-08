@@ -1,27 +1,18 @@
 package ma.chana9.modules.annonce.dto;
 
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
-
-import java.math.BigDecimal;
+import ma.chana9.shared.enums.FlagReason;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AnnonceAlertRequest {
+public class AnnonceFlagRequest {
 
-    private String breed;
-    private String region;
+    @NotNull
+    private FlagReason reason;
 
-    @Min(1)
-    private Integer radiusKm;
-
-    @DecimalMin("0.0")
-    private BigDecimal maxPrice;
-
-    @Min(0)
-    private Integer minAgeMonths;
+    private String comment;
 }

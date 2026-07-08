@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: 013-create-audit-log-table
-      author: chana9
+      author: ED-DAMI
       changes:
         - createTable:
             tableName: audit_logs
@@ -53,10 +53,6 @@ databaseChangeLog:
                   name: created_at
                   type: timestamp
                   defaultValueComputed: NOW()
-        - addCheckConstraint:
-            tableName: audit_logs
-            constraintName: chk_audit_status
-            checkCondition: "status IN ('SUCCESS','FAILURE','WARNING')"
         - createIndex:
             tableName: audit_logs
             indexName: idx_audit_user_id
@@ -75,3 +71,18 @@ databaseChangeLog:
             columns:
               - column:
                   name: created_at
+
+  - changeSet:
+      id: 013-add-check-constraint-audit-status
+      author: ED-DAMI
+      changes:
+        - sql:
+            sql: >
+              ALTER TABLE audit_logs
+              ADD CONSTRAINT chk_audit_status
+              CHECK (status IN ('SUCCESS','FAILURE','WARNING'));
+      rollback:
+        - sql:
+            sql: >
+              ALTER TABLE audit_logs
+              DROP CONSTRAINT chk_audit_status;

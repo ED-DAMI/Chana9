@@ -1,14 +1,14 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/chana9
-    username: chana9
-    password: chana9
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/chana9}
+    username: ${DATABASE_USER:chana9}
+    password: ${DATABASE_PASSWORD:chana9}
   jpa:
     hibernate:
       ddl-auto: validate
     show-sql: false
   liquibase:
-    change-log: classpath:db/changelog/db.changelog-master.yaml
+    change-log: classpath:db/changelog/master-annonces.yaml
     enabled: true
   messages:
     basename: messages
@@ -16,8 +16,8 @@ spring:
 app:
   jwt:
     secret: ${JWT_SECRET}
-    access-expiration: 86400000
-    refresh-expiration: 604800000
+    access-expiration: ${JWT_ACCESS_EXPIRATION:86400000}
+    refresh-expiration: ${JWT_REFRESH_EXPIRATION:604800000}
     algorithm: HS512
   security:
     max-refresh-tokens-per-user: 5
@@ -27,4 +27,4 @@ app:
     async: true
     retain-days: 90
   otp:
-    expiration-minutes: 5
+    expiration-minutes: ${OTP_EXPIRATION_MINUTES:5}

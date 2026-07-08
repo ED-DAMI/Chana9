@@ -9,13 +9,11 @@ import ma.chana9.modules.user.User;
 @Data
 @Builder
 public class UserDTO {
-
     private UUID id;
     private String phone;
     private String fullName;
     private String role;
     private boolean kycVerified;
-
     public static UserDTO from(User user) {
         return UserDTO.builder()
                 .id(user.getId())

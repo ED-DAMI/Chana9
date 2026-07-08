@@ -1,62 +1,38 @@
-# ═══════════════════════════════════════════════════════════
-#  Chana9 Backend — Dockerfile multi-stage
-#  Stage 1 : build Maven
-#  Stage 2 : image runtime légère
-# ═══════════════════════════════════════════════════════════
-
-# ───────────────────────────────────────────────────────────
-#  STAGE 1 — BUILD
-# ───────────────────────────────────────────────────────────
-FROM eclipse-temurin:21-jdk AS builder
+# ─── Stage 1 : Build ───────────────────────────────────────────
+FROM maven:3.9-eclipse-temurin-21 AS builder
 
 WORKDIR /app
 
-# Copier d'abord le pom.xml seul pour profiter du cache Docker
-# (les dépendances Maven ne sont re-téléchargées que si pom.xml change)
+# 1. Copier le pom.xml en premier (layer cachée séparément)
 COPY pom.xml .
-RUN mvn dependency:go-offline -B 2>/dev/null || true
 
-# Copier le code source
+# 2. Télécharger dépendances + plugins en une seule commande RUN
+#    → Une seule layer Docker = cache plus efficace
+RUN mvn dependency:go-offline dependency:resolve-plugins -B
+
+# 3. Copier le code source
 COPY src ./src
 
-# Build sans les tests (les tests tournent en CI séparément)
-RUN mvn clean package -DskipTests -B
+# 4. Build (le cache de la layer précédente est réutilisé si pom.xml n'a pas changé)
+RUN mvn package -DskipTests -B
 
-# ───────────────────────────────────────────────────────────
-#  STAGE 2 — RUNTIME
-# ───────────────────────────────────────────────────────────
-FROM eclipse-temurin:21-jre
+# ─── Stage 2 : Runtime ─────────────────────────────────────────
+FROM eclipse-temurin:21-jre-alpine
 
-# Métadonnées
-LABEL maintainer="Equipe Chana9"
-LABEL project="chana9-backend"
-LABEL description="API REST — Plateforme de commercialisation du bétail au Maroc"
-
-# Créer un utilisateur non-root (bonne pratique sécurité)
-RUN groupadd --system chana9 && \
-    useradd --system --gid chana9 --no-create-home chana9
+# Sécurité : ne pas tourner en root
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser
 
 WORKDIR /app
-
-# Copier uniquement le jar depuis le stage builder
 COPY --from=builder /app/target/*.jar app.jar
 
-# Donner les droits à l'utilisateur non-root
-RUN chown chana9:chana9 app.jar
+# Healthcheck intégré
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
+  CMD wget -qO- http://localhost:8080/actuator/health || exit 1
 
-# Basculer sur l'utilisateur non-root
-USER chana9
-
-# Port exposé par Spring Boot
 EXPOSE 8080
 
-# Variables d'environnement avec valeurs par défaut
-ENV SPRING_PROFILES_ACTIVE=prod
-ENV JAVA_OPTS="-Xms256m -Xmx512m"
+# Valeurs par défaut pour JAVA_OPTS (override possible au runtime)
+ENV JAVA_OPTS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0"
 
-# Health check — vérifie que l'API répond toutes les 30s
-HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-  CMD curl -f http://localhost:8080/actuator/health || exit 1
-
-# Point d'entrée avec JAVA_OPTS dynamique
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar /app/app.jar"]
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]

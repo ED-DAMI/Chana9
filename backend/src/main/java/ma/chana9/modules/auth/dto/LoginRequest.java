@@ -7,7 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class LoginRequest {
-
     @NotBlank
     private String phone;
 }

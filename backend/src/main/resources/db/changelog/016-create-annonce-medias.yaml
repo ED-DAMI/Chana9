@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 006-create-annonce-medias
+      id: 016-create-annonce-medias
       author: chana9
       changes:
         - createTable:

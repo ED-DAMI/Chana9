@@ -63,7 +63,18 @@ databaseChangeLog:
                   name: updated_at
                   type: timestamp
                   defaultValueComputed: NOW()
-        - addCheckConstraint:
-            tableName: sequestres
-            constraintName: chk_sequestres_statut
-            checkCondition: "statut IN ('EN_ATTENTE','BLOQUE','LIBERE','REMBOURSE','LITIGE')"
+
+  - changeSet:
+      id: 005-add-check-constraint-sequestres-statut
+      author: chana9
+      changes:
+        - sql:
+            sql: >
+              ALTER TABLE sequestres
+              ADD CONSTRAINT chk_sequestres_statut
+              CHECK (statut IN ('EN_ATTENTE','BLOQUE','LIBERE','REMBOURSE','LITIGE'));
+      rollback:
+        - sql:
+            sql: >
+              ALTER TABLE sequestres
+              DROP CONSTRAINT chk_sequestres_statut;

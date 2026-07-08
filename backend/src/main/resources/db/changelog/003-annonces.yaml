@@ -65,7 +65,18 @@ databaseChangeLog:
                   name: updated_at
                   type: timestamp
                   defaultValueComputed: NOW()
-        - addCheckConstraint:
-            tableName: annonces
-            constraintName: chk_annonces_statut
-            checkCondition: "statut IN ('ACTIVE','VENDUE','SUSPENDUE','EXPIREE')"
+
+  - changeSet:
+      id: 003-add-check-constraint-annonces-statut
+      author: chana9
+      changes:
+        - sql:
+            sql: >
+              ALTER TABLE annonces
+              ADD CONSTRAINT chk_annonces_statut
+              CHECK (statut IN ('ACTIVE','VENDUE','SUSPENDUE','EXPIREE'));
+      rollback:
+        - sql:
+            sql: >
+              ALTER TABLE annonces
+              DROP CONSTRAINT chk_annonces_statut;

@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: 009-create-indexes
-      author: chana9
+      author: ED-DAMI
       changes:
         - createIndex:
             tableName: annonces

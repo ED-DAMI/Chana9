@@ -1,4 +1,4 @@
-package ma.chana9.modules.annonce;
+package ma.chana9.modules.annonce.dto;
 
 import jakarta.validation.constraints.*;
 import lombok.*;

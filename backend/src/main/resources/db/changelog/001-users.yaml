@@ -58,7 +58,18 @@ databaseChangeLog:
                   name: updated_at
                   type: timestamp
                   defaultValueComputed: NOW()
-        - addCheckConstraint:
-            tableName: users
-            constraintName: chk_users_role
-            checkCondition: "role IN ('ELEVEUR', 'ACHETEUR', 'ADMIN')"
+
+  - changeSet:
+      id: 001-add-check-constraint-users-role
+      author: chana9
+      changes:
+        - sql:
+            sql: >
+              ALTER TABLE users
+              ADD CONSTRAINT chk_users_role
+              CHECK (role IN ('ELEVEUR', 'ACHETEUR', 'ADMIN'));
+      rollback:
+        - sql:
+            sql: >
+              ALTER TABLE users
+              DROP CONSTRAINT chk_users_role;

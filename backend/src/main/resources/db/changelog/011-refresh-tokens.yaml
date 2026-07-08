@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: 011-create-refresh-tokens-table
-      author: chana9
+      author: ED-DAMI
       changes:
         - createTable:
             tableName: refresh_tokens

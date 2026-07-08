@@ -1,8 +1,3 @@
-# ═══════════════════════════════════════════════════════════
-#  Chana9 — docker-compose.yml
-#  Services : PostgreSQL 17 + Backend Spring Boot
-# ═══════════════════════════════════════════════════════════
-
 services:
   postgres:
     image: postgres:17
@@ -11,7 +6,7 @@ services:
     environment:
       POSTGRES_DB:       ${POSTGRES_DB:-chana9}
       POSTGRES_USER:     ${POSTGRES_USER:-chana9}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-chana9_2026@}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       PGDATA:            /var/lib/postgresql/data/pgdata
       TZ:                UTC
     ports:
@@ -27,102 +22,71 @@ services:
     networks:
       - chana9-network
 
-  # ─────────────────────────────────────────────────────────
-  #  Backend Spring Boot
-  # ─────────────────────────────────────────────────────────
-  backend:
+  api:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: chana9-backend
+    container_name: chana9-api
     restart: unless-stopped
     depends_on:
       postgres:
-        condition: service_healthy       # attend que postgres soit prêt
+        condition: service_healthy
     ports:
       - "8080:8080"
     environment:
-      # Spring
-      SPRING_PROFILES_ACTIVE:           ${SPRING_PROFILES_ACTIVE:-prod}
-
-      # Base de données
-      DATABASE_URL:                     jdbc:postgresql://postgres:5432/${POSTGRES_DB:-chana9}
-      DATABASE_USER:                    ${POSTGRES_USER:-chana9}
-      DATABASE_PASSWORD:                ${POSTGRES_PASSWORD:-chana9_2026@}
-
-      # JWT
-      JWT_SECRET:                       ${JWT_SECRET}
-      JWT_ACCESS_EXPIRATION:            ${JWT_ACCESS_EXPIRATION:-86400000}
-      JWT_REFRESH_EXPIRATION:           ${JWT_REFRESH_EXPIRATION:-604800000}
-
-      # OTP
-      OTP_EXPIRATION_MINUTES:           ${OTP_EXPIRATION_MINUTES:-5}
-
-      # SMS
-      SMS_PROVIDER:                     ${SMS_PROVIDER:-log}
-      SMS_API_KEY:                      ${SMS_API_KEY:-}
-      SMS_SENDER_ID:                    ${SMS_SENDER_ID:-Chana9}
-
-      # Paiement
-      PAYMENT_PROVIDER:                 ${PAYMENT_PROVIDER:-mock}
-      PAYMENT_API_KEY:                  ${PAYMENT_API_KEY:-}
-      PAYMENT_API_SECRET:               ${PAYMENT_API_SECRET:-}
-      PAYMENT_MERCHANT_ID:              ${PAYMENT_MERCHANT_ID:-}
-      PAYMENT_CALLBACK_URL:             ${PAYMENT_CALLBACK_URL:-}
-
-      # Commission
-      COMMISSION_RATE:                  ${COMMISSION_RATE:-0.03}
-      COMMISSION_MAX_DH:                ${COMMISSION_MAX_DH:-200}
-
-      # Stockage fichiers
-      STORAGE_PROVIDER:                 ${STORAGE_PROVIDER:-local}
-      STORAGE_LOCAL_PATH:               /app/uploads
-      S3_BUCKET_NAME:                   ${S3_BUCKET_NAME:-}
-      S3_REGION:                        ${S3_REGION:-}
-      S3_ACCESS_KEY:                    ${S3_ACCESS_KEY:-}
-      S3_SECRET_KEY:                    ${S3_SECRET_KEY:-}
-
-      # Firebase
-      FIREBASE_ENABLED:                 ${FIREBASE_ENABLED:-false}
-      FIREBASE_PROJECT_ID:              ${FIREBASE_PROJECT_ID:-}
-
-      # Mail
-      MAIL_HOST:                        ${MAIL_HOST:-smtp.gmail.com}
-      MAIL_PORT:                        ${MAIL_PORT:-587}
-      MAIL_USERNAME:                    ${MAIL_USERNAME:-}
-      MAIL_PASSWORD:                    ${MAIL_PASSWORD:-}
-
-      # CORS
-      CORS_ALLOWED_ORIGINS:             ${CORS_ALLOWED_ORIGINS:-*}
-
-      # JVM
-      JAVA_OPTS:                        ${JAVA_OPTS:--Xms256m -Xmx512m}
-
-      # Timezone
-      TZ:                               UTC
+      SPRING_PROFILES_ACTIVE:       ${SPRING_PROFILES_ACTIVE:-prod}
+      DATABASE_URL:                 jdbc:postgresql://postgres:5432/${POSTGRES_DB:-chana9}
+      DATABASE_USER:                ${POSTGRES_USER:-chana9}
+      DATABASE_PASSWORD:            ${POSTGRES_PASSWORD}
+      JWT_SECRET:                   ${JWT_SECRET}
+      JWT_ACCESS_EXPIRATION:        ${JWT_ACCESS_EXPIRATION:-86400000}
+      JWT_REFRESH_EXPIRATION:       ${JWT_REFRESH_EXPIRATION:-604800000}
+      OTP_EXPIRATION_MINUTES:       ${OTP_EXPIRATION_MINUTES:-5}
+      SMS_PROVIDER:                 ${SMS_PROVIDER:-log}
+      SMS_API_KEY:                  ${SMS_API_KEY:-}
+      SMS_SENDER_ID:                ${SMS_SENDER_ID:-Chana9}
+      PAYMENT_PROVIDER:             ${PAYMENT_PROVIDER:-mock}
+      PAYMENT_API_KEY:              ${PAYMENT_API_KEY:-}
+      PAYMENT_API_SECRET:           ${PAYMENT_API_SECRET:-}
+      PAYMENT_MERCHANT_ID:          ${PAYMENT_MERCHANT_ID:-}
+      PAYMENT_CALLBACK_URL:         ${PAYMENT_CALLBACK_URL:-}
+      COMMISSION_RATE:              ${COMMISSION_RATE:-0.03}
+      COMMISSION_MAX_DH:            ${COMMISSION_MAX_DH:-200}
+      STORAGE_PROVIDER:             ${STORAGE_PROVIDER:-local}
+      STORAGE_LOCAL_PATH:           /app/uploads
+      S3_BUCKET_NAME:               ${S3_BUCKET_NAME:-}
+      S3_REGION:                    ${S3_REGION:-}
+      S3_ACCESS_KEY:                ${S3_ACCESS_KEY:-}
+      S3_SECRET_KEY:                ${S3_SECRET_KEY:-}
+      FIREBASE_ENABLED:             ${FIREBASE_ENABLED:-false}
+      FIREBASE_PROJECT_ID:          ${FIREBASE_PROJECT_ID:-}
+      MAIL_HOST:                    ${MAIL_HOST:-smtp.gmail.com}
+      MAIL_PORT:                    ${MAIL_PORT:-587}
+      MAIL_USERNAME:                ${MAIL_USERNAME:-}
+      MAIL_PASSWORD:                ${MAIL_PASSWORD:-}
+      CORS_ALLOWED_ORIGINS:         ${CORS_ALLOWED_ORIGINS:-*}
+      JAVA_OPTS:                    ${JAVA_OPTS:--Xms256m -Xmx512m}
+      TZ:                           UTC
     volumes:
-      - uploads:/app/uploads            # photos des animaux
+      - uploads:/app/uploads
+      - maven-cache:/root/.m2        # ← Cache Maven persisté
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1"]
       interval: 30s
       timeout: 10s
-      retries: 3
-      start_period: 60s                 # laisse le temps à Spring de démarrer
+      retries: 1
+      start_period: 60s
     networks:
       - chana9-network
 
-# ─────────────────────────────────────────────────────────
-#  Volumes persistants
-# ─────────────────────────────────────────────────────────
 volumes:
   pgdata:
     driver: local
   uploads:
     driver: local
+  maven-cache:                       # ← Nouveau volume
+    driver: local
 
-# ─────────────────────────────────────────────────────────
-#  Réseau interne
-# ─────────────────────────────────────────────────────────
 networks:
   chana9-network:
     driver: bridge

@@ -1,8 +1,8 @@
 package ma.chana9.shared.enums;
 
-public enum StatutAnnonce {
+public enum AnnonceStatus {
     ACTIVE,
-    VENDUE,
-    SUSPENDUE,
-    EXPIREE
+    SOLD,
+    SUSPENDED,
+    EXPIRED
 }

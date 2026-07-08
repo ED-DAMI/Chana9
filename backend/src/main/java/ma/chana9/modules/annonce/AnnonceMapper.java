@@ -3,7 +3,7 @@ package ma.chana9.modules.annonce;
 import lombok.experimental.UtilityClass;
 import ma.chana9.modules.annonce.dto.AnnonceMediaResponse;
 import ma.chana9.modules.annonce.dto.AnnonceResponse;
-import ma.chana9.shared.util.NullSafe;
+import ma.chana9.shared.config.NullSafe;
 import org.locationtech.jts.geom.Point;
 
 import java.util.List;

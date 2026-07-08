@@ -10,7 +10,6 @@ public class OtpRequest {
 
     @NotBlank
     private String phone;
-
     @NotBlank
     private String otp;
 }
