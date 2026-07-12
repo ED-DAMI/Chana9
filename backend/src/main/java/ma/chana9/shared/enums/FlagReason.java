@@ -1,4 +1,16 @@
 package ma.chana9.shared.enums;
 
-public interface FlagReason {
+public enum FlagReason {
+    MISLEADING_PHOTOS,
+    FALSE_INFORMATION,
+    DUPLICATE_ANNONCE,
+    ABUSIVE_PRICE,
+    HIDDEN_FEES,
+    UNRESPONSIVE_SELLER,
+    FRAUDULENT_SELLER,
+    ANIMAL_DOES_NOT_EXIST,
+    SICK_ANIMAL,
+    STOLEN_ANIMAL,
+    INAPPROPRIATE_CONTENT,
+    OTHER
 }

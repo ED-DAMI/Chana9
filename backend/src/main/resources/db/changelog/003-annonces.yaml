@@ -1,82 +1,744 @@
 databaseChangeLog:
-  - changeSet:
-      id: 003-create-annonces-table
-      author: chana9
-      changes:
-        - createTable:
-            tableName: annonces
-            columns:
-              - column:
-                  name: id
-                  type: uuid
-                  defaultValueComputed: gen_random_uuid()
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: title
-                  type: varchar(200)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: description
-                  type: text
-              - column:
-                  name: race
-                  type: varchar(100)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: poids_estime
-                  type: numeric(6,2)
-              - column:
-                  name: prix
-                  type: numeric(10,2)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: region
-                  type: varchar(100)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: statut
-                  type: varchar(20)
-                  defaultValue: ACTIVE
-              - column:
-                  name: is_top_lot
-                  type: boolean
-                  defaultValueBoolean: false
-              - column:
-                  name: top_lot_expires_at
-                  type: timestamp
-              - column:
-                  name: eleveur_id
-                  type: uuid
-                  constraints:
-                    nullable: false
-                    foreignKeyName: fk_annonces_eleveur
-                    references: users(id)
-              - column:
-                  name: created_at
-                  type: timestamp
-                  defaultValueComputed: NOW()
-              - column:
-                  name: updated_at
-                  type: timestamp
-                  defaultValueComputed: NOW()
 
-  - changeSet:
-      id: 003-add-check-constraint-annonces-statut
-      author: chana9
-      changes:
-        - sql:
-            sql: >
-              ALTER TABLE annonces
-              ADD CONSTRAINT chk_annonces_statut
-              CHECK (statut IN ('ACTIVE','VENDUE','SUSPENDUE','EXPIREE'));
-      rollback:
-        - sql:
-            sql: >
-              ALTER TABLE annonces
-              DROP CONSTRAINT chk_annonces_statut;
+  # =============================================================================
+  # MODULE ANNONCES — Chana9
+  # Auteur  : ED-DAMI
+  # Tables  : annonces, annonce_medias, annonce_signalements,
+  #           annonce_flags, favoris, alertes_annonces
+  # =============================================================================
+
+  # ---------------------------------------------------------------------------
+  # 001 — annonces
+  # ---------------------------------------------------------------------------
+    - changeSet:
+        id: 003-enable-postgis-extension
+        author: ED-DAMI
+        runOnChange: false
+        changes:
+          - sql:
+              sql: CREATE EXTENSION IF NOT EXISTS postgis;
+        rollback:
+          - sql:
+              sql: DROP EXTENSION IF EXISTS postgis;
+
+    - changeSet:
+        id: 003-create-annonces-table
+        author: ED-DAMI
+        changes:
+          - createTable:
+              tableName: annonces
+              columns:
+                - column:
+                    name: id
+                    type: uuid
+                    defaultValueComputed: gen_random_uuid()
+                    constraints:
+                      primaryKey: true
+                      nullable: false
+                - column:
+                    name: title
+                    type: varchar(200)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: description
+                    type: text
+                - column:
+                    name: breed
+                    type: varchar(100)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: estimated_weight
+                    type: numeric(6,2)
+                - column:
+                    name: price
+                    type: numeric(10,2)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: price_negotiable
+                    type: boolean
+                    defaultValueBoolean: false
+                - column:
+                    name: region
+                    type: varchar(100)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: status
+                    type: varchar(20)
+                    defaultValue: ACTIVE
+                - column:
+                    name: gender
+                    type: varchar(10)
+                - column:
+                    name: birth_date
+                    type: date
+                - column:
+                    name: age_months
+                    type: integer
+                - column:
+                    name: location
+                    type: geometry(Point, 4326)
+                - column:
+                    name: address_label
+                    type: varchar(255)
+                - column:
+                    name: delivery_available
+                    type: boolean
+                    defaultValueBoolean: false
+                - column:
+                    name: delivery_radius_km
+                    type: integer
+                - column:
+                    name: delivery_price
+                    type: numeric(8,2)
+                - column:
+                    name: is_top_lot
+                    type: boolean
+                    defaultValueBoolean: false
+                - column:
+                    name: top_lot_expires_at
+                    type: timestamp
+                - column:
+                    name: expires_at
+                    type: timestamp
+                - column:
+                    name: seller_id
+                    type: uuid
+                    constraints:
+                      nullable: false
+                - column:
+                    name: created_at
+                    type: timestamp
+                    defaultValueComputed: NOW()
+                - column:
+                    name: updated_at
+                    type: timestamp
+                    defaultValueComputed: NOW()
+
+          - createIndex:
+              tableName: annonces
+              indexName: idx_annonces_seller_id
+              columns:
+                - column:
+                    name: seller_id
+
+          - createIndex:
+              tableName: annonces
+              indexName: idx_annonces_status
+              columns:
+                - column:
+                    name: status
+
+          - createIndex:
+              tableName: annonces
+              indexName: idx_annonces_region
+              columns:
+                - column:
+                    name: region
+
+          - createIndex:
+              tableName: annonces
+              indexName: idx_annonces_breed
+              columns:
+                - column:
+                    name: breed
+
+          - createIndex:
+              tableName: annonces
+              indexName: idx_annonces_expires_at
+              columns:
+                - column:
+                    name: expires_at
+
+          - createIndex:
+              tableName: annonces
+              indexName: idx_annonces_top_lot_expires_at
+              columns:
+                - column:
+                    name: top_lot_expires_at
+
+          - createIndex:
+              tableName: annonces
+              indexName: idx_annonces_price
+              columns:
+                - column:
+                    name: price
+
+    - changeSet:
+        id: 003-create-spatial-index-annonces-location
+        author: ED-DAMI
+        changes:
+          - sql:
+              sql: >
+                CREATE INDEX idx_annonces_location
+                ON annonces USING GIST (location);
+        rollback:
+          - sql:
+              sql: DROP INDEX IF EXISTS idx_annonces_location;
+
+    - changeSet:
+        id: 003-add-check-constraint-annonces-status
+        author: ED-DAMI
+        changes:
+          - sql:
+              sql: >
+                ALTER TABLE annonces
+                ADD CONSTRAINT chk_annonces_status
+                CHECK (status IN ('ACTIVE','SOLD','SUSPENDED','EXPIRED'));
+        rollback:
+          - sql:
+              sql: >
+                ALTER TABLE annonces
+                DROP CONSTRAINT chk_annonces_status;
+
+    - changeSet:
+        id: 003-add-check-constraint-annonces-gender
+        author: ED-DAMI
+        changes:
+          - sql:
+              sql: >
+                ALTER TABLE annonces
+                ADD CONSTRAINT chk_annonces_gender
+                CHECK (gender IN ('MALE','FEMALE'));
+        rollback:
+          - sql:
+              sql: >
+                ALTER TABLE annonces
+                DROP CONSTRAINT chk_annonces_gender;
+
+    - changeSet:
+        id: 003-add-check-constraint-annonces-price
+        author: ED-DAMI
+        changes:
+          - sql:
+              sql: >
+                ALTER TABLE annonces
+                ADD CONSTRAINT chk_annonces_price_positive
+                CHECK (price > 0);
+        rollback:
+          - sql:
+              sql: >
+                ALTER TABLE annonces
+                DROP CONSTRAINT chk_annonces_price_positive;
+
+    - changeSet:
+        id: 003-add-check-constraint-annonces-delivery
+        author: ED-DAMI
+        changes:
+          - sql:
+              sql: >
+                ALTER TABLE annonces
+                ADD CONSTRAINT chk_annonces_delivery_coherence
+                CHECK (
+                  delivery_available = false
+                  OR (delivery_available = true AND delivery_radius_km IS NOT NULL)
+                );
+        rollback:
+          - sql:
+              sql: >
+                ALTER TABLE annonces
+                DROP CONSTRAINT chk_annonces_delivery_coherence;
+
+    - changeSet:
+        id: 003-add-check-constraint-annonces-age
+        author: ED-DAMI
+        changes:
+          - sql:
+              sql: >
+                ALTER TABLE annonces
+                ADD CONSTRAINT chk_annonces_age_source
+                CHECK (birth_date IS NOT NULL OR age_months IS NOT NULL);
+        rollback:
+          - sql:
+              sql: >
+                ALTER TABLE annonces
+                DROP CONSTRAINT chk_annonces_age_source;
+  # ---------------------------------------------------------------------------
+  # 002 — annonce_medias
+  # ---------------------------------------------------------------------------
+    - changeSet:
+        id: 002-create-annonce-medias-table
+        author: ED-DAMI
+        changes:
+          - createTable:
+              tableName: annonce_medias
+              columns:
+                - column:
+                    name: id
+                    type: uuid
+                    defaultValueComputed: gen_random_uuid()
+                    constraints:
+                      primaryKey: true
+                      nullable: false
+                - column:
+                    name: annonce_id
+                    type: uuid
+                    constraints:
+                      nullable: false
+                      foreignKeyName: fk_media_annonce
+                      references: annonces(id)
+                      deleteCascade: true
+                - column:
+                    name: url
+                    type: varchar(512)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: order
+                    type: integer
+                    defaultValueNumeric: 0
+                - column:
+                    name: is_cover
+                    type: boolean
+                    defaultValueBoolean: false
+                - column:
+                    name: format
+                    type: varchar(10)
+                - column:
+                    name: created_at
+                    type: timestamp
+                    defaultValueComputed: NOW()
+
+          - createIndex:
+              tableName: annonce_medias
+              indexName: idx_media_annonce_id
+              columns:
+                - column:
+                    name: annonce_id
+
+          - createIndex:
+              tableName: annonce_medias
+              indexName: idx_media_is_principale
+              columns:
+                - column:
+                    name: is_cover
+
+    - changeSet:
+        id: 002-add-check-constraint-media-format
+        author: ED-DAMI
+        changes:
+          - sql:
+              sql: >
+                ALTER TABLE annonce_medias
+                ADD CONSTRAINT chk_media_format
+                CHECK (format IN ('JPEG','PNG','HEIC'));
+        rollback:
+          - sql:
+              sql: >
+                ALTER TABLE annonce_medias
+                DROP CONSTRAINT chk_media_format;
+
+    - changeSet:
+        id: 002-add-check-constraint-media-order
+        author: ED-DAMI
+        changes:
+          - sql:
+              sql: >
+                ALTER TABLE annonce_medias
+                ADD CONSTRAINT chk_media_order_positive
+                CHECK ("order" >= 0);
+        rollback:
+          - sql:
+              sql: >
+                ALTER TABLE annonce_medias
+                DROP CONSTRAINT chk_media_order_positive;
+
+    # ---------------------------------------------------------------------------
+    # 003 — annonce_signalements  (AnnonceReport — signalements utilisateurs)
+    # ---------------------------------------------------------------------------
+    - changeSet:
+        id: 003-create-annonce-signalements-table
+        author: ED-DAMI
+        changes:
+          - createTable:
+              tableName: annonce_signalements
+              columns:
+                - column:
+                    name: id
+                    type: uuid
+                    defaultValueComputed: gen_random_uuid()
+                    constraints:
+                      primaryKey: true
+                      nullable: false
+                - column:
+                    name: annonce_id
+                    type: uuid
+                    constraints:
+                      nullable: false
+                      foreignKeyName: fk_signalement_annonce
+                      references: annonces(id)
+                      deleteCascade: true
+                - column:
+                    name: signaleur_id
+                    type: uuid
+                    constraints:
+                      nullable: false
+                - column:
+                    name: reason
+                    type: varchar(30)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: comment
+                    type: text
+                - column:
+                    name: status
+                    type: varchar(20)
+                    defaultValue: PENDING
+                - column:
+                    name: created_at
+                    type: timestamp
+                    defaultValueComputed: NOW()
+                - column:
+                    name: traite_at
+                    type: timestamp
+                - column:
+                    name: traite_par
+                    type: uuid
+
+          - addUniqueConstraint:
+              tableName: annonce_signalements
+              constraintName: idx_signalement_unique
+              columnNames: annonce_id, signaleur_id
+
+          - createIndex:
+              tableName: annonce_signalements
+              indexName: idx_signalement_annonce_id
+              columns:
+                - column:
+                    name: annonce_id
+
+          - createIndex:
+              tableName: annonce_signalements
+              indexName: idx_signalement_status
+              columns:
+                - column:
+                    name: status
+
+          - createIndex:
+              tableName: annonce_signalements
+              indexName: idx_signalement_signaleur_id
+              columns:
+                - column:
+                    name: signaleur_id
+
+    - changeSet:
+        id: 003-add-check-constraint-signalement-reason
+        author: ED-DAMI
+        changes:
+          - sql:
+              sql: >
+                ALTER TABLE annonce_signalements
+                ADD CONSTRAINT chk_signalement_reason
+                CHECK (reason IN (
+                  'ABUSIVE_PRICE',
+                  'ANIMAL_DOES_NOT_EXIST',
+                  'MISLEADING_PHOTOS',
+                  'FRAUDULENT_SELLER',
+                  'OTHER'
+                ));
+        rollback:
+          - sql:
+              sql: >
+                ALTER TABLE annonce_signalements
+                DROP CONSTRAINT chk_signalement_reason;
+
+    - changeSet:
+        id: 003-add-check-constraint-signalement-status
+        author: ED-DAMI
+        changes:
+          - sql:
+              sql: >
+                ALTER TABLE annonce_signalements
+                ADD CONSTRAINT chk_signalement_status
+                CHECK (status IN ('PENDING','PROCESSED','REJECTED'));
+        rollback:
+          - sql:
+              sql: >
+                ALTER TABLE annonce_signalements
+                DROP CONSTRAINT chk_signalement_status;
+
+    # ---------------------------------------------------------------------------
+    # 004 — annonce_flags  (AnnonceFlag — flags modérateurs)
+    # NOTE: @Table(name = "annonce_flags") doit être corrigé dans AnnonceFlag.java
+    #       (actuellement en collision avec annonce_signalements)
+    # ---------------------------------------------------------------------------
+    - changeSet:
+        id: 004-create-annonce-flags-table
+        author: ED-DAMI
+        changes:
+          - createTable:
+              tableName: annonce_flags
+              columns:
+                - column:
+                    name: id
+                    type: uuid
+                    defaultValueComputed: gen_random_uuid()
+                    constraints:
+                      primaryKey: true
+                      nullable: false
+                - column:
+                    name: annonce_id
+                    type: uuid
+                    constraints:
+                      nullable: false
+                      foreignKeyName: fk_flag_annonce
+                      references: annonces(id)
+                      deleteCascade: true
+                - column:
+                    name: signaleur_id
+                    type: uuid
+                    constraints:
+                      nullable: false
+                - column:
+                    name: reason
+                    type: varchar(30)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: comment
+                    type: text
+                - column:
+                    name: status
+                    type: varchar(20)
+                    defaultValue: PENDING
+                - column:
+                    name: created_at
+                    type: timestamp
+                    defaultValueComputed: NOW()
+                - column:
+                    name: traite_at
+                    type: timestamp
+                - column:
+                    name: traite_par
+                    type: uuid
+
+          - addUniqueConstraint:
+              tableName: annonce_flags
+              constraintName: idx_flag_unique
+              columnNames: annonce_id, signaleur_id
+
+          - createIndex:
+              tableName: annonce_flags
+              indexName: idx_flag_annonce_id
+              columns:
+                - column:
+                    name: annonce_id
+
+          - createIndex:
+              tableName: annonce_flags
+              indexName: idx_flag_status
+              columns:
+                - column:
+                    name: status
+
+          - createIndex:
+              tableName: annonce_flags
+              indexName: idx_flag_traite_par
+              columns:
+                - column:
+                    name: traite_par
+
+    - changeSet:
+        id: 004-add-check-constraint-flag-status
+        author: ED-DAMI
+        changes:
+          - sql:
+              sql: >
+                ALTER TABLE annonce_flags
+                ADD CONSTRAINT chk_flag_status
+                CHECK (status IN ('PENDING','REVIEWED','REJECTED'));
+        rollback:
+          - sql:
+              sql: >
+                ALTER TABLE annonce_flags
+                DROP CONSTRAINT chk_flag_status;
+
+    - changeSet:
+        id: 004-add-check-constraint-flag-reason
+        author: ED-DAMI
+        changes:
+          - sql:
+              sql: >
+                ALTER TABLE annonce_flags
+                ADD CONSTRAINT chk_flag_reason
+                CHECK (reason IN (
+                  'MISLEADING_PHOTOS',
+                  'FALSE_INFORMATION',
+                  'DUPLICATE_ANNONCE',
+                  'ABUSIVE_PRICE',
+                  'HIDDEN_FEES',
+                  'UNRESPONSIVE_SELLER',
+                  'FRAUDULENT_SELLER',
+                  'ANIMAL_DOES_NOT_EXIST',
+                  'SICK_ANIMAL',
+                  'STOLEN_ANIMAL',
+                  'INAPPROPRIATE_CONTENT',
+                  'OTHER'
+                ));
+        rollback:
+          - sql:
+              sql: >
+                ALTER TABLE annonce_flags
+                DROP CONSTRAINT chk_flag_reason;
+
+    # ---------------------------------------------------------------------------
+    # 005 — favoris
+    # ---------------------------------------------------------------------------
+    - changeSet:
+        id: 005-create-favoris-table
+        author: ED-DAMI
+        changes:
+          - createTable:
+              tableName: favoris
+              columns:
+                - column:
+                    name: id
+                    type: uuid
+                    defaultValueComputed: gen_random_uuid()
+                    constraints:
+                      primaryKey: true
+                      nullable: false
+                - column:
+                    name: acheteur_id
+                    type: uuid
+                    constraints:
+                      nullable: false
+                - column:
+                    name: annonce_id
+                    type: uuid
+                    constraints:
+                      nullable: false
+                      foreignKeyName: fk_favoris_annonce
+                      references: annonces(id)
+                      deleteCascade: true
+                - column:
+                    name: created_at
+                    type: timestamp
+                    defaultValueComputed: NOW()
+
+          - addUniqueConstraint:
+              tableName: favoris
+              constraintName: idx_favoris_unique
+              columnNames: acheteur_id, annonce_id
+
+          - createIndex:
+              tableName: favoris
+              indexName: idx_favoris_acheteur_id
+              columns:
+                - column:
+                    name: acheteur_id
+
+          - createIndex:
+              tableName: favoris
+              indexName: idx_favoris_annonce_id
+              columns:
+                - column:
+                    name: annonce_id
+
+    # ---------------------------------------------------------------------------
+    # 006 — alertes_annonces
+    # ---------------------------------------------------------------------------
+    - changeSet:
+        id: 006-create-alertes-annonces-table
+        author: ED-DAMI
+        changes:
+          - createTable:
+              tableName: alertes_annonces
+              columns:
+                - column:
+                    name: id
+                    type: uuid
+                    defaultValueComputed: gen_random_uuid()
+                    constraints:
+                      primaryKey: true
+                      nullable: false
+                - column:
+                    name: acheteur_id
+                    type: uuid
+                    constraints:
+                      nullable: false
+                - column:
+                    name: breed
+                    type: varchar(100)
+                - column:
+                    name: region
+                    type: varchar(100)
+                - column:
+                    name: rayon_km
+                    type: integer
+                - column:
+                    name: prix_max
+                    type: numeric(10,2)
+                - column:
+                    name: age_mois_min
+                    type: integer
+                - column:
+                    name: is_active
+                    type: boolean
+                    defaultValueBoolean: true
+                - column:
+                    name: created_at
+                    type: timestamp
+                    defaultValueComputed: NOW()
+
+          - createIndex:
+              tableName: alertes_annonces
+              indexName: idx_alertes_acheteur_id
+              columns:
+                - column:
+                    name: acheteur_id
+
+          - createIndex:
+              tableName: alertes_annonces
+              indexName: idx_alertes_is_active
+              columns:
+                - column:
+                    name: is_active
+
+          - createIndex:
+              tableName: alertes_annonces
+              indexName: idx_alertes_breed
+              columns:
+                - column:
+                    name: breed
+
+          - createIndex:
+              tableName: alertes_annonces
+              indexName: idx_alertes_region
+              columns:
+                - column:
+                    name: region
+
+    - changeSet:
+        id: 006-add-check-constraint-alertes-prix-max
+        author: ED-DAMI
+        changes:
+          - sql:
+              sql: >
+                ALTER TABLE alertes_annonces
+                ADD CONSTRAINT chk_alertes_prix_max_positive
+                CHECK (prix_max IS NULL OR prix_max > 0);
+        rollback:
+          - sql:
+              sql: >
+                ALTER TABLE alertes_annonces
+                DROP CONSTRAINT chk_alertes_prix_max_positive;
+
+    - changeSet:
+        id: 006-add-check-constraint-alertes-age-min
+        author: ED-DAMI
+        changes:
+          - sql:
+              sql: >
+                ALTER TABLE alertes_annonces
+                ADD CONSTRAINT chk_alertes_age_mois_min_positive
+                CHECK (age_mois_min IS NULL OR age_mois_min >= 0);
+        rollback:
+          - sql:
+              sql: >
+                ALTER TABLE alertes_annonces
+                DROP CONSTRAINT chk_alertes_age_mois_min_positive;
