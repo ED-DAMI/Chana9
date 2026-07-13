@@ -4,5 +4,5 @@ public enum BlacklistReason {
     LOGOUT,
     SUSPICIOUS_ACTIVITY,
     TOKEN_ROTATION,
-    ADMIN_REVOKE
+    PASSWORD_RESET, ADMIN_REVOKE
 }

@@ -4,12 +4,11 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
-public class OtpRequest {
+
+public record OtpRequest (
 
     @NotBlank
-    private String phone;
+    String phone,
     @NotBlank
-    private String otp;
-}
+     String otp
+){}

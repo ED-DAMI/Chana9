@@ -4,7 +4,6 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -17,6 +16,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import ma.chana9.config.JwtConfig;
 import ma.chana9.config.SecurityProperties;
+import ma.chana9.modules.auth.AuthMapper;
 import ma.chana9.modules.auth.dto.AuthResponse;
 import ma.chana9.modules.user.User;
 import ma.chana9.modules.user.UserRepository;
@@ -24,9 +24,9 @@ import ma.chana9.modules.user.dto.UserDTO;
 import ma.chana9.shared.audit.service.AuditService;
 import ma.chana9.shared.constants.AuditConstants;
 import ma.chana9.shared.constants.ErrorKeys;
+import ma.chana9.shared.constants.MessageKeys;
 import ma.chana9.shared.constants.SecurityConstants;
 import ma.chana9.shared.enums.AuditAction;
-import ma.chana9.shared.enums.AuditStatus;
 import ma.chana9.shared.enums.BlacklistReason;
 import ma.chana9.shared.enums.Role;
 import ma.chana9.shared.security.domain.RefreshToken;
@@ -56,6 +56,7 @@ public class TokenService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final TokenBlacklistRepository tokenBlacklistRepository;
     private final AuditService auditService;
+    private final AuthMapper authMapper;
 
     public String generateAccessToken(User user) {
         Instant now = Instant.now();
@@ -115,7 +116,7 @@ public class TokenService {
         String accessToken = generateAccessToken(user);
         String newRefreshToken = generateRefreshToken(user, request);
         auditService.logSuccess(AuditAction.TOKEN_REFRESHED, user.getId(), AuditConstants.TOKEN_ENTITY, refreshToken.getId().toString());
-        return AuthResponse.of(accessToken, newRefreshToken, UserDTO.from(user), jwtConfig.getAccessExpiration(), jwtConfig.getRefreshExpiration());
+        return new AuthResponse(accessToken, newRefreshToken,jwtConfig.getAccessExpiration(),jwtConfig.getRefreshExpiration(),authMapper.toUserDTO(user), MessageKeys.Auth.TOKEN_REFRESHED);
     }
 
     @Transactional

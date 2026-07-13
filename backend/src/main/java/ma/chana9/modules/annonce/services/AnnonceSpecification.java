@@ -22,61 +22,61 @@ public class AnnonceSpecification {
 
             predicates.add(cb.equal(root.get(EntityFields.AnnonceFields.STATUS), AnnonceStatus.ACTIVE));
 
-            if (request.getBreed() != null) {
+            if (request.breed() != null) {
                 predicates.add(cb.like(
                         cb.lower(root.get(EntityFields.AnnonceFields.BREED)),
-                        "%%%s%%".formatted(request.getBreed().toLowerCase())
+                        "%%%s%%".formatted(request.breed().toLowerCase())
                 ));
             }
 
-            if (request.getRegion() != null) {
+            if (request.region() != null) {
                 predicates.add(cb.like(
                         cb.lower(root.get(EntityFields.AnnonceFields.REGION)),
-                        "%%%s%%".formatted(request.getRegion().toLowerCase())
+                        "%%%s%%".formatted(request.region().toLowerCase())
                 ));
             }
 
-            if (request.getMinPrice() != null) {
-                predicates.add(cb.greaterThanOrEqualTo(root.get(EntityFields.AnnonceFields.PRICE), request.getMinPrice()));
+            if (request.minPrice() != null) {
+                predicates.add(cb.greaterThanOrEqualTo(root.get(EntityFields.AnnonceFields.PRICE), request.minPrice()));
             }
 
-            if (request.getMaxPrice() != null) {
-                predicates.add(cb.lessThanOrEqualTo(root.get(EntityFields.AnnonceFields.PRICE), request.getMaxPrice()));
+            if (request.maxPrice() != null) {
+                predicates.add(cb.lessThanOrEqualTo(root.get(EntityFields.AnnonceFields.PRICE), request.maxPrice()));
             }
 
-            if (request.getMinWeight() != null) {
-                predicates.add(cb.greaterThanOrEqualTo(root.get(EntityFields.AnnonceFields.ESTIMATED_WEIGHT), request.getMinWeight()));
+            if (request.minWeight() != null) {
+                predicates.add(cb.greaterThanOrEqualTo(root.get(EntityFields.AnnonceFields.ESTIMATED_WEIGHT), request.minWeight()));
             }
 
-            if (request.getMaxWeight() != null) {
-                predicates.add(cb.lessThanOrEqualTo(root.get(EntityFields.AnnonceFields.ESTIMATED_WEIGHT), request.getMaxWeight()));
+            if (request.maxWeight() != null) {
+                predicates.add(cb.lessThanOrEqualTo(root.get(EntityFields.AnnonceFields.ESTIMATED_WEIGHT), request.maxWeight()));
             }
 
-            if (request.getGender() != null) {
-                predicates.add(cb.equal(root.get(EntityFields.AnnonceFields.GENDER), request.getGender()));
+            if (request.gender() != null) {
+                predicates.add(cb.equal(root.get(EntityFields.AnnonceFields.GENDER), request.gender()));
             }
 
-            if (request.getMinAgeMonths() != null) {
-                predicates.add(cb.greaterThanOrEqualTo(root.get(EntityFields.AnnonceFields.AGE_MONTHS), request.getMinAgeMonths()));
+            if (request.minAgeMonths() != null) {
+                predicates.add(cb.greaterThanOrEqualTo(root.get(EntityFields.AnnonceFields.AGE_MONTHS), request.minAgeMonths()));
             }
 
-            if (request.getMaxAgeMonths() != null) {
-                predicates.add(cb.lessThanOrEqualTo(root.get(EntityFields.AnnonceFields.AGE_MONTHS), request.getMaxAgeMonths()));
+            if (request.maxAgeMonths() != null) {
+                predicates.add(cb.lessThanOrEqualTo(root.get(EntityFields.AnnonceFields.AGE_MONTHS), request.maxAgeMonths()));
             }
 
-            if (Boolean.TRUE.equals(request.getDeliveryAvailable())) {
+            if (Boolean.TRUE.equals(request.deliveryAvailable())) {
                 predicates.add(cb.isTrue(root.get(EntityFields.AnnonceFields.DELIVERY_AVAILABLE)));
             }
 
-            if (Boolean.TRUE.equals(request.getPriceNegotiable())) {
+            if (Boolean.TRUE.equals(request.priceNegotiable())) {
                 predicates.add(cb.isTrue(root.get(EntityFields.AnnonceFields.PRICE_NEGOTIABLE)));
             }
 
-            if (Boolean.TRUE.equals(request.getTopLotOnly())) {
+            if (Boolean.TRUE.equals(request.topLotOnly())) {
                 predicates.add(cb.isTrue(root.get(EntityFields.AnnonceFields.IS_TOP_LOT)));
             }
 
-            if (Boolean.TRUE.equals(request.getEligibleForAid())) {
+            if (Boolean.TRUE.equals(request.eligibleForAid())) {
                 predicates.add(cb.lessThanOrEqualTo(
                         root.get(EntityFields.AnnonceFields.BIRTH_DATE),
                         LocalDate.now().minusMonths(AnnonceConstants.AID_MIN_AGE_MONTHS)

@@ -1,69 +1,39 @@
 package ma.chana9.modules.annonce.services;
 
-import lombok.experimental.UtilityClass;
 import ma.chana9.modules.annonce.dto.AnnonceMediaResponse;
 import ma.chana9.modules.annonce.dto.AnnonceResponse;
 import ma.chana9.modules.annonce.entities.Annonce;
 import ma.chana9.modules.annonce.entities.AnnonceMedia;
-import ma.chana9.shared.config.NullSafe;
 import org.locationtech.jts.geom.Point;
+import org.mapstruct.*;
 
 import java.util.List;
 
-@UtilityClass
-public class AnnonceMapper {
+@Mapper(componentModel = "spring", imports = AnnonceDomainService.class)
+public interface AnnonceMapper {
 
-    public static AnnonceResponse toResponse(Annonce annonce) {
-        return toResponse(annonce, null);
+    @Mapping(target = "latitude",           expression = "java(getY(annonce.getLocation()))")
+    @Mapping(target = "longitude",          expression = "java(getX(annonce.getLocation()))")
+    @Mapping(target = "distanceKm",         ignore = true)
+    @Mapping(target = "eligibleForAid",     expression = "java(AnnonceDomainService.isEligibleForAid(annonce))")
+    @Mapping(target = "effectiveAgeMonths", expression = "java(AnnonceDomainService.getEffectiveAgeMonths(annonce))")
+    AnnonceResponse toResponse(Annonce annonce);
+
+    @Mapping(target = "latitude",           expression = "java(getY(annonce.getLocation()))")
+    @Mapping(target = "longitude",          expression = "java(getX(annonce.getLocation()))")
+    @Mapping(target = "eligibleForAid",     expression = "java(AnnonceDomainService.isEligibleForAid(annonce))")
+    @Mapping(target = "effectiveAgeMonths", expression = "java(AnnonceDomainService.getEffectiveAgeMonths(annonce))")
+    AnnonceResponse toResponse(Annonce annonce, @Context Double distanceKm);
+
+    @AfterMapping
+    default void applyDistance(@Context Double distanceKm,
+                               @MappingTarget AnnonceResponse.AnnonceResponseBuilder target) {
+        if (distanceKm != null) target.distanceKm(distanceKm);
     }
 
-    public static AnnonceResponse toResponse(Annonce annonce, Double distanceKm) {
-        Point location = annonce.getLocation();
-        return AnnonceResponse.builder()
-                .id(annonce.getId())
-                .title(annonce.getTitle())
-                .description(annonce.getDescription())
-                .breed(annonce.getBreed())
-                .estimatedWeight(annonce.getEstimatedWeight())
-                .price(annonce.getPrice())
-                .priceNegotiable(annonce.getPriceNegotiable())
-                .region(annonce.getRegion())
-                .status(annonce.getStatus())
-                .gender(annonce.getGender())
-                .birthDate(annonce.getBirthDate())
-                .ageMonths(annonce.getAgeMonths())
-                .effectiveAgeMonths(annonce.getEffectiveAgeMonths())
-                .eligibleForAid(annonce.isEligibleForAid())
-                .addressLabel(annonce.getAddressLabel())
-                .latitude(NullSafe.mapped(location, Point::getY))
-                .longitude(NullSafe.mapped(location, Point::getX))
-                .distanceKm(distanceKm)
-                .deliveryAvailable(annonce.getDeliveryAvailable())
-                .deliveryRadiusKm(annonce.getDeliveryRadiusKm())
-                .deliveryPrice(annonce.getDeliveryPrice())
-                .isTopLot(annonce.getIsTopLot())
-                .topLotExpiresAt(annonce.getTopLotExpiresAt())
-                .expiresAt(annonce.getExpiresAt())
-                .sellerId(annonce.getSellerId())
-                .medias(toMediaResponses(annonce.getMedias()))
-                .createdAt(annonce.getCreatedAt())
-                .updatedAt(annonce.getUpdatedAt())
-                .build();
-    }
+    List<AnnonceMediaResponse> toMediaResponses(List<AnnonceMedia> medias);
+    AnnonceMediaResponse       toMediaResponse(AnnonceMedia media);
 
-    public static List<AnnonceMediaResponse> toMediaResponses(List<AnnonceMedia> medias) {
-        return NullSafe.mappedOrDefault(medias, list -> list.stream()
-                .map(AnnonceMapper::toMediaResponse)
-                .toList(), List.of());
-    }
-
-    public static AnnonceMediaResponse toMediaResponse(AnnonceMedia media) {
-        return AnnonceMediaResponse.builder()
-                .id(media.getId())
-                .url(media.getUrl())
-                .order(media.getOrder())
-                .isCover(media.getIsCover())
-                .format(media.getFormat())
-                .build();
-    }
+    default Double getY(Point p) { return p != null ? p.getY() : null; }
+    default Double getX(Point p) { return p != null ? p.getX() : null; }
 }

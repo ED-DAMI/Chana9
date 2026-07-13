@@ -43,19 +43,4 @@ public class AnnonceAlert {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        if (active == null) active = true;
-    }
-    public boolean matches(Annonce annonce) {
-        if (breed != null && !breed.equalsIgnoreCase(annonce.getBreed())) return false;
-        if (region != null && !region.equalsIgnoreCase(annonce.getRegion())) return false;
-        if (maxPrice != null && annonce.getPrice().compareTo(maxPrice) > 0) return false;
-        if (minAgeMonths != null) {
-            Integer age = annonce.getEffectiveAgeMonths();
-            if (age == null || age < minAgeMonths) return false;
-        }
-        return true;
-    }
 }

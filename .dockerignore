@@ -1,0 +1,12 @@
+mobile
+target
+.git
+.gitignore
+*.log
+.idea
+*.iml
+.vscode
+.dockerignore
+.docker-compose.yml
+!pom.xml
+!backend/src

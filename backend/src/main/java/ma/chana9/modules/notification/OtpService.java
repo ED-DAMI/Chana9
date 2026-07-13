@@ -27,7 +27,7 @@ public class OtpService {
     }
 
     public boolean isValid(OtpCode otpCode, String code) {
-        return !otpCode.isUsed() && otpCode.getExpiresAt().isAfter(LocalDateTime.now()) && otpCode.getCode().equals(code);
+        return !otpCode.getUsed() && otpCode.getExpiresAt().isAfter(LocalDateTime.now()) && otpCode.getCode().equals(code);
     }
 
     private String generateCode() {

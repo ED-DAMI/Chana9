@@ -3,20 +3,13 @@ package ma.chana9.modules.annonce.services;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ma.chana9.modules.annonce.dto.*;
-import ma.chana9.modules.annonce.entities.Annonce;
-import ma.chana9.modules.annonce.entities.AnnonceAlert;
-import ma.chana9.modules.annonce.entities.AnnonceFlag;
-import ma.chana9.modules.annonce.entities.Favorite;
+import ma.chana9.modules.annonce.entities.*;
 import ma.chana9.modules.annonce.repositories.*;
 import ma.chana9.shared.config.AnnonceConstants;
 import ma.chana9.shared.enums.AnnonceStatus;
 import ma.chana9.shared.enums.FlagStatus;
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.Point;
-import org.locationtech.jts.geom.PrecisionModel;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.locationtech.jts.geom.*;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,102 +22,103 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AnnonceService {
 
-	private static final int SRID = 4326;
+	private static final int SRID          = 4326;
 	private static final int METERS_PER_KM = 1000;
 
-	private final AnnonceRepository annonceRepository;
+	private final AnnonceRepository      annonceRepository;
 	private final AnnonceMediaRepository annonceMediaRepository;
-	private final AnnonceFlagRepository annonceFlagRepository;
-	private final FavoriteRepository favoriteRepository;
+	private final AnnonceFlagRepository  annonceFlagRepository;
+	private final FavoriteRepository     favoriteRepository;
 	private final AnnonceAlertRepository annonceAlertRepository;
-	private final GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), SRID);
+	private final AnnonceMapper          annonceMapper;
+	private final GeometryFactory        geometryFactory =
+			new GeometryFactory(new PrecisionModel(), SRID);
 
 	@Transactional
 	public AnnonceResponse create(AnnonceRequest request, UUID sellerId) {
 		Annonce annonce = Annonce.builder()
-				.title(request.getTitle())
-				.description(request.getDescription())
-				.breed(request.getBreed())
-				.estimatedWeight(request.getEstimatedWeight())
-				.price(request.getPrice())
-				.priceNegotiable(request.getPriceNegotiable())
-				.region(request.getRegion())
-				.gender(request.getGender())
-				.birthDate(request.getBirthDate())
-				.ageMonths(request.getAgeMonths())
-				.addressLabel(request.getAddressLabel())
-				.deliveryAvailable(request.getDeliveryAvailable())
-				.deliveryRadiusKm(request.getDeliveryRadiusKm())
-				.deliveryPrice(request.getDeliveryPrice())
-				.location(buildPoint(request.getLatitude(), request.getLongitude()))
+				.title(request.title())
+				.description(request.description())
+				.breed(request.breed())
+				.estimatedWeight(request.estimatedWeight())
+				.price(request.price())
+				.priceNegotiable(request.priceNegotiable())
+				.region(request.region())
+				.gender(request.gender())
+				.birthDate(request.birthDate())
+				.ageMonths(request.ageMonths())
+				.addressLabel(request.addressLabel())
+				.deliveryAvailable(request.deliveryAvailable())
+				.deliveryRadiusKm(request.deliveryRadiusKm())
+				.deliveryPrice(request.deliveryPrice())
+				.location(buildPoint(request.latitude(), request.longitude()))
 				.sellerId(sellerId)
 				.status(AnnonceStatus.ACTIVE)
 				.build();
 
 		Annonce saved = annonceRepository.save(annonce);
 		notifyMatchingAlerts(saved);
-		return AnnonceMapper.toResponse(saved);
+		return annonceMapper.toResponse(saved);
 	}
 
 	@Transactional
 	public AnnonceResponse update(UUID id, AnnonceRequest request, UUID sellerId) {
 		Annonce annonce = findOwnedOrThrow(id, sellerId);
 
-		annonce.setTitle(request.getTitle());
-		annonce.setDescription(request.getDescription());
-		annonce.setBreed(request.getBreed());
-		annonce.setEstimatedWeight(request.getEstimatedWeight());
-		annonce.setPrice(request.getPrice());
-		annonce.setPriceNegotiable(request.getPriceNegotiable());
-		annonce.setRegion(request.getRegion());
-		annonce.setGender(request.getGender());
-		annonce.setBirthDate(request.getBirthDate());
-		annonce.setAgeMonths(request.getAgeMonths());
-		annonce.setAddressLabel(request.getAddressLabel());
-		annonce.setDeliveryAvailable(request.getDeliveryAvailable());
-		annonce.setDeliveryRadiusKm(request.getDeliveryRadiusKm());
-		annonce.setDeliveryPrice(request.getDeliveryPrice());
-		annonce.setLocation(buildPoint(request.getLatitude(), request.getLongitude()));
+		annonce.setTitle(request.title());
+		annonce.setDescription(request.description());
+		annonce.setBreed(request.breed());
+		annonce.setEstimatedWeight(request.estimatedWeight());
+		annonce.setPrice(request.price());
+		annonce.setPriceNegotiable(request.priceNegotiable());
+		annonce.setRegion(request.region());
+		annonce.setGender(request.gender());
+		annonce.setBirthDate(request.birthDate());
+		annonce.setAgeMonths(request.ageMonths());
+		annonce.setAddressLabel(request.addressLabel());
+		annonce.setDeliveryAvailable(request.deliveryAvailable());
+		annonce.setDeliveryRadiusKm(request.deliveryRadiusKm());
+		annonce.setDeliveryPrice(request.deliveryPrice());
+		annonce.setLocation(buildPoint(request.latitude(), request.longitude()));
 
-		return AnnonceMapper.toResponse(annonceRepository.save(annonce));
+		return annonceMapper.toResponse(annonceRepository.save(annonce));
 	}
 
 	@Transactional
 	public void delete(UUID id, UUID sellerId) {
-		Annonce annonce = findOwnedOrThrow(id, sellerId);
-		annonceRepository.delete(annonce);
+		annonceRepository.delete(findOwnedOrThrow(id, sellerId));
 	}
 
 	@Transactional(readOnly = true)
 	public AnnonceResponse findById(UUID id) {
-		return AnnonceMapper.toResponse(findOrThrow(id));
+		return annonceMapper.toResponse(findOrThrow(id));
 	}
 
 	@Transactional(readOnly = true)
 	public Page<AnnonceResponse> search(AnnonceSearchRequest request, Pageable pageable) {
-		if (request.getLatitude() != null && request.getLongitude() != null && request.getRadiusKm() != null) {
+		if (request.latitude() != null && request.longitude() != null && request.radiusKm() != null) {
 			return annonceRepository.findNearby(
-					request.getLatitude(),
-					request.getLongitude(),
-					request.getRadiusKm() * METERS_PER_KM,
+					request.latitude(),
+					request.longitude(),
+					request.radiusKm() * METERS_PER_KM,
 					pageable
-			).map(AnnonceMapper::toResponse);
+			).map(annonceMapper::toResponse);
 		}
 		return annonceRepository.findAll(AnnonceSpecification.from(request), pageable)
-				.map(AnnonceMapper::toResponse);
+				.map(annonceMapper::toResponse);
 	}
 
 	@Transactional(readOnly = true)
 	public Page<AnnonceResponse> findBySeller(UUID sellerId, Pageable pageable) {
 		return annonceRepository.findBySellerId(sellerId, pageable)
-				.map(AnnonceMapper::toResponse);
+				.map(annonceMapper::toResponse);
 	}
 
 	@Transactional
 	public AnnonceResponse suspend(UUID id, UUID sellerId) {
 		Annonce annonce = findOwnedOrThrow(id, sellerId);
 		annonce.setStatus(AnnonceStatus.SUSPENDED);
-		return AnnonceMapper.toResponse(annonceRepository.save(annonce));
+		return annonceMapper.toResponse(annonceRepository.save(annonce));
 	}
 
 	@Transactional
@@ -132,14 +126,14 @@ public class AnnonceService {
 		Annonce annonce = findOwnedOrThrow(id, sellerId);
 		annonce.setStatus(AnnonceStatus.ACTIVE);
 		annonce.setExpiresAt(LocalDateTime.now().plusDays(AnnonceConstants.DEFAULT_EXPIRY_DAYS));
-		return AnnonceMapper.toResponse(annonceRepository.save(annonce));
+		return annonceMapper.toResponse(annonceRepository.save(annonce));
 	}
 
 	@Transactional
 	public AnnonceResponse markAsSold(UUID id, UUID sellerId) {
 		Annonce annonce = findOwnedOrThrow(id, sellerId);
 		annonce.setStatus(AnnonceStatus.SOLD);
-		return AnnonceMapper.toResponse(annonceRepository.save(annonce));
+		return annonceMapper.toResponse(annonceRepository.save(annonce));
 	}
 
 	@Transactional
@@ -147,7 +141,7 @@ public class AnnonceService {
 		Annonce annonce = findOwnedOrThrow(id, sellerId);
 		annonce.setIsTopLot(true);
 		annonce.setTopLotExpiresAt(LocalDateTime.now().plusDays(durationDays));
-		return AnnonceMapper.toResponse(annonceRepository.save(annonce));
+		return annonceMapper.toResponse(annonceRepository.save(annonce));
 	}
 
 	@Transactional
@@ -158,15 +152,13 @@ public class AnnonceService {
 
 		Annonce annonce = findOrThrow(annonceId);
 
-		AnnonceFlag flag = AnnonceFlag.builder()
+		annonceFlagRepository.save(AnnonceFlag.builder()
 				.annonce(annonce)
 				.reporterId(reporterId)
-				.reason(request.getReason())
-				.comment(request.getComment())
+				.reason(request.reason())
+				.comment(request.comment())
 				.status(FlagStatus.PENDING)
-				.build();
-
-		annonceFlagRepository.save(flag);
+				.build());
 
 		long pendingCount = annonceFlagRepository.countByAnnonceIdAndStatus(annonceId, FlagStatus.PENDING);
 		if (pendingCount >= AnnonceConstants.AUTO_SUSPEND_FLAG_THRESHOLD) {
@@ -181,11 +173,10 @@ public class AnnonceService {
 		if (favoriteRepository.existsByBuyerIdAndAnnonceId(buyerId, annonceId)) {
 			throw new IllegalStateException("annonce.favorite.already.added");
 		}
-		Favorite favorite = Favorite.builder()
+		favoriteRepository.save(Favorite.builder()
 				.buyerId(buyerId)
 				.annonce(findOrThrow(annonceId))
-				.build();
-		favoriteRepository.save(favorite);
+				.build());
 	}
 
 	@Transactional
@@ -196,22 +187,20 @@ public class AnnonceService {
 	@Transactional(readOnly = true)
 	public Page<AnnonceResponse> findFavorites(UUID buyerId, Pageable pageable) {
 		return favoriteRepository.findByBuyerId(buyerId, pageable)
-				.map(fav -> AnnonceMapper.toResponse(fav.getAnnonce()));
+				.map(fav -> annonceMapper.toResponse(fav.getAnnonce()));
 	}
 
 	@Transactional
 	public AnnonceAlert createAlert(UUID buyerId, AnnonceAlertRequest request) {
-		return annonceAlertRepository.save(
-				AnnonceAlert.builder()
-						.buyerId(buyerId)
-						.breed(request.getBreed())
-						.region(request.getRegion())
-						.radiusKm(request.getRadiusKm())
-						.maxPrice(request.getMaxPrice())
-						.minAgeMonths(request.getMinAgeMonths())
-						.active(true)
-						.build()
-		);
+		return annonceAlertRepository.save(AnnonceAlert.builder()
+				.buyerId(buyerId)
+				.breed(request.breed())
+				.region(request.region())
+				.radiusKm(request.radiusKm())
+				.maxPrice(request.maxPrice())
+				.minAgeMonths(request.minAgeMonths())
+				.active(true)
+				.build());
 	}
 
 	@Transactional
@@ -225,8 +214,7 @@ public class AnnonceService {
 	}
 
 	private void notifyMatchingAlerts(Annonce annonce) {
-		List<AnnonceAlert> alerts = annonceAlertRepository.findByActiveTrue();
-		long matchCount = alerts.stream().filter(a -> a.matches(annonce)).count();
+		long matchCount = annonceAlertRepository.countMatchingAlerts(annonce);
 		if (matchCount > 0) {
 			log.info("annonce.alerts.matched annonceId={} count={}", annonce.getId(), matchCount);
 		}

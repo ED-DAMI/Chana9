@@ -22,15 +22,25 @@ databaseChangeLog:
               - column:
                   name: full_name
                   type: varchar(100)
+                  constraints:
+                    nullable: false
               - column:
                   name: role
                   type: varchar(20)
                   constraints:
                     nullable: false
               - column:
+                  name: password_hash
+                  type: varchar(255)
+              - column:
                   name: kyc_verified
                   type: boolean
                   defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: kyc_submitted_at
+                  type: timestamp
               - column:
                   name: kyc_cin
                   type: varchar(20)
@@ -50,14 +60,23 @@ databaseChangeLog:
                   name: is_active
                   type: boolean
                   defaultValueBoolean: true
+                  constraints:
+                    nullable: false
               - column:
                   name: created_at
                   type: timestamp
                   defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
               - column:
                   name: updated_at
                   type: timestamp
                   defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+      rollback:
+        - dropTable:
+            tableName: users
 
   - changeSet:
       id: 001-add-check-constraint-users-role

@@ -2,49 +2,31 @@ package ma.chana9.modules.annonce.dto;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
-import lombok.*;
 import ma.chana9.shared.enums.AnimalGender;
 
 import java.math.BigDecimal;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class AnnonceSearchRequest {
+public record AnnonceSearchRequest(
+        String breed,
+        String region,
 
-    private String breed;
-    private String region;
+        @DecimalMin("0.0") BigDecimal minPrice,
+        @DecimalMin("0.0") BigDecimal maxPrice,
+        @DecimalMin("0.0") BigDecimal minWeight,
+        @DecimalMin("0.0") BigDecimal maxWeight,
 
-    @DecimalMin("0.0")
-    private BigDecimal minPrice;
+        AnimalGender gender,
 
-    @DecimalMin("0.0")
-    private BigDecimal maxPrice;
+        @Min(0) Integer minAgeMonths,
+        @Min(0) Integer maxAgeMonths,
 
-    @DecimalMin("0.0")
-    private BigDecimal minWeight;
+        Boolean deliveryAvailable,
+        Boolean priceNegotiable,
+        Boolean eligibleForAid,
+        Boolean topLotOnly,
 
-    @DecimalMin("0.0")
-    private BigDecimal maxWeight;
+        Double latitude,
+        Double longitude,
 
-    private AnimalGender gender;
-
-    @Min(0)
-    private Integer minAgeMonths;
-
-    @Min(0)
-    private Integer maxAgeMonths;
-
-    private Boolean deliveryAvailable;
-    private Boolean priceNegotiable;
-    private Boolean eligibleForAid;
-    private Boolean topLotOnly;
-
-    private Double latitude;
-    private Double longitude;
-
-    @Min(1)
-    private Integer radiusKm;
-}
+        @Min(1) Integer radiusKm
+) {}

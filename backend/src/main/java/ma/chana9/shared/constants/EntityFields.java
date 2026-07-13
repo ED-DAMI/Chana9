@@ -15,7 +15,7 @@ public class EntityFields {
 
     @UtilityClass
     public static class User {
-        public static final String PHONE = "phone";
+        public static final String PHONE = "Phone";
         public static final String FULL_NAME = "fullName";
         public static final String ROLE = "role";
         public static final String KYC_VERIFIED = "kycVerified";

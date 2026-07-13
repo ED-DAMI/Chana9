@@ -108,30 +108,4 @@ public class Annonce {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    public boolean isEligibleForAid() {
-        if (birthDate != null) {
-            return birthDate.isBefore(LocalDate.now().minusMonths(12));
-        }
-        return ageMonths != null && ageMonths >= 12;
-    }
-
-    public Integer getEffectiveAgeMonths() {
-        if (birthDate != null) {
-            return (int) ChronoUnit.MONTHS.between(birthDate, LocalDate.now());
-        }
-        return ageMonths;
-    }
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-        if (status == null) status = AnnonceStatus.ACTIVE;
-        if (expiresAt == null) expiresAt = createdAt.plusDays(30);
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
 }

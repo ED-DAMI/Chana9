@@ -21,9 +21,6 @@ databaseChangeLog:
       file: db/changelog/007-notifications.yaml
       relativeToChangelogFile: false
   - include:
-      file: db/changelog/010-seed-admin.yaml
-      relativeToChangelogFile: false
-  - include:
       file: db/changelog/011-refresh-tokens.yaml
       relativeToChangelogFile: false
   - include:

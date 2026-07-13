@@ -55,9 +55,4 @@ public class AnnonceReport {
     @Column(name = "traite_par")
     private UUID processedBy;
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        if (status == null) status = ReportStatus.PENDING;
-    }
 }

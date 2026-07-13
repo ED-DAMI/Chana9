@@ -16,7 +16,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class AnnonceResponse {
-
     private UUID id;
     private String title;
     private String description;

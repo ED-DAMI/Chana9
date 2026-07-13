@@ -1,26 +1,19 @@
 package ma.chana9.modules.user.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import ma.chana9.shared.enums.Role;
+
+import java.time.LocalDateTime;
 import java.util.UUID;
 
-import lombok.Builder;
-import lombok.Data;
-import ma.chana9.modules.user.User;
-
-@Data
-@Builder
-public class UserDTO {
-    private UUID id;
-    private String phone;
-    private String fullName;
-    private String role;
-    private boolean kycVerified;
-    public static UserDTO from(User user) {
-        return UserDTO.builder()
-                .id(user.getId())
-                .phone(user.getPhone())
-                .fullName(user.getFullName())
-                .role(user.getRole() != null ? user.getRole().name() : null)
-                .kycVerified(user.isKycVerified())
-                .build();
-    }
-}
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public record UserDTO(
+        UUID id,
+        String phone,
+        String fullName,
+        Role role,
+        boolean kycVerified,
+        LocalDateTime kycSubmittedAt,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt
+) {}

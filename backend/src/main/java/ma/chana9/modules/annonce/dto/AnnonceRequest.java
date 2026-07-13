@@ -1,60 +1,50 @@
 package ma.chana9.modules.annonce.dto;
 
 import jakarta.validation.constraints.*;
-import lombok.*;
 import ma.chana9.shared.enums.AnimalGender;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class AnnonceRequest {
+public record AnnonceRequest(
 
-    @NotBlank
-    @Size(max = 200)
-    private String title;
+        @NotBlank @Size(max = 200)
+        String title,
 
-    private String description;
+        String description,
 
-    @NotBlank
-    @Size(max = 100)
-    private String breed;
+        @NotBlank @Size(max = 100)
+        String breed,
 
-    @DecimalMin("0.0")
-    private BigDecimal estimatedWeight;
+        @DecimalMin("0.0")
+        BigDecimal estimatedWeight,
 
-    @NotNull
-    @DecimalMin("0.01")
-    private BigDecimal price;
+        @NotNull @DecimalMin("0.01")
+        BigDecimal price,
 
-    private Boolean priceNegotiable;
+        Boolean priceNegotiable,
 
-    @NotBlank
-    @Size(max = 100)
-    private String region;
+        @NotBlank @Size(max = 100)
+        String region,
 
-    private AnimalGender gender;
+        AnimalGender gender,
 
-    private LocalDate birthDate;
+        LocalDate birthDate,
 
-    @Min(0)
-    private Integer ageMonths;
+        @Min(0)
+        Integer ageMonths,
 
-    private Double latitude;
-    private Double longitude;
+        Double latitude,
+        Double longitude,
 
-    @Size(max = 255)
-    private String addressLabel;
+        @Size(max = 255)
+        String addressLabel,
 
-    private Boolean deliveryAvailable;
+        Boolean deliveryAvailable,
 
-    @Min(0)
-    private Integer deliveryRadiusKm;
+        @Min(0)
+        Integer deliveryRadiusKm,
 
-    @DecimalMin("0.0")
-    private BigDecimal deliveryPrice;
-}
+        @DecimalMin("0.0")
+        BigDecimal deliveryPrice
+) {}

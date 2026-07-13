@@ -55,9 +55,5 @@ public class AnnonceFlag {
     @Column(name = "traite_par")
     private UUID reviewedBy;
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        if (status == null) status = FlagStatus.PENDING;
-    }
+
 }

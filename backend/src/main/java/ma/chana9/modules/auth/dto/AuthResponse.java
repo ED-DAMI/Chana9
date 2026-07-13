@@ -1,35 +1,21 @@
 package ma.chana9.modules.auth.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import ma.chana9.modules.user.dto.UserDTO;
 
-@Getter
-@Setter
-@Data
 @Builder
-public class AuthResponse {
-
-    private final String message;
-    private final String accessToken;
-    private final String refreshToken;
-    private final UserDTO user;
-    private final long accessTokenExpiresIn;
-    private final long refreshTokenExpiresIn;
-
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public record AuthResponse(
+        String accessToken,
+        String refreshToken,
+        Long accessTokenExpiresIn,
+        Long refreshTokenExpiresIn,
+        UserDTO user,
+        String message
+) {
     public static AuthResponse message(String message) {
-        return AuthResponse.builder().message(message).build();
+        return new AuthResponse(null, null, null, null, null, message);
     }
 
-    public static AuthResponse of(String accessToken, String refreshToken, UserDTO user, long accessTokenExpiresIn, long refreshTokenExpiresIn) {
-        return AuthResponse.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .user(user)
-                .accessTokenExpiresIn(accessTokenExpiresIn)
-                .refreshTokenExpiresIn(refreshTokenExpiresIn)
-                .build();
-    }
 }
