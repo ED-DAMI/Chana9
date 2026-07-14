@@ -1,9 +1,14 @@
+import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:ma_chana9_app/features/auth/domain/entities/user.dart';
+import 'package:ma_chana9_app/features/auth/data/models/user_model.dart';
 
 class TokenStorage {
   final FlutterSecureStorage _storage;
+
   static const String _accessTokenKey = 'access_token';
   static const String _refreshTokenKey = 'refresh_token';
+  static const String _cachedUserKey = 'cached_user';
 
   TokenStorage(this._storage);
 
@@ -17,6 +22,30 @@ class TokenStorage {
     }
   }
 
+  Future<void> saveUser(User user) async {
+    final userModel = UserModel(
+      id: user.id,
+      phone: user.phone,
+      fullName: user.fullName,
+      role: user.role,
+      kycVerified: user.kycVerified,
+      kycSubmittedAt: user.kycSubmittedAt,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    );
+    await _storage.write(
+      key: _cachedUserKey,
+      value: jsonEncode(userModel.toJson()),
+    );
+  }
+
+  Future<User?> getCachedUser() async {
+    final raw = await _storage.read(key: _cachedUserKey);
+    if (raw == null) return null;
+    return UserModel.fromJson(jsonDecode(raw) as Map<String, dynamic>)
+        .toEntity();
+  }
+
   Future<String?> getAccessToken() =>
       _storage.read(key: _accessTokenKey);
 
@@ -24,8 +53,7 @@ class TokenStorage {
       _storage.read(key: _refreshTokenKey);
 
   Future<void> clearTokens() async {
-    await _storage.delete(key: _accessTokenKey);
-    await _storage.delete(key: _refreshTokenKey);
+    await _storage.deleteAll();
   }
 
   Future<bool> hasToken() async {
