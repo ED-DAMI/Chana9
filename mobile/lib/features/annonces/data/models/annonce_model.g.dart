@@ -46,8 +46,12 @@ _AnnonceModel _$AnnonceModelFromJson(Map<String, dynamic> json) =>
               )
               .toList() ??
           const [],
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
+      createdAt: json['createdAt'] == null
+          ? null
+          : DateTime.parse(json['createdAt'] as String),
+      updatedAt: json['updatedAt'] == null
+          ? null
+          : DateTime.parse(json['updatedAt'] as String),
     );
 
 Map<String, dynamic> _$AnnonceModelToJson(_AnnonceModel instance) =>
@@ -78,8 +82,8 @@ Map<String, dynamic> _$AnnonceModelToJson(_AnnonceModel instance) =>
       'expiresAt': instance.expiresAt?.toIso8601String(),
       'sellerId': instance.sellerId,
       'medias': instance.medias,
-      'createdAt': instance.createdAt.toIso8601String(),
-      'updatedAt': instance.updatedAt.toIso8601String(),
+      'createdAt': instance.createdAt?.toIso8601String(),
+      'updatedAt': instance.updatedAt?.toIso8601String(),
     };
 
 const _$AnnonceStatusEnumMap = {

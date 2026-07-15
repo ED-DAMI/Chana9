@@ -83,9 +83,9 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
       'deliveryAvailable': _deliveryAvailable,
       if (_deliveryAvailable) ...{
         'deliveryRadiusKm':
-            int.tryParse(_deliveryRadiusController.text),
+        int.tryParse(_deliveryRadiusController.text),
         'deliveryPrice':
-            double.tryParse(_deliveryPriceController.text),
+        double.tryParse(_deliveryPriceController.text),
       },
       if (_gender != null) 'gender': _gender!.name,
     };
@@ -140,14 +140,14 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
                 controller: _titleController,
                 label: 'Titre *',
                 validator: (v) =>
-                    v == null || v.trim().isEmpty ? 'Titre requis' : null,
+                v == null || v.trim().isEmpty ? 'Titre requis' : null,
               ),
               const SizedBox(height: 16),
               _FormField(
                 controller: _breedController,
                 label: 'Race *',
                 validator: (v) =>
-                    v == null || v.trim().isEmpty ? 'Race requise' : null,
+                v == null || v.trim().isEmpty ? 'Race requise' : null,
               ),
               const SizedBox(height: 16),
               _FormField(
@@ -164,7 +164,7 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
                       label: 'Prix (MAD) *',
                       keyboardType: TextInputType.number,
                       validator: (v) =>
-                          double.tryParse(v ?? '') == null ? 'Prix invalide' : null,
+                      double.tryParse(v ?? '') == null ? 'Prix invalide' : null,
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -182,7 +182,7 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
                 controller: _regionController,
                 label: 'Région *',
                 validator: (v) =>
-                    v == null || v.trim().isEmpty ? 'Région requise' : null,
+                v == null || v.trim().isEmpty ? 'Région requise' : null,
               ),
               const SizedBox(height: 16),
               Text('Genre',
@@ -254,11 +254,11 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
                         minimumSize: const Size.fromHeight(52)),
                     child: isLoading
                         ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
-                                strokeWidth: 2, color: Colors.white),
-                          )
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                          strokeWidth: 2, color: Colors.white),
+                    )
                         : Text(_isEditing ? 'Enregistrer' : 'Publier'),
                   );
                 },

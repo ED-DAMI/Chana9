@@ -90,22 +90,22 @@ class _AnnonceDetailView extends StatelessWidget {
             flexibleSpace: FlexibleSpaceBar(
               background: annonce.medias.isNotEmpty
                   ? PageView.builder(
-                      itemCount: annonce.medias.length,
-                      itemBuilder: (_, index) => Image.network(
-                        annonce.medias[index].url,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => Container(
-                          color: Colors.grey.shade200,
-                          child: const Icon(Icons.broken_image_outlined,
-                              size: 64, color: Colors.grey),
-                        ),
-                      ),
-                    )
+                itemCount: annonce.medias.length,
+                itemBuilder: (_, index) => Image.network(
+                  annonce.medias[index].url,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => Container(
+                    color: Colors.grey.shade200,
+                    child: const Icon(Icons.broken_image_outlined,
+                        size: 64, color: Colors.grey),
+                  ),
+                ),
+              )
                   : Container(
-                      color: Colors.grey.shade200,
-                      child: const Icon(Icons.image_not_supported_outlined,
-                          size: 64, color: Colors.grey),
-                    ),
+                color: Colors.grey.shade200,
+                child: const Icon(Icons.image_not_supported_outlined,
+                    size: 64, color: Colors.grey),
+              ),
             ),
             actions: [
               IconButton(
@@ -207,7 +207,7 @@ class _AnnonceDetailView extends StatelessWidget {
                         icon: Icons.local_shipping_outlined,
                         label: 'Livraison',
                         value:
-                            'Disponible${annonce.deliveryRadiusKm != null ? ' (${annonce.deliveryRadiusKm} km)' : ''}${annonce.deliveryPrice != null ? ' — ${annonce.deliveryPrice} MAD' : ''}'),
+                        'Disponible${annonce.deliveryRadiusKm != null ? ' (${annonce.deliveryRadiusKm} km)' : ''}${annonce.deliveryPrice != null ? ' — ${annonce.deliveryPrice} MAD' : ''}'),
                   if (annonce.eligibleForAid)
                     _InfoRow(
                         icon: Icons.verified_outlined,

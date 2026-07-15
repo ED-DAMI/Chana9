@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AnnonceModel {
 
- String get id; String get title; String? get description; String get breed; double? get estimatedWeight; double get price; bool get priceNegotiable; String get region; AnnonceStatus get status; AnimalGender? get gender; DateTime? get birthDate; int? get ageMonths; int? get effectiveAgeMonths; bool get eligibleForAid; String? get addressLabel; double? get latitude; double? get longitude; double? get distanceKm; bool get deliveryAvailable; int? get deliveryRadiusKm; double? get deliveryPrice; bool get isTopLot; DateTime? get topLotExpiresAt; DateTime? get expiresAt; String get sellerId; List<AnnonceMediaModel> get medias; DateTime get createdAt; DateTime get updatedAt;
+ String get id; String get title; String? get description; String get breed; double? get estimatedWeight; double get price; bool get priceNegotiable; String get region; AnnonceStatus get status; AnimalGender? get gender; DateTime? get birthDate; int? get ageMonths; int? get effectiveAgeMonths; bool get eligibleForAid; String? get addressLabel; double? get latitude; double? get longitude; double? get distanceKm; bool get deliveryAvailable; int? get deliveryRadiusKm; double? get deliveryPrice; bool get isTopLot; DateTime? get topLotExpiresAt; DateTime? get expiresAt; String get sellerId; List<AnnonceMediaModel> get medias; DateTime? get createdAt; DateTime? get updatedAt;
 /// Create a copy of AnnonceModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $AnnonceModelCopyWith<$Res>  {
   factory $AnnonceModelCopyWith(AnnonceModel value, $Res Function(AnnonceModel) _then) = _$AnnonceModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, String? description, String breed, double? estimatedWeight, double price, bool priceNegotiable, String region, AnnonceStatus status, AnimalGender? gender, DateTime? birthDate, int? ageMonths, int? effectiveAgeMonths, bool eligibleForAid, String? addressLabel, double? latitude, double? longitude, double? distanceKm, bool deliveryAvailable, int? deliveryRadiusKm, double? deliveryPrice, bool isTopLot, DateTime? topLotExpiresAt, DateTime? expiresAt, String sellerId, List<AnnonceMediaModel> medias, DateTime createdAt, DateTime updatedAt
+ String id, String title, String? description, String breed, double? estimatedWeight, double price, bool priceNegotiable, String region, AnnonceStatus status, AnimalGender? gender, DateTime? birthDate, int? ageMonths, int? effectiveAgeMonths, bool eligibleForAid, String? addressLabel, double? latitude, double? longitude, double? distanceKm, bool deliveryAvailable, int? deliveryRadiusKm, double? deliveryPrice, bool isTopLot, DateTime? topLotExpiresAt, DateTime? expiresAt, String sellerId, List<AnnonceMediaModel> medias, DateTime? createdAt, DateTime? updatedAt
 });
 
 
@@ -65,7 +65,7 @@ class _$AnnonceModelCopyWithImpl<$Res>
 
 /// Create a copy of AnnonceModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? description = freezed,Object? breed = null,Object? estimatedWeight = freezed,Object? price = null,Object? priceNegotiable = null,Object? region = null,Object? status = null,Object? gender = freezed,Object? birthDate = freezed,Object? ageMonths = freezed,Object? effectiveAgeMonths = freezed,Object? eligibleForAid = null,Object? addressLabel = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? distanceKm = freezed,Object? deliveryAvailable = null,Object? deliveryRadiusKm = freezed,Object? deliveryPrice = freezed,Object? isTopLot = null,Object? topLotExpiresAt = freezed,Object? expiresAt = freezed,Object? sellerId = null,Object? medias = null,Object? createdAt = null,Object? updatedAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? description = freezed,Object? breed = null,Object? estimatedWeight = freezed,Object? price = null,Object? priceNegotiable = null,Object? region = null,Object? status = null,Object? gender = freezed,Object? birthDate = freezed,Object? ageMonths = freezed,Object? effectiveAgeMonths = freezed,Object? eligibleForAid = null,Object? addressLabel = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? distanceKm = freezed,Object? deliveryAvailable = null,Object? deliveryRadiusKm = freezed,Object? deliveryPrice = freezed,Object? isTopLot = null,Object? topLotExpiresAt = freezed,Object? expiresAt = freezed,Object? sellerId = null,Object? medias = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -93,9 +93,9 @@ as bool,topLotExpiresAt: freezed == topLotExpiresAt ? _self.topLotExpiresAt : to
 as DateTime?,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,sellerId: null == sellerId ? _self.sellerId : sellerId // ignore: cast_nullable_to_non_nullable
 as String,medias: null == medias ? _self.medias : medias // ignore: cast_nullable_to_non_nullable
-as List<AnnonceMediaModel>,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime,
+as List<AnnonceMediaModel>,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 
@@ -180,7 +180,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String? description,  String breed,  double? estimatedWeight,  double price,  bool priceNegotiable,  String region,  AnnonceStatus status,  AnimalGender? gender,  DateTime? birthDate,  int? ageMonths,  int? effectiveAgeMonths,  bool eligibleForAid,  String? addressLabel,  double? latitude,  double? longitude,  double? distanceKm,  bool deliveryAvailable,  int? deliveryRadiusKm,  double? deliveryPrice,  bool isTopLot,  DateTime? topLotExpiresAt,  DateTime? expiresAt,  String sellerId,  List<AnnonceMediaModel> medias,  DateTime createdAt,  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String? description,  String breed,  double? estimatedWeight,  double price,  bool priceNegotiable,  String region,  AnnonceStatus status,  AnimalGender? gender,  DateTime? birthDate,  int? ageMonths,  int? effectiveAgeMonths,  bool eligibleForAid,  String? addressLabel,  double? latitude,  double? longitude,  double? distanceKm,  bool deliveryAvailable,  int? deliveryRadiusKm,  double? deliveryPrice,  bool isTopLot,  DateTime? topLotExpiresAt,  DateTime? expiresAt,  String sellerId,  List<AnnonceMediaModel> medias,  DateTime? createdAt,  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AnnonceModel() when $default != null:
 return $default(_that.id,_that.title,_that.description,_that.breed,_that.estimatedWeight,_that.price,_that.priceNegotiable,_that.region,_that.status,_that.gender,_that.birthDate,_that.ageMonths,_that.effectiveAgeMonths,_that.eligibleForAid,_that.addressLabel,_that.latitude,_that.longitude,_that.distanceKm,_that.deliveryAvailable,_that.deliveryRadiusKm,_that.deliveryPrice,_that.isTopLot,_that.topLotExpiresAt,_that.expiresAt,_that.sellerId,_that.medias,_that.createdAt,_that.updatedAt);case _:
@@ -201,7 +201,7 @@ return $default(_that.id,_that.title,_that.description,_that.breed,_that.estimat
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String? description,  String breed,  double? estimatedWeight,  double price,  bool priceNegotiable,  String region,  AnnonceStatus status,  AnimalGender? gender,  DateTime? birthDate,  int? ageMonths,  int? effectiveAgeMonths,  bool eligibleForAid,  String? addressLabel,  double? latitude,  double? longitude,  double? distanceKm,  bool deliveryAvailable,  int? deliveryRadiusKm,  double? deliveryPrice,  bool isTopLot,  DateTime? topLotExpiresAt,  DateTime? expiresAt,  String sellerId,  List<AnnonceMediaModel> medias,  DateTime createdAt,  DateTime updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String? description,  String breed,  double? estimatedWeight,  double price,  bool priceNegotiable,  String region,  AnnonceStatus status,  AnimalGender? gender,  DateTime? birthDate,  int? ageMonths,  int? effectiveAgeMonths,  bool eligibleForAid,  String? addressLabel,  double? latitude,  double? longitude,  double? distanceKm,  bool deliveryAvailable,  int? deliveryRadiusKm,  double? deliveryPrice,  bool isTopLot,  DateTime? topLotExpiresAt,  DateTime? expiresAt,  String sellerId,  List<AnnonceMediaModel> medias,  DateTime? createdAt,  DateTime? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _AnnonceModel():
 return $default(_that.id,_that.title,_that.description,_that.breed,_that.estimatedWeight,_that.price,_that.priceNegotiable,_that.region,_that.status,_that.gender,_that.birthDate,_that.ageMonths,_that.effectiveAgeMonths,_that.eligibleForAid,_that.addressLabel,_that.latitude,_that.longitude,_that.distanceKm,_that.deliveryAvailable,_that.deliveryRadiusKm,_that.deliveryPrice,_that.isTopLot,_that.topLotExpiresAt,_that.expiresAt,_that.sellerId,_that.medias,_that.createdAt,_that.updatedAt);case _:
@@ -221,7 +221,7 @@ return $default(_that.id,_that.title,_that.description,_that.breed,_that.estimat
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String? description,  String breed,  double? estimatedWeight,  double price,  bool priceNegotiable,  String region,  AnnonceStatus status,  AnimalGender? gender,  DateTime? birthDate,  int? ageMonths,  int? effectiveAgeMonths,  bool eligibleForAid,  String? addressLabel,  double? latitude,  double? longitude,  double? distanceKm,  bool deliveryAvailable,  int? deliveryRadiusKm,  double? deliveryPrice,  bool isTopLot,  DateTime? topLotExpiresAt,  DateTime? expiresAt,  String sellerId,  List<AnnonceMediaModel> medias,  DateTime createdAt,  DateTime updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String? description,  String breed,  double? estimatedWeight,  double price,  bool priceNegotiable,  String region,  AnnonceStatus status,  AnimalGender? gender,  DateTime? birthDate,  int? ageMonths,  int? effectiveAgeMonths,  bool eligibleForAid,  String? addressLabel,  double? latitude,  double? longitude,  double? distanceKm,  bool deliveryAvailable,  int? deliveryRadiusKm,  double? deliveryPrice,  bool isTopLot,  DateTime? topLotExpiresAt,  DateTime? expiresAt,  String sellerId,  List<AnnonceMediaModel> medias,  DateTime? createdAt,  DateTime? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _AnnonceModel() when $default != null:
 return $default(_that.id,_that.title,_that.description,_that.breed,_that.estimatedWeight,_that.price,_that.priceNegotiable,_that.region,_that.status,_that.gender,_that.birthDate,_that.ageMonths,_that.effectiveAgeMonths,_that.eligibleForAid,_that.addressLabel,_that.latitude,_that.longitude,_that.distanceKm,_that.deliveryAvailable,_that.deliveryRadiusKm,_that.deliveryPrice,_that.isTopLot,_that.topLotExpiresAt,_that.expiresAt,_that.sellerId,_that.medias,_that.createdAt,_that.updatedAt);case _:
@@ -236,7 +236,7 @@ return $default(_that.id,_that.title,_that.description,_that.breed,_that.estimat
 @JsonSerializable()
 
 class _AnnonceModel extends AnnonceModel {
-  const _AnnonceModel({required this.id, required this.title, this.description, required this.breed, this.estimatedWeight, required this.price, required this.priceNegotiable, required this.region, required this.status, this.gender, this.birthDate, this.ageMonths, this.effectiveAgeMonths, required this.eligibleForAid, this.addressLabel, this.latitude, this.longitude, this.distanceKm, required this.deliveryAvailable, this.deliveryRadiusKm, this.deliveryPrice, required this.isTopLot, this.topLotExpiresAt, this.expiresAt, required this.sellerId, final  List<AnnonceMediaModel> medias = const [], required this.createdAt, required this.updatedAt}): _medias = medias,super._();
+  const _AnnonceModel({required this.id, required this.title, this.description, required this.breed, this.estimatedWeight, required this.price, required this.priceNegotiable, required this.region, required this.status, this.gender, this.birthDate, this.ageMonths, this.effectiveAgeMonths, required this.eligibleForAid, this.addressLabel, this.latitude, this.longitude, this.distanceKm, required this.deliveryAvailable, this.deliveryRadiusKm, this.deliveryPrice, required this.isTopLot, this.topLotExpiresAt, this.expiresAt, required this.sellerId, final  List<AnnonceMediaModel> medias = const [], this.createdAt, this.updatedAt}): _medias = medias,super._();
   factory _AnnonceModel.fromJson(Map<String, dynamic> json) => _$AnnonceModelFromJson(json);
 
 @override final  String id;
@@ -271,8 +271,8 @@ class _AnnonceModel extends AnnonceModel {
   return EqualUnmodifiableListView(_medias);
 }
 
-@override final  DateTime createdAt;
-@override final  DateTime updatedAt;
+@override final  DateTime? createdAt;
+@override final  DateTime? updatedAt;
 
 /// Create a copy of AnnonceModel
 /// with the given fields replaced by the non-null parameter values.
@@ -307,7 +307,7 @@ abstract mixin class _$AnnonceModelCopyWith<$Res> implements $AnnonceModelCopyWi
   factory _$AnnonceModelCopyWith(_AnnonceModel value, $Res Function(_AnnonceModel) _then) = __$AnnonceModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, String? description, String breed, double? estimatedWeight, double price, bool priceNegotiable, String region, AnnonceStatus status, AnimalGender? gender, DateTime? birthDate, int? ageMonths, int? effectiveAgeMonths, bool eligibleForAid, String? addressLabel, double? latitude, double? longitude, double? distanceKm, bool deliveryAvailable, int? deliveryRadiusKm, double? deliveryPrice, bool isTopLot, DateTime? topLotExpiresAt, DateTime? expiresAt, String sellerId, List<AnnonceMediaModel> medias, DateTime createdAt, DateTime updatedAt
+ String id, String title, String? description, String breed, double? estimatedWeight, double price, bool priceNegotiable, String region, AnnonceStatus status, AnimalGender? gender, DateTime? birthDate, int? ageMonths, int? effectiveAgeMonths, bool eligibleForAid, String? addressLabel, double? latitude, double? longitude, double? distanceKm, bool deliveryAvailable, int? deliveryRadiusKm, double? deliveryPrice, bool isTopLot, DateTime? topLotExpiresAt, DateTime? expiresAt, String sellerId, List<AnnonceMediaModel> medias, DateTime? createdAt, DateTime? updatedAt
 });
 
 
@@ -324,7 +324,7 @@ class __$AnnonceModelCopyWithImpl<$Res>
 
 /// Create a copy of AnnonceModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? description = freezed,Object? breed = null,Object? estimatedWeight = freezed,Object? price = null,Object? priceNegotiable = null,Object? region = null,Object? status = null,Object? gender = freezed,Object? birthDate = freezed,Object? ageMonths = freezed,Object? effectiveAgeMonths = freezed,Object? eligibleForAid = null,Object? addressLabel = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? distanceKm = freezed,Object? deliveryAvailable = null,Object? deliveryRadiusKm = freezed,Object? deliveryPrice = freezed,Object? isTopLot = null,Object? topLotExpiresAt = freezed,Object? expiresAt = freezed,Object? sellerId = null,Object? medias = null,Object? createdAt = null,Object? updatedAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? description = freezed,Object? breed = null,Object? estimatedWeight = freezed,Object? price = null,Object? priceNegotiable = null,Object? region = null,Object? status = null,Object? gender = freezed,Object? birthDate = freezed,Object? ageMonths = freezed,Object? effectiveAgeMonths = freezed,Object? eligibleForAid = null,Object? addressLabel = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? distanceKm = freezed,Object? deliveryAvailable = null,Object? deliveryRadiusKm = freezed,Object? deliveryPrice = freezed,Object? isTopLot = null,Object? topLotExpiresAt = freezed,Object? expiresAt = freezed,Object? sellerId = null,Object? medias = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_AnnonceModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -352,9 +352,9 @@ as bool,topLotExpiresAt: freezed == topLotExpiresAt ? _self.topLotExpiresAt : to
 as DateTime?,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,sellerId: null == sellerId ? _self.sellerId : sellerId // ignore: cast_nullable_to_non_nullable
 as String,medias: null == medias ? _self._medias : medias // ignore: cast_nullable_to_non_nullable
-as List<AnnonceMediaModel>,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime,
+as List<AnnonceMediaModel>,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 

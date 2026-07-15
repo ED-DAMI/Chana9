@@ -12,6 +12,11 @@ spring:
     enabled: true
   messages:
     basename: messages
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 5MB
+      max-request-size: 20MB
 
 app:
   jwt:
@@ -28,3 +33,8 @@ app:
     retain-days: 90
   otp:
     expiration-minutes: ${OTP_EXPIRATION_MINUTES:5}
+storage:
+  root-dir: uploads
+  max-file-size-bytes: 5242880
+  thumbnail-width: 400
+  thumbnail-height: 400

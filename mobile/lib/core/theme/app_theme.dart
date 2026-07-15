@@ -1,33 +1,38 @@
+// lib/core/theme/app_theme.dart
+
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  static const Color green = Color(0xFF1E783C);
-  static const Color gold = Color(0xFFBE8C14);
-
-  static ThemeData get lightTheme {
-    final colorScheme = ColorScheme.fromSeed(
-      seedColor: green,
-      primary: green,
-      secondary: gold,
-      background: const Color(0xFFF8F5EF),
-    );
-
-    return ThemeData(
-      useMaterial3: true,
-      colorScheme: colorScheme,
-      scaffoldBackgroundColor: colorScheme.background,
-      appBarTheme: const AppBarTheme(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: false,
+  static ThemeData get lightTheme => ThemeData(
+    colorScheme: ColorScheme.fromSeed(
+      seedColor: const Color(0xFF2E7D32),
+      brightness: Brightness.light,
+    ),
+    useMaterial3: true,
+    fontFamily: 'Roboto',
+    appBarTheme: const AppBarTheme(
+      elevation: 0,
+      centerTitle: false,
+    ),
+    cardTheme: const CardThemeData(
+      elevation: 0,
+      margin: EdgeInsets.zero,
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
       ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: green,
-          foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: 12,
+        vertical: 14,
+      ),
+    ),
+    filledButtonTheme: FilledButtonThemeData(
+      style: FilledButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
         ),
       ),
-    );
-  }
+    ),
+  );
 }

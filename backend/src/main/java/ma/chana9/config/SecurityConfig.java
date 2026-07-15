@@ -52,6 +52,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, ApiPaths.Users.STATS).permitAll()
                         .requestMatchers(ApiPaths.Audit.BASE + "/**").hasRole(Role.ADMIN.name())
                         .requestMatchers(HttpMethod.PUT, ApiPaths.Users.BASE + "/admin/**").hasRole(Role.ADMIN.name())
+                        .requestMatchers(HttpMethod.GET, ApiPaths.Storage.BASE + "/**").permitAll()
                         .requestMatchers(HttpMethod.POST, ApiPaths.Sequestres.BASE + "/admin/**").hasRole(Role.ADMIN.name())
                         .anyRequest().authenticated()
                 )

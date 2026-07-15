@@ -27,11 +27,20 @@ public class AnnonceMedia {
     @Column(nullable = false, length = 512)
     private String url;
 
-    @Column(name = "\"order\"")
+    @Column(name = "original_filename", length = 255)
+    private String originalFilename;
+
+    @Column(name = "content_type", length = 50)
+    private String contentType;
+
+    @Column(name = "size_bytes")
+    private Long sizeBytes;
+
+    @Column(name = "media_order")
     @Builder.Default
     private Integer order = 0;
 
-    @Column(name = "is_cover")
+    @Column(name = "is_cover", nullable = false)
     @Builder.Default
     private Boolean isCover = false;
 
@@ -39,8 +48,11 @@ public class AnnonceMedia {
     @Column(length = 10)
     private MediaFormat format;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-
+    @PrePersist
+    void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
 }

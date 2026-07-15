@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/models/annonce_search_request_model.dart';
 import '../bloc/annonce_bloc.dart';
-import '../widgets/annonce_card.dart';
+import '../widgets/annonce_post_card.dart';
 import '../widgets/annonce_filter_sheet.dart';
-import 'annonce_detail_page.dart';
+import 'package:go_router/go_router.dart';
+
 
 class AnnonceListPage extends StatefulWidget {
   const AnnonceListPage({super.key});
@@ -17,12 +18,13 @@ class _AnnonceListPageState extends State<AnnonceListPage> {
   var _currentFilter = const AnnonceSearchRequestModel();
   final _scrollController = ScrollController();
   int _currentPage = 0;
-  static const int _pageSize = 20;
+  bool _isFetchingMore = false;
+  static const int _pageSize = 10;
 
   @override
   void initState() {
     super.initState();
-    _loadAnnonces();
+    _loadAnnonces(reset: true);
     _scrollController.addListener(_onScroll);
   }
 
@@ -43,12 +45,16 @@ class _AnnonceListPageState extends State<AnnonceListPage> {
 
   void _onScroll() {
     if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 200) {
+            _scrollController.position.maxScrollExtent - 300 &&
+        !_isFetchingMore) {
       final state = context.read<AnnonceBloc>().state;
       state.maybeWhen(
         annonceListLoaded: (data) {
           if (!data.last) {
-            _currentPage++;
+            setState(() {
+              _isFetchingMore = true;
+              _currentPage++;
+            });
             _loadAnnonces();
           }
         },
@@ -65,7 +71,10 @@ class _AnnonceListPageState extends State<AnnonceListPage> {
       builder: (_) => AnnonceFilterSheet(
         initialFilter: _currentFilter,
         onApply: (filter) {
-          setState(() => _currentFilter = filter);
+          setState(() {
+            _currentFilter = filter;
+            _isFetchingMore = false;
+          });
           _loadAnnonces(reset: true);
         },
       ),
@@ -74,73 +83,113 @@ class _AnnonceListPageState extends State<AnnonceListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
-        title: const Text('Annonces'),
+        backgroundColor: Colors.white,
+        elevation: 1,
+        title: Row(
+          children: [
+            Text(
+              'Chana9',
+              style: TextStyle(
+                color: theme.colorScheme.primary,
+                fontWeight: FontWeight.bold,
+                fontSize: 22,
+              ),
+            ),
+          ],
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.tune),
             onPressed: _openFilterSheet,
             tooltip: 'Filtres',
           ),
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: _openFilterSheet,
+            tooltip: 'Rechercher',
+          ),
         ],
       ),
-      body: BlocBuilder<AnnonceBloc, AnnonceState>(
+      body: BlocConsumer<AnnonceBloc, AnnonceState>(
+        listener: (context, state) {
+          state.maybeWhen(
+            annonceListLoaded: (_) =>
+                setState(() => _isFetchingMore = false),
+            failure: (_) => setState(() => _isFetchingMore = false),
+            orElse: () {},
+          );
+        },
         builder: (context, state) {
-          return state.when(
+          return state.maybeWhen(
             initial: () => const SizedBox.shrink(),
             loading: () => const Center(child: CircularProgressIndicator()),
             annonceListLoaded: (data) {
               if (data.content.isEmpty) {
-                return const Center(
-                  child: Text('Aucune annonce trouvée.'),
-                );
-              }
-              return RefreshIndicator(
-                onRefresh: () async => _loadAnnonces(reset: true),
-                child: GridView.builder(
-                  controller: _scrollController,
-                  padding: const EdgeInsets.all(12),
-                  gridDelegate:
-                      const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                    childAspectRatio: 0.72,
-                  ),
-                  itemCount: data.content.length,
-                  itemBuilder: (context, index) {
-                    final annonce = data.content[index];
-                    return AnnonceCard(
-                      annonce: annonce,
-                      onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => BlocProvider.value(
-                            value: context.read<AnnonceBloc>(),
-                            child: AnnonceDetailPage(annonceId: annonce.id),
-                          ),
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('🐑',
+                          style: TextStyle(fontSize: 64)),
+                      const SizedBox(height: 16),
+                      Text(
+                        'Aucune annonce trouvée',
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          color: Colors.grey,
                         ),
                       ),
-                      onFavoriteToggle: () => context
-                          .read<AnnonceBloc>()
-                          .add(AnnonceEvent.addFavorite(annonce.id)),
+                      const SizedBox(height: 12),
+                      TextButton(
+                        onPressed: () => _loadAnnonces(reset: true),
+                        child: const Text('Réessayer'),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
+              return RefreshIndicator(
+                onRefresh: () async {
+                  setState(() => _isFetchingMore = false);
+                  _loadAnnonces(reset: true);
+                },
+                child: ListView.builder(
+                  controller: _scrollController,
+                  itemCount: data.content.length + (_isFetchingMore ? 1 : 0),
+                  itemBuilder: (context, index) {
+                    // Loader en bas de liste
+                    if (index == data.content.length) {
+                      return const Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Center(
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                      );
+                    }
+
+                    final annonce = data.content[index];
+                    return AnnoncePostCard(
+                      annonce: annonce,
+                      onTap: () =>
+                          context.push('/annonces/${annonce.id}'),
+                      onContact: () =>
+                          context.push('/annonces/${annonce.id}'),
                     );
                   },
                 ),
               );
             },
-            annonceDetailLoaded: (_) => const SizedBox.shrink(),
-            annonceCreated: (_) => const SizedBox.shrink(),
-            annonceUpdated: (_) => const SizedBox.shrink(),
-            annonceDeleted: () => const SizedBox.shrink(),
-            actionSuccess: () => const SizedBox.shrink(),
-            favoritesLoaded: (_) => const SizedBox.shrink(),
-            alertsLoaded: (_) => const SizedBox.shrink(),
             failure: (message) => Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.error_outline, size: 48, color: Colors.red),
+                  const Icon(Icons.error_outline,
+                      size: 48, color: Colors.red),
                   const SizedBox(height: 12),
                   Text(message, textAlign: TextAlign.center),
                   const SizedBox(height: 16),
@@ -151,8 +200,14 @@ class _AnnonceListPageState extends State<AnnonceListPage> {
                 ],
               ),
             ),
+            orElse: () => const SizedBox.shrink(),
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => context.push('/annonces/new'),
+        icon: const Icon(Icons.add),
+        label: const Text('Publier'),
       ),
     );
   }

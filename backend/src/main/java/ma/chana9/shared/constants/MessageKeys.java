@@ -16,6 +16,6 @@ public class MessageKeys {
         public static final String REGISTER_SUCCESS       = "message.auth.register-success";
         public static final String LOGIN_SUCCESS          = "message.auth.login-success";
         public static final String PASSWORD_RESET_SUCCESS = "message.auth.password-reset-success";
-        public static final String TOKEN_REFRESHED =  "";
+        public static final String TOKEN_REFRESHED = "message.auth.token-refreshed";
     }
 }

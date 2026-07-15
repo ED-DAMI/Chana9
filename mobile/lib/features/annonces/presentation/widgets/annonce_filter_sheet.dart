@@ -17,58 +17,65 @@ class AnnonceFilterSheet extends StatefulWidget {
 }
 
 class _AnnonceFilterSheetState extends State<AnnonceFilterSheet> {
-  late String? _breed;
-  late String? _region;
-  late double? _minPrice;
-  late double? _maxPrice;
-  late double? _minWeight;
-  late double? _maxWeight;
-  late AnimalGender? _gender;
-  late bool? _deliveryAvailable;
-  late bool? _priceNegotiable;
-  late bool? _eligibleForAid;
-  late bool? _topLotOnly;
+  late final TextEditingController _breedController;
+  late final TextEditingController _regionController;
+  late final TextEditingController _minPriceController;
+  late final TextEditingController _maxPriceController;
+  late final TextEditingController _minWeightController;
+  late final TextEditingController _maxWeightController;
 
-  final _minPriceController = TextEditingController();
-  final _maxPriceController = TextEditingController();
-  final _minWeightController = TextEditingController();
-  final _maxWeightController = TextEditingController();
-  final _breedController = TextEditingController();
-  final _regionController = TextEditingController();
+  AnimalGender? _gender;
+  bool? _deliveryAvailable;
+  bool? _priceNegotiable;
+  bool? _eligibleForAid;
+  bool? _topLotOnly;
 
   @override
   void initState() {
     super.initState();
     final f = widget.initialFilter;
-    _breed = f.breed;
-    _region = f.region;
-    _minPrice = f.minPrice;
-    _maxPrice = f.maxPrice;
-    _minWeight = f.minWeight;
-    _maxWeight = f.maxWeight;
+    _breedController = TextEditingController(text: f.breed ?? '');
+    _regionController = TextEditingController(text: f.region ?? '');
+    _minPriceController =
+        TextEditingController(text: f.minPrice?.toString() ?? '');
+    _maxPriceController =
+        TextEditingController(text: f.maxPrice?.toString() ?? '');
+    _minWeightController =
+        TextEditingController(text: f.minWeight?.toString() ?? '');
+    _maxWeightController =
+        TextEditingController(text: f.maxWeight?.toString() ?? '');
     _gender = f.gender;
     _deliveryAvailable = f.deliveryAvailable;
     _priceNegotiable = f.priceNegotiable;
     _eligibleForAid = f.eligibleForAid;
     _topLotOnly = f.topLotOnly;
-
-    _breedController.text = _breed ?? '';
-    _regionController.text = _region ?? '';
-    _minPriceController.text = _minPrice?.toString() ?? '';
-    _maxPriceController.text = _maxPrice?.toString() ?? '';
-    _minWeightController.text = _minWeight?.toString() ?? '';
-    _maxWeightController.text = _maxWeight?.toString() ?? '';
   }
 
   @override
   void dispose() {
+    _breedController.dispose();
+    _regionController.dispose();
     _minPriceController.dispose();
     _maxPriceController.dispose();
     _minWeightController.dispose();
     _maxWeightController.dispose();
-    _breedController.dispose();
-    _regionController.dispose();
     super.dispose();
+  }
+
+  void _reset() {
+    setState(() {
+      _breedController.clear();
+      _regionController.clear();
+      _minPriceController.clear();
+      _maxPriceController.clear();
+      _minWeightController.clear();
+      _maxWeightController.clear();
+      _gender = null;
+      _deliveryAvailable = null;
+      _priceNegotiable = null;
+      _eligibleForAid = null;
+      _topLotOnly = null;
+    });
   }
 
   void _apply() {
@@ -93,28 +100,6 @@ class _AnnonceFilterSheetState extends State<AnnonceFilterSheet> {
     Navigator.of(context).pop();
   }
 
-  void _reset() {
-    setState(() {
-      _breed = null;
-      _region = null;
-      _minPrice = null;
-      _maxPrice = null;
-      _minWeight = null;
-      _maxWeight = null;
-      _gender = null;
-      _deliveryAvailable = null;
-      _priceNegotiable = null;
-      _eligibleForAid = null;
-      _topLotOnly = null;
-      _breedController.clear();
-      _regionController.clear();
-      _minPriceController.clear();
-      _maxPriceController.clear();
-      _minWeightController.clear();
-      _maxWeightController.clear();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -129,23 +114,45 @@ class _AnnonceFilterSheetState extends State<AnnonceFilterSheet> {
           decoration: BoxDecoration(
             color: theme.scaffoldBackgroundColor,
             borderRadius:
-                const BorderRadius.vertical(top: Radius.circular(20)),
+            const BorderRadius.vertical(top: Radius.circular(20)),
           ),
           child: Column(
             children: [
+              // Handle
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.only(top: 12),
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+
+              // Header
+              Padding(
+                padding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 child: Row(
                   children: [
-                    Text('Filtres',
-                        style: theme.textTheme.titleLarge
-                            ?.copyWith(fontWeight: FontWeight.bold)),
+                    Text(
+                      'Filtres',
+                      style: theme.textTheme.titleLarge
+                          ?.copyWith(fontWeight: FontWeight.bold),
+                    ),
                     const Spacer(),
-                    TextButton(onPressed: _reset, child: const Text('Réinitialiser')),
+                    TextButton(
+                      onPressed: _reset,
+                      child: const Text('Réinitialiser'),
+                    ),
                   ],
                 ),
               ),
               const Divider(height: 1),
+
+              // Contenu
               Expanded(
                 child: ListView(
                   controller: scrollController,
@@ -155,7 +162,7 @@ class _AnnonceFilterSheetState extends State<AnnonceFilterSheet> {
                     _FilterTextField(
                       controller: _breedController,
                       label: 'Race',
-                      hint: 'ex: Sardi, Timahdite...',
+                      hint: 'ex: Sardi, Timahdite, Boujad...',
                     ),
                     const SizedBox(height: 12),
                     _FilterTextField(
@@ -164,6 +171,7 @@ class _AnnonceFilterSheetState extends State<AnnonceFilterSheet> {
                       hint: 'ex: Casablanca-Settat',
                     ),
                     const SizedBox(height: 20),
+
                     _SectionTitle(title: 'Prix (MAD)'),
                     Row(
                       children: [
@@ -185,6 +193,7 @@ class _AnnonceFilterSheetState extends State<AnnonceFilterSheet> {
                       ],
                     ),
                     const SizedBox(height: 20),
+
                     _SectionTitle(title: 'Poids (kg)'),
                     Row(
                       children: [
@@ -206,42 +215,54 @@ class _AnnonceFilterSheetState extends State<AnnonceFilterSheet> {
                       ],
                     ),
                     const SizedBox(height: 20),
+
                     _SectionTitle(title: 'Genre'),
                     SegmentedButton<AnimalGender?>(
                       segments: const [
                         ButtonSegment(value: null, label: Text('Tous')),
                         ButtonSegment(
-                            value: AnimalGender.male, label: Text('Mâle')),
+                          value: AnimalGender.male,
+                          label: Text('Mâle'),
+                          icon: Icon(Icons.male),
+                        ),
                         ButtonSegment(
-                            value: AnimalGender.female, label: Text('Femelle')),
+                          value: AnimalGender.female,
+                          label: Text('Femelle'),
+                          icon: Icon(Icons.female),
+                        ),
                       ],
                       selected: {_gender},
                       onSelectionChanged: (val) =>
                           setState(() => _gender = val.first),
                     ),
                     const SizedBox(height: 20),
+
                     _SectionTitle(title: 'Options'),
-                    _FilterCheckbox(
+                    _FilterSwitch(
                       label: 'Livraison disponible',
-                      value: _deliveryAvailable,
+                      icon: Icons.local_shipping_outlined,
+                      value: _deliveryAvailable ?? false,
                       onChanged: (v) =>
                           setState(() => _deliveryAvailable = v ? true : null),
                     ),
-                    _FilterCheckbox(
+                    _FilterSwitch(
                       label: 'Prix négociable',
-                      value: _priceNegotiable,
+                      icon: Icons.handshake_outlined,
+                      value: _priceNegotiable ?? false,
                       onChanged: (v) =>
                           setState(() => _priceNegotiable = v ? true : null),
                     ),
-                    _FilterCheckbox(
+                    _FilterSwitch(
                       label: 'Éligible aux aides',
-                      value: _eligibleForAid,
+                      icon: Icons.verified_outlined,
+                      value: _eligibleForAid ?? false,
                       onChanged: (v) =>
                           setState(() => _eligibleForAid = v ? true : null),
                     ),
-                    _FilterCheckbox(
+                    _FilterSwitch(
                       label: 'Top Lot uniquement',
-                      value: _topLotOnly,
+                      icon: Icons.star_outlined,
+                      value: _topLotOnly ?? false,
                       onChanged: (v) =>
                           setState(() => _topLotOnly = v ? true : null),
                     ),
@@ -249,14 +270,27 @@ class _AnnonceFilterSheetState extends State<AnnonceFilterSheet> {
                   ],
                 ),
               ),
+
+              // Bouton appliquer
               Padding(
                 padding: EdgeInsets.fromLTRB(
-                    16, 8, 16, MediaQuery.of(context).padding.bottom + 16),
+                  16,
+                  8,
+                  16,
+                  MediaQuery.of(context).padding.bottom + 16,
+                ),
                 child: FilledButton(
                   onPressed: _apply,
                   style: FilledButton.styleFrom(
-                      minimumSize: const Size.fromHeight(52)),
-                  child: const Text('Appliquer les filtres'),
+                    minimumSize: const Size.fromHeight(52),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: const Text(
+                    'Appliquer les filtres',
+                    style: TextStyle(fontSize: 16),
+                  ),
                 ),
               ),
             ],
@@ -275,12 +309,14 @@ class _SectionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Text(title,
-          style: Theme.of(context)
-              .textTheme
-              .labelLarge
-              ?.copyWith(fontWeight: FontWeight.bold)),
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Text(
+        title,
+        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+          fontWeight: FontWeight.bold,
+          color: Colors.grey.shade700,
+        ),
+      ),
     );
   }
 }
@@ -306,32 +342,44 @@ class _FilterTextField extends StatelessWidget {
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
-        border: const OutlineInputBorder(),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
         isDense: true,
+        contentPadding:
+        const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       ),
     );
   }
 }
 
-class _FilterCheckbox extends StatelessWidget {
+class _FilterSwitch extends StatelessWidget {
   final String label;
-  final bool? value;
+  final IconData icon;
+  final bool value;
   final ValueChanged<bool> onChanged;
 
-  const _FilterCheckbox({
+  const _FilterSwitch({
     required this.label,
+    required this.icon,
     required this.value,
     required this.onChanged,
   });
 
   @override
   Widget build(BuildContext context) {
-    return CheckboxListTile(
-      title: Text(label),
-      value: value ?? false,
-      onChanged: (v) => onChanged(v ?? false),
+    return SwitchListTile(
+      title: Row(
+        children: [
+          Icon(icon, size: 18, color: Colors.grey.shade600),
+          const SizedBox(width: 8),
+          Text(label),
+        ],
+      ),
+      value: value,
+      onChanged: onChanged,
       contentPadding: EdgeInsets.zero,
-      controlAffinity: ListTileControlAffinity.leading,
+      dense: true,
     );
   }
 }

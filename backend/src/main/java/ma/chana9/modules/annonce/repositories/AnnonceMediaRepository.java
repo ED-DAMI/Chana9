@@ -21,4 +21,6 @@ public interface AnnonceMediaRepository extends JpaRepository<AnnonceMedia, UUID
     @Modifying
     @Query("UPDATE AnnonceMedia m SET m.isCover = false WHERE m.annonce.id = :annonceId")
     void clearCoverByAnnonceId(@Param("annonceId") UUID annonceId);
+
+    List<AnnonceMedia> findByAnnonceIdOrderByOrder(UUID annonceId);
 }

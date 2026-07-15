@@ -70,4 +70,8 @@ public class ApiPaths {
         public static final String MARK_READ     = "/{id}/read";
         public static final String MARK_ALL_READ = "/read-all";
     }
+    @UtilityClass
+    public static class Storage {
+        public static final String BASE = API_V1 + "/storage";
+    }
 }

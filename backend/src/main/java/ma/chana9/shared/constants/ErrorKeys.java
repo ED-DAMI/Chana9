@@ -18,4 +18,17 @@ public class ErrorKeys {
         public static final String PHONE_ALREADY_EXISTS        = "error.auth.phone-already-exists";
         public static final String PHONE_NOT_FOUND             = "error.auth.phone-not-found";
     }
+    @UtilityClass
+    public static class Annonce {
+        public static final String NOT_FOUND        = "error.annonce.not-found";
+        public static final String FORBIDDEN        = "error.annonce.forbidden";
+        public static final String MEDIA_NOT_FOUND  = "error.annonce.media-not-found";
+        public static final String MAX_MEDIAS_REACHED = "error.annonce.max-medias-reached";
+    }
+
+    @UtilityClass
+    public static class Storage {
+        public static final String UPLOAD_FAILED    = "error.storage.upload-failed";
+        public static final String DELETE_FAILED    = "error.storage.delete-failed";
+    }
 }

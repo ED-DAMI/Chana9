@@ -6,7 +6,7 @@ import 'annonce_media.dart';
 part 'annonce.freezed.dart';
 
 @freezed
- abstract class Annonce with _$Annonce {
+abstract class Annonce with _$Annonce {
   const factory Annonce({
     required String id,
     required String title,
@@ -34,7 +34,7 @@ part 'annonce.freezed.dart';
     DateTime? expiresAt,
     required String sellerId,
     required List<AnnonceMedia> medias,
-    required DateTime createdAt,
-    required DateTime updatedAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   }) = _Annonce;
 }
