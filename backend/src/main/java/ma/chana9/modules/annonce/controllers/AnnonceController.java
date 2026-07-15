@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
+import static java.lang.IO.println;
+
 @RestController
 @RequestMapping("/api/v1/annonces")
 @RequiredArgsConstructor
@@ -57,6 +59,7 @@ public class AnnonceController {
             @Valid AnnonceSearchRequest request,
             Pageable pageable
     ) {
+        
         return ResponseEntity.ok(annonceService.search(request, pageable));
     }
 

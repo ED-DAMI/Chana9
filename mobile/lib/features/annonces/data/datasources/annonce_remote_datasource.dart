@@ -1,3 +1,4 @@
+import 'package:ma_chana9_app/core/constants/api_constants.dart';
 import 'package:ma_chana9_app/core/network/dio_client.dart';
 import 'package:ma_chana9_app/shared/model/paginated/paginated_response.dart';
 import '../models/annonce_model.dart';
@@ -37,7 +38,7 @@ abstract class AnnonceRemoteDataSource {
 class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
   final DioClient dioClient;
 
-  static const String _base = '/api/annonces';
+  static const String _base = ApiConstants.annonces;
 
   AnnonceRemoteDataSourceImpl(this.dioClient);
 

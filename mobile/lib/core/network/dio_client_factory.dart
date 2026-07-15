@@ -1,10 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:ma_chana9_app/core/constants/api_constants.dart';
 import 'dio_client.dart';
 
 class DioClientFactory {
 
-  static const String _baseUrl = 'https://api.chana9.ma';
+  static const String _baseUrl = ApiConstants.baseUrl;
   static const String _tokenKey = 'access_token';
 
   static DioClient create(FlutterSecureStorage secureStorage) {
@@ -33,7 +34,6 @@ class DioClientFactory {
           handler.next(response);
         },
         onError: (DioException error, handler) async {
-          // Token expiré → on efface et on laisse passer l'erreur 401
           if (error.response?.statusCode == 401) {
             await secureStorage.delete(key: _tokenKey);
           }

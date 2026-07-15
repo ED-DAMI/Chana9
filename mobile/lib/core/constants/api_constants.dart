@@ -1,6 +1,5 @@
 class ApiConstants {
-  static const String baseUrl = 'http://localhost:8080/api';
-
+  static const String baseUrl = 'http://192.168.1.16:8080/api/v1';
   static const String login = '/auth/login';
   static const String verifyOtp = '/auth/verify-otp';
   static const String annonces = '/annonces';

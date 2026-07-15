@@ -49,6 +49,7 @@ public class AuthController {
 	public AuthResponse login(
 			@Valid @RequestBody PasswordLoginRequest request,
 			HttpServletRequest httpRequest) {
+
 		return authService.login(request, httpRequest);
 	}
 

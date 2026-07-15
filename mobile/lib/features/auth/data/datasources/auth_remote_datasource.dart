@@ -10,7 +10,7 @@ abstract class AuthRemoteDataSource {
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final DioClient dioClient;
 
-  static const String _base = '/api/v1/auth';
+  static const String _base = '/auth';
 
   AuthRemoteDataSourceImpl(this.dioClient);
 

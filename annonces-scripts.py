@@ -1,200 +1,185 @@
+#!/usr/bin/env python3
 """
-Simulateur d'annonces - 10 annonces par minute
-API: POST /api/v1/annonces
+Script de génération d'annonces pour chana9.ma
+Authentification → JWT → Création des annonces
 """
 
 import requests
-import time
+import json
 import random
-import uuid
-from datetime import datetime, timedelta
-from typing import Optional
+from datetime import date, timedelta
+from time import sleep
 
 # ─── Configuration ────────────────────────────────────────────────────────────
-BASE_URL = "http://localhost:8080"
-ENDPOINT = f"{BASE_URL}/api/v1/annonces"
-ANNONCES_PER_MINUTE = 10
-INTERVAL_SECONDS = 60 / ANNONCES_PER_MINUTE  # 6 secondes entre chaque annonce
 
-# IDs vendeurs de test (à remplacer par de vrais UUIDs)
-SELLER_IDS = [
-    "11111111-1111-1111-1111-111111111111",
-    "22222222-2222-2222-2222-222222222222",
-    "33333333-3333-3333-3333-333333333333",
-]
+BASE_URL = "http://localhost:8080"   # ← adapte si nécessaire
+AUTH_URL = f"{BASE_URL}/api/v1/auth/login"      # ← adapte l'endpoint d'auth
+ANNONCES_URL = f"{BASE_URL}/api/v1/annonces"
 
-# ─── Données de simulation ─────────────────────────────────────────────────────
+USERNAME = "0653995947"
+PASSWORD = "20032003"
+
+# ─── Données de test ──────────────────────────────────────────────────────────
+
 BREEDS = [
-    "Sardi", "Timahdite", "Beni Guil", "Boujaâd", "D'man",
-    "Béni Ahsen", "Dokkali", "Méchoui", "Beni Snassen", "Oulad Jellal"
+    "Beni Guil", "Timahdite", "Sardi", "Ouled Djellal", "D'man",
+    "Boujad", "Béni Ahsen", "Chaouia"
 ]
 
 REGIONS = [
-    "Casablanca-Settat", "Rabat-Salé-Kénitra", "Fès-Meknès",
-    "Marrakech-Safi", "Tanger-Tétouan-Al Hoceïma", "Souss-Massa",
-    "Drâa-Tafilalet", "Oriental", "Béni Mellal-Khénifra", "Guelmim-Oued Noun"
+    "Casablanca-Settat", "Rabat-Salé-Kénitra", "Marrakech-Safi",
+    "Fès-Meknès", "Tanger-Tétouan-Al Hoceïma", "Souss-Massa",
+    "Oriental", "Béni Mellal-Khénifra", "Drâa-Tafilalet"
 ]
 
 GENDERS = ["MALE", "FEMALE"]
 
 TITLES = [
-    "Beau mouton à vendre",
-    "Mouton de qualité supérieure",
-    "Excellent mouton pour Aid",
-    "Mouton bien entretenu",
-    "Mouton race pure disponible",
-    "Grand mouton sain et fort",
-    "Mouton idéal pour sacrifice",
-    "Belle brebis reproductrice",
-    "Mouton bien nourri à céder",
-    "Agneau de lait disponible",
+    "Bélier de race {} à vendre",
+    "Belle brebis {} disponible",
+    "Agneau {} en bonne santé",
+    "Mouton {} de qualité supérieure",
+    "{} reproducteur à céder",
+    "Lot de moutons {} à vendre",
+    "Agnelle {} prête pour l'Aid",
+    "Mâle {} de boucherie",
 ]
 
 DESCRIPTIONS = [
-    "Animal en parfaite santé, vacciné et vermifugé. Idéal pour les fêtes.",
-    "Élevé en plein air, nourri naturellement. Poids certifié.",
-    "Mouton de ferme, très docile. Livraison possible dans la région.",
-    "Animal de qualité, suivi vétérinaire régulier. Prix à débattre.",
-    "Bel animal bien charpenté, excellent pour la boucherie ou reproduction.",
-    None,  # description optionnelle
+    "Animal en excellente santé, vacciné et vermifugé. Elevé en plein air.",
+    "Bel animal bien charnu, nourri aux céréales. Idéal pour l'Aid Al Adha.",
+    "Reproducteur de qualité, issu d'un élevage familial traditionnel.",
+    "Animal sain, pesé et certifié. Possibilité de livraison dans la région.",
+    "Mouton robuste élevé à la ferme depuis sa naissance. Très bon tempérament.",
+    "Belle bête bien entretenue. Alimentation naturelle et soins réguliers.",
 ]
 
-# ─── Générateur d'annonce aléatoire ───────────────────────────────────────────
-def generate_annonce() -> dict:
-    birth_date = datetime.now() - timedelta(days=random.randint(90, 900))
-    age_months = random.randint(3, 30)
-    price = round(random.uniform(800, 5000), 2)
-    delivery = random.choice([True, False])
 
-    return {
-        "title": random.choice(TITLES),
+def random_date_in_past(min_months=6, max_months=48):
+    days_ago = random.randint(min_months * 30, max_months * 30)
+    return date.today() - timedelta(days=days_ago)
+
+
+def generate_annonce_payload():
+    breed = random.choice(BREEDS)
+    gender = random.choice(GENDERS)
+    title_template = random.choice(TITLES)
+    title = title_template.format(breed)[:200]
+
+    weight = round(random.uniform(30.0, 120.0), 1)
+    price = round(random.uniform(1500.0, 12000.0), 2)
+    region = random.choice(REGIONS)
+    birth_date = random_date_in_past()
+    age_months = (date.today() - birth_date).days // 30
+
+    has_delivery = random.choice([True, False])
+
+    payload = {
+        "title": title,
         "description": random.choice(DESCRIPTIONS),
-        "breed": random.choice(BREEDS),
-        "estimatedWeight": round(random.uniform(20.0, 120.0), 1),
+        "breed": breed,
+        "estimatedWeight": weight,
         "price": price,
         "priceNegotiable": random.choice([True, False]),
-        "region": random.choice(REGIONS),
-        "gender": random.choice(GENDERS),
-        "birthDate": birth_date.strftime("%Y-%m-%d"),
+        "region": region,
+        "gender": gender,
+        "birthDate": birth_date.isoformat(),
         "ageMonths": age_months,
         "latitude": round(random.uniform(27.5, 35.9), 6),
         "longitude": round(random.uniform(-13.0, -1.0), 6),
-        "addressLabel": f"Ferme {random.choice(REGIONS)}",
-        "deliveryAvailable": delivery,
-        "deliveryRadiusKm": random.randint(10, 100) if delivery else 0,
-        "deliveryPrice": round(random.uniform(50, 300), 2) if delivery else 0.0,
+        "addressLabel": f"Ferme, {region}",
+        "deliveryAvailable": has_delivery,
+        "deliveryRadiusKm": random.randint(10, 100) if has_delivery else 0,
+        "deliveryPrice": round(random.uniform(50.0, 500.0), 2) if has_delivery else 0.0,
     }
+    return payload
 
-# ─── Envoi d'une annonce ───────────────────────────────────────────────────────
-def post_annonce(seller_id: str) -> Optional[dict]:
-    payload = generate_annonce()
+
+# ─── Authentification ─────────────────────────────────────────────────────────
+
+def authenticate():
+    print(f"[AUTH] Connexion avec {USERNAME}...")
+    try:
+        resp = requests.post(
+            AUTH_URL,
+            json={"phone": USERNAME, "password": PASSWORD},
+            timeout=10
+        )
+        resp.raise_for_status()
+        data = resp.json()
+
+        # Adapte la clé selon ta réponse JSON ("token", "accessToken", "jwt"...)
+        token = (
+                data.get("token") or
+                data.get("accessToken") or
+                data.get("access_token") or
+                data.get("jwt")
+        )
+
+        if not token:
+            print(f"[AUTH] ❌ Token introuvable dans la réponse: {data}")
+            return None
+
+        print(f"[AUTH] ✅ JWT récupéré avec succès")
+        return token
+
+    except requests.exceptions.HTTPError as e:
+        print(f"[AUTH] ❌ Erreur HTTP {e.response.status_code}: {e.response.text}")
+        return None
+    except requests.exceptions.RequestException as e:
+        print(f"[AUTH] ❌ Erreur réseau: {e}")
+        return None
+
+
+# ─── Création des annonces ────────────────────────────────────────────────────
+
+def create_annonce(token: str, seller_id: str, payload: dict, index: int):
     headers = {
+        "Authorization": f"Bearer {token}",
         "Content-Type": "application/json",
         "X-User-Id": seller_id,
     }
-
     try:
-        response = requests.post(ENDPOINT, json=payload, headers=headers, timeout=10)
-        if response.status_code == 201:
-            data = response.json()
-            print(f"  ✅ [{response.status_code}] Annonce créée — ID: {data.get('id', 'N/A')} | "
-                  f"Race: {payload['breed']} | Prix: {payload['price']} MAD")
-            return data
-        else:
-            print(f"  ❌ [{response.status_code}] Erreur — {response.text[:120]}")
-            return None
-    except requests.exceptions.ConnectionError:
-        print(f"  🔴 Connexion refusée. Vérifiez que le serveur tourne sur {BASE_URL}")
+        resp = requests.post(ANNONCES_URL, json=payload, headers=headers, timeout=10)
+        resp.raise_for_status()
+        data = resp.json()
+        print(f"  [{index}] ✅ Créée : {data.get('id', '?')} — {payload['title']}")
+        return data
+    except requests.exceptions.HTTPError as e:
+        print(f"  [{index}] ❌ Erreur {e.response.status_code}: {e.response.text}")
         return None
-    except requests.exceptions.Timeout:
-        print(f"  ⏱️  Timeout — le serveur ne répond pas.")
-        return None
-    except Exception as e:
-        print(f"  💥 Erreur inattendue: {e}")
+    except requests.exceptions.RequestException as e:
+        print(f"  [{index}] ❌ Erreur réseau: {e}")
         return None
 
-# ─── Boucle principale ─────────────────────────────────────────────────────────
-def run(total_annonces: int = None, minutes: int = None):
-    """
-    Paramètres :
-      total_annonces : nombre total d'annonces à envoyer (None = infini)
-      minutes        : durée en minutes (None = infini)
-    """
-    print("=" * 60)
-    print("  🐑 Simulateur d'annonces — Chana9")
-    print(f"  Rythme : {ANNONCES_PER_MINUTE} annonces/minute "
-          f"(1 toutes les {INTERVAL_SECONDS}s)")
-    print(f"  Endpoint : {ENDPOINT}")
-    if total_annonces:
-        print(f"  Objectif : {total_annonces} annonces")
-    elif minutes:
-        print(f"  Durée    : {minutes} minute(s)")
-    else:
-        print("  Mode     : infini (Ctrl+C pour arrêter)")
-    print("=" * 60)
 
-    sent = 0
-    success = 0
-    start_time = time.time()
-    deadline = start_time + (minutes * 60) if minutes else None
+# ─── Main ─────────────────────────────────────────────────────────────────────
 
-    try:
-        while True:
-            # Vérification des conditions d'arrêt
-            if total_annonces and sent >= total_annonces:
-                break
-            if deadline and time.time() >= deadline:
-                break
+def main():
+    # Paramètres
+    NOMBRE_ANNONCES = 20        # ← change selon tes besoins
+    SELLER_ID = "cdc64936-bbd3-429c-bfbc-b4e19a2be9b8"  # ← UUID du vendeur (si tu le connais)
+    PAUSE_ENTRE_REQUETES = 0.3  # secondes
 
-            seller_id = random.choice(SELLER_IDS)
-            print(f"\n[{sent + 1}] Envoi — Vendeur: {seller_id}")
+    # 1. Authentification
+    token = authenticate()
+    if not token:
+        print("\n[STOP] Impossible de continuer sans JWT.")
+        return
 
-            result = post_annonce(seller_id)
-            if result:
-                success += 1
-            sent += 1
+    # 2. Génération des annonces
+    print(f"\n[ANNONCES] Création de {NOMBRE_ANNONCES} annonces...\n")
+    created = 0
 
-            # Attendre avant la prochaine annonce (sauf pour la dernière)
-            if (not total_annonces or sent < total_annonces) and \
-               (not deadline or time.time() < deadline):
-                time.sleep(INTERVAL_SECONDS)
+    for i in range(1, NOMBRE_ANNONCES + 1):
+        payload = generate_annonce_payload()
+        result = create_annonce(token, SELLER_ID, payload, i)
+        if result:
+            created += 1
+        sleep(PAUSE_ENTRE_REQUETES)
 
-    except KeyboardInterrupt:
-        print("\n\n⛔ Arrêt manuel demandé.")
-
-    # ─── Résumé ───────────────────────────────────────────────────────────────
-    elapsed = time.time() - start_time
-    print("\n" + "=" * 60)
-    print("  📊 Résumé de simulation")
-    print(f"  Annonces envoyées : {sent}")
-    print(f"  Succès            : {success}")
-    print(f"  Échecs            : {sent - success}")
-    print(f"  Durée totale      : {elapsed:.1f}s")
-    if elapsed > 0:
-        print(f"  Débit réel        : {sent / (elapsed / 60):.1f} annonces/min")
-    print("=" * 60)
+    print(f"\n[FIN] {created}/{NOMBRE_ANNONCES} annonces créées avec succès.")
 
 
-# ─── Point d'entrée ────────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser(description="Simulateur d'annonces Chana9")
-    parser.add_argument(
-        "--total", type=int, default=None,
-        help="Nombre total d'annonces à envoyer (défaut: infini)"
-    )
-    parser.add_argument(
-        "--minutes", type=int, default=None,
-        help="Durée de simulation en minutes (défaut: infini)"
-    )
-    parser.add_argument(
-        "--url", type=str, default=BASE_URL,
-        help=f"URL de base de l'API (défaut: {BASE_URL})"
-    )
-    args = parser.parse_args()
-
-    if args.url != BASE_URL:
-        ENDPOINT = f"{args.url}/api/v1/annonces"
-
-    run(total_annonces=args.total, minutes=args.minutes)
+    main()
