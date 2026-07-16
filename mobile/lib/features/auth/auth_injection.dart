@@ -10,6 +10,7 @@ import 'domain/usecases/login.dart';
 import 'domain/usecases/logout.dart';
 import 'presentation/bloc/auth_bloc.dart';
 
+
 void registerAuthDependencies(GetIt sl) {
   sl.registerLazySingleton<AuthRemoteDataSource>(
     () => AuthRemoteDataSourceImpl(sl<DioClient>()),

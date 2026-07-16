@@ -37,10 +37,13 @@ class AuthRepositoryImpl implements AuthRepository {
           LoginRequestModel(phone: phone, password: password),
         );
         final result = model.toEntity();
+
         await tokenStorage.saveTokens(
           accessToken: result.accessToken,
           refreshToken: result.refreshToken,
         );
+        await tokenStorage.saveUser(result.user);
+
         return result;
       });
 
@@ -56,7 +59,7 @@ class AuthRepositoryImpl implements AuthRepository {
       _execute(() async {
         final cachedUser = await tokenStorage.getCachedUser();
         if (cachedUser != null) return cachedUser;
-        throw Exception('No cached user found');
+        throw Exception('Session expirée, veuillez vous reconnecter');
       });
 
   @override
@@ -72,6 +75,7 @@ class AuthRepositoryImpl implements AuthRepository {
           accessToken: result.accessToken,
           refreshToken: result.refreshToken,
         );
+        await tokenStorage.saveUser(result.user);
         return result;
       });
 }
