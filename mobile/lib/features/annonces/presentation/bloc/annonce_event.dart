@@ -1,7 +1,7 @@
 part of 'annonce_bloc.dart';
 
 @freezed
-class AnnonceEvent with _$AnnonceEvent {
+abstract class AnnonceEvent with _$AnnonceEvent {
   const factory AnnonceEvent.searchAnnonces({
     required AnnonceSearchRequestModel request,
     @Default(0) int page,
@@ -17,7 +17,7 @@ class AnnonceEvent with _$AnnonceEvent {
   }) = _LoadAnnoncesBySeller;
 
   const factory AnnonceEvent.createAnnonce(Map<String, dynamic> body) =
-      _CreateAnnonce;
+  _CreateAnnonce;
 
   const factory AnnonceEvent.updateAnnonce({
     required String id,
@@ -28,7 +28,8 @@ class AnnonceEvent with _$AnnonceEvent {
 
   const factory AnnonceEvent.suspendAnnonce(String id) = _SuspendAnnonce;
 
-  const factory AnnonceEvent.reactivateAnnonce(String id) = _ReactivateAnnonce;
+  const factory AnnonceEvent.reactivateAnnonce(String id) =
+  _ReactivateAnnonce;
 
   const factory AnnonceEvent.markAsSold(String id) = _MarkAsSold;
 
@@ -52,9 +53,14 @@ class AnnonceEvent with _$AnnonceEvent {
   }) = _LoadFavorites;
 
   const factory AnnonceEvent.createAlert(Map<String, dynamic> body) =
-      _CreateAlert;
+  _CreateAlert;
 
   const factory AnnonceEvent.deleteAlert(String alertId) = _DeleteAlert;
 
   const factory AnnonceEvent.loadAlertsByBuyer() = _LoadAlertsByBuyer;
+
+  const factory AnnonceEvent.uploadMedia({
+    required String annonceId,
+    required String filePath,
+  }) = _UploadMedia;
 }
