@@ -38,7 +38,7 @@ abstract class AnnonceSearchRequestModel with _$AnnonceSearchRequestModel {
     if (maxPrice != null) params['maxPrice'] = maxPrice;
     if (minWeight != null) params['minWeight'] = minWeight;
     if (maxWeight != null) params['maxWeight'] = maxWeight;
-    if (gender != null) params['gender'] = gender!.name;
+    if (gender != null) params['gender'] = gender!.value;
     if (minAgeMonths != null) params['minAgeMonths'] = minAgeMonths;
     if (maxAgeMonths != null) params['maxAgeMonths'] = maxAgeMonths;
     if (deliveryAvailable != null) params['deliveryAvailable'] = deliveryAvailable;
