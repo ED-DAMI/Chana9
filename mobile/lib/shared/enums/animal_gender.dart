@@ -18,3 +18,18 @@ enum AnimalGender {
 
   String toJson() => value;
 }
+
+extension AnimalGenderExtension on AnimalGender {
+  static AnimalGender? fromString(String value) {
+    switch (value.toUpperCase()) {
+      case 'MALE':
+      case 'MÂLE':
+        return AnimalGender.male;
+      case 'FEMALE':
+      case 'FEMELLE':
+        return AnimalGender.female;
+      default:
+        return null;
+    }
+  }
+}

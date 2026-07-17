@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:ma_chana9_app/core/error/failure.dart';
+import '../../../../shared/enums/animal_gender.dart';
 import '../../../../shared/model/paginated/paginated_response.dart';
 import '../models/annonce_alert_request_model.dart';
 import '../models/annonce_request_model.dart';

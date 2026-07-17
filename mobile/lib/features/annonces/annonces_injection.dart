@@ -1,5 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:ma_chana9_app/core/network/dio_client.dart';
+import 'package:ma_chana9_app/core/network/token_storage.dart';
+
 import 'data/datasources/annonce_remote_datasource.dart';
 import 'data/repositories/annonce_repository_impl.dart';
 import 'domain/repositories/annonce_repository.dart';
@@ -24,11 +26,14 @@ import 'presentation/bloc/annonce_bloc.dart';
 
 void registerAnnoncesDependencies(GetIt sl) {
   sl.registerLazySingleton<AnnonceRemoteDataSource>(
-    () => AnnonceRemoteDataSourceImpl(sl<DioClient>()),
+        () => AnnonceRemoteDataSourceImpl(
+      dioClient: sl<DioClient>(),
+      tokenStorage: sl<TokenStorage>(),
+    ),
   );
 
   sl.registerLazySingleton<AnnonceRepository>(
-    () => AnnonceRepositoryImpl(sl<AnnonceRemoteDataSource>()),
+        () => AnnonceRepositoryImpl(sl<AnnonceRemoteDataSource>()),
   );
 
   sl.registerLazySingleton(() => CreateAnnonce(sl<AnnonceRepository>()));
@@ -50,22 +55,22 @@ void registerAnnoncesDependencies(GetIt sl) {
   sl.registerLazySingleton(() => GetAlertsByBuyer(sl<AnnonceRepository>()));
 
   sl.registerFactory(() => AnnonceBloc(
-        searchAnnonces: sl(),
-        getAnnonceById: sl(),
-        getAnnoncesBySeller: sl(),
-        createAnnonce: sl(),
-        updateAnnonce: sl(),
-        deleteAnnonce: sl(),
-        suspendAnnonce: sl(),
-        reactivateAnnonce: sl(),
-        markAsSold: sl(),
-        activateTopLot: sl(),
-        flagAnnonce: sl(),
-        addFavorite: sl(),
-        removeFavorite: sl(),
-        getFavorites: sl(),
-        createAlert: sl(),
-        deleteAlert: sl(),
-        getAlertsByBuyer: sl(),
-      ));
+    searchAnnonces: sl(),
+    getAnnonceById: sl(),
+    getAnnoncesBySeller: sl(),
+    createAnnonce: sl(),
+    updateAnnonce: sl(),
+    deleteAnnonce: sl(),
+    suspendAnnonce: sl(),
+    reactivateAnnonce: sl(),
+    markAsSold: sl(),
+    activateTopLot: sl(),
+    flagAnnonce: sl(),
+    addFavorite: sl(),
+    removeFavorite: sl(),
+    getFavorites: sl(),
+    createAlert: sl(),
+    deleteAlert: sl(),
+    getAlertsByBuyer: sl(),
+  ));
 }

@@ -55,7 +55,7 @@ extension AnnonceEventPatterns on AnnonceEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _SearchAnnonces value)?  searchAnnonces,TResult Function( _LoadAnnonceById value)?  loadAnnonceById,TResult Function( _LoadAnnoncesBySeller value)?  loadAnnoncesBySeller,TResult Function( _CreateAnnonce value)?  createAnnonce,TResult Function( _UpdateAnnonce value)?  updateAnnonce,TResult Function( _DeleteAnnonce value)?  deleteAnnonce,TResult Function( _SuspendAnnonce value)?  suspendAnnonce,TResult Function( _ReactivateAnnonce value)?  reactivateAnnonce,TResult Function( _MarkAsSold value)?  markAsSold,TResult Function( _ActivateTopLot value)?  activateTopLot,TResult Function( _FlagAnnonce value)?  flagAnnonce,TResult Function( _AddFavorite value)?  addFavorite,TResult Function( _RemoveFavorite value)?  removeFavorite,TResult Function( _LoadFavorites value)?  loadFavorites,TResult Function( _CreateAlert value)?  createAlert,TResult Function( _DeleteAlert value)?  deleteAlert,TResult Function( _LoadAlertsByBuyer value)?  loadAlertsByBuyer,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _SearchAnnonces value)?  searchAnnonces,TResult Function( _LoadAnnonceById value)?  loadAnnonceById,TResult Function( _LoadAnnoncesBySeller value)?  loadAnnoncesBySeller,TResult Function( _CreateAnnonce value)?  createAnnonce,TResult Function( _UpdateAnnonce value)?  updateAnnonce,TResult Function( _DeleteAnnonce value)?  deleteAnnonce,TResult Function( _SuspendAnnonce value)?  suspendAnnonce,TResult Function( _ReactivateAnnonce value)?  reactivateAnnonce,TResult Function( _MarkAsSold value)?  markAsSold,TResult Function( _ActivateTopLot value)?  activateTopLot,TResult Function( _FlagAnnonce value)?  flagAnnonce,TResult Function( _AddFavorite value)?  addFavorite,TResult Function( _RemoveFavorite value)?  removeFavorite,TResult Function( _LoadFavorites value)?  loadFavorites,TResult Function( _CreateAlert value)?  createAlert,TResult Function( _DeleteAlert value)?  deleteAlert,TResult Function( _LoadAlertsByBuyer value)?  loadAlertsByBuyer,TResult Function( _UploadMedia value)?  uploadMedia,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _SearchAnnonces() when searchAnnonces != null:
@@ -75,7 +75,8 @@ return removeFavorite(_that);case _LoadFavorites() when loadFavorites != null:
 return loadFavorites(_that);case _CreateAlert() when createAlert != null:
 return createAlert(_that);case _DeleteAlert() when deleteAlert != null:
 return deleteAlert(_that);case _LoadAlertsByBuyer() when loadAlertsByBuyer != null:
-return loadAlertsByBuyer(_that);case _:
+return loadAlertsByBuyer(_that);case _UploadMedia() when uploadMedia != null:
+return uploadMedia(_that);case _:
   return orElse();
 
 }
@@ -93,7 +94,7 @@ return loadAlertsByBuyer(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _SearchAnnonces value)  searchAnnonces,required TResult Function( _LoadAnnonceById value)  loadAnnonceById,required TResult Function( _LoadAnnoncesBySeller value)  loadAnnoncesBySeller,required TResult Function( _CreateAnnonce value)  createAnnonce,required TResult Function( _UpdateAnnonce value)  updateAnnonce,required TResult Function( _DeleteAnnonce value)  deleteAnnonce,required TResult Function( _SuspendAnnonce value)  suspendAnnonce,required TResult Function( _ReactivateAnnonce value)  reactivateAnnonce,required TResult Function( _MarkAsSold value)  markAsSold,required TResult Function( _ActivateTopLot value)  activateTopLot,required TResult Function( _FlagAnnonce value)  flagAnnonce,required TResult Function( _AddFavorite value)  addFavorite,required TResult Function( _RemoveFavorite value)  removeFavorite,required TResult Function( _LoadFavorites value)  loadFavorites,required TResult Function( _CreateAlert value)  createAlert,required TResult Function( _DeleteAlert value)  deleteAlert,required TResult Function( _LoadAlertsByBuyer value)  loadAlertsByBuyer,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _SearchAnnonces value)  searchAnnonces,required TResult Function( _LoadAnnonceById value)  loadAnnonceById,required TResult Function( _LoadAnnoncesBySeller value)  loadAnnoncesBySeller,required TResult Function( _CreateAnnonce value)  createAnnonce,required TResult Function( _UpdateAnnonce value)  updateAnnonce,required TResult Function( _DeleteAnnonce value)  deleteAnnonce,required TResult Function( _SuspendAnnonce value)  suspendAnnonce,required TResult Function( _ReactivateAnnonce value)  reactivateAnnonce,required TResult Function( _MarkAsSold value)  markAsSold,required TResult Function( _ActivateTopLot value)  activateTopLot,required TResult Function( _FlagAnnonce value)  flagAnnonce,required TResult Function( _AddFavorite value)  addFavorite,required TResult Function( _RemoveFavorite value)  removeFavorite,required TResult Function( _LoadFavorites value)  loadFavorites,required TResult Function( _CreateAlert value)  createAlert,required TResult Function( _DeleteAlert value)  deleteAlert,required TResult Function( _LoadAlertsByBuyer value)  loadAlertsByBuyer,required TResult Function( _UploadMedia value)  uploadMedia,}){
 final _that = this;
 switch (_that) {
 case _SearchAnnonces():
@@ -113,7 +114,8 @@ return removeFavorite(_that);case _LoadFavorites():
 return loadFavorites(_that);case _CreateAlert():
 return createAlert(_that);case _DeleteAlert():
 return deleteAlert(_that);case _LoadAlertsByBuyer():
-return loadAlertsByBuyer(_that);case _:
+return loadAlertsByBuyer(_that);case _UploadMedia():
+return uploadMedia(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -130,7 +132,7 @@ return loadAlertsByBuyer(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _SearchAnnonces value)?  searchAnnonces,TResult? Function( _LoadAnnonceById value)?  loadAnnonceById,TResult? Function( _LoadAnnoncesBySeller value)?  loadAnnoncesBySeller,TResult? Function( _CreateAnnonce value)?  createAnnonce,TResult? Function( _UpdateAnnonce value)?  updateAnnonce,TResult? Function( _DeleteAnnonce value)?  deleteAnnonce,TResult? Function( _SuspendAnnonce value)?  suspendAnnonce,TResult? Function( _ReactivateAnnonce value)?  reactivateAnnonce,TResult? Function( _MarkAsSold value)?  markAsSold,TResult? Function( _ActivateTopLot value)?  activateTopLot,TResult? Function( _FlagAnnonce value)?  flagAnnonce,TResult? Function( _AddFavorite value)?  addFavorite,TResult? Function( _RemoveFavorite value)?  removeFavorite,TResult? Function( _LoadFavorites value)?  loadFavorites,TResult? Function( _CreateAlert value)?  createAlert,TResult? Function( _DeleteAlert value)?  deleteAlert,TResult? Function( _LoadAlertsByBuyer value)?  loadAlertsByBuyer,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _SearchAnnonces value)?  searchAnnonces,TResult? Function( _LoadAnnonceById value)?  loadAnnonceById,TResult? Function( _LoadAnnoncesBySeller value)?  loadAnnoncesBySeller,TResult? Function( _CreateAnnonce value)?  createAnnonce,TResult? Function( _UpdateAnnonce value)?  updateAnnonce,TResult? Function( _DeleteAnnonce value)?  deleteAnnonce,TResult? Function( _SuspendAnnonce value)?  suspendAnnonce,TResult? Function( _ReactivateAnnonce value)?  reactivateAnnonce,TResult? Function( _MarkAsSold value)?  markAsSold,TResult? Function( _ActivateTopLot value)?  activateTopLot,TResult? Function( _FlagAnnonce value)?  flagAnnonce,TResult? Function( _AddFavorite value)?  addFavorite,TResult? Function( _RemoveFavorite value)?  removeFavorite,TResult? Function( _LoadFavorites value)?  loadFavorites,TResult? Function( _CreateAlert value)?  createAlert,TResult? Function( _DeleteAlert value)?  deleteAlert,TResult? Function( _LoadAlertsByBuyer value)?  loadAlertsByBuyer,TResult? Function( _UploadMedia value)?  uploadMedia,}){
 final _that = this;
 switch (_that) {
 case _SearchAnnonces() when searchAnnonces != null:
@@ -150,7 +152,8 @@ return removeFavorite(_that);case _LoadFavorites() when loadFavorites != null:
 return loadFavorites(_that);case _CreateAlert() when createAlert != null:
 return createAlert(_that);case _DeleteAlert() when deleteAlert != null:
 return deleteAlert(_that);case _LoadAlertsByBuyer() when loadAlertsByBuyer != null:
-return loadAlertsByBuyer(_that);case _:
+return loadAlertsByBuyer(_that);case _UploadMedia() when uploadMedia != null:
+return uploadMedia(_that);case _:
   return null;
 
 }
@@ -167,7 +170,7 @@ return loadAlertsByBuyer(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( AnnonceSearchRequestModel request,  int page,  int size)?  searchAnnonces,TResult Function( String id)?  loadAnnonceById,TResult Function( String sellerId,  int page,  int size)?  loadAnnoncesBySeller,TResult Function( Map<String, dynamic> body)?  createAnnonce,TResult Function( String id,  Map<String, dynamic> body)?  updateAnnonce,TResult Function( String id)?  deleteAnnonce,TResult Function( String id)?  suspendAnnonce,TResult Function( String id)?  reactivateAnnonce,TResult Function( String id)?  markAsSold,TResult Function( String id,  int durationDays)?  activateTopLot,TResult Function( String id,  Map<String, dynamic> body)?  flagAnnonce,TResult Function( String id)?  addFavorite,TResult Function( String id)?  removeFavorite,TResult Function( int page,  int size)?  loadFavorites,TResult Function( Map<String, dynamic> body)?  createAlert,TResult Function( String alertId)?  deleteAlert,TResult Function()?  loadAlertsByBuyer,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( AnnonceSearchRequestModel request,  int page,  int size)?  searchAnnonces,TResult Function( String id)?  loadAnnonceById,TResult Function( String sellerId,  int page,  int size)?  loadAnnoncesBySeller,TResult Function( Map<String, dynamic> body)?  createAnnonce,TResult Function( String id,  Map<String, dynamic> body)?  updateAnnonce,TResult Function( String id)?  deleteAnnonce,TResult Function( String id)?  suspendAnnonce,TResult Function( String id)?  reactivateAnnonce,TResult Function( String id)?  markAsSold,TResult Function( String id,  int durationDays)?  activateTopLot,TResult Function( String id,  Map<String, dynamic> body)?  flagAnnonce,TResult Function( String id)?  addFavorite,TResult Function( String id)?  removeFavorite,TResult Function( int page,  int size)?  loadFavorites,TResult Function( Map<String, dynamic> body)?  createAlert,TResult Function( String alertId)?  deleteAlert,TResult Function()?  loadAlertsByBuyer,TResult Function( String annonceId,  String filePath)?  uploadMedia,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SearchAnnonces() when searchAnnonces != null:
 return searchAnnonces(_that.request,_that.page,_that.size);case _LoadAnnonceById() when loadAnnonceById != null:
@@ -186,7 +189,8 @@ return removeFavorite(_that.id);case _LoadFavorites() when loadFavorites != null
 return loadFavorites(_that.page,_that.size);case _CreateAlert() when createAlert != null:
 return createAlert(_that.body);case _DeleteAlert() when deleteAlert != null:
 return deleteAlert(_that.alertId);case _LoadAlertsByBuyer() when loadAlertsByBuyer != null:
-return loadAlertsByBuyer();case _:
+return loadAlertsByBuyer();case _UploadMedia() when uploadMedia != null:
+return uploadMedia(_that.annonceId,_that.filePath);case _:
   return orElse();
 
 }
@@ -204,7 +208,7 @@ return loadAlertsByBuyer();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( AnnonceSearchRequestModel request,  int page,  int size)  searchAnnonces,required TResult Function( String id)  loadAnnonceById,required TResult Function( String sellerId,  int page,  int size)  loadAnnoncesBySeller,required TResult Function( Map<String, dynamic> body)  createAnnonce,required TResult Function( String id,  Map<String, dynamic> body)  updateAnnonce,required TResult Function( String id)  deleteAnnonce,required TResult Function( String id)  suspendAnnonce,required TResult Function( String id)  reactivateAnnonce,required TResult Function( String id)  markAsSold,required TResult Function( String id,  int durationDays)  activateTopLot,required TResult Function( String id,  Map<String, dynamic> body)  flagAnnonce,required TResult Function( String id)  addFavorite,required TResult Function( String id)  removeFavorite,required TResult Function( int page,  int size)  loadFavorites,required TResult Function( Map<String, dynamic> body)  createAlert,required TResult Function( String alertId)  deleteAlert,required TResult Function()  loadAlertsByBuyer,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( AnnonceSearchRequestModel request,  int page,  int size)  searchAnnonces,required TResult Function( String id)  loadAnnonceById,required TResult Function( String sellerId,  int page,  int size)  loadAnnoncesBySeller,required TResult Function( Map<String, dynamic> body)  createAnnonce,required TResult Function( String id,  Map<String, dynamic> body)  updateAnnonce,required TResult Function( String id)  deleteAnnonce,required TResult Function( String id)  suspendAnnonce,required TResult Function( String id)  reactivateAnnonce,required TResult Function( String id)  markAsSold,required TResult Function( String id,  int durationDays)  activateTopLot,required TResult Function( String id,  Map<String, dynamic> body)  flagAnnonce,required TResult Function( String id)  addFavorite,required TResult Function( String id)  removeFavorite,required TResult Function( int page,  int size)  loadFavorites,required TResult Function( Map<String, dynamic> body)  createAlert,required TResult Function( String alertId)  deleteAlert,required TResult Function()  loadAlertsByBuyer,required TResult Function( String annonceId,  String filePath)  uploadMedia,}) {final _that = this;
 switch (_that) {
 case _SearchAnnonces():
 return searchAnnonces(_that.request,_that.page,_that.size);case _LoadAnnonceById():
@@ -223,7 +227,8 @@ return removeFavorite(_that.id);case _LoadFavorites():
 return loadFavorites(_that.page,_that.size);case _CreateAlert():
 return createAlert(_that.body);case _DeleteAlert():
 return deleteAlert(_that.alertId);case _LoadAlertsByBuyer():
-return loadAlertsByBuyer();case _:
+return loadAlertsByBuyer();case _UploadMedia():
+return uploadMedia(_that.annonceId,_that.filePath);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -240,7 +245,7 @@ return loadAlertsByBuyer();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( AnnonceSearchRequestModel request,  int page,  int size)?  searchAnnonces,TResult? Function( String id)?  loadAnnonceById,TResult? Function( String sellerId,  int page,  int size)?  loadAnnoncesBySeller,TResult? Function( Map<String, dynamic> body)?  createAnnonce,TResult? Function( String id,  Map<String, dynamic> body)?  updateAnnonce,TResult? Function( String id)?  deleteAnnonce,TResult? Function( String id)?  suspendAnnonce,TResult? Function( String id)?  reactivateAnnonce,TResult? Function( String id)?  markAsSold,TResult? Function( String id,  int durationDays)?  activateTopLot,TResult? Function( String id,  Map<String, dynamic> body)?  flagAnnonce,TResult? Function( String id)?  addFavorite,TResult? Function( String id)?  removeFavorite,TResult? Function( int page,  int size)?  loadFavorites,TResult? Function( Map<String, dynamic> body)?  createAlert,TResult? Function( String alertId)?  deleteAlert,TResult? Function()?  loadAlertsByBuyer,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( AnnonceSearchRequestModel request,  int page,  int size)?  searchAnnonces,TResult? Function( String id)?  loadAnnonceById,TResult? Function( String sellerId,  int page,  int size)?  loadAnnoncesBySeller,TResult? Function( Map<String, dynamic> body)?  createAnnonce,TResult? Function( String id,  Map<String, dynamic> body)?  updateAnnonce,TResult? Function( String id)?  deleteAnnonce,TResult? Function( String id)?  suspendAnnonce,TResult? Function( String id)?  reactivateAnnonce,TResult? Function( String id)?  markAsSold,TResult? Function( String id,  int durationDays)?  activateTopLot,TResult? Function( String id,  Map<String, dynamic> body)?  flagAnnonce,TResult? Function( String id)?  addFavorite,TResult? Function( String id)?  removeFavorite,TResult? Function( int page,  int size)?  loadFavorites,TResult? Function( Map<String, dynamic> body)?  createAlert,TResult? Function( String alertId)?  deleteAlert,TResult? Function()?  loadAlertsByBuyer,TResult? Function( String annonceId,  String filePath)?  uploadMedia,}) {final _that = this;
 switch (_that) {
 case _SearchAnnonces() when searchAnnonces != null:
 return searchAnnonces(_that.request,_that.page,_that.size);case _LoadAnnonceById() when loadAnnonceById != null:
@@ -259,7 +264,8 @@ return removeFavorite(_that.id);case _LoadFavorites() when loadFavorites != null
 return loadFavorites(_that.page,_that.size);case _CreateAlert() when createAlert != null:
 return createAlert(_that.body);case _DeleteAlert() when deleteAlert != null:
 return deleteAlert(_that.alertId);case _LoadAlertsByBuyer() when loadAlertsByBuyer != null:
-return loadAlertsByBuyer();case _:
+return loadAlertsByBuyer();case _UploadMedia() when uploadMedia != null:
+return uploadMedia(_that.annonceId,_that.filePath);case _:
   return null;
 
 }
@@ -1403,6 +1409,74 @@ String toString() {
 
 
 
+
+/// @nodoc
+
+
+class _UploadMedia implements AnnonceEvent {
+  const _UploadMedia({required this.annonceId, required this.filePath});
+  
+
+ final  String annonceId;
+ final  String filePath;
+
+/// Create a copy of AnnonceEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$UploadMediaCopyWith<_UploadMedia> get copyWith => __$UploadMediaCopyWithImpl<_UploadMedia>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UploadMedia&&(identical(other.annonceId, annonceId) || other.annonceId == annonceId)&&(identical(other.filePath, filePath) || other.filePath == filePath));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,annonceId,filePath);
+
+@override
+String toString() {
+  return 'AnnonceEvent.uploadMedia(annonceId: $annonceId, filePath: $filePath)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$UploadMediaCopyWith<$Res> implements $AnnonceEventCopyWith<$Res> {
+  factory _$UploadMediaCopyWith(_UploadMedia value, $Res Function(_UploadMedia) _then) = __$UploadMediaCopyWithImpl;
+@useResult
+$Res call({
+ String annonceId, String filePath
+});
+
+
+
+
+}
+/// @nodoc
+class __$UploadMediaCopyWithImpl<$Res>
+    implements _$UploadMediaCopyWith<$Res> {
+  __$UploadMediaCopyWithImpl(this._self, this._then);
+
+  final _UploadMedia _self;
+  final $Res Function(_UploadMedia) _then;
+
+/// Create a copy of AnnonceEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? annonceId = null,Object? filePath = null,}) {
+  return _then(_UploadMedia(
+annonceId: null == annonceId ? _self.annonceId : annonceId // ignore: cast_nullable_to_non_nullable
+as String,filePath: null == filePath ? _self.filePath : filePath // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
 
 /// @nodoc
 mixin _$AnnonceState {
