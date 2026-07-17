@@ -1,8 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ma_chana9_app/shared/enums/annonce_status.dart';
 import 'package:ma_chana9_app/shared/enums/animal_gender.dart';
-
-import '../../../annonces/domain/entities/annonce.dart';
+import '../../domain/entities/annonce.dart';
 import 'annonce_media_model.dart';
 
 part 'annonce_model.freezed.dart';

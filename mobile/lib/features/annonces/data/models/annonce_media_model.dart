@@ -1,8 +1,5 @@
-import 'package:dartz/dartz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-
-import '../../../annonces/domain/entities/annonce_media.dart';
-
+import '../../domain/entities/annonce_media.dart';
 
 part 'annonce_media_model.freezed.dart';
 part 'annonce_media_model.g.dart';
