@@ -2,11 +2,12 @@ import 'package:dio/dio.dart';
 import 'package:ma_chana9_app/core/network/dio_client.dart';
 import 'package:ma_chana9_app/core/network/token_storage.dart';
 import 'package:ma_chana9_app/shared/model/paginated/paginated_response.dart';
-import '../models/annonce_alert_request_model.dart';
-import '../models/annonce_request_model.dart';
 import '../models/annonce_model.dart';
 import '../models/annonce_media_model.dart';
+import '../models/annonce_request_model.dart';
 import '../models/annonce_search_request_model.dart';
+import '../models/annonce_alert_request_model.dart';
+
 abstract class AnnonceRemoteDataSource {
   Future<AnnonceModel> create(AnnonceRequestModel request);
   Future<AnnonceModel> update(String id, AnnonceRequestModel request);
@@ -37,11 +38,13 @@ abstract class AnnonceRemoteDataSource {
   Future<void> deleteAlert(String alertId);
   Future<List<Map<String, dynamic>>> findAlertsByBuyer();
   Future<AnnonceMediaModel> uploadMedia(String annonceId, String filePath);
+  Future<void> deleteMedia(String annonceId, String mediaId);
 }
 
 class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
   final DioClient dioClient;
   final TokenStorage tokenStorage;
+
   static const String _base = '/api/v1/annonces';
 
   AnnonceRemoteDataSourceImpl({
@@ -49,7 +52,7 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
     required this.tokenStorage,
   });
 
-  Future<Options> _userHeader() async {
+  Future<Options> _userIdHeader() async {
     final user = await tokenStorage.getCachedUser();
     return Options(headers: {'X-User-Id': user?.id ?? ''});
   }
@@ -59,7 +62,7 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
     final response = await dioClient.post(
       _base,
       data: request.toJson(),
-      options: await _userHeader(),
+      options: await _userIdHeader(),
     );
     return AnnonceModel.fromJson(response.data as Map<String, dynamic>);
   }
@@ -69,14 +72,14 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
     final response = await dioClient.put(
       '$_base/$id',
       data: request.toJson(),
-      options: await _userHeader(),
+      options: await _userIdHeader(),
     );
     return AnnonceModel.fromJson(response.data as Map<String, dynamic>);
   }
 
   @override
   Future<void> delete(String id) async {
-    await dioClient.delete('$_base/$id', options: await _userHeader());
+    await dioClient.delete('$_base/$id', options: await _userIdHeader());
   }
 
   @override
@@ -125,7 +128,7 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
   Future<AnnonceModel> suspend(String id) async {
     final response = await dioClient.patch(
       '$_base/$id/suspend',
-      options: await _userHeader(),
+      options: await _userIdHeader(),
     );
     return AnnonceModel.fromJson(response.data as Map<String, dynamic>);
   }
@@ -134,7 +137,7 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
   Future<AnnonceModel> reactivate(String id) async {
     final response = await dioClient.patch(
       '$_base/$id/reactivate',
-      options: await _userHeader(),
+      options: await _userIdHeader(),
     );
     return AnnonceModel.fromJson(response.data as Map<String, dynamic>);
   }
@@ -143,17 +146,16 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
   Future<AnnonceModel> markAsSold(String id) async {
     final response = await dioClient.patch(
       '$_base/$id/sold',
-      options: await _userHeader(),
+      options: await _userIdHeader(),
     );
     return AnnonceModel.fromJson(response.data as Map<String, dynamic>);
   }
 
   @override
-  // POST /{id}/top-lot/{durationDays} — pas de query param, durationDays dans le path
   Future<AnnonceModel> activateTopLot(String id, int durationDays) async {
     final response = await dioClient.post(
       '$_base/$id/top-lot/$durationDays',
-      options: await _userHeader(),
+      options: await _userIdHeader(),
     );
     return AnnonceModel.fromJson(response.data as Map<String, dynamic>);
   }
@@ -163,7 +165,7 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
     await dioClient.post(
       '$_base/$id/flag',
       data: body,
-      options: await _userHeader(),
+      options: await _userIdHeader(),
     );
   }
 
@@ -171,7 +173,7 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
   Future<void> addFavorite(String id) async {
     await dioClient.post(
       '$_base/$id/favorites',
-      options: await _userHeader(),
+      options: await _userIdHeader(),
     );
   }
 
@@ -179,7 +181,7 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
   Future<void> removeFavorite(String id) async {
     await dioClient.delete(
       '$_base/$id/favorites',
-      options: await _userHeader(),
+      options: await _userIdHeader(),
     );
   }
 
@@ -191,7 +193,7 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
     final response = await dioClient.get(
       '$_base/favorites',
       queryParameters: {'page': page, 'size': size},
-      options: await _userHeader(),
+      options: await _userIdHeader(),
     );
     return PaginatedResponse.fromJson(
       response.data as Map<String, dynamic>,
@@ -204,7 +206,7 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
     await dioClient.post(
       '$_base/alerts',
       data: request.toJson(),
-      options: await _userHeader(),
+      options: await _userIdHeader(),
     );
   }
 
@@ -212,7 +214,7 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
   Future<void> deleteAlert(String alertId) async {
     await dioClient.delete(
       '$_base/alerts/$alertId',
-      options: await _userHeader(),
+      options: await _userIdHeader(),
     );
   }
 
@@ -220,31 +222,38 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
   Future<List<Map<String, dynamic>>> findAlertsByBuyer() async {
     final response = await dioClient.get(
       '$_base/alerts',
-      options: await _userHeader(),
+      options: await _userIdHeader(),
     );
     return (response.data as List).cast<Map<String, dynamic>>();
   }
 
   @override
-  // POST /{annonceId}/medias — multipart/form-data
+
   Future<AnnonceMediaModel> uploadMedia(
       String annonceId, String filePath) async {
     final fileName = filePath.split('/').last;
+
     final formData = FormData.fromMap({
-      'file': await MultipartFile.fromFile(filePath, filename: fileName),
+      'file': await MultipartFile.fromFile(
+        filePath,
+        filename: fileName,
+      ),
     });
-    final user = await tokenStorage.getCachedUser();
+
     final response = await dioClient.post(
       '$_base/$annonceId/medias',
       data: formData,
-      options: Options(
-        headers: {
-          'X-User-Id': user?.id ?? '',
-          'Content-Type': 'multipart/form-data',
-        },
-      ),
     );
-    final data = response.data['data'] ?? response.data;
-    return AnnonceMediaModel.fromJson(data as Map<String, dynamic>);
+    final raw = response.data;
+    final json = raw is Map && raw.containsKey('data')
+        ? raw['data'] as Map<String, dynamic>
+        : raw as Map<String, dynamic>;
+
+    return AnnonceMediaModel.fromJson(json);
+  }
+
+  @override
+  Future<void> deleteMedia(String annonceId, String mediaId) async {
+    await dioClient.delete('$_base/$annonceId/medias/$mediaId');
   }
 }

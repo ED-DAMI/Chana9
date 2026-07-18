@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ma_chana9_app/shared/model/paginated/paginated_response.dart';
 import '../../data/models/annonce_search_request_model.dart';
 import '../../domain/entities/annonce.dart';
+import '../../domain/entities/annonce_media.dart';
 import '../../domain/usecases/activate_top_lot.dart';
 import '../../domain/usecases/add_favorite.dart';
 import '../../domain/usecases/create_alert.dart';
@@ -20,6 +21,7 @@ import '../../domain/usecases/remove_favorite.dart';
 import '../../domain/usecases/search_annonces.dart';
 import '../../domain/usecases/suspend_annonce.dart';
 import '../../domain/usecases/update_annonce.dart';
+import '../../domain/usecases/upload_media.dart';
 
 part 'annonce_bloc.freezed.dart';
 part 'annonce_event.dart';
@@ -43,6 +45,7 @@ class AnnonceBloc extends Bloc<AnnonceEvent, AnnonceState> {
   final CreateAlert createAlert;
   final DeleteAlert deleteAlert;
   final GetAlertsByBuyer getAlertsByBuyer;
+  final UploadMedia uploadMedia;
 
   AnnonceBloc({
     required this.searchAnnonces,
@@ -62,11 +65,13 @@ class AnnonceBloc extends Bloc<AnnonceEvent, AnnonceState> {
     required this.createAlert,
     required this.deleteAlert,
     required this.getAlertsByBuyer,
+    required this.uploadMedia,
   }) : super(const AnnonceState.initial()) {
     on<_SearchAnnonces>(_onSearchAnnonces);
     on<_LoadAnnonceById>(_onLoadAnnonceById);
     on<_LoadAnnoncesBySeller>(_onLoadAnnoncesBySeller);
     on<_CreateAnnonce>(_onCreateAnnonce);
+    on<_CreateAnnonceWithMedias>(_onCreateAnnonceWithMedias);
     on<_UpdateAnnonce>(_onUpdateAnnonce);
     on<_DeleteAnnonce>(_onDeleteAnnonce);
     on<_SuspendAnnonce>(_onSuspendAnnonce);
@@ -80,7 +85,75 @@ class AnnonceBloc extends Bloc<AnnonceEvent, AnnonceState> {
     on<_CreateAlert>(_onCreateAlert);
     on<_DeleteAlert>(_onDeleteAlert);
     on<_LoadAlertsByBuyer>(_onLoadAlertsByBuyer);
+    on<_UploadMedia>(_onUploadMedia);
   }
+
+  // ── Création + upload photos en une seule opération ─────────────────────
+
+  Future<void> _onCreateAnnonceWithMedias(
+      _CreateAnnonceWithMedias event, Emitter<AnnonceState> emit) async {
+    emit(const AnnonceState.loading());
+
+    // Étape 1 — créer l'annonce
+    final createResult = await createAnnonce(
+      CreateAnnonceParams(body: event.body),
+    );
+
+    await createResult.fold(
+          (failure) async => emit(AnnonceState.failure(failure.message)),
+          (annonce) async {
+        // Pas de photos → terminé
+        if (event.photoPaths.isEmpty) {
+          emit(AnnonceState.annonceCreated(annonce));
+          return;
+        }
+
+        // Étape 2 — uploader les photos séquentiellement
+        final total = event.photoPaths.length;
+        for (int i = 0; i < total; i++) {
+          emit(AnnonceState.uploadingMedias(
+            current: i + 1,
+            total: total,
+          ));
+
+          final uploadResult = await uploadMedia(
+            UploadMediaParams(
+              annonceId: annonce.id,
+              filePath: event.photoPaths[i],
+            ),
+          );
+
+          // Si un upload échoue, on continue les autres
+          // et on log l'erreur sans bloquer
+          uploadResult.fold(
+                (failure) => null, // continuer même si une photo échoue
+                (_) => null,
+          );
+        }
+
+        // Étape 3 — émettre l'état final avec l'annonce créée
+        emit(AnnonceState.annonceCreated(annonce));
+      },
+    );
+  }
+
+  // ── Upload photo seule ───────────────────────────────────────────────────
+
+  Future<void> _onUploadMedia(
+      _UploadMedia event, Emitter<AnnonceState> emit) async {
+    final result = await uploadMedia(
+      UploadMediaParams(
+        annonceId: event.annonceId,
+        filePath: event.filePath,
+      ),
+    );
+    result.fold(
+          (f) => emit(AnnonceState.failure(f.message)),
+          (media) => emit(AnnonceState.mediaUploaded(media)),
+    );
+  }
+
+  // ── Autres handlers ──────────────────────────────────────────────────────
 
   Future<void> _onSearchAnnonces(
       _SearchAnnonces event, Emitter<AnnonceState> emit) async {
@@ -91,8 +164,8 @@ class AnnonceBloc extends Bloc<AnnonceEvent, AnnonceState> {
       size: event.size,
     ));
     result.fold(
-      (failure) => emit(AnnonceState.failure(failure.message)),
-      (data) => emit(AnnonceState.annonceListLoaded(data)),
+          (f) => emit(AnnonceState.failure(f.message)),
+          (data) => emit(AnnonceState.annonceListLoaded(data)),
     );
   }
 
@@ -101,8 +174,8 @@ class AnnonceBloc extends Bloc<AnnonceEvent, AnnonceState> {
     emit(const AnnonceState.loading());
     final result = await getAnnonceById(GetAnnonceByIdParams(id: event.id));
     result.fold(
-      (failure) => emit(AnnonceState.failure(failure.message)),
-      (annonce) => emit(AnnonceState.annonceDetailLoaded(annonce)),
+          (f) => emit(AnnonceState.failure(f.message)),
+          (a) => emit(AnnonceState.annonceDetailLoaded(a)),
     );
   }
 
@@ -115,19 +188,18 @@ class AnnonceBloc extends Bloc<AnnonceEvent, AnnonceState> {
       size: event.size,
     ));
     result.fold(
-      (failure) => emit(AnnonceState.failure(failure.message)),
-      (data) => emit(AnnonceState.annonceListLoaded(data)),
+          (f) => emit(AnnonceState.failure(f.message)),
+          (data) => emit(AnnonceState.annonceListLoaded(data)),
     );
   }
 
   Future<void> _onCreateAnnonce(
       _CreateAnnonce event, Emitter<AnnonceState> emit) async {
     emit(const AnnonceState.loading());
-    final result =
-        await createAnnonce(CreateAnnonceParams(body: event.body));
+    final result = await createAnnonce(CreateAnnonceParams(body: event.body));
     result.fold(
-      (failure) => emit(AnnonceState.failure(failure.message)),
-      (annonce) => emit(AnnonceState.annonceCreated(annonce)),
+          (f) => emit(AnnonceState.failure(f.message)),
+          (a) => emit(AnnonceState.annonceCreated(a)),
     );
   }
 
@@ -137,8 +209,8 @@ class AnnonceBloc extends Bloc<AnnonceEvent, AnnonceState> {
     final result = await updateAnnonce(
         UpdateAnnonceParams(id: event.id, body: event.body));
     result.fold(
-      (failure) => emit(AnnonceState.failure(failure.message)),
-      (annonce) => emit(AnnonceState.annonceUpdated(annonce)),
+          (f) => emit(AnnonceState.failure(f.message)),
+          (a) => emit(AnnonceState.annonceUpdated(a)),
     );
   }
 
@@ -147,8 +219,8 @@ class AnnonceBloc extends Bloc<AnnonceEvent, AnnonceState> {
     emit(const AnnonceState.loading());
     final result = await deleteAnnonce(DeleteAnnonceParams(id: event.id));
     result.fold(
-      (failure) => emit(AnnonceState.failure(failure.message)),
-      (_) => emit(const AnnonceState.annonceDeleted()),
+          (f) => emit(AnnonceState.failure(f.message)),
+          (_) => emit(const AnnonceState.annonceDeleted()),
     );
   }
 
@@ -157,8 +229,8 @@ class AnnonceBloc extends Bloc<AnnonceEvent, AnnonceState> {
     emit(const AnnonceState.loading());
     final result = await suspendAnnonce(SuspendAnnonceParams(id: event.id));
     result.fold(
-      (failure) => emit(AnnonceState.failure(failure.message)),
-      (_) => emit(const AnnonceState.actionSuccess()),
+          (f) => emit(AnnonceState.failure(f.message)),
+          (_) => emit(const AnnonceState.actionSuccess()),
     );
   }
 
@@ -166,10 +238,10 @@ class AnnonceBloc extends Bloc<AnnonceEvent, AnnonceState> {
       _ReactivateAnnonce event, Emitter<AnnonceState> emit) async {
     emit(const AnnonceState.loading());
     final result =
-        await reactivateAnnonce(ReactivateAnnonceParams(id: event.id));
+    await reactivateAnnonce(ReactivateAnnonceParams(id: event.id));
     result.fold(
-      (failure) => emit(AnnonceState.failure(failure.message)),
-      (_) => emit(const AnnonceState.actionSuccess()),
+          (f) => emit(AnnonceState.failure(f.message)),
+          (_) => emit(const AnnonceState.actionSuccess()),
     );
   }
 
@@ -178,8 +250,8 @@ class AnnonceBloc extends Bloc<AnnonceEvent, AnnonceState> {
     emit(const AnnonceState.loading());
     final result = await markAsSold(MarkAsSoldParams(id: event.id));
     result.fold(
-      (failure) => emit(AnnonceState.failure(failure.message)),
-      (_) => emit(const AnnonceState.actionSuccess()),
+          (f) => emit(AnnonceState.failure(f.message)),
+          (_) => emit(const AnnonceState.actionSuccess()),
     );
   }
 
@@ -189,8 +261,8 @@ class AnnonceBloc extends Bloc<AnnonceEvent, AnnonceState> {
     final result = await activateTopLot(
         ActivateTopLotParams(id: event.id, durationDays: event.durationDays));
     result.fold(
-      (failure) => emit(AnnonceState.failure(failure.message)),
-      (_) => emit(const AnnonceState.actionSuccess()),
+          (f) => emit(AnnonceState.failure(f.message)),
+          (_) => emit(const AnnonceState.actionSuccess()),
     );
   }
 
@@ -198,10 +270,10 @@ class AnnonceBloc extends Bloc<AnnonceEvent, AnnonceState> {
       _FlagAnnonce event, Emitter<AnnonceState> emit) async {
     emit(const AnnonceState.loading());
     final result =
-        await flagAnnonce(FlagAnnonceParams(id: event.id, body: event.body));
+    await flagAnnonce(FlagAnnonceParams(id: event.id, body: event.body));
     result.fold(
-      (failure) => emit(AnnonceState.failure(failure.message)),
-      (_) => emit(const AnnonceState.actionSuccess()),
+          (f) => emit(AnnonceState.failure(f.message)),
+          (_) => emit(const AnnonceState.actionSuccess()),
     );
   }
 
@@ -209,8 +281,8 @@ class AnnonceBloc extends Bloc<AnnonceEvent, AnnonceState> {
       _AddFavorite event, Emitter<AnnonceState> emit) async {
     final result = await addFavorite(AddFavoriteParams(id: event.id));
     result.fold(
-      (failure) => emit(AnnonceState.failure(failure.message)),
-      (_) => emit(const AnnonceState.actionSuccess()),
+          (f) => emit(AnnonceState.failure(f.message)),
+          (_) => emit(const AnnonceState.actionSuccess()),
     );
   }
 
@@ -218,8 +290,8 @@ class AnnonceBloc extends Bloc<AnnonceEvent, AnnonceState> {
       _RemoveFavorite event, Emitter<AnnonceState> emit) async {
     final result = await removeFavorite(RemoveFavoriteParams(id: event.id));
     result.fold(
-      (failure) => emit(AnnonceState.failure(failure.message)),
-      (_) => emit(const AnnonceState.actionSuccess()),
+          (f) => emit(AnnonceState.failure(f.message)),
+          (_) => emit(const AnnonceState.actionSuccess()),
     );
   }
 
@@ -229,8 +301,8 @@ class AnnonceBloc extends Bloc<AnnonceEvent, AnnonceState> {
     final result = await getFavorites(
         GetFavoritesParams(page: event.page, size: event.size));
     result.fold(
-      (failure) => emit(AnnonceState.failure(failure.message)),
-      (data) => emit(AnnonceState.favoritesLoaded(data)),
+          (f) => emit(AnnonceState.failure(f.message)),
+          (data) => emit(AnnonceState.favoritesLoaded(data)),
     );
   }
 
@@ -239,18 +311,19 @@ class AnnonceBloc extends Bloc<AnnonceEvent, AnnonceState> {
     emit(const AnnonceState.loading());
     final result = await createAlert(CreateAlertParams(body: event.body));
     result.fold(
-      (failure) => emit(AnnonceState.failure(failure.message)),
-      (_) => emit(const AnnonceState.actionSuccess()),
+          (f) => emit(AnnonceState.failure(f.message)),
+          (_) => emit(const AnnonceState.actionSuccess()),
     );
   }
 
   Future<void> _onDeleteAlert(
       _DeleteAlert event, Emitter<AnnonceState> emit) async {
     emit(const AnnonceState.loading());
-    final result = await deleteAlert(DeleteAlertParams(alertId: event.alertId));
+    final result =
+    await deleteAlert(DeleteAlertParams(alertId: event.alertId));
     result.fold(
-      (failure) => emit(AnnonceState.failure(failure.message)),
-      (_) => emit(const AnnonceState.actionSuccess()),
+          (f) => emit(AnnonceState.failure(f.message)),
+          (_) => emit(const AnnonceState.actionSuccess()),
     );
   }
 
@@ -259,8 +332,8 @@ class AnnonceBloc extends Bloc<AnnonceEvent, AnnonceState> {
     emit(const AnnonceState.loading());
     final result = await getAlertsByBuyer(const NoParams());
     result.fold(
-      (failure) => emit(AnnonceState.failure(failure.message)),
-      (alerts) => emit(AnnonceState.alertsLoaded(alerts)),
+          (f) => emit(AnnonceState.failure(f.message)),
+          (alerts) => emit(AnnonceState.alertsLoaded(alerts)),
     );
   }
 }

@@ -72,5 +72,6 @@ void registerAnnoncesDependencies(GetIt sl) {
     createAlert: sl(),
     deleteAlert: sl(),
     getAlertsByBuyer: sl(),
+    uploadMedia: sl(),
   ));
 }
