@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:ma_chana9_app/core/network/dio_client.dart';
 import 'package:ma_chana9_app/core/network/token_storage.dart';
+import 'package:ma_chana9_app/features/annonces/domain/usecases/upload_media.dart';
 
 import 'data/datasources/annonce_remote_datasource.dart';
 import 'data/repositories/annonce_repository_impl.dart';
@@ -53,7 +54,7 @@ void registerAnnoncesDependencies(GetIt sl) {
   sl.registerLazySingleton(() => CreateAlert(sl<AnnonceRepository>()));
   sl.registerLazySingleton(() => DeleteAlert(sl<AnnonceRepository>()));
   sl.registerLazySingleton(() => GetAlertsByBuyer(sl<AnnonceRepository>()));
-
+  sl.registerCachedFactory(()=>UploadMedia(sl<AnnonceRepository>()));
   sl.registerFactory(() => AnnonceBloc(
     searchAnnonces: sl(),
     getAnnonceById: sl(),

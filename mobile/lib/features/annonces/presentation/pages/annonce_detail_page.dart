@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ma_chana9_app/shared/enums/annonce_status.dart';
 import '../../domain/entities/annonce.dart';
+import '../../domain/entities/annonce_media.dart';
 import '../bloc/annonce_bloc.dart';
 import 'annonce_form_page.dart';
 
@@ -65,6 +66,21 @@ class _AnnonceDetailPageState extends State<AnnonceDetailPage> {
           failure: (message) => Scaffold(
             appBar: AppBar(),
             body: Center(child: Text(message)),
+          ),
+          uploadingMedias: (int current, int total) => Scaffold(
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const CircularProgressIndicator(),
+                  const SizedBox(height: 16),
+                  Text("Envoi des médias : $current / $total"),
+                ],
+              ),
+            ),
+          ),
+          mediaUploaded: (AnnonceMedia media) => const Scaffold(
+            body: Center(child: Text("Médias envoyés avec succès !")),
           ),
         );
       },
