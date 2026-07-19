@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:ma_chana9_app/core/error/failure.dart';
+import 'package:ma_chana9_app/features/annonces/domain/entities/annonce_media.dart';
 import 'package:ma_chana9_app/shared/model/paginated/paginated_response.dart';
 import '../entities/annonce.dart';
 import '../../data/models/annonce_search_request_model.dart';
@@ -33,4 +34,6 @@ abstract class AnnonceRepository {
   Future<Either<Failure, Unit>> createAlert(Map<String, dynamic> body);
   Future<Either<Failure, Unit>> deleteAlert(String alertId);
   Future<Either<Failure, List<Map<String, dynamic>>>> getAlertsByBuyer();
+
+  Future<Either<Failure, AnnonceMedia>> uploadMedia(String annonceId, String filePath);
 }

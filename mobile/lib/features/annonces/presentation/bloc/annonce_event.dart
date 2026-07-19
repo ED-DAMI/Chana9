@@ -16,8 +16,15 @@ abstract class AnnonceEvent with _$AnnonceEvent {
     @Default(20) int size,
   }) = _LoadAnnoncesBySeller;
 
+  // Création simple sans photos
   const factory AnnonceEvent.createAnnonce(Map<String, dynamic> body) =
   _CreateAnnonce;
+
+  // Création + upload photos en une seule opération atomique
+  const factory AnnonceEvent.createAnnonceWithMedias({
+    required Map<String, dynamic> body,
+    required List<String> photoPaths,
+  }) = _CreateAnnonceWithMedias;
 
   const factory AnnonceEvent.updateAnnonce({
     required String id,

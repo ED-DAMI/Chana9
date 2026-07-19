@@ -1,6 +1,5 @@
 package ma.chana9.modules.annonce.controllers;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import lombok.RequiredArgsConstructor;
@@ -33,8 +32,8 @@ public class AnnonceMediaController {
     public ApiResponse<AnnonceMedia> upload(
             @PathVariable UUID annonceId,
             @RequestParam("file") MultipartFile file,
-            @AuthenticationPrincipal AppUserDetails userDetails) {
-        AnnonceMedia media = annonceMediaService.upload(annonceId, userDetails.getId(), file);
+            @AuthenticationPrincipal UUID sellerId) {
+        AnnonceMedia media = annonceMediaService.upload(annonceId, sellerId, file);
         return ApiResponse.success(null, media);
     }
 
@@ -44,7 +43,6 @@ public class AnnonceMediaController {
             @PathVariable UUID annonceId,
             @PathVariable UUID mediaId,
             @AuthenticationPrincipal AppUserDetails userDetails) {
-        annonceMediaService.delete(mediaId, userDetails.getId());
         return ApiResponse.success(null, null);
     }
 }

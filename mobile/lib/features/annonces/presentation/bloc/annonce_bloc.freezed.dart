@@ -55,14 +55,15 @@ extension AnnonceEventPatterns on AnnonceEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _SearchAnnonces value)?  searchAnnonces,TResult Function( _LoadAnnonceById value)?  loadAnnonceById,TResult Function( _LoadAnnoncesBySeller value)?  loadAnnoncesBySeller,TResult Function( _CreateAnnonce value)?  createAnnonce,TResult Function( _UpdateAnnonce value)?  updateAnnonce,TResult Function( _DeleteAnnonce value)?  deleteAnnonce,TResult Function( _SuspendAnnonce value)?  suspendAnnonce,TResult Function( _ReactivateAnnonce value)?  reactivateAnnonce,TResult Function( _MarkAsSold value)?  markAsSold,TResult Function( _ActivateTopLot value)?  activateTopLot,TResult Function( _FlagAnnonce value)?  flagAnnonce,TResult Function( _AddFavorite value)?  addFavorite,TResult Function( _RemoveFavorite value)?  removeFavorite,TResult Function( _LoadFavorites value)?  loadFavorites,TResult Function( _CreateAlert value)?  createAlert,TResult Function( _DeleteAlert value)?  deleteAlert,TResult Function( _LoadAlertsByBuyer value)?  loadAlertsByBuyer,TResult Function( _UploadMedia value)?  uploadMedia,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _SearchAnnonces value)?  searchAnnonces,TResult Function( _LoadAnnonceById value)?  loadAnnonceById,TResult Function( _LoadAnnoncesBySeller value)?  loadAnnoncesBySeller,TResult Function( _CreateAnnonce value)?  createAnnonce,TResult Function( _CreateAnnonceWithMedias value)?  createAnnonceWithMedias,TResult Function( _UpdateAnnonce value)?  updateAnnonce,TResult Function( _DeleteAnnonce value)?  deleteAnnonce,TResult Function( _SuspendAnnonce value)?  suspendAnnonce,TResult Function( _ReactivateAnnonce value)?  reactivateAnnonce,TResult Function( _MarkAsSold value)?  markAsSold,TResult Function( _ActivateTopLot value)?  activateTopLot,TResult Function( _FlagAnnonce value)?  flagAnnonce,TResult Function( _AddFavorite value)?  addFavorite,TResult Function( _RemoveFavorite value)?  removeFavorite,TResult Function( _LoadFavorites value)?  loadFavorites,TResult Function( _CreateAlert value)?  createAlert,TResult Function( _DeleteAlert value)?  deleteAlert,TResult Function( _LoadAlertsByBuyer value)?  loadAlertsByBuyer,TResult Function( _UploadMedia value)?  uploadMedia,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _SearchAnnonces() when searchAnnonces != null:
 return searchAnnonces(_that);case _LoadAnnonceById() when loadAnnonceById != null:
 return loadAnnonceById(_that);case _LoadAnnoncesBySeller() when loadAnnoncesBySeller != null:
 return loadAnnoncesBySeller(_that);case _CreateAnnonce() when createAnnonce != null:
-return createAnnonce(_that);case _UpdateAnnonce() when updateAnnonce != null:
+return createAnnonce(_that);case _CreateAnnonceWithMedias() when createAnnonceWithMedias != null:
+return createAnnonceWithMedias(_that);case _UpdateAnnonce() when updateAnnonce != null:
 return updateAnnonce(_that);case _DeleteAnnonce() when deleteAnnonce != null:
 return deleteAnnonce(_that);case _SuspendAnnonce() when suspendAnnonce != null:
 return suspendAnnonce(_that);case _ReactivateAnnonce() when reactivateAnnonce != null:
@@ -94,14 +95,15 @@ return uploadMedia(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _SearchAnnonces value)  searchAnnonces,required TResult Function( _LoadAnnonceById value)  loadAnnonceById,required TResult Function( _LoadAnnoncesBySeller value)  loadAnnoncesBySeller,required TResult Function( _CreateAnnonce value)  createAnnonce,required TResult Function( _UpdateAnnonce value)  updateAnnonce,required TResult Function( _DeleteAnnonce value)  deleteAnnonce,required TResult Function( _SuspendAnnonce value)  suspendAnnonce,required TResult Function( _ReactivateAnnonce value)  reactivateAnnonce,required TResult Function( _MarkAsSold value)  markAsSold,required TResult Function( _ActivateTopLot value)  activateTopLot,required TResult Function( _FlagAnnonce value)  flagAnnonce,required TResult Function( _AddFavorite value)  addFavorite,required TResult Function( _RemoveFavorite value)  removeFavorite,required TResult Function( _LoadFavorites value)  loadFavorites,required TResult Function( _CreateAlert value)  createAlert,required TResult Function( _DeleteAlert value)  deleteAlert,required TResult Function( _LoadAlertsByBuyer value)  loadAlertsByBuyer,required TResult Function( _UploadMedia value)  uploadMedia,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _SearchAnnonces value)  searchAnnonces,required TResult Function( _LoadAnnonceById value)  loadAnnonceById,required TResult Function( _LoadAnnoncesBySeller value)  loadAnnoncesBySeller,required TResult Function( _CreateAnnonce value)  createAnnonce,required TResult Function( _CreateAnnonceWithMedias value)  createAnnonceWithMedias,required TResult Function( _UpdateAnnonce value)  updateAnnonce,required TResult Function( _DeleteAnnonce value)  deleteAnnonce,required TResult Function( _SuspendAnnonce value)  suspendAnnonce,required TResult Function( _ReactivateAnnonce value)  reactivateAnnonce,required TResult Function( _MarkAsSold value)  markAsSold,required TResult Function( _ActivateTopLot value)  activateTopLot,required TResult Function( _FlagAnnonce value)  flagAnnonce,required TResult Function( _AddFavorite value)  addFavorite,required TResult Function( _RemoveFavorite value)  removeFavorite,required TResult Function( _LoadFavorites value)  loadFavorites,required TResult Function( _CreateAlert value)  createAlert,required TResult Function( _DeleteAlert value)  deleteAlert,required TResult Function( _LoadAlertsByBuyer value)  loadAlertsByBuyer,required TResult Function( _UploadMedia value)  uploadMedia,}){
 final _that = this;
 switch (_that) {
 case _SearchAnnonces():
 return searchAnnonces(_that);case _LoadAnnonceById():
 return loadAnnonceById(_that);case _LoadAnnoncesBySeller():
 return loadAnnoncesBySeller(_that);case _CreateAnnonce():
-return createAnnonce(_that);case _UpdateAnnonce():
+return createAnnonce(_that);case _CreateAnnonceWithMedias():
+return createAnnonceWithMedias(_that);case _UpdateAnnonce():
 return updateAnnonce(_that);case _DeleteAnnonce():
 return deleteAnnonce(_that);case _SuspendAnnonce():
 return suspendAnnonce(_that);case _ReactivateAnnonce():
@@ -132,14 +134,15 @@ return uploadMedia(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _SearchAnnonces value)?  searchAnnonces,TResult? Function( _LoadAnnonceById value)?  loadAnnonceById,TResult? Function( _LoadAnnoncesBySeller value)?  loadAnnoncesBySeller,TResult? Function( _CreateAnnonce value)?  createAnnonce,TResult? Function( _UpdateAnnonce value)?  updateAnnonce,TResult? Function( _DeleteAnnonce value)?  deleteAnnonce,TResult? Function( _SuspendAnnonce value)?  suspendAnnonce,TResult? Function( _ReactivateAnnonce value)?  reactivateAnnonce,TResult? Function( _MarkAsSold value)?  markAsSold,TResult? Function( _ActivateTopLot value)?  activateTopLot,TResult? Function( _FlagAnnonce value)?  flagAnnonce,TResult? Function( _AddFavorite value)?  addFavorite,TResult? Function( _RemoveFavorite value)?  removeFavorite,TResult? Function( _LoadFavorites value)?  loadFavorites,TResult? Function( _CreateAlert value)?  createAlert,TResult? Function( _DeleteAlert value)?  deleteAlert,TResult? Function( _LoadAlertsByBuyer value)?  loadAlertsByBuyer,TResult? Function( _UploadMedia value)?  uploadMedia,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _SearchAnnonces value)?  searchAnnonces,TResult? Function( _LoadAnnonceById value)?  loadAnnonceById,TResult? Function( _LoadAnnoncesBySeller value)?  loadAnnoncesBySeller,TResult? Function( _CreateAnnonce value)?  createAnnonce,TResult? Function( _CreateAnnonceWithMedias value)?  createAnnonceWithMedias,TResult? Function( _UpdateAnnonce value)?  updateAnnonce,TResult? Function( _DeleteAnnonce value)?  deleteAnnonce,TResult? Function( _SuspendAnnonce value)?  suspendAnnonce,TResult? Function( _ReactivateAnnonce value)?  reactivateAnnonce,TResult? Function( _MarkAsSold value)?  markAsSold,TResult? Function( _ActivateTopLot value)?  activateTopLot,TResult? Function( _FlagAnnonce value)?  flagAnnonce,TResult? Function( _AddFavorite value)?  addFavorite,TResult? Function( _RemoveFavorite value)?  removeFavorite,TResult? Function( _LoadFavorites value)?  loadFavorites,TResult? Function( _CreateAlert value)?  createAlert,TResult? Function( _DeleteAlert value)?  deleteAlert,TResult? Function( _LoadAlertsByBuyer value)?  loadAlertsByBuyer,TResult? Function( _UploadMedia value)?  uploadMedia,}){
 final _that = this;
 switch (_that) {
 case _SearchAnnonces() when searchAnnonces != null:
 return searchAnnonces(_that);case _LoadAnnonceById() when loadAnnonceById != null:
 return loadAnnonceById(_that);case _LoadAnnoncesBySeller() when loadAnnoncesBySeller != null:
 return loadAnnoncesBySeller(_that);case _CreateAnnonce() when createAnnonce != null:
-return createAnnonce(_that);case _UpdateAnnonce() when updateAnnonce != null:
+return createAnnonce(_that);case _CreateAnnonceWithMedias() when createAnnonceWithMedias != null:
+return createAnnonceWithMedias(_that);case _UpdateAnnonce() when updateAnnonce != null:
 return updateAnnonce(_that);case _DeleteAnnonce() when deleteAnnonce != null:
 return deleteAnnonce(_that);case _SuspendAnnonce() when suspendAnnonce != null:
 return suspendAnnonce(_that);case _ReactivateAnnonce() when reactivateAnnonce != null:
@@ -170,13 +173,14 @@ return uploadMedia(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( AnnonceSearchRequestModel request,  int page,  int size)?  searchAnnonces,TResult Function( String id)?  loadAnnonceById,TResult Function( String sellerId,  int page,  int size)?  loadAnnoncesBySeller,TResult Function( Map<String, dynamic> body)?  createAnnonce,TResult Function( String id,  Map<String, dynamic> body)?  updateAnnonce,TResult Function( String id)?  deleteAnnonce,TResult Function( String id)?  suspendAnnonce,TResult Function( String id)?  reactivateAnnonce,TResult Function( String id)?  markAsSold,TResult Function( String id,  int durationDays)?  activateTopLot,TResult Function( String id,  Map<String, dynamic> body)?  flagAnnonce,TResult Function( String id)?  addFavorite,TResult Function( String id)?  removeFavorite,TResult Function( int page,  int size)?  loadFavorites,TResult Function( Map<String, dynamic> body)?  createAlert,TResult Function( String alertId)?  deleteAlert,TResult Function()?  loadAlertsByBuyer,TResult Function( String annonceId,  String filePath)?  uploadMedia,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( AnnonceSearchRequestModel request,  int page,  int size)?  searchAnnonces,TResult Function( String id)?  loadAnnonceById,TResult Function( String sellerId,  int page,  int size)?  loadAnnoncesBySeller,TResult Function( Map<String, dynamic> body)?  createAnnonce,TResult Function( Map<String, dynamic> body,  List<String> photoPaths)?  createAnnonceWithMedias,TResult Function( String id,  Map<String, dynamic> body)?  updateAnnonce,TResult Function( String id)?  deleteAnnonce,TResult Function( String id)?  suspendAnnonce,TResult Function( String id)?  reactivateAnnonce,TResult Function( String id)?  markAsSold,TResult Function( String id,  int durationDays)?  activateTopLot,TResult Function( String id,  Map<String, dynamic> body)?  flagAnnonce,TResult Function( String id)?  addFavorite,TResult Function( String id)?  removeFavorite,TResult Function( int page,  int size)?  loadFavorites,TResult Function( Map<String, dynamic> body)?  createAlert,TResult Function( String alertId)?  deleteAlert,TResult Function()?  loadAlertsByBuyer,TResult Function( String annonceId,  String filePath)?  uploadMedia,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SearchAnnonces() when searchAnnonces != null:
 return searchAnnonces(_that.request,_that.page,_that.size);case _LoadAnnonceById() when loadAnnonceById != null:
 return loadAnnonceById(_that.id);case _LoadAnnoncesBySeller() when loadAnnoncesBySeller != null:
 return loadAnnoncesBySeller(_that.sellerId,_that.page,_that.size);case _CreateAnnonce() when createAnnonce != null:
-return createAnnonce(_that.body);case _UpdateAnnonce() when updateAnnonce != null:
+return createAnnonce(_that.body);case _CreateAnnonceWithMedias() when createAnnonceWithMedias != null:
+return createAnnonceWithMedias(_that.body,_that.photoPaths);case _UpdateAnnonce() when updateAnnonce != null:
 return updateAnnonce(_that.id,_that.body);case _DeleteAnnonce() when deleteAnnonce != null:
 return deleteAnnonce(_that.id);case _SuspendAnnonce() when suspendAnnonce != null:
 return suspendAnnonce(_that.id);case _ReactivateAnnonce() when reactivateAnnonce != null:
@@ -208,13 +212,14 @@ return uploadMedia(_that.annonceId,_that.filePath);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( AnnonceSearchRequestModel request,  int page,  int size)  searchAnnonces,required TResult Function( String id)  loadAnnonceById,required TResult Function( String sellerId,  int page,  int size)  loadAnnoncesBySeller,required TResult Function( Map<String, dynamic> body)  createAnnonce,required TResult Function( String id,  Map<String, dynamic> body)  updateAnnonce,required TResult Function( String id)  deleteAnnonce,required TResult Function( String id)  suspendAnnonce,required TResult Function( String id)  reactivateAnnonce,required TResult Function( String id)  markAsSold,required TResult Function( String id,  int durationDays)  activateTopLot,required TResult Function( String id,  Map<String, dynamic> body)  flagAnnonce,required TResult Function( String id)  addFavorite,required TResult Function( String id)  removeFavorite,required TResult Function( int page,  int size)  loadFavorites,required TResult Function( Map<String, dynamic> body)  createAlert,required TResult Function( String alertId)  deleteAlert,required TResult Function()  loadAlertsByBuyer,required TResult Function( String annonceId,  String filePath)  uploadMedia,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( AnnonceSearchRequestModel request,  int page,  int size)  searchAnnonces,required TResult Function( String id)  loadAnnonceById,required TResult Function( String sellerId,  int page,  int size)  loadAnnoncesBySeller,required TResult Function( Map<String, dynamic> body)  createAnnonce,required TResult Function( Map<String, dynamic> body,  List<String> photoPaths)  createAnnonceWithMedias,required TResult Function( String id,  Map<String, dynamic> body)  updateAnnonce,required TResult Function( String id)  deleteAnnonce,required TResult Function( String id)  suspendAnnonce,required TResult Function( String id)  reactivateAnnonce,required TResult Function( String id)  markAsSold,required TResult Function( String id,  int durationDays)  activateTopLot,required TResult Function( String id,  Map<String, dynamic> body)  flagAnnonce,required TResult Function( String id)  addFavorite,required TResult Function( String id)  removeFavorite,required TResult Function( int page,  int size)  loadFavorites,required TResult Function( Map<String, dynamic> body)  createAlert,required TResult Function( String alertId)  deleteAlert,required TResult Function()  loadAlertsByBuyer,required TResult Function( String annonceId,  String filePath)  uploadMedia,}) {final _that = this;
 switch (_that) {
 case _SearchAnnonces():
 return searchAnnonces(_that.request,_that.page,_that.size);case _LoadAnnonceById():
 return loadAnnonceById(_that.id);case _LoadAnnoncesBySeller():
 return loadAnnoncesBySeller(_that.sellerId,_that.page,_that.size);case _CreateAnnonce():
-return createAnnonce(_that.body);case _UpdateAnnonce():
+return createAnnonce(_that.body);case _CreateAnnonceWithMedias():
+return createAnnonceWithMedias(_that.body,_that.photoPaths);case _UpdateAnnonce():
 return updateAnnonce(_that.id,_that.body);case _DeleteAnnonce():
 return deleteAnnonce(_that.id);case _SuspendAnnonce():
 return suspendAnnonce(_that.id);case _ReactivateAnnonce():
@@ -245,13 +250,14 @@ return uploadMedia(_that.annonceId,_that.filePath);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( AnnonceSearchRequestModel request,  int page,  int size)?  searchAnnonces,TResult? Function( String id)?  loadAnnonceById,TResult? Function( String sellerId,  int page,  int size)?  loadAnnoncesBySeller,TResult? Function( Map<String, dynamic> body)?  createAnnonce,TResult? Function( String id,  Map<String, dynamic> body)?  updateAnnonce,TResult? Function( String id)?  deleteAnnonce,TResult? Function( String id)?  suspendAnnonce,TResult? Function( String id)?  reactivateAnnonce,TResult? Function( String id)?  markAsSold,TResult? Function( String id,  int durationDays)?  activateTopLot,TResult? Function( String id,  Map<String, dynamic> body)?  flagAnnonce,TResult? Function( String id)?  addFavorite,TResult? Function( String id)?  removeFavorite,TResult? Function( int page,  int size)?  loadFavorites,TResult? Function( Map<String, dynamic> body)?  createAlert,TResult? Function( String alertId)?  deleteAlert,TResult? Function()?  loadAlertsByBuyer,TResult? Function( String annonceId,  String filePath)?  uploadMedia,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( AnnonceSearchRequestModel request,  int page,  int size)?  searchAnnonces,TResult? Function( String id)?  loadAnnonceById,TResult? Function( String sellerId,  int page,  int size)?  loadAnnoncesBySeller,TResult? Function( Map<String, dynamic> body)?  createAnnonce,TResult? Function( Map<String, dynamic> body,  List<String> photoPaths)?  createAnnonceWithMedias,TResult? Function( String id,  Map<String, dynamic> body)?  updateAnnonce,TResult? Function( String id)?  deleteAnnonce,TResult? Function( String id)?  suspendAnnonce,TResult? Function( String id)?  reactivateAnnonce,TResult? Function( String id)?  markAsSold,TResult? Function( String id,  int durationDays)?  activateTopLot,TResult? Function( String id,  Map<String, dynamic> body)?  flagAnnonce,TResult? Function( String id)?  addFavorite,TResult? Function( String id)?  removeFavorite,TResult? Function( int page,  int size)?  loadFavorites,TResult? Function( Map<String, dynamic> body)?  createAlert,TResult? Function( String alertId)?  deleteAlert,TResult? Function()?  loadAlertsByBuyer,TResult? Function( String annonceId,  String filePath)?  uploadMedia,}) {final _that = this;
 switch (_that) {
 case _SearchAnnonces() when searchAnnonces != null:
 return searchAnnonces(_that.request,_that.page,_that.size);case _LoadAnnonceById() when loadAnnonceById != null:
 return loadAnnonceById(_that.id);case _LoadAnnoncesBySeller() when loadAnnoncesBySeller != null:
 return loadAnnoncesBySeller(_that.sellerId,_that.page,_that.size);case _CreateAnnonce() when createAnnonce != null:
-return createAnnonce(_that.body);case _UpdateAnnonce() when updateAnnonce != null:
+return createAnnonce(_that.body);case _CreateAnnonceWithMedias() when createAnnonceWithMedias != null:
+return createAnnonceWithMedias(_that.body,_that.photoPaths);case _UpdateAnnonce() when updateAnnonce != null:
 return updateAnnonce(_that.id,_that.body);case _DeleteAnnonce() when deleteAnnonce != null:
 return deleteAnnonce(_that.id);case _SuspendAnnonce() when suspendAnnonce != null:
 return suspendAnnonce(_that.id);case _ReactivateAnnonce() when reactivateAnnonce != null:
@@ -554,6 +560,86 @@ class __$CreateAnnonceCopyWithImpl<$Res>
   return _then(_CreateAnnonce(
 null == body ? _self._body : body // ignore: cast_nullable_to_non_nullable
 as Map<String, dynamic>,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class _CreateAnnonceWithMedias implements AnnonceEvent {
+  const _CreateAnnonceWithMedias({required final  Map<String, dynamic> body, required final  List<String> photoPaths}): _body = body,_photoPaths = photoPaths;
+  
+
+ final  Map<String, dynamic> _body;
+ Map<String, dynamic> get body {
+  if (_body is EqualUnmodifiableMapView) return _body;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_body);
+}
+
+ final  List<String> _photoPaths;
+ List<String> get photoPaths {
+  if (_photoPaths is EqualUnmodifiableListView) return _photoPaths;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_photoPaths);
+}
+
+
+/// Create a copy of AnnonceEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$CreateAnnonceWithMediasCopyWith<_CreateAnnonceWithMedias> get copyWith => __$CreateAnnonceWithMediasCopyWithImpl<_CreateAnnonceWithMedias>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CreateAnnonceWithMedias&&const DeepCollectionEquality().equals(other._body, _body)&&const DeepCollectionEquality().equals(other._photoPaths, _photoPaths));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_body),const DeepCollectionEquality().hash(_photoPaths));
+
+@override
+String toString() {
+  return 'AnnonceEvent.createAnnonceWithMedias(body: $body, photoPaths: $photoPaths)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$CreateAnnonceWithMediasCopyWith<$Res> implements $AnnonceEventCopyWith<$Res> {
+  factory _$CreateAnnonceWithMediasCopyWith(_CreateAnnonceWithMedias value, $Res Function(_CreateAnnonceWithMedias) _then) = __$CreateAnnonceWithMediasCopyWithImpl;
+@useResult
+$Res call({
+ Map<String, dynamic> body, List<String> photoPaths
+});
+
+
+
+
+}
+/// @nodoc
+class __$CreateAnnonceWithMediasCopyWithImpl<$Res>
+    implements _$CreateAnnonceWithMediasCopyWith<$Res> {
+  __$CreateAnnonceWithMediasCopyWithImpl(this._self, this._then);
+
+  final _CreateAnnonceWithMedias _self;
+  final $Res Function(_CreateAnnonceWithMedias) _then;
+
+/// Create a copy of AnnonceEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? body = null,Object? photoPaths = null,}) {
+  return _then(_CreateAnnonceWithMedias(
+body: null == body ? _self._body : body // ignore: cast_nullable_to_non_nullable
+as Map<String, dynamic>,photoPaths: null == photoPaths ? _self._photoPaths : photoPaths // ignore: cast_nullable_to_non_nullable
+as List<String>,
   ));
 }
 
@@ -1522,12 +1608,13 @@ extension AnnonceStatePatterns on AnnonceState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial value)?  initial,TResult Function( _Loading value)?  loading,TResult Function( _AnnonceListLoaded value)?  annonceListLoaded,TResult Function( _AnnonceDetailLoaded value)?  annonceDetailLoaded,TResult Function( _AnnonceCreated value)?  annonceCreated,TResult Function( _AnnonceUpdated value)?  annonceUpdated,TResult Function( _AnnonceDeleted value)?  annonceDeleted,TResult Function( _ActionSuccess value)?  actionSuccess,TResult Function( _FavoritesLoaded value)?  favoritesLoaded,TResult Function( _AlertsLoaded value)?  alertsLoaded,TResult Function( _Failure value)?  failure,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial value)?  initial,TResult Function( _Loading value)?  loading,TResult Function( _UploadingMedias value)?  uploadingMedias,TResult Function( _AnnonceListLoaded value)?  annonceListLoaded,TResult Function( _AnnonceDetailLoaded value)?  annonceDetailLoaded,TResult Function( _AnnonceCreated value)?  annonceCreated,TResult Function( _AnnonceUpdated value)?  annonceUpdated,TResult Function( _AnnonceDeleted value)?  annonceDeleted,TResult Function( _ActionSuccess value)?  actionSuccess,TResult Function( _FavoritesLoaded value)?  favoritesLoaded,TResult Function( _AlertsLoaded value)?  alertsLoaded,TResult Function( _MediaUploaded value)?  mediaUploaded,TResult Function( _Failure value)?  failure,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial(_that);case _Loading() when loading != null:
-return loading(_that);case _AnnonceListLoaded() when annonceListLoaded != null:
+return loading(_that);case _UploadingMedias() when uploadingMedias != null:
+return uploadingMedias(_that);case _AnnonceListLoaded() when annonceListLoaded != null:
 return annonceListLoaded(_that);case _AnnonceDetailLoaded() when annonceDetailLoaded != null:
 return annonceDetailLoaded(_that);case _AnnonceCreated() when annonceCreated != null:
 return annonceCreated(_that);case _AnnonceUpdated() when annonceUpdated != null:
@@ -1535,7 +1622,8 @@ return annonceUpdated(_that);case _AnnonceDeleted() when annonceDeleted != null:
 return annonceDeleted(_that);case _ActionSuccess() when actionSuccess != null:
 return actionSuccess(_that);case _FavoritesLoaded() when favoritesLoaded != null:
 return favoritesLoaded(_that);case _AlertsLoaded() when alertsLoaded != null:
-return alertsLoaded(_that);case _Failure() when failure != null:
+return alertsLoaded(_that);case _MediaUploaded() when mediaUploaded != null:
+return mediaUploaded(_that);case _Failure() when failure != null:
 return failure(_that);case _:
   return orElse();
 
@@ -1554,12 +1642,13 @@ return failure(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial value)  initial,required TResult Function( _Loading value)  loading,required TResult Function( _AnnonceListLoaded value)  annonceListLoaded,required TResult Function( _AnnonceDetailLoaded value)  annonceDetailLoaded,required TResult Function( _AnnonceCreated value)  annonceCreated,required TResult Function( _AnnonceUpdated value)  annonceUpdated,required TResult Function( _AnnonceDeleted value)  annonceDeleted,required TResult Function( _ActionSuccess value)  actionSuccess,required TResult Function( _FavoritesLoaded value)  favoritesLoaded,required TResult Function( _AlertsLoaded value)  alertsLoaded,required TResult Function( _Failure value)  failure,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial value)  initial,required TResult Function( _Loading value)  loading,required TResult Function( _UploadingMedias value)  uploadingMedias,required TResult Function( _AnnonceListLoaded value)  annonceListLoaded,required TResult Function( _AnnonceDetailLoaded value)  annonceDetailLoaded,required TResult Function( _AnnonceCreated value)  annonceCreated,required TResult Function( _AnnonceUpdated value)  annonceUpdated,required TResult Function( _AnnonceDeleted value)  annonceDeleted,required TResult Function( _ActionSuccess value)  actionSuccess,required TResult Function( _FavoritesLoaded value)  favoritesLoaded,required TResult Function( _AlertsLoaded value)  alertsLoaded,required TResult Function( _MediaUploaded value)  mediaUploaded,required TResult Function( _Failure value)  failure,}){
 final _that = this;
 switch (_that) {
 case _Initial():
 return initial(_that);case _Loading():
-return loading(_that);case _AnnonceListLoaded():
+return loading(_that);case _UploadingMedias():
+return uploadingMedias(_that);case _AnnonceListLoaded():
 return annonceListLoaded(_that);case _AnnonceDetailLoaded():
 return annonceDetailLoaded(_that);case _AnnonceCreated():
 return annonceCreated(_that);case _AnnonceUpdated():
@@ -1567,7 +1656,8 @@ return annonceUpdated(_that);case _AnnonceDeleted():
 return annonceDeleted(_that);case _ActionSuccess():
 return actionSuccess(_that);case _FavoritesLoaded():
 return favoritesLoaded(_that);case _AlertsLoaded():
-return alertsLoaded(_that);case _Failure():
+return alertsLoaded(_that);case _MediaUploaded():
+return mediaUploaded(_that);case _Failure():
 return failure(_that);case _:
   throw StateError('Unexpected subclass');
 
@@ -1585,12 +1675,13 @@ return failure(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial value)?  initial,TResult? Function( _Loading value)?  loading,TResult? Function( _AnnonceListLoaded value)?  annonceListLoaded,TResult? Function( _AnnonceDetailLoaded value)?  annonceDetailLoaded,TResult? Function( _AnnonceCreated value)?  annonceCreated,TResult? Function( _AnnonceUpdated value)?  annonceUpdated,TResult? Function( _AnnonceDeleted value)?  annonceDeleted,TResult? Function( _ActionSuccess value)?  actionSuccess,TResult? Function( _FavoritesLoaded value)?  favoritesLoaded,TResult? Function( _AlertsLoaded value)?  alertsLoaded,TResult? Function( _Failure value)?  failure,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial value)?  initial,TResult? Function( _Loading value)?  loading,TResult? Function( _UploadingMedias value)?  uploadingMedias,TResult? Function( _AnnonceListLoaded value)?  annonceListLoaded,TResult? Function( _AnnonceDetailLoaded value)?  annonceDetailLoaded,TResult? Function( _AnnonceCreated value)?  annonceCreated,TResult? Function( _AnnonceUpdated value)?  annonceUpdated,TResult? Function( _AnnonceDeleted value)?  annonceDeleted,TResult? Function( _ActionSuccess value)?  actionSuccess,TResult? Function( _FavoritesLoaded value)?  favoritesLoaded,TResult? Function( _AlertsLoaded value)?  alertsLoaded,TResult? Function( _MediaUploaded value)?  mediaUploaded,TResult? Function( _Failure value)?  failure,}){
 final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial(_that);case _Loading() when loading != null:
-return loading(_that);case _AnnonceListLoaded() when annonceListLoaded != null:
+return loading(_that);case _UploadingMedias() when uploadingMedias != null:
+return uploadingMedias(_that);case _AnnonceListLoaded() when annonceListLoaded != null:
 return annonceListLoaded(_that);case _AnnonceDetailLoaded() when annonceDetailLoaded != null:
 return annonceDetailLoaded(_that);case _AnnonceCreated() when annonceCreated != null:
 return annonceCreated(_that);case _AnnonceUpdated() when annonceUpdated != null:
@@ -1598,7 +1689,8 @@ return annonceUpdated(_that);case _AnnonceDeleted() when annonceDeleted != null:
 return annonceDeleted(_that);case _ActionSuccess() when actionSuccess != null:
 return actionSuccess(_that);case _FavoritesLoaded() when favoritesLoaded != null:
 return favoritesLoaded(_that);case _AlertsLoaded() when alertsLoaded != null:
-return alertsLoaded(_that);case _Failure() when failure != null:
+return alertsLoaded(_that);case _MediaUploaded() when mediaUploaded != null:
+return mediaUploaded(_that);case _Failure() when failure != null:
 return failure(_that);case _:
   return null;
 
@@ -1616,11 +1708,12 @@ return failure(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( PaginatedResponse<Annonce> annonces)?  annonceListLoaded,TResult Function( Annonce annonce)?  annonceDetailLoaded,TResult Function( Annonce annonce)?  annonceCreated,TResult Function( Annonce annonce)?  annonceUpdated,TResult Function()?  annonceDeleted,TResult Function()?  actionSuccess,TResult Function( PaginatedResponse<Annonce> favorites)?  favoritesLoaded,TResult Function( List<Map<String, dynamic>> alerts)?  alertsLoaded,TResult Function( String message)?  failure,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( int current,  int total)?  uploadingMedias,TResult Function( PaginatedResponse<Annonce> annonces)?  annonceListLoaded,TResult Function( Annonce annonce)?  annonceDetailLoaded,TResult Function( Annonce annonce)?  annonceCreated,TResult Function( Annonce annonce)?  annonceUpdated,TResult Function()?  annonceDeleted,TResult Function()?  actionSuccess,TResult Function( PaginatedResponse<Annonce> favorites)?  favoritesLoaded,TResult Function( List<Map<String, dynamic>> alerts)?  alertsLoaded,TResult Function( AnnonceMedia media)?  mediaUploaded,TResult Function( String message)?  failure,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
-return loading();case _AnnonceListLoaded() when annonceListLoaded != null:
+return loading();case _UploadingMedias() when uploadingMedias != null:
+return uploadingMedias(_that.current,_that.total);case _AnnonceListLoaded() when annonceListLoaded != null:
 return annonceListLoaded(_that.annonces);case _AnnonceDetailLoaded() when annonceDetailLoaded != null:
 return annonceDetailLoaded(_that.annonce);case _AnnonceCreated() when annonceCreated != null:
 return annonceCreated(_that.annonce);case _AnnonceUpdated() when annonceUpdated != null:
@@ -1628,7 +1721,8 @@ return annonceUpdated(_that.annonce);case _AnnonceDeleted() when annonceDeleted 
 return annonceDeleted();case _ActionSuccess() when actionSuccess != null:
 return actionSuccess();case _FavoritesLoaded() when favoritesLoaded != null:
 return favoritesLoaded(_that.favorites);case _AlertsLoaded() when alertsLoaded != null:
-return alertsLoaded(_that.alerts);case _Failure() when failure != null:
+return alertsLoaded(_that.alerts);case _MediaUploaded() when mediaUploaded != null:
+return mediaUploaded(_that.media);case _Failure() when failure != null:
 return failure(_that.message);case _:
   return orElse();
 
@@ -1647,11 +1741,12 @@ return failure(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( PaginatedResponse<Annonce> annonces)  annonceListLoaded,required TResult Function( Annonce annonce)  annonceDetailLoaded,required TResult Function( Annonce annonce)  annonceCreated,required TResult Function( Annonce annonce)  annonceUpdated,required TResult Function()  annonceDeleted,required TResult Function()  actionSuccess,required TResult Function( PaginatedResponse<Annonce> favorites)  favoritesLoaded,required TResult Function( List<Map<String, dynamic>> alerts)  alertsLoaded,required TResult Function( String message)  failure,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( int current,  int total)  uploadingMedias,required TResult Function( PaginatedResponse<Annonce> annonces)  annonceListLoaded,required TResult Function( Annonce annonce)  annonceDetailLoaded,required TResult Function( Annonce annonce)  annonceCreated,required TResult Function( Annonce annonce)  annonceUpdated,required TResult Function()  annonceDeleted,required TResult Function()  actionSuccess,required TResult Function( PaginatedResponse<Annonce> favorites)  favoritesLoaded,required TResult Function( List<Map<String, dynamic>> alerts)  alertsLoaded,required TResult Function( AnnonceMedia media)  mediaUploaded,required TResult Function( String message)  failure,}) {final _that = this;
 switch (_that) {
 case _Initial():
 return initial();case _Loading():
-return loading();case _AnnonceListLoaded():
+return loading();case _UploadingMedias():
+return uploadingMedias(_that.current,_that.total);case _AnnonceListLoaded():
 return annonceListLoaded(_that.annonces);case _AnnonceDetailLoaded():
 return annonceDetailLoaded(_that.annonce);case _AnnonceCreated():
 return annonceCreated(_that.annonce);case _AnnonceUpdated():
@@ -1659,7 +1754,8 @@ return annonceUpdated(_that.annonce);case _AnnonceDeleted():
 return annonceDeleted();case _ActionSuccess():
 return actionSuccess();case _FavoritesLoaded():
 return favoritesLoaded(_that.favorites);case _AlertsLoaded():
-return alertsLoaded(_that.alerts);case _Failure():
+return alertsLoaded(_that.alerts);case _MediaUploaded():
+return mediaUploaded(_that.media);case _Failure():
 return failure(_that.message);case _:
   throw StateError('Unexpected subclass');
 
@@ -1677,11 +1773,12 @@ return failure(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( PaginatedResponse<Annonce> annonces)?  annonceListLoaded,TResult? Function( Annonce annonce)?  annonceDetailLoaded,TResult? Function( Annonce annonce)?  annonceCreated,TResult? Function( Annonce annonce)?  annonceUpdated,TResult? Function()?  annonceDeleted,TResult? Function()?  actionSuccess,TResult? Function( PaginatedResponse<Annonce> favorites)?  favoritesLoaded,TResult? Function( List<Map<String, dynamic>> alerts)?  alertsLoaded,TResult? Function( String message)?  failure,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( int current,  int total)?  uploadingMedias,TResult? Function( PaginatedResponse<Annonce> annonces)?  annonceListLoaded,TResult? Function( Annonce annonce)?  annonceDetailLoaded,TResult? Function( Annonce annonce)?  annonceCreated,TResult? Function( Annonce annonce)?  annonceUpdated,TResult? Function()?  annonceDeleted,TResult? Function()?  actionSuccess,TResult? Function( PaginatedResponse<Annonce> favorites)?  favoritesLoaded,TResult? Function( List<Map<String, dynamic>> alerts)?  alertsLoaded,TResult? Function( AnnonceMedia media)?  mediaUploaded,TResult? Function( String message)?  failure,}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
-return loading();case _AnnonceListLoaded() when annonceListLoaded != null:
+return loading();case _UploadingMedias() when uploadingMedias != null:
+return uploadingMedias(_that.current,_that.total);case _AnnonceListLoaded() when annonceListLoaded != null:
 return annonceListLoaded(_that.annonces);case _AnnonceDetailLoaded() when annonceDetailLoaded != null:
 return annonceDetailLoaded(_that.annonce);case _AnnonceCreated() when annonceCreated != null:
 return annonceCreated(_that.annonce);case _AnnonceUpdated() when annonceUpdated != null:
@@ -1689,7 +1786,8 @@ return annonceUpdated(_that.annonce);case _AnnonceDeleted() when annonceDeleted 
 return annonceDeleted();case _ActionSuccess() when actionSuccess != null:
 return actionSuccess();case _FavoritesLoaded() when favoritesLoaded != null:
 return favoritesLoaded(_that.favorites);case _AlertsLoaded() when alertsLoaded != null:
-return alertsLoaded(_that.alerts);case _Failure() when failure != null:
+return alertsLoaded(_that.alerts);case _MediaUploaded() when mediaUploaded != null:
+return mediaUploaded(_that.media);case _Failure() when failure != null:
 return failure(_that.message);case _:
   return null;
 
@@ -1761,6 +1859,74 @@ String toString() {
 
 
 
+
+/// @nodoc
+
+
+class _UploadingMedias implements AnnonceState {
+  const _UploadingMedias({required this.current, required this.total});
+  
+
+ final  int current;
+ final  int total;
+
+/// Create a copy of AnnonceState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$UploadingMediasCopyWith<_UploadingMedias> get copyWith => __$UploadingMediasCopyWithImpl<_UploadingMedias>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UploadingMedias&&(identical(other.current, current) || other.current == current)&&(identical(other.total, total) || other.total == total));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,current,total);
+
+@override
+String toString() {
+  return 'AnnonceState.uploadingMedias(current: $current, total: $total)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$UploadingMediasCopyWith<$Res> implements $AnnonceStateCopyWith<$Res> {
+  factory _$UploadingMediasCopyWith(_UploadingMedias value, $Res Function(_UploadingMedias) _then) = __$UploadingMediasCopyWithImpl;
+@useResult
+$Res call({
+ int current, int total
+});
+
+
+
+
+}
+/// @nodoc
+class __$UploadingMediasCopyWithImpl<$Res>
+    implements _$UploadingMediasCopyWith<$Res> {
+  __$UploadingMediasCopyWithImpl(this._self, this._then);
+
+  final _UploadingMedias _self;
+  final $Res Function(_UploadingMedias) _then;
+
+/// Create a copy of AnnonceState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? current = null,Object? total = null,}) {
+  return _then(_UploadingMedias(
+current: null == current ? _self.current : current // ignore: cast_nullable_to_non_nullable
+as int,total: null == total ? _self.total : total // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
+}
 
 /// @nodoc
 
@@ -2253,6 +2419,81 @@ as List<Map<String, dynamic>>,
 }
 
 
+}
+
+/// @nodoc
+
+
+class _MediaUploaded implements AnnonceState {
+  const _MediaUploaded(this.media);
+  
+
+ final  AnnonceMedia media;
+
+/// Create a copy of AnnonceState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$MediaUploadedCopyWith<_MediaUploaded> get copyWith => __$MediaUploadedCopyWithImpl<_MediaUploaded>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MediaUploaded&&(identical(other.media, media) || other.media == media));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,media);
+
+@override
+String toString() {
+  return 'AnnonceState.mediaUploaded(media: $media)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$MediaUploadedCopyWith<$Res> implements $AnnonceStateCopyWith<$Res> {
+  factory _$MediaUploadedCopyWith(_MediaUploaded value, $Res Function(_MediaUploaded) _then) = __$MediaUploadedCopyWithImpl;
+@useResult
+$Res call({
+ AnnonceMedia media
+});
+
+
+$AnnonceMediaCopyWith<$Res> get media;
+
+}
+/// @nodoc
+class __$MediaUploadedCopyWithImpl<$Res>
+    implements _$MediaUploadedCopyWith<$Res> {
+  __$MediaUploadedCopyWithImpl(this._self, this._then);
+
+  final _MediaUploaded _self;
+  final $Res Function(_MediaUploaded) _then;
+
+/// Create a copy of AnnonceState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? media = null,}) {
+  return _then(_MediaUploaded(
+null == media ? _self.media : media // ignore: cast_nullable_to_non_nullable
+as AnnonceMedia,
+  ));
+}
+
+/// Create a copy of AnnonceState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$AnnonceMediaCopyWith<$Res> get media {
+  
+  return $AnnonceMediaCopyWith<$Res>(_self.media, (value) {
+    return _then(_self.copyWith(media: value));
+  });
+}
 }
 
 /// @nodoc

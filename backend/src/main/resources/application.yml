@@ -38,3 +38,7 @@ storage:
   max-file-size-bytes: 5242880
   thumbnail-width: 400
   thumbnail-height: 400
+logging:
+  level:
+    org.springframework.security: TRACE
+    ma.chana9: DEBUG

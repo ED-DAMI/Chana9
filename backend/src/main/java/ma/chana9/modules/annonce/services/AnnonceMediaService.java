@@ -2,6 +2,7 @@ package ma.chana9.modules.annonce.services;
 
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import ma.chana9.modules.annonce.entities.Annonce;
 import ma.chana9.modules.annonce.entities.AnnonceMedia;
 import ma.chana9.modules.annonce.repositories.AnnonceMediaRepository;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AnnonceMediaService {
@@ -29,6 +31,7 @@ public class AnnonceMediaService {
 
     @Transactional
     public AnnonceMedia upload(UUID annonceId, UUID sellerId, MultipartFile file) {
+
         Annonce annonce = annonceRepository.findById(annonceId)
                 .orElseThrow(() -> new ApiException(ErrorKeys.Annonce.NOT_FOUND));
 
@@ -43,7 +46,6 @@ public class AnnonceMediaService {
 
         try {
             String url = storageService.saveAnnonceMedia(file, annonceId.toString());
-
             AnnonceMedia media = AnnonceMedia.builder()
                     .annonce(annonce)
                     .url(url)
