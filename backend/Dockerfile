@@ -19,6 +19,8 @@ RUN apk add --no-cache wget && \
 USER appuser
 WORKDIR /app
 
+RUN mkdir -p /app/uploads && \
+    chown -R appuser:appgroup /app
 COPY --from=builder /app/target/*.jar app.jar
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \

@@ -1,3 +1,4 @@
+import 'package:ma_chana9_app/core/constants/api_constants.dart';
 import 'package:ma_chana9_app/core/network/dio_client.dart';
 import '../models/auth_response_model.dart';
 import '../models/login_request_model.dart';
@@ -10,14 +11,14 @@ abstract class AuthRemoteDataSource {
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final DioClient dioClient;
 
-  static const String _base = '/auth';
+  static const String _base =ApiConstants.baseUrl;
 
   AuthRemoteDataSourceImpl(this.dioClient);
 
   @override
   Future<AuthResponseModel> login(LoginRequestModel request) async {
     final response = await dioClient.post(
-      '$_base/login',
+      _base+ApiConstants.login,
       data: request.toJson(),
     );
     return AuthResponseModel.fromJson(response.data as Map<String, dynamic>);

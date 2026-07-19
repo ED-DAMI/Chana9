@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:ma_chana9_app/core/constants/api_constants.dart';
 import '../../domain/entities/annonce.dart';
 
 class AnnoncePhotoCarousel extends StatefulWidget {
@@ -44,7 +45,7 @@ class _AnnoncePhotoCarouselState extends State<AnnoncePhotoCarousel> {
             onPageChanged: (index) => setState(() => _currentIndex = index),
             itemBuilder: (context, index) {
               return CachedNetworkImage(
-                imageUrl: medias[index].url,
+                imageUrl: ApiConstants.baseUrl_photos +"/"+medias[index].url,
                 fit: BoxFit.cover,
                 width: double.infinity,
                 placeholder: (context, url) => Container(
@@ -65,7 +66,6 @@ class _AnnoncePhotoCarouselState extends State<AnnoncePhotoCarousel> {
             },
           ),
 
-          // Compteur  1 / 3
           if (medias.length > 1)
             Positioned(
               top: 12,

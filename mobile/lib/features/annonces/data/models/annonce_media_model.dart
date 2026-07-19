@@ -13,8 +13,14 @@ enum MediaFormat {
 
   final String value;
   const MediaFormat(this.value);
-}
 
+  static MediaFormat fromJson(String? value) {
+    return MediaFormat.values.firstWhere(
+          (e) => e.value == value,
+      orElse: () => MediaFormat.image,
+    );
+  }
+}
 @freezed
 abstract class AnnonceMediaModel with _$AnnonceMediaModel {
   const AnnonceMediaModel._();

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:ma_chana9_app/core/constants/api_constants.dart';
 import 'package:ma_chana9_app/core/network/dio_client.dart';
 import 'package:ma_chana9_app/core/network/token_storage.dart';
 import 'package:ma_chana9_app/shared/model/paginated/paginated_response.dart';
@@ -45,7 +46,7 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
   final DioClient dioClient;
   final TokenStorage tokenStorage;
 
-  static const String _base = '/api/v1/annonces';
+  static const String _base = ApiConstants.annonces;
 
   AnnonceRemoteDataSourceImpl({
     required this.dioClient,

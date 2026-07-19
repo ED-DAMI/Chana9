@@ -19,7 +19,7 @@ class _AnnonceListPageState extends State<AnnonceListPage> {
   final _scrollController = ScrollController();
   int _currentPage = 0;
   bool _isFetchingMore = false;
-  static const int _pageSize = 10;
+  static const int _pageSize = 50;
 
   @override
   void initState() {
