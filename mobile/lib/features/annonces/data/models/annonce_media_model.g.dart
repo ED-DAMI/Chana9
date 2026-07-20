@@ -12,7 +12,9 @@ _AnnonceMediaModel _$AnnonceMediaModelFromJson(Map<String, dynamic> json) =>
       url: json['url'] as String,
       order: (json['order'] as num).toInt(),
       isCover: json['isCover'] as bool,
-      format: $enumDecode(_$MediaFormatEnumMap, json['format']),
+      format:
+          $enumDecodeNullable(_$MediaFormatEnumMap, json['format']) ??
+          MediaFormat.image,
     );
 
 Map<String, dynamic> _$AnnonceMediaModelToJson(_AnnonceMediaModel instance) =>

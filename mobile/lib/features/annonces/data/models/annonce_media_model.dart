@@ -21,6 +21,7 @@ enum MediaFormat {
     );
   }
 }
+
 @freezed
 abstract class AnnonceMediaModel with _$AnnonceMediaModel {
   const AnnonceMediaModel._();
@@ -30,7 +31,7 @@ abstract class AnnonceMediaModel with _$AnnonceMediaModel {
     required String url,
     @JsonKey(name: 'order') required int order,
     @JsonKey(name: 'isCover') required bool isCover,
-    required MediaFormat format,
+    @Default(MediaFormat.image) MediaFormat format,
   }) = _AnnonceMediaModel;
 
   factory AnnonceMediaModel.fromJson(Map<String, dynamic> json) =>

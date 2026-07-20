@@ -213,14 +213,14 @@ return $default(_that.id,_that.url,_that.order,_that.isCover,_that.format);case 
 @JsonSerializable()
 
 class _AnnonceMediaModel extends AnnonceMediaModel {
-  const _AnnonceMediaModel({required this.id, required this.url, @JsonKey(name: 'order') required this.order, @JsonKey(name: 'isCover') required this.isCover, required this.format}): super._();
+  const _AnnonceMediaModel({required this.id, required this.url, @JsonKey(name: 'order') required this.order, @JsonKey(name: 'isCover') required this.isCover, this.format = MediaFormat.image}): super._();
   factory _AnnonceMediaModel.fromJson(Map<String, dynamic> json) => _$AnnonceMediaModelFromJson(json);
 
 @override final  String id;
 @override final  String url;
 @override@JsonKey(name: 'order') final  int order;
 @override@JsonKey(name: 'isCover') final  bool isCover;
-@override final  MediaFormat format;
+@override@JsonKey() final  MediaFormat format;
 
 /// Create a copy of AnnonceMediaModel
 /// with the given fields replaced by the non-null parameter values.
