@@ -1,5 +1,6 @@
-import 'package:get_it/get_it.dart';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get_it/get_it.dart';
 
 import 'core/network/dio_client.dart';
 import 'core/network/dio_client_factory.dart';

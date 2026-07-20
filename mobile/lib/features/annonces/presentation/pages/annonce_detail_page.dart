@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ma_chana9_app/core/constants/api_constants.dart';
 import 'package:ma_chana9_app/features/annonces/presentation/bloc/annonce_detail_bloc.dart';
 import 'package:ma_chana9_app/shared/enums/annonce_status.dart';
 import '../../../../injection_container.dart';
@@ -72,7 +73,7 @@ class _AnnonceDetailView extends StatelessWidget {
                   ? PageView.builder(
                 itemCount: annonce.medias.length,
                 itemBuilder: (_, index) => Image.network(
-                  annonce.medias[index].url,
+                  "${ApiConstants.baseUrl_photos}/${annonce.medias[index].url}",
                   fit: BoxFit.cover,
                   errorBuilder: (_, __, ___) => Container(
                     color: Colors.grey.shade200,
