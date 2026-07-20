@@ -1,89 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ma_chana9_app/core/constants/api_constants.dart';
+import 'package:ma_chana9_app/features/annonces/presentation/bloc/annonce_detail_bloc.dart';
 import 'package:ma_chana9_app/shared/enums/annonce_status.dart';
+import '../../../../injection_container.dart';
 import '../../domain/entities/annonce.dart';
-import '../../domain/entities/annonce_media.dart';
-import '../bloc/annonce_bloc.dart';
 import 'annonce_form_page.dart';
 
-class AnnonceDetailPage extends StatefulWidget {
+class AnnonceDetailPage extends StatelessWidget {
   final String annonceId;
 
   const AnnonceDetailPage({super.key, required this.annonceId});
 
   @override
-  State<AnnonceDetailPage> createState() => _AnnonceDetailPageState();
-}
-
-class _AnnonceDetailPageState extends State<AnnonceDetailPage> {
-  @override
-  void initState() {
-    super.initState();
-    context
-        .read<AnnonceBloc>()
-        .add(AnnonceEvent.loadAnnonceById(widget.annonceId));
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AnnonceBloc, AnnonceState>(
-      listener: (context, state) {
-        state.whenOrNull(
-          actionSuccess: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Action effectuée avec succès')),
-            );
-            context
-                .read<AnnonceBloc>()
-                .add(AnnonceEvent.loadAnnonceById(widget.annonceId));
-          },
-          annonceDeleted: () {
-            Navigator.of(context).pop();
-          },
-          failure: (message) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(message), backgroundColor: Colors.red),
-            );
-          },
-        );
-      },
-      builder: (context, state) {
-        return state.when(
-          initial: () => const Scaffold(
-              body: Center(child: CircularProgressIndicator())),
-          loading: () => const Scaffold(
-              body: Center(child: CircularProgressIndicator())),
-          annonceDetailLoaded: (annonce) =>
-              _AnnonceDetailView(annonce: annonce),
-          annonceListLoaded: (_) => const Scaffold(body: SizedBox.shrink()),
-          annonceCreated: (_) => const Scaffold(body: SizedBox.shrink()),
-          annonceUpdated: (annonce) => _AnnonceDetailView(annonce: annonce),
-          annonceDeleted: () => const Scaffold(body: SizedBox.shrink()),
-          actionSuccess: () => const Scaffold(
-              body: Center(child: CircularProgressIndicator())),
-          favoritesLoaded: (_) => const Scaffold(body: SizedBox.shrink()),
-          alertsLoaded: (_) => const Scaffold(body: SizedBox.shrink()),
-          failure: (message) => Scaffold(
-            appBar: AppBar(),
-            body: Center(child: Text(message)),
-          ),
-          uploadingMedias: (int current, int total) => Scaffold(
-            body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const CircularProgressIndicator(),
-                  const SizedBox(height: 16),
-                  Text("Envoi des médias : $current / $total"),
-                ],
-              ),
+    return BlocProvider(
+      create: (context) => sl<AnnonceDetailBloc>()
+        ..add(AnnonceDetailEvent.load(annonceId)),
+      child: BlocConsumer<AnnonceDetailBloc, AnnonceDetailState>(
+        listener: (context, state) {
+          state.whenOrNull(
+            actionSuccess: (_) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Action effectuée avec succès')),
+              );
+            },
+            deleted: () => Navigator.of(context).pop(),
+            failure: (message) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(message), backgroundColor: Colors.red),
+              );
+            },
+          );
+        },
+        builder: (context, state) {
+          return state.when(
+            initial: () => const Scaffold(
+                body: Center(child: CircularProgressIndicator())),
+            loading: () => const Scaffold(
+                body: Center(child: CircularProgressIndicator())),
+            loaded: (annonce) => _AnnonceDetailView(annonce: annonce),
+            actionSuccess: (annonce) => _AnnonceDetailView(annonce: annonce),
+            deleted: () => const Scaffold(body: SizedBox.shrink()),
+            failure: (message) => Scaffold(
+              appBar: AppBar(),
+              body: Center(child: Text(message)),
             ),
-          ),
-          mediaUploaded: (AnnonceMedia media) => const Scaffold(
-            body: Center(child: Text("Médias envoyés avec succès !")),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }
@@ -108,7 +73,7 @@ class _AnnonceDetailView extends StatelessWidget {
                   ? PageView.builder(
                 itemCount: annonce.medias.length,
                 itemBuilder: (_, index) => Image.network(
-                  annonce.medias[index].url,
+                  "${ApiConstants.baseUrl_photos}/${annonce.medias[index].url}",
                   fit: BoxFit.cover,
                   errorBuilder: (_, __, ___) => Container(
                     color: Colors.grey.shade200,
@@ -127,8 +92,8 @@ class _AnnonceDetailView extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.favorite_border),
                 onPressed: () => context
-                    .read<AnnonceBloc>()
-                    .add(AnnonceEvent.addFavorite(annonce.id)),
+                    .read<AnnonceDetailBloc>()
+                    .add(AnnonceDetailEvent.addFavorite(annonce.id)),
               ),
               PopupMenuButton<String>(
                 onSelected: (value) =>
@@ -193,7 +158,10 @@ class _AnnonceDetailView extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  _InfoRow(icon: Icons.category_outlined, label: 'Race', value: annonce.breed),
+                  _InfoRow(
+                      icon: Icons.category_outlined,
+                      label: 'Race',
+                      value: annonce.breed),
                   if (annonce.gender != null)
                     _InfoRow(
                         icon: Icons.transgender,
@@ -250,26 +218,24 @@ class _AnnonceDetailView extends StatelessWidget {
 
   void _handleMenuAction(
       BuildContext context, String action, Annonce annonce) {
-    final bloc = context.read<AnnonceBloc>();
+    final bloc = context.read<AnnonceDetailBloc>();
     switch (action) {
       case 'suspend':
-        bloc.add(AnnonceEvent.suspendAnnonce(annonce.id));
+        bloc.add(AnnonceDetailEvent.suspend(annonce.id));
         break;
       case 'reactivate':
-        bloc.add(AnnonceEvent.reactivateAnnonce(annonce.id));
+        bloc.add(AnnonceDetailEvent.reactivate(annonce.id));
         break;
       case 'sold':
-        bloc.add(AnnonceEvent.markAsSold(annonce.id));
+        bloc.add(AnnonceDetailEvent.markAsSold(annonce.id));
         break;
       case 'top_lot':
-        bloc.add(AnnonceEvent.activateTopLot(id: annonce.id, durationDays: 7));
+        bloc.add(AnnonceDetailEvent.activateTopLot(
+            id: annonce.id, durationDays: 7));
         break;
       case 'edit':
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (_) => BlocProvider.value(
-            value: bloc,
-            child: AnnonceFormPage(annonce: annonce),
-          ),
+          builder: (_) => AnnonceFormPage(annonce: annonce),
         ));
         break;
       case 'delete':
@@ -286,7 +252,7 @@ class _AnnonceDetailView extends StatelessWidget {
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
-                  bloc.add(AnnonceEvent.deleteAnnonce(annonce.id));
+                  bloc.add(AnnonceDetailEvent.delete(annonce.id));
                 },
                 child: const Text('Supprimer',
                     style: TextStyle(color: Colors.red)),
@@ -296,8 +262,10 @@ class _AnnonceDetailView extends StatelessWidget {
         );
         break;
       case 'flag':
-        bloc.add(AnnonceEvent.flagAnnonce(
-            id: annonce.id, body: {'reason': 'inappropriate'}));
+        bloc.add(AnnonceDetailEvent.flag(
+          id: annonce.id,
+          body: {'reason': 'inappropriate'},
+        ));
         break;
     }
   }

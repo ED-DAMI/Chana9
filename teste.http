@@ -1,0 +1,6 @@
+### GET request to example server
+GET http://192.168.1.155:8080/api/v1/annonces/search?page=0&size=50
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjZGM2NDkzNi1iYmQzLTQyOWMtYmZiYy1iNGUxOWEyYmU5YjgiLCJQaG9uZSI6IjA2NTM5OTU5NDciLCJyb2xlIjoiQURNSU4iLCJqdGkiOiI1MmY5NzMyNS00Y2YyLTQ0MjctODhiZS0wODgyMDBjOTA2MzciLCJpYXQiOjE3ODQ1NDM0MTUsImV4cCI6MTc4NDYyOTgxNX0.rCRgMasKIAm318YgyKu8pdd7a4HoL8FQaBFoJ0lsMUYVB9jSD0sAvU_p3immblSiPHP1Ra-i6RrSh9pDGK4q4A
+###

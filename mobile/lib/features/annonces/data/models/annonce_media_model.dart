@@ -3,24 +3,6 @@ import '../../domain/entities/annonce_media.dart';
 
 part 'annonce_media_model.freezed.dart';
 part 'annonce_media_model.g.dart';
-
-@JsonEnum(valueField: 'value')
-enum MediaFormat {
-  @JsonValue('IMAGE')
-  image('IMAGE'),
-  @JsonValue('VIDEO')
-  video('VIDEO');
-
-  final String value;
-  const MediaFormat(this.value);
-
-  static MediaFormat fromJson(String? value) {
-    return MediaFormat.values.firstWhere(
-          (e) => e.value == value,
-      orElse: () => MediaFormat.image,
-    );
-  }
-}
 @freezed
 abstract class AnnonceMediaModel with _$AnnonceMediaModel {
   const AnnonceMediaModel._();
@@ -30,7 +12,6 @@ abstract class AnnonceMediaModel with _$AnnonceMediaModel {
     required String url,
     @JsonKey(name: 'order') required int order,
     @JsonKey(name: 'isCover') required bool isCover,
-    required MediaFormat format,
   }) = _AnnonceMediaModel;
 
   factory AnnonceMediaModel.fromJson(Map<String, dynamic> json) =>
@@ -39,7 +20,6 @@ abstract class AnnonceMediaModel with _$AnnonceMediaModel {
   AnnonceMedia toEntity() => AnnonceMedia(
     id: id,
     url: url,
-    mediaType: format.value,
     position: order,
   );
 }

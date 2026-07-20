@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AnnonceMediaModel {
 
- String get id; String get url;@JsonKey(name: 'order') int get order;@JsonKey(name: 'isCover') bool get isCover; MediaFormat get format;
+ String get id; String get url;@JsonKey(name: 'order') int get order;@JsonKey(name: 'isCover') bool get isCover;
 /// Create a copy of AnnonceMediaModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $AnnonceMediaModelCopyWith<AnnonceMediaModel> get copyWith => _$AnnonceMediaMode
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AnnonceMediaModel&&(identical(other.id, id) || other.id == id)&&(identical(other.url, url) || other.url == url)&&(identical(other.order, order) || other.order == order)&&(identical(other.isCover, isCover) || other.isCover == isCover)&&(identical(other.format, format) || other.format == format));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AnnonceMediaModel&&(identical(other.id, id) || other.id == id)&&(identical(other.url, url) || other.url == url)&&(identical(other.order, order) || other.order == order)&&(identical(other.isCover, isCover) || other.isCover == isCover));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,url,order,isCover,format);
+int get hashCode => Object.hash(runtimeType,id,url,order,isCover);
 
 @override
 String toString() {
-  return 'AnnonceMediaModel(id: $id, url: $url, order: $order, isCover: $isCover, format: $format)';
+  return 'AnnonceMediaModel(id: $id, url: $url, order: $order, isCover: $isCover)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $AnnonceMediaModelCopyWith<$Res>  {
   factory $AnnonceMediaModelCopyWith(AnnonceMediaModel value, $Res Function(AnnonceMediaModel) _then) = _$AnnonceMediaModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String url,@JsonKey(name: 'order') int order,@JsonKey(name: 'isCover') bool isCover, MediaFormat format
+ String id, String url,@JsonKey(name: 'order') int order,@JsonKey(name: 'isCover') bool isCover
 });
 
 
@@ -65,14 +65,13 @@ class _$AnnonceMediaModelCopyWithImpl<$Res>
 
 /// Create a copy of AnnonceMediaModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? url = null,Object? order = null,Object? isCover = null,Object? format = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? url = null,Object? order = null,Object? isCover = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
 as String,order: null == order ? _self.order : order // ignore: cast_nullable_to_non_nullable
 as int,isCover: null == isCover ? _self.isCover : isCover // ignore: cast_nullable_to_non_nullable
-as bool,format: null == format ? _self.format : format // ignore: cast_nullable_to_non_nullable
-as MediaFormat,
+as bool,
   ));
 }
 
@@ -157,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String url, @JsonKey(name: 'order')  int order, @JsonKey(name: 'isCover')  bool isCover,  MediaFormat format)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String url, @JsonKey(name: 'order')  int order, @JsonKey(name: 'isCover')  bool isCover)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AnnonceMediaModel() when $default != null:
-return $default(_that.id,_that.url,_that.order,_that.isCover,_that.format);case _:
+return $default(_that.id,_that.url,_that.order,_that.isCover);case _:
   return orElse();
 
 }
@@ -178,10 +177,10 @@ return $default(_that.id,_that.url,_that.order,_that.isCover,_that.format);case 
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String url, @JsonKey(name: 'order')  int order, @JsonKey(name: 'isCover')  bool isCover,  MediaFormat format)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String url, @JsonKey(name: 'order')  int order, @JsonKey(name: 'isCover')  bool isCover)  $default,) {final _that = this;
 switch (_that) {
 case _AnnonceMediaModel():
-return $default(_that.id,_that.url,_that.order,_that.isCover,_that.format);case _:
+return $default(_that.id,_that.url,_that.order,_that.isCover);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +197,10 @@ return $default(_that.id,_that.url,_that.order,_that.isCover,_that.format);case 
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String url, @JsonKey(name: 'order')  int order, @JsonKey(name: 'isCover')  bool isCover,  MediaFormat format)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String url, @JsonKey(name: 'order')  int order, @JsonKey(name: 'isCover')  bool isCover)?  $default,) {final _that = this;
 switch (_that) {
 case _AnnonceMediaModel() when $default != null:
-return $default(_that.id,_that.url,_that.order,_that.isCover,_that.format);case _:
+return $default(_that.id,_that.url,_that.order,_that.isCover);case _:
   return null;
 
 }
@@ -213,14 +212,13 @@ return $default(_that.id,_that.url,_that.order,_that.isCover,_that.format);case 
 @JsonSerializable()
 
 class _AnnonceMediaModel extends AnnonceMediaModel {
-  const _AnnonceMediaModel({required this.id, required this.url, @JsonKey(name: 'order') required this.order, @JsonKey(name: 'isCover') required this.isCover, required this.format}): super._();
+  const _AnnonceMediaModel({required this.id, required this.url, @JsonKey(name: 'order') required this.order, @JsonKey(name: 'isCover') required this.isCover}): super._();
   factory _AnnonceMediaModel.fromJson(Map<String, dynamic> json) => _$AnnonceMediaModelFromJson(json);
 
 @override final  String id;
 @override final  String url;
 @override@JsonKey(name: 'order') final  int order;
 @override@JsonKey(name: 'isCover') final  bool isCover;
-@override final  MediaFormat format;
 
 /// Create a copy of AnnonceMediaModel
 /// with the given fields replaced by the non-null parameter values.
@@ -235,16 +233,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AnnonceMediaModel&&(identical(other.id, id) || other.id == id)&&(identical(other.url, url) || other.url == url)&&(identical(other.order, order) || other.order == order)&&(identical(other.isCover, isCover) || other.isCover == isCover)&&(identical(other.format, format) || other.format == format));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AnnonceMediaModel&&(identical(other.id, id) || other.id == id)&&(identical(other.url, url) || other.url == url)&&(identical(other.order, order) || other.order == order)&&(identical(other.isCover, isCover) || other.isCover == isCover));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,url,order,isCover,format);
+int get hashCode => Object.hash(runtimeType,id,url,order,isCover);
 
 @override
 String toString() {
-  return 'AnnonceMediaModel(id: $id, url: $url, order: $order, isCover: $isCover, format: $format)';
+  return 'AnnonceMediaModel(id: $id, url: $url, order: $order, isCover: $isCover)';
 }
 
 
@@ -255,7 +253,7 @@ abstract mixin class _$AnnonceMediaModelCopyWith<$Res> implements $AnnonceMediaM
   factory _$AnnonceMediaModelCopyWith(_AnnonceMediaModel value, $Res Function(_AnnonceMediaModel) _then) = __$AnnonceMediaModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String url,@JsonKey(name: 'order') int order,@JsonKey(name: 'isCover') bool isCover, MediaFormat format
+ String id, String url,@JsonKey(name: 'order') int order,@JsonKey(name: 'isCover') bool isCover
 });
 
 
@@ -272,14 +270,13 @@ class __$AnnonceMediaModelCopyWithImpl<$Res>
 
 /// Create a copy of AnnonceMediaModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? url = null,Object? order = null,Object? isCover = null,Object? format = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? url = null,Object? order = null,Object? isCover = null,}) {
   return _then(_AnnonceMediaModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
 as String,order: null == order ? _self.order : order // ignore: cast_nullable_to_non_nullable
 as int,isCover: null == isCover ? _self.isCover : isCover // ignore: cast_nullable_to_non_nullable
-as bool,format: null == format ? _self.format : format // ignore: cast_nullable_to_non_nullable
-as MediaFormat,
+as bool,
   ));
 }
 

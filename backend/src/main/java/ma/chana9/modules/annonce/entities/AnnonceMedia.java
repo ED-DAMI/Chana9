@@ -44,10 +44,6 @@ public class AnnonceMedia {
     @Builder.Default
     private Boolean isCover = false;
 
-    @Enumerated(EnumType.STRING)
-    @Column(length = 10)
-    private MediaFormat format;
-
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

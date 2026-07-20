@@ -53,17 +53,11 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
     required this.tokenStorage,
   });
 
-  Future<Options> _userIdHeader() async {
-    final user = await tokenStorage.getCachedUser();
-    return Options(headers: {'X-User-Id': user?.id ?? ''});
-  }
-
   @override
   Future<AnnonceModel> create(AnnonceRequestModel request) async {
     final response = await dioClient.post(
       _base,
-      data: request.toJson(),
-      options: await _userIdHeader(),
+      data: request.toJson()
     );
     return AnnonceModel.fromJson(response.data as Map<String, dynamic>);
   }
@@ -73,14 +67,13 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
     final response = await dioClient.put(
       '$_base/$id',
       data: request.toJson(),
-      options: await _userIdHeader(),
     );
     return AnnonceModel.fromJson(response.data as Map<String, dynamic>);
   }
 
   @override
   Future<void> delete(String id) async {
-    await dioClient.delete('$_base/$id', options: await _userIdHeader());
+    await dioClient.delete('$_base/$id');
   }
 
   @override
@@ -128,8 +121,7 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
   @override
   Future<AnnonceModel> suspend(String id) async {
     final response = await dioClient.patch(
-      '$_base/$id/suspend',
-      options: await _userIdHeader(),
+      '$_base/$id/suspend'
     );
     return AnnonceModel.fromJson(response.data as Map<String, dynamic>);
   }
@@ -137,8 +129,7 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
   @override
   Future<AnnonceModel> reactivate(String id) async {
     final response = await dioClient.patch(
-      '$_base/$id/reactivate',
-      options: await _userIdHeader(),
+      '$_base/$id/reactivate'
     );
     return AnnonceModel.fromJson(response.data as Map<String, dynamic>);
   }
@@ -146,8 +137,7 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
   @override
   Future<AnnonceModel> markAsSold(String id) async {
     final response = await dioClient.patch(
-      '$_base/$id/sold',
-      options: await _userIdHeader(),
+      '$_base/$id/sold'
     );
     return AnnonceModel.fromJson(response.data as Map<String, dynamic>);
   }
@@ -155,8 +145,7 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
   @override
   Future<AnnonceModel> activateTopLot(String id, int durationDays) async {
     final response = await dioClient.post(
-      '$_base/$id/top-lot/$durationDays',
-      options: await _userIdHeader(),
+      '$_base/$id/top-lot/$durationDays'
     );
     return AnnonceModel.fromJson(response.data as Map<String, dynamic>);
   }
@@ -166,23 +155,20 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
     await dioClient.post(
       '$_base/$id/flag',
       data: body,
-      options: await _userIdHeader(),
     );
   }
 
   @override
   Future<void> addFavorite(String id) async {
     await dioClient.post(
-      '$_base/$id/favorites',
-      options: await _userIdHeader(),
+      '$_base/$id/favorites'
     );
   }
 
   @override
   Future<void> removeFavorite(String id) async {
     await dioClient.delete(
-      '$_base/$id/favorites',
-      options: await _userIdHeader(),
+      '$_base/$id/favorites'
     );
   }
 
@@ -194,7 +180,6 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
     final response = await dioClient.get(
       '$_base/favorites',
       queryParameters: {'page': page, 'size': size},
-      options: await _userIdHeader(),
     );
     return PaginatedResponse.fromJson(
       response.data as Map<String, dynamic>,
@@ -206,16 +191,14 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
   Future<void> createAlert(AnnonceAlertRequestModel request) async {
     await dioClient.post(
       '$_base/alerts',
-      data: request.toJson(),
-      options: await _userIdHeader(),
+      data: request.toJson()
     );
   }
 
   @override
   Future<void> deleteAlert(String alertId) async {
     await dioClient.delete(
-      '$_base/alerts/$alertId',
-      options: await _userIdHeader(),
+      '$_base/alerts/$alertId'
     );
   }
 
@@ -223,7 +206,6 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
   Future<List<Map<String, dynamic>>> findAlertsByBuyer() async {
     final response = await dioClient.get(
       '$_base/alerts',
-      options: await _userIdHeader(),
     );
     return (response.data as List).cast<Map<String, dynamic>>();
   }

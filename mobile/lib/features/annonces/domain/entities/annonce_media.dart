@@ -7,7 +7,6 @@ abstract class AnnonceMedia with _$AnnonceMedia {
   const factory AnnonceMedia({
     required String id,
     required String url,
-    required String mediaType,
     required int position,
   }) = _AnnonceMedia;
 }

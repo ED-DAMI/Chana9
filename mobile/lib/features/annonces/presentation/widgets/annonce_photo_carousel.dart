@@ -45,7 +45,7 @@ class _AnnoncePhotoCarouselState extends State<AnnoncePhotoCarousel> {
             onPageChanged: (index) => setState(() => _currentIndex = index),
             itemBuilder: (context, index) {
               return CachedNetworkImage(
-                imageUrl: ApiConstants.baseUrl_photos +"/"+medias[index].url,
+                imageUrl: "${ApiConstants.baseUrl_photos}/${medias[index].url}",
                 fit: BoxFit.cover,
                 width: double.infinity,
                 placeholder: (context, url) => Container(

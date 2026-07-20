@@ -162,7 +162,7 @@ class _AnnonceListPageState extends State<AnnonceListPage> {
                   controller: _scrollController,
                   itemCount: data.content.length + (_isFetchingMore ? 1 : 0),
                   itemBuilder: (context, index) {
-                    // Loader en bas de liste
+
                     if (index == data.content.length) {
                       return const Padding(
                         padding: EdgeInsets.all(16),
