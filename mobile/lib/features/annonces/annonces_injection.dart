@@ -24,6 +24,7 @@ import 'domain/usecases/search_annonces.dart';
 import 'domain/usecases/suspend_annonce.dart';
 import 'domain/usecases/update_annonce.dart';
 import 'presentation/bloc/annonce_bloc.dart';
+import 'presentation/bloc/annonce_detail_bloc.dart'; 
 
 void registerAnnoncesDependencies(GetIt sl) {
   sl.registerLazySingleton<AnnonceRemoteDataSource>(
@@ -54,25 +55,29 @@ void registerAnnoncesDependencies(GetIt sl) {
   sl.registerLazySingleton(() => CreateAlert(sl<AnnonceRepository>()));
   sl.registerLazySingleton(() => DeleteAlert(sl<AnnonceRepository>()));
   sl.registerLazySingleton(() => GetAlertsByBuyer(sl<AnnonceRepository>()));
-  sl.registerCachedFactory(()=>UploadMedia(sl<AnnonceRepository>()));
+  sl.registerCachedFactory(() => UploadMedia(sl<AnnonceRepository>()));
+
   sl.registerFactory(() => AnnonceBloc(
     searchAnnonces: sl(),
-    getAnnonceById: sl(),
     getAnnoncesBySeller: sl(),
     createAnnonce: sl(),
-    updateAnnonce: sl(),
-    deleteAnnonce: sl(),
+    getFavorites: sl(),
+    createAlert: sl(),
+    deleteAlert: sl(),
+    getAlertsByBuyer: sl(),
+    uploadMedia: sl(),
+    removeFavorite: sl(),
+  ));
+
+  sl.registerFactory(() => AnnonceDetailBloc(
+    getAnnonceById: sl(),
     suspendAnnonce: sl(),
     reactivateAnnonce: sl(),
     markAsSold: sl(),
     activateTopLot: sl(),
     flagAnnonce: sl(),
     addFavorite: sl(),
-    removeFavorite: sl(),
-    getFavorites: sl(),
-    createAlert: sl(),
-    deleteAlert: sl(),
-    getAlertsByBuyer: sl(),
-    uploadMedia: sl(),
+    deleteAnnonce: sl(),
+    updateAnnonce: sl(),
   ));
 }
