@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AnnonceMedia {
 
- String get id; String get url; String get mediaType; int get position;
+ String get id; String get url; int get position;
 /// Create a copy of AnnonceMedia
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $AnnonceMediaCopyWith<AnnonceMedia> get copyWith => _$AnnonceMediaCopyWithImpl<A
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AnnonceMedia&&(identical(other.id, id) || other.id == id)&&(identical(other.url, url) || other.url == url)&&(identical(other.mediaType, mediaType) || other.mediaType == mediaType)&&(identical(other.position, position) || other.position == position));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AnnonceMedia&&(identical(other.id, id) || other.id == id)&&(identical(other.url, url) || other.url == url)&&(identical(other.position, position) || other.position == position));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,url,mediaType,position);
+int get hashCode => Object.hash(runtimeType,id,url,position);
 
 @override
 String toString() {
-  return 'AnnonceMedia(id: $id, url: $url, mediaType: $mediaType, position: $position)';
+  return 'AnnonceMedia(id: $id, url: $url, position: $position)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $AnnonceMediaCopyWith<$Res>  {
   factory $AnnonceMediaCopyWith(AnnonceMedia value, $Res Function(AnnonceMedia) _then) = _$AnnonceMediaCopyWithImpl;
 @useResult
 $Res call({
- String id, String url, String mediaType, int position
+ String id, String url, int position
 });
 
 
@@ -62,11 +62,10 @@ class _$AnnonceMediaCopyWithImpl<$Res>
 
 /// Create a copy of AnnonceMedia
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? url = null,Object? mediaType = null,Object? position = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? url = null,Object? position = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
-as String,mediaType: null == mediaType ? _self.mediaType : mediaType // ignore: cast_nullable_to_non_nullable
 as String,position: null == position ? _self.position : position // ignore: cast_nullable_to_non_nullable
 as int,
   ));
@@ -153,10 +152,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String url,  String mediaType,  int position)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String url,  int position)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AnnonceMedia() when $default != null:
-return $default(_that.id,_that.url,_that.mediaType,_that.position);case _:
+return $default(_that.id,_that.url,_that.position);case _:
   return orElse();
 
 }
@@ -174,10 +173,10 @@ return $default(_that.id,_that.url,_that.mediaType,_that.position);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String url,  String mediaType,  int position)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String url,  int position)  $default,) {final _that = this;
 switch (_that) {
 case _AnnonceMedia():
-return $default(_that.id,_that.url,_that.mediaType,_that.position);case _:
+return $default(_that.id,_that.url,_that.position);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -194,10 +193,10 @@ return $default(_that.id,_that.url,_that.mediaType,_that.position);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String url,  String mediaType,  int position)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String url,  int position)?  $default,) {final _that = this;
 switch (_that) {
 case _AnnonceMedia() when $default != null:
-return $default(_that.id,_that.url,_that.mediaType,_that.position);case _:
+return $default(_that.id,_that.url,_that.position);case _:
   return null;
 
 }
@@ -209,12 +208,11 @@ return $default(_that.id,_that.url,_that.mediaType,_that.position);case _:
 
 
 class _AnnonceMedia implements AnnonceMedia {
-  const _AnnonceMedia({required this.id, required this.url, required this.mediaType, required this.position});
+  const _AnnonceMedia({required this.id, required this.url, required this.position});
   
 
 @override final  String id;
 @override final  String url;
-@override final  String mediaType;
 @override final  int position;
 
 /// Create a copy of AnnonceMedia
@@ -227,16 +225,16 @@ _$AnnonceMediaCopyWith<_AnnonceMedia> get copyWith => __$AnnonceMediaCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AnnonceMedia&&(identical(other.id, id) || other.id == id)&&(identical(other.url, url) || other.url == url)&&(identical(other.mediaType, mediaType) || other.mediaType == mediaType)&&(identical(other.position, position) || other.position == position));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AnnonceMedia&&(identical(other.id, id) || other.id == id)&&(identical(other.url, url) || other.url == url)&&(identical(other.position, position) || other.position == position));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,url,mediaType,position);
+int get hashCode => Object.hash(runtimeType,id,url,position);
 
 @override
 String toString() {
-  return 'AnnonceMedia(id: $id, url: $url, mediaType: $mediaType, position: $position)';
+  return 'AnnonceMedia(id: $id, url: $url, position: $position)';
 }
 
 
@@ -247,7 +245,7 @@ abstract mixin class _$AnnonceMediaCopyWith<$Res> implements $AnnonceMediaCopyWi
   factory _$AnnonceMediaCopyWith(_AnnonceMedia value, $Res Function(_AnnonceMedia) _then) = __$AnnonceMediaCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String url, String mediaType, int position
+ String id, String url, int position
 });
 
 
@@ -264,11 +262,10 @@ class __$AnnonceMediaCopyWithImpl<$Res>
 
 /// Create a copy of AnnonceMedia
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? url = null,Object? mediaType = null,Object? position = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? url = null,Object? position = null,}) {
   return _then(_AnnonceMedia(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
-as String,mediaType: null == mediaType ? _self.mediaType : mediaType // ignore: cast_nullable_to_non_nullable
 as String,position: null == position ? _self.position : position // ignore: cast_nullable_to_non_nullable
 as int,
   ));

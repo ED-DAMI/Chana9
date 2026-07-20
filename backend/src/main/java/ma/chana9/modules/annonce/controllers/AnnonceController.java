@@ -2,164 +2,166 @@ package ma.chana9.modules.annonce.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import ma.chana9.modules.annonce.services.AnnonceService;
 import ma.chana9.modules.annonce.dto.*;
 import ma.chana9.modules.annonce.entities.AnnonceAlert;
+import ma.chana9.modules.annonce.services.AnnonceService;
+import ma.chana9.shared.constants.ApiPaths;
+import ma.chana9.shared.response.ApiResponse;
+import ma.chana9.shared.security.AppUserDetails;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
-
 @RestController
-@RequestMapping("/api/v1/annonces")
+@RequestMapping(ApiPaths.Annonces.BASE)
 @RequiredArgsConstructor
 public class AnnonceController {
 
     private final AnnonceService annonceService;
 
     @PostMapping
-    public ResponseEntity<AnnonceResponse> create(
+    @PreAuthorize("isAuthenticated()")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ApiResponse<AnnonceResponse> create(
             @Valid @RequestBody AnnonceRequest request,
-            @RequestHeader("X-User-Id") UUID sellerId
-    ) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(annonceService.create(request, sellerId));
+            @AuthenticationPrincipal UUID userID) {
+        return ApiResponse.success("200", annonceService.create(request, userID));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AnnonceResponse> update(
+    @PreAuthorize("isAuthenticated()")
+    public ApiResponse<AnnonceResponse> update(
             @PathVariable UUID id,
             @Valid @RequestBody AnnonceRequest request,
-            @RequestHeader("X-User-Id") UUID sellerId
-    ) {
-        return ResponseEntity.ok(annonceService.update(id, request, sellerId));
+            @AuthenticationPrincipal UUID userId) {
+        return ApiResponse.success("200", annonceService.update(id, request, userId));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(
+    @PreAuthorize("isAuthenticated()")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(
             @PathVariable UUID id,
-            @RequestHeader("X-User-Id") UUID sellerId
-    ) {
-        annonceService.delete(id, sellerId);
-        return ResponseEntity.noContent().build();
+            @AuthenticationPrincipal AppUserDetails userDetails) {
+        annonceService.delete(id, userDetails.getId());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AnnonceResponse> findById(@PathVariable UUID id) {
-        return ResponseEntity.ok(annonceService.findById(id));
+    public ApiResponse<AnnonceResponse> findById(@PathVariable UUID id) {
+        return ApiResponse.success("200", annonceService.findById(id));
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Page<AnnonceResponse>> search(
+    public ApiResponse<Page<AnnonceResponse>> search(
             @Valid AnnonceSearchRequest request,
-            Pageable pageable
-    ) {
-
-        return ResponseEntity.ok(annonceService.search(request, pageable));
+            Pageable pageable) {
+        return ApiResponse.success("200", annonceService.search(request, pageable));
     }
 
     @GetMapping("/seller/{sellerId}")
-    public ResponseEntity<Page<AnnonceResponse>> findBySeller(
+    public ApiResponse<Page<AnnonceResponse>> findBySeller(
             @PathVariable UUID sellerId,
-            Pageable pageable
-    ) {
-        return ResponseEntity.ok(annonceService.findBySeller(sellerId, pageable));
+            Pageable pageable) {
+        return ApiResponse.success(null, annonceService.findBySeller(sellerId, pageable));
     }
 
     @PatchMapping("/{id}/suspend")
-    public ResponseEntity<AnnonceResponse> suspend(
+    @PreAuthorize("isAuthenticated()")
+    public ApiResponse<AnnonceResponse> suspend(
             @PathVariable UUID id,
-            @RequestHeader("X-User-Id") UUID sellerId
-    ) {
-        return ResponseEntity.ok(annonceService.suspend(id, sellerId));
+            @AuthenticationPrincipal UUID userId) {
+        return ApiResponse.success(null, annonceService.suspend(id, userId));
     }
 
     @PatchMapping("/{id}/reactivate")
-    public ResponseEntity<AnnonceResponse> reactivate(
+    @PreAuthorize("isAuthenticated()")
+    public ApiResponse<AnnonceResponse> reactivate(
             @PathVariable UUID id,
-            @RequestHeader("X-User-Id") UUID sellerId
-    ) {
-        return ResponseEntity.ok(annonceService.reactivate(id, sellerId));
+            @AuthenticationPrincipal UUID userId) {
+        return ApiResponse.success(null, annonceService.reactivate(id, userId));
     }
 
     @PatchMapping("/{id}/sold")
-    public ResponseEntity<AnnonceResponse> markAsSold(
+    @PreAuthorize("isAuthenticated()")
+    public ApiResponse<AnnonceResponse> markAsSold(
             @PathVariable UUID id,
-            @RequestHeader("X-User-Id") UUID sellerId
-    ) {
-        return ResponseEntity.ok(annonceService.markAsSold(id, sellerId));
+            @AuthenticationPrincipal AppUserDetails userDetails) {
+        return ApiResponse.success(null, annonceService.markAsSold(id, userDetails.getId()));
     }
 
     @PostMapping("/{id}/top-lot/{durationDays}")
-    public ResponseEntity<AnnonceResponse> activateTopLot(
+    @PreAuthorize("isAuthenticated()")
+    public ApiResponse<AnnonceResponse> activateTopLot(
             @PathVariable UUID id,
             @PathVariable int durationDays,
-            @RequestHeader("X-User-Id") UUID sellerId
-    ) {
-        return ResponseEntity.ok(annonceService.activateTopLot(id, sellerId, durationDays));
+            @AuthenticationPrincipal UUID userId) {
+        return ApiResponse.success(null, annonceService.activateTopLot(id, userId, durationDays));
     }
 
     @PostMapping("/{id}/flag")
-    public ResponseEntity<Void> flag(
+    @PreAuthorize("isAuthenticated()")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void flag(
             @PathVariable UUID id,
             @Valid @RequestBody AnnonceFlagRequest request,
-            @RequestHeader("X-User-Id") UUID reporterId
-    ) {
-        annonceService.flag(id, reporterId, request);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+            @AuthenticationPrincipal UUID userId) {
+        annonceService.flag(id, userId, request);
     }
 
     @PostMapping("/{id}/favorites")
-    public ResponseEntity<Void> addFavorite(
+    @PreAuthorize("hasRole('ACHETEUR')")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addFavorite(
             @PathVariable UUID id,
-            @RequestHeader("X-User-Id") UUID buyerId
-    ) {
-        annonceService.addFavorite(id, buyerId);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+            @AuthenticationPrincipal AppUserDetails userDetails) {
+        annonceService.addFavorite(id, userDetails.getId());
     }
 
     @DeleteMapping("/{id}/favorites")
-    public ResponseEntity<Void> removeFavorite(
+    @PreAuthorize("hasRole('ACHETEUR')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removeFavorite(
             @PathVariable UUID id,
-            @RequestHeader("X-User-Id") UUID buyerId
-    ) {
-        annonceService.removeFavorite(id, buyerId);
-        return ResponseEntity.noContent().build();
+            @AuthenticationPrincipal UUID userId) {
+        annonceService.removeFavorite(id, userId);
     }
 
     @GetMapping("/favorites")
-    public ResponseEntity<Page<AnnonceResponse>> findFavorites(
-            @RequestHeader("X-User-Id") UUID buyerId,
-            Pageable pageable
-    ) {
-        return ResponseEntity.ok(annonceService.findFavorites(buyerId, pageable));
+    @PreAuthorize("hasRole('ACHETEUR')")
+    public ApiResponse<Page<AnnonceResponse>> findFavorites(
+            @AuthenticationPrincipal UUID userId,
+            Pageable pageable) {
+        return ApiResponse.success("200", annonceService.findFavorites(userId, pageable));
     }
 
     @PostMapping("/alerts")
-    public ResponseEntity<AnnonceAlert> createAlert(
+    @PreAuthorize("hasRole('ACHETEUR')")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ApiResponse<AnnonceAlert> createAlert(
             @Valid @RequestBody AnnonceAlertRequest request,
-            @RequestHeader("X-User-Id") UUID buyerId
-    ) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(annonceService.createAlert(buyerId, request));
+            @AuthenticationPrincipal UUID userId) {
+        return ApiResponse.success(null, annonceService.createAlert(userId ,request));
     }
 
     @DeleteMapping("/alerts/{alertId}")
-    public ResponseEntity<Void> deleteAlert(
+    @PreAuthorize("hasRole('ACHETEUR')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteAlert(
             @PathVariable UUID alertId,
-            @RequestHeader("X-User-Id") UUID buyerId
-    ) {
-        annonceService.deleteAlert(alertId, buyerId);
-        return ResponseEntity.noContent().build();
+            @AuthenticationPrincipal UUID userId) {
+        annonceService.deleteAlert(alertId, userId);
     }
 
     @GetMapping("/alerts")
-    public ResponseEntity<List<AnnonceAlert>> findAlerts(
-            @RequestHeader("X-User-Id") UUID buyerId
-    ) {
-        return ResponseEntity.ok(annonceService.findAlertsByBuyer(buyerId));
+    @PreAuthorize("hasRole('ACHETEUR')")
+    public ApiResponse<List<AnnonceAlert>> findAlerts(
+            @AuthenticationPrincipal UUID userId) {
+        return ApiResponse.success("200", annonceService.findAlertsByBuyer(userId));
     }
 }

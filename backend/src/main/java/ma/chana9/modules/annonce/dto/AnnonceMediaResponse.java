@@ -8,6 +8,5 @@ public record AnnonceMediaResponse(
         UUID id,
         String url,
         Integer order,
-        Boolean isCover,
-        MediaFormat format
+        Boolean isCover
 ) {}

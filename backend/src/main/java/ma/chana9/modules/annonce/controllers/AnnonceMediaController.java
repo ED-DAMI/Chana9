@@ -42,7 +42,8 @@ public class AnnonceMediaController {
     public ApiResponse<Void> delete(
             @PathVariable UUID annonceId,
             @PathVariable UUID mediaId,
-            @AuthenticationPrincipal AppUserDetails userDetails) {
+            @AuthenticationPrincipal UUID userId) {
+        annonceMediaService.delete(mediaId,userId);
         return ApiResponse.success(null, null);
     }
 }
