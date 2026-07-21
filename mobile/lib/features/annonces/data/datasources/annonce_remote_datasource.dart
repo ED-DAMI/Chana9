@@ -53,22 +53,23 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
     required this.tokenStorage,
   });
 
+  Map<String, dynamic> _extractData(dynamic responseData) {
+    if (responseData is Map && responseData.containsKey('data')) {
+      return responseData['data'] as Map<String, dynamic>;
+    }
+    return responseData as Map<String, dynamic>;
+  }
+
   @override
   Future<AnnonceModel> create(AnnonceRequestModel request) async {
-    final response = await dioClient.post(
-      _base,
-      data: request.toJson()
-    );
-    return AnnonceModel.fromJson(response.data as Map<String, dynamic>);
+    final response = await dioClient.post(_base, data: request.toJson());
+    return AnnonceModel.fromJson(_extractData(response.data));
   }
 
   @override
   Future<AnnonceModel> update(String id, AnnonceRequestModel request) async {
-    final response = await dioClient.put(
-      '$_base/$id',
-      data: request.toJson(),
-    );
-    return AnnonceModel.fromJson(response.data as Map<String, dynamic>);
+    final response = await dioClient.put('$_base/$id', data: request.toJson());
+    return AnnonceModel.fromJson(_extractData(response.data));
   }
 
   @override
@@ -79,7 +80,7 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
   @override
   Future<AnnonceModel> findById(String id) async {
     final response = await dioClient.get('$_base/$id');
-    return AnnonceModel.fromJson(response.data as Map<String, dynamic>);
+    return AnnonceModel.fromJson(_extractData(response.data));
   }
 
   @override
@@ -97,7 +98,7 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
       },
     );
     return PaginatedResponse.fromJson(
-      response.data as Map<String, dynamic>,
+      _extractData(response.data),
           (json) => AnnonceModel.fromJson(json as Map<String, dynamic>),
     );
   }
@@ -113,63 +114,48 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
       queryParameters: {'page': page, 'size': size},
     );
     return PaginatedResponse.fromJson(
-      response.data as Map<String, dynamic>,
+      _extractData(response.data),
           (json) => AnnonceModel.fromJson(json as Map<String, dynamic>),
     );
   }
 
   @override
   Future<AnnonceModel> suspend(String id) async {
-    final response = await dioClient.patch(
-      '$_base/$id/suspend'
-    );
-    return AnnonceModel.fromJson(response.data as Map<String, dynamic>);
+    final response = await dioClient.patch('$_base/$id/suspend');
+    return AnnonceModel.fromJson(_extractData(response.data));
   }
 
   @override
   Future<AnnonceModel> reactivate(String id) async {
-    final response = await dioClient.patch(
-      '$_base/$id/reactivate'
-    );
-    return AnnonceModel.fromJson(response.data as Map<String, dynamic>);
+    final response = await dioClient.patch('$_base/$id/reactivate');
+    return AnnonceModel.fromJson(_extractData(response.data));
   }
 
   @override
   Future<AnnonceModel> markAsSold(String id) async {
-    final response = await dioClient.patch(
-      '$_base/$id/sold'
-    );
-    return AnnonceModel.fromJson(response.data as Map<String, dynamic>);
+    final response = await dioClient.patch('$_base/$id/sold');
+    return AnnonceModel.fromJson(_extractData(response.data));
   }
 
   @override
   Future<AnnonceModel> activateTopLot(String id, int durationDays) async {
-    final response = await dioClient.post(
-      '$_base/$id/top-lot/$durationDays'
-    );
-    return AnnonceModel.fromJson(response.data as Map<String, dynamic>);
+    final response = await dioClient.post('$_base/$id/top-lot/$durationDays');
+    return AnnonceModel.fromJson(_extractData(response.data));
   }
 
   @override
   Future<void> flag(String id, Map<String, dynamic> body) async {
-    await dioClient.post(
-      '$_base/$id/flag',
-      data: body,
-    );
+    await dioClient.post('$_base/$id/flag', data: body);
   }
 
   @override
   Future<void> addFavorite(String id) async {
-    await dioClient.post(
-      '$_base/$id/favorites'
-    );
+    await dioClient.post('$_base/$id/favorites');
   }
 
   @override
   Future<void> removeFavorite(String id) async {
-    await dioClient.delete(
-      '$_base/$id/favorites'
-    );
+    await dioClient.delete('$_base/$id/favorites');
   }
 
   @override
@@ -182,57 +168,42 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
       queryParameters: {'page': page, 'size': size},
     );
     return PaginatedResponse.fromJson(
-      response.data as Map<String, dynamic>,
+      _extractData(response.data),
           (json) => AnnonceModel.fromJson(json as Map<String, dynamic>),
     );
   }
 
   @override
   Future<void> createAlert(AnnonceAlertRequestModel request) async {
-    await dioClient.post(
-      '$_base/alerts',
-      data: request.toJson()
-    );
+    await dioClient.post('$_base/alerts', data: request.toJson());
   }
 
   @override
   Future<void> deleteAlert(String alertId) async {
-    await dioClient.delete(
-      '$_base/alerts/$alertId'
-    );
+    await dioClient.delete('$_base/alerts/$alertId');
   }
 
   @override
   Future<List<Map<String, dynamic>>> findAlertsByBuyer() async {
-    final response = await dioClient.get(
-      '$_base/alerts',
-    );
-    return (response.data as List).cast<Map<String, dynamic>>();
+    final response = await dioClient.get('$_base/alerts');
+    final data = response.data is Map && response.data.containsKey('data')
+        ? response.data['data']
+        : response.data;
+    return (data as List).cast<Map<String, dynamic>>();
   }
 
   @override
-
   Future<AnnonceMediaModel> uploadMedia(
       String annonceId, String filePath) async {
     final fileName = filePath.split('/').last;
-
     final formData = FormData.fromMap({
-      'file': await MultipartFile.fromFile(
-        filePath,
-        filename: fileName,
-      ),
+      'file': await MultipartFile.fromFile(filePath, filename: fileName),
     });
-
     final response = await dioClient.post(
       '$_base/$annonceId/medias',
       data: formData,
     );
-    final raw = response.data;
-    final json = raw is Map && raw.containsKey('data')
-        ? raw['data'] as Map<String, dynamic>
-        : raw as Map<String, dynamic>;
-
-    return AnnonceMediaModel.fromJson(json);
+    return AnnonceMediaModel.fromJson(_extractData(response.data));
   }
 
   @override
