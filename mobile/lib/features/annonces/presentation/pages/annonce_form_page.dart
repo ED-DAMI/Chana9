@@ -8,6 +8,57 @@ import 'package:ma_chana9_app/shared/enums/animal_gender.dart';
 import '../../domain/entities/annonce.dart';
 import '../bloc/annonce_bloc.dart';
 
+// ── Données régions/villes ────────────────────────────────────────────────────
+
+const Map<String, List<String>> kMoroccoRegionsAndCities = {
+  'Tanger-Tétouan-Al Hoceïma': [
+    'Tanger', 'Tétouan', 'Al Hoceïma', 'Larache',
+    'Chefchaouen', 'Ouezzane', 'Mdiq', 'Fnideq',
+  ],
+  'Oriental': [
+    'Oujda', 'Nador', 'Berkane', 'Taourirt',
+    'Jerada', 'Guercif', 'Driouch', 'Figuig',
+  ],
+  'Fès-Meknès': [
+    'Fès', 'Meknès', 'Taza', 'Ifrane',
+    'Khénifra', 'Sefrou', 'Moulay Yacoub', 'El Hajeb', 'Boulemane',
+  ],
+  'Rabat-Salé-Kénitra': [
+    'Rabat', 'Salé', 'Kénitra', 'Témara',
+    'Skhirate', 'Khémisset', 'Sidi Kacem', 'Sidi Slimane',
+  ],
+  'Béni Mellal-Khénifra': [
+    'Béni Mellal', 'Khénifra', 'Khouribga',
+    'Fquih Ben Salah', 'Azilal',
+  ],
+  'Casablanca-Settat': [
+    'Casablanca', 'Settat', 'Mohammedia', 'El Jadida',
+    'Berrechid', 'Benslimane', 'Médiouna', 'Nouaceur',
+  ],
+  'Marrakech-Safi': [
+    'Marrakech', 'Safi', 'Essaouira', 'El Kelaa des Sraghna',
+    'Chichaoua', 'Al Haouz', 'Youssoufia', 'Rehamna',
+  ],
+  'Drâa-Tafilalet': [
+    'Errachidia', 'Ouarzazate', 'Zagora', 'Tinghir', 'Midelt',
+  ],
+  'Souss-Massa': [
+    'Agadir', 'Taroudannt', 'Tiznit',
+    'Chtouka Aït Baha', 'Inezgane-Aït Melloul', 'Tata',
+  ],
+  'Guelmim-Oued Noun': [
+    'Guelmim', 'Sidi Ifni', 'Assa-Zag', 'Tan-Tan',
+  ],
+  'Laâyoune-Sakia El Hamra': [
+    'Laâyoune', 'Boujdour', 'Tarfaya', 'Es-Semara',
+  ],
+  'Dakhla-Oued Ed-Dahab': [
+    'Dakhla', 'Aousserd',
+  ],
+};
+
+// ── Page principale ───────────────────────────────────────────────────────────
+
 class AnnonceFormPage extends StatefulWidget {
   final Annonce? annonce;
 
@@ -35,13 +86,13 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
   final _priceController = TextEditingController();
   bool _priceNegotiable = false;
 
-  final _regionController = TextEditingController();
+  String? _selectedRegion;
+  String? _selectedCity;
   final _addressController = TextEditingController();
   bool _deliveryAvailable = false;
   final _deliveryRadiusController = TextEditingController();
   final _deliveryPriceController = TextEditingController();
 
-  // ── GPS ──────────────────────────────────────────────────────────────────
   bool _isLocating = false;
   double? _latitude;
   double? _longitude;
@@ -64,13 +115,27 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
     _descriptionController.text = a.description ?? '';
     _priceController.text = a.price.toString();
     _priceNegotiable = a.priceNegotiable;
-    _regionController.text = a.region;
     _addressController.text = a.addressLabel ?? '';
     _deliveryAvailable = a.deliveryAvailable;
     _deliveryRadiusController.text = a.deliveryRadiusKm?.toString() ?? '';
     _deliveryPriceController.text = a.deliveryPrice?.toString() ?? '';
     _latitude = a.latitude;
     _longitude = a.longitude;
+
+    // Préfill région et ville
+    final region = kMoroccoRegionsAndCities.keys.firstWhere(
+          (r) => r.toLowerCase() == a.region.toLowerCase(),
+      orElse: () => '',
+    );
+    if (region.isNotEmpty) {
+      _selectedRegion = region;
+      final cities = kMoroccoRegionsAndCities[region] ?? [];
+      final city = cities.firstWhere(
+            (c) => c.toLowerCase() == (a.addressLabel ?? '').toLowerCase(),
+        orElse: () => '',
+      );
+      if (city.isNotEmpty) _selectedCity = city;
+    }
   }
 
   @override
@@ -81,27 +146,22 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
     _titleController.dispose();
     _descriptionController.dispose();
     _priceController.dispose();
-    _regionController.dispose();
     _addressController.dispose();
     _deliveryRadiusController.dispose();
     _deliveryPriceController.dispose();
     super.dispose();
   }
 
-  // ── GPS ──────────────────────────────────────────────────────────────────
-
   Future<void> _detectLocation() async {
     setState(() => _isLocating = true);
 
     try {
-      // Vérifier si le GPS est activé
       final serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
         _showLocationError('Le GPS est désactivé. Veuillez l\'activer.');
         return;
       }
 
-      // Vérifier/demander les permissions
       LocationPermission permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
@@ -116,14 +176,10 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
         return;
       }
 
-      // Obtenir la position
       final position = await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(
-          accuracy: LocationAccuracy.high,
-        ),
+        locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
       );
 
-      // Convertir en adresse
       final placemarks = await placemarkFromCoordinates(
         position.latitude,
         position.longitude,
@@ -131,10 +187,8 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
 
       if (placemarks.isNotEmpty) {
         final place = placemarks.first;
-
-        // Remplir région
-        final region = place.administrativeArea ?? '';
-        // Remplir adresse
+        final detectedRegion = place.administrativeArea ?? '';
+        final detectedCity = place.locality ?? '';
         final address = [
           place.street,
           place.subLocality,
@@ -144,7 +198,26 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
         setState(() {
           _latitude = position.latitude;
           _longitude = position.longitude;
-          if (region.isNotEmpty) _regionController.text = region;
+
+          // Chercher la région correspondante
+          final matchedRegion = kMoroccoRegionsAndCities.keys.firstWhere(
+                (r) => r.toLowerCase().contains(detectedRegion.toLowerCase()) ||
+                detectedRegion.toLowerCase().contains(r.toLowerCase()),
+            orElse: () => '',
+          );
+          if (matchedRegion.isNotEmpty) {
+            _selectedRegion = matchedRegion;
+
+            // Chercher la ville correspondante
+            final cities = kMoroccoRegionsAndCities[matchedRegion] ?? [];
+            final matchedCity = cities.firstWhere(
+                  (c) => c.toLowerCase().contains(detectedCity.toLowerCase()) ||
+                  detectedCity.toLowerCase().contains(c.toLowerCase()),
+              orElse: () => '',
+            );
+            if (matchedCity.isNotEmpty) _selectedCity = matchedCity;
+          }
+
           if (address.isNotEmpty) _addressController.text = address;
         });
       }
@@ -161,8 +234,6 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
       SnackBar(content: Text(message), backgroundColor: Colors.red),
     );
   }
-
-  // ─────────────────────────────────────────────────────────────────────────
 
   Future<void> _pickFromGallery() async {
     final images = await _picker.pickMultiImage(imageQuality: 80);
@@ -191,8 +262,7 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
           children: [
             const SizedBox(height: 12),
             Container(
-              width: 40,
-              height: 4,
+              width: 40, height: 4,
               decoration: BoxDecoration(
                 color: Colors.grey.shade300,
                 borderRadius: BorderRadius.circular(2),
@@ -203,18 +273,12 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
               leading: const Icon(Icons.photo_library_outlined),
               title: const Text('Choisir depuis la galerie'),
               subtitle: Text('${_photos.length}/5 photos'),
-              onTap: () {
-                Navigator.pop(context);
-                _pickFromGallery();
-              },
+              onTap: () { Navigator.pop(context); _pickFromGallery(); },
             ),
             ListTile(
               leading: const Icon(Icons.camera_alt_outlined),
               title: const Text('Prendre une photo'),
-              onTap: () {
-                Navigator.pop(context);
-                _pickFromCamera();
-              },
+              onTap: () { Navigator.pop(context); _pickFromCamera(); },
             ),
             const SizedBox(height: 8),
           ],
@@ -228,7 +292,7 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
     'breed': _breedController.text.trim(),
     'price': double.tryParse(_priceController.text),
     'priceNegotiable': _priceNegotiable,
-    'region': _regionController.text.trim(),
+    'region': _selectedRegion ?? '',
     'eligibleForAid': _eligibleForAid,
     'deliveryAvailable': _deliveryAvailable,
     if (_descriptionController.text.trim().isNotEmpty)
@@ -238,9 +302,9 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
       'estimatedWeight': double.tryParse(_weightController.text),
     if (_ageController.text.isNotEmpty)
       'ageMonths': int.tryParse(_ageController.text),
+    if (_selectedCity != null) 'city': _selectedCity,
     if (_addressController.text.trim().isNotEmpty)
       'addressLabel': _addressController.text.trim(),
-    // ✅ Coordonnées GPS
     if (_latitude != null) 'latitude': _latitude,
     if (_longitude != null) 'longitude': _longitude,
     if (_deliveryAvailable) ...{
@@ -313,19 +377,25 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
     ),
     Step(
       title: const Text('Localisation'),
-      subtitle: const Text('Région et livraison'),
+      subtitle: const Text('Région, ville et livraison'),
       isActive: _currentStep >= 3,
       state: StepState.indexed,
       content: _LocationStep(
-        regionController: _regionController,
+        selectedRegion: _selectedRegion,
+        selectedCity: _selectedCity,
         addressController: _addressController,
         deliveryAvailable: _deliveryAvailable,
         deliveryRadiusController: _deliveryRadiusController,
         deliveryPriceController: _deliveryPriceController,
+        onRegionChanged: (region) => setState(() {
+          _selectedRegion = region;
+          _selectedCity = null;
+        }),
+        onCityChanged: (city) => setState(() => _selectedCity = city),
         onDeliveryChanged: (v) => setState(() => _deliveryAvailable = v),
-        onDetectLocation: _detectLocation, // ✅ GPS
-        isLocating: _isLocating,           // ✅ état chargement
-        hasLocation: _latitude != null,    // ✅ indicateur GPS obtenu
+        onDetectLocation: _detectLocation,
+        isLocating: _isLocating,
+        hasLocation: _latitude != null,
       ),
     ),
   ];
@@ -385,8 +455,7 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
                 child: Stepper(
                   currentStep: _currentStep,
                   type: StepperType.vertical,
-                  onStepTapped: (step) =>
-                      setState(() => _currentStep = step),
+                  onStepTapped: (step) => setState(() => _currentStep = step),
                   onStepContinue: () {
                     if (_currentStep < _steps.length - 1) {
                       setState(() => _currentStep++);
@@ -408,15 +477,12 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
                       child: Row(
                         children: [
                           FilledButton(
-                            onPressed:
-                            isLoading ? null : details.onStepContinue,
+                            onPressed: isLoading ? null : details.onStepContinue,
                             child: isLoading && isLast
                                 ? const SizedBox(
-                              height: 18,
-                              width: 18,
+                              height: 18, width: 18,
                               child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: Colors.white),
+                                  strokeWidth: 2, color: Colors.white),
                             )
                                 : Text(isLast ? 'Publier' : 'Suivant'),
                           ),
@@ -448,8 +514,7 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
                             const SizedBox(height: 16),
                             Text(
                               'Upload photo $uploadCurrent / $uploadTotal',
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold),
+                              style: const TextStyle(fontWeight: FontWeight.bold),
                             ),
                             const SizedBox(height: 8),
                             LinearProgressIndicator(
@@ -478,10 +543,10 @@ class _PhotoStep extends StatelessWidget {
   final VoidCallback onAdd;
   final void Function(int) onRemove;
 
-  const _PhotoStep(
-      {required this.photos,
-        required this.onAdd,
-        required this.onRemove});
+  const _PhotoStep({
+    required this.photos,
+    required this.onAdd,
+    required this.onRemove});
 
   @override
   Widget build(BuildContext context) {
@@ -492,9 +557,7 @@ class _PhotoStep extends StatelessWidget {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            crossAxisSpacing: 8,
-            mainAxisSpacing: 8,
+            crossAxisCount: 3, crossAxisSpacing: 8, mainAxisSpacing: 8,
           ),
           itemCount: photos.length + (photos.length < 5 ? 1 : 0),
           itemBuilder: (context, index) {
@@ -515,8 +578,7 @@ class _PhotoStep extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text('${photos.length}/5',
                           style: TextStyle(
-                              fontSize: 11,
-                              color: Colors.grey.shade500)),
+                              fontSize: 11, color: Colors.grey.shade500)),
                     ],
                   ),
                 ),
@@ -533,8 +595,7 @@ class _PhotoStep extends StatelessWidget {
                 ),
                 if (index == 0)
                   Positioned(
-                    bottom: 4,
-                    left: 4,
+                    bottom: 4, left: 4,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 6, vertical: 2),
@@ -542,20 +603,17 @@ class _PhotoStep extends StatelessWidget {
                           color: Colors.black54,
                           borderRadius: BorderRadius.circular(4)),
                       child: const Text('Principale',
-                          style: TextStyle(
-                              color: Colors.white, fontSize: 9)),
+                          style: TextStyle(color: Colors.white, fontSize: 9)),
                     ),
                   ),
                 Positioned(
-                  top: 4,
-                  right: 4,
+                  top: 4, right: 4,
                   child: GestureDetector(
                     onTap: () => onRemove(index),
                     child: Container(
                       padding: const EdgeInsets.all(3),
                       decoration: const BoxDecoration(
-                          color: Colors.black54,
-                          shape: BoxShape.circle),
+                          color: Colors.black54, shape: BoxShape.circle),
                       child: const Icon(Icons.close,
                           color: Colors.white, size: 14),
                     ),
@@ -710,22 +768,28 @@ class _AnnonceStep extends StatelessWidget {
 }
 
 class _LocationStep extends StatelessWidget {
-  final TextEditingController regionController;
+  final String? selectedRegion;
+  final String? selectedCity;
   final TextEditingController addressController;
   final bool deliveryAvailable;
   final TextEditingController deliveryRadiusController;
   final TextEditingController deliveryPriceController;
+  final ValueChanged<String?> onRegionChanged;
+  final ValueChanged<String?> onCityChanged;
   final ValueChanged<bool> onDeliveryChanged;
-  final VoidCallback onDetectLocation; // ✅ GPS
-  final bool isLocating;               // ✅ chargement
-  final bool hasLocation;              // ✅ GPS obtenu
+  final VoidCallback onDetectLocation;
+  final bool isLocating;
+  final bool hasLocation;
 
   const _LocationStep({
-    required this.regionController,
+    required this.selectedRegion,
+    required this.selectedCity,
     required this.addressController,
     required this.deliveryAvailable,
     required this.deliveryRadiusController,
     required this.deliveryPriceController,
+    required this.onRegionChanged,
+    required this.onCityChanged,
     required this.onDeliveryChanged,
     required this.onDetectLocation,
     required this.isLocating,
@@ -734,16 +798,19 @@ class _LocationStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cities = selectedRegion != null
+        ? kMoroccoRegionsAndCities[selectedRegion] ?? []
+        : <String>[];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // ✅ Bouton GPS
+        // Bouton GPS
         OutlinedButton.icon(
           onPressed: isLocating ? null : onDetectLocation,
           icon: isLocating
               ? const SizedBox(
-            width: 16,
-            height: 16,
+            width: 16, height: 16,
             child: CircularProgressIndicator(strokeWidth: 2),
           )
               : Icon(
@@ -765,17 +832,57 @@ class _LocationStep extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 12),
-        _FormField(
-            controller: regionController,
-            label: 'Région *',
-            hint: 'ex: Casablanca-Settat',
-            validator: (v) =>
-            v == null || v.trim().isEmpty ? 'Région requise' : null),
+
+        // Dropdown Région
+        DropdownButtonFormField<String>(
+          value: selectedRegion,
+          isExpanded: true,
+          decoration: InputDecoration(
+            labelText: 'Région *',
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10)),
+            contentPadding:
+            const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          ),
+          hint: const Text('Sélectionner une région'),
+          items: kMoroccoRegionsAndCities.keys
+              .map((r) => DropdownMenuItem(value: r, child: Text(r)))
+              .toList(),
+          onChanged: onRegionChanged,
+          validator: (v) => v == null ? 'Région requise' : null,
+        ),
         const SizedBox(height: 12),
+
+        // Dropdown Ville (filtré par région)
+        DropdownButtonFormField<String>(
+          value: selectedCity,
+          isExpanded: true,
+          decoration: InputDecoration(
+            labelText: 'Ville',
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10)),
+            contentPadding:
+            const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          ),
+          hint: Text(
+            selectedRegion == null
+                ? 'Sélectionnez d\'abord une région'
+                : 'Sélectionner une ville',
+            style: TextStyle(color: Colors.grey.shade400, fontSize: 13),
+          ),
+          items: cities
+              .map((c) => DropdownMenuItem(value: c, child: Text(c)))
+              .toList(),
+          onChanged: selectedRegion == null ? null : onCityChanged,
+        ),
+        const SizedBox(height: 12),
+
+        // Adresse libre
         _FormField(
             controller: addressController,
             label: 'Adresse (optionnel)',
             hint: 'ex: Ferme, route de Settat'),
+
         SwitchListTile(
           title: const Text('Livraison disponible'),
           value: deliveryAvailable,
@@ -835,10 +942,8 @@ class _FormField extends StatelessWidget {
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
-        hintStyle:
-        TextStyle(color: Colors.grey.shade400, fontSize: 13),
-        border:
-        OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 13),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         contentPadding:
         const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       ),
