@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AnnonceRequestModel {
 
- String get title; String? get description; String get breed; double? get estimatedWeight; double get price; bool? get priceNegotiable; String get region; AnimalGender? get gender; String? get birthDate; int? get ageMonths; double? get latitude; double? get longitude; String? get addressLabel; bool? get deliveryAvailable; int? get deliveryRadiusKm; double? get deliveryPrice;
+ String get title; String? get description; AnimalBreed get breed; double get price; bool? get priceNegotiable; String get region; AnimalGender? get gender; int? get ageMonths; double? get latitude; double? get longitude; String? get addressLabel; bool? get deliveryAvailable; double? get deliveryPrice;
 /// Create a copy of AnnonceRequestModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $AnnonceRequestModelCopyWith<AnnonceRequestModel> get copyWith => _$AnnonceReque
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AnnonceRequestModel&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.breed, breed) || other.breed == breed)&&(identical(other.estimatedWeight, estimatedWeight) || other.estimatedWeight == estimatedWeight)&&(identical(other.price, price) || other.price == price)&&(identical(other.priceNegotiable, priceNegotiable) || other.priceNegotiable == priceNegotiable)&&(identical(other.region, region) || other.region == region)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.birthDate, birthDate) || other.birthDate == birthDate)&&(identical(other.ageMonths, ageMonths) || other.ageMonths == ageMonths)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.addressLabel, addressLabel) || other.addressLabel == addressLabel)&&(identical(other.deliveryAvailable, deliveryAvailable) || other.deliveryAvailable == deliveryAvailable)&&(identical(other.deliveryRadiusKm, deliveryRadiusKm) || other.deliveryRadiusKm == deliveryRadiusKm)&&(identical(other.deliveryPrice, deliveryPrice) || other.deliveryPrice == deliveryPrice));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AnnonceRequestModel&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.breed, breed) || other.breed == breed)&&(identical(other.price, price) || other.price == price)&&(identical(other.priceNegotiable, priceNegotiable) || other.priceNegotiable == priceNegotiable)&&(identical(other.region, region) || other.region == region)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.ageMonths, ageMonths) || other.ageMonths == ageMonths)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.addressLabel, addressLabel) || other.addressLabel == addressLabel)&&(identical(other.deliveryAvailable, deliveryAvailable) || other.deliveryAvailable == deliveryAvailable)&&(identical(other.deliveryPrice, deliveryPrice) || other.deliveryPrice == deliveryPrice));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,title,description,breed,estimatedWeight,price,priceNegotiable,region,gender,birthDate,ageMonths,latitude,longitude,addressLabel,deliveryAvailable,deliveryRadiusKm,deliveryPrice);
+int get hashCode => Object.hash(runtimeType,title,description,breed,price,priceNegotiable,region,gender,ageMonths,latitude,longitude,addressLabel,deliveryAvailable,deliveryPrice);
 
 @override
 String toString() {
-  return 'AnnonceRequestModel(title: $title, description: $description, breed: $breed, estimatedWeight: $estimatedWeight, price: $price, priceNegotiable: $priceNegotiable, region: $region, gender: $gender, birthDate: $birthDate, ageMonths: $ageMonths, latitude: $latitude, longitude: $longitude, addressLabel: $addressLabel, deliveryAvailable: $deliveryAvailable, deliveryRadiusKm: $deliveryRadiusKm, deliveryPrice: $deliveryPrice)';
+  return 'AnnonceRequestModel(title: $title, description: $description, breed: $breed, price: $price, priceNegotiable: $priceNegotiable, region: $region, gender: $gender, ageMonths: $ageMonths, latitude: $latitude, longitude: $longitude, addressLabel: $addressLabel, deliveryAvailable: $deliveryAvailable, deliveryPrice: $deliveryPrice)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $AnnonceRequestModelCopyWith<$Res>  {
   factory $AnnonceRequestModelCopyWith(AnnonceRequestModel value, $Res Function(AnnonceRequestModel) _then) = _$AnnonceRequestModelCopyWithImpl;
 @useResult
 $Res call({
- String title, String? description, String breed, double? estimatedWeight, double price, bool? priceNegotiable, String region, AnimalGender? gender, String? birthDate, int? ageMonths, double? latitude, double? longitude, String? addressLabel, bool? deliveryAvailable, int? deliveryRadiusKm, double? deliveryPrice
+ String title, String? description, AnimalBreed breed, double price, bool? priceNegotiable, String region, AnimalGender? gender, int? ageMonths, double? latitude, double? longitude, String? addressLabel, bool? deliveryAvailable, double? deliveryPrice
 });
 
 
@@ -65,24 +65,21 @@ class _$AnnonceRequestModelCopyWithImpl<$Res>
 
 /// Create a copy of AnnonceRequestModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? title = null,Object? description = freezed,Object? breed = null,Object? estimatedWeight = freezed,Object? price = null,Object? priceNegotiable = freezed,Object? region = null,Object? gender = freezed,Object? birthDate = freezed,Object? ageMonths = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? addressLabel = freezed,Object? deliveryAvailable = freezed,Object? deliveryRadiusKm = freezed,Object? deliveryPrice = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? title = null,Object? description = freezed,Object? breed = null,Object? price = null,Object? priceNegotiable = freezed,Object? region = null,Object? gender = freezed,Object? ageMonths = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? addressLabel = freezed,Object? deliveryAvailable = freezed,Object? deliveryPrice = freezed,}) {
   return _then(_self.copyWith(
 title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,breed: null == breed ? _self.breed : breed // ignore: cast_nullable_to_non_nullable
-as String,estimatedWeight: freezed == estimatedWeight ? _self.estimatedWeight : estimatedWeight // ignore: cast_nullable_to_non_nullable
-as double?,price: null == price ? _self.price : price // ignore: cast_nullable_to_non_nullable
+as AnimalBreed,price: null == price ? _self.price : price // ignore: cast_nullable_to_non_nullable
 as double,priceNegotiable: freezed == priceNegotiable ? _self.priceNegotiable : priceNegotiable // ignore: cast_nullable_to_non_nullable
 as bool?,region: null == region ? _self.region : region // ignore: cast_nullable_to_non_nullable
 as String,gender: freezed == gender ? _self.gender : gender // ignore: cast_nullable_to_non_nullable
-as AnimalGender?,birthDate: freezed == birthDate ? _self.birthDate : birthDate // ignore: cast_nullable_to_non_nullable
-as String?,ageMonths: freezed == ageMonths ? _self.ageMonths : ageMonths // ignore: cast_nullable_to_non_nullable
+as AnimalGender?,ageMonths: freezed == ageMonths ? _self.ageMonths : ageMonths // ignore: cast_nullable_to_non_nullable
 as int?,latitude: freezed == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
 as double?,longitude: freezed == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
 as double?,addressLabel: freezed == addressLabel ? _self.addressLabel : addressLabel // ignore: cast_nullable_to_non_nullable
 as String?,deliveryAvailable: freezed == deliveryAvailable ? _self.deliveryAvailable : deliveryAvailable // ignore: cast_nullable_to_non_nullable
-as bool?,deliveryRadiusKm: freezed == deliveryRadiusKm ? _self.deliveryRadiusKm : deliveryRadiusKm // ignore: cast_nullable_to_non_nullable
-as int?,deliveryPrice: freezed == deliveryPrice ? _self.deliveryPrice : deliveryPrice // ignore: cast_nullable_to_non_nullable
+as bool?,deliveryPrice: freezed == deliveryPrice ? _self.deliveryPrice : deliveryPrice // ignore: cast_nullable_to_non_nullable
 as double?,
   ));
 }
@@ -168,10 +165,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String title,  String? description,  String breed,  double? estimatedWeight,  double price,  bool? priceNegotiable,  String region,  AnimalGender? gender,  String? birthDate,  int? ageMonths,  double? latitude,  double? longitude,  String? addressLabel,  bool? deliveryAvailable,  int? deliveryRadiusKm,  double? deliveryPrice)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String title,  String? description,  AnimalBreed breed,  double price,  bool? priceNegotiable,  String region,  AnimalGender? gender,  int? ageMonths,  double? latitude,  double? longitude,  String? addressLabel,  bool? deliveryAvailable,  double? deliveryPrice)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AnnonceRequestModel() when $default != null:
-return $default(_that.title,_that.description,_that.breed,_that.estimatedWeight,_that.price,_that.priceNegotiable,_that.region,_that.gender,_that.birthDate,_that.ageMonths,_that.latitude,_that.longitude,_that.addressLabel,_that.deliveryAvailable,_that.deliveryRadiusKm,_that.deliveryPrice);case _:
+return $default(_that.title,_that.description,_that.breed,_that.price,_that.priceNegotiable,_that.region,_that.gender,_that.ageMonths,_that.latitude,_that.longitude,_that.addressLabel,_that.deliveryAvailable,_that.deliveryPrice);case _:
   return orElse();
 
 }
@@ -189,10 +186,10 @@ return $default(_that.title,_that.description,_that.breed,_that.estimatedWeight,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String title,  String? description,  String breed,  double? estimatedWeight,  double price,  bool? priceNegotiable,  String region,  AnimalGender? gender,  String? birthDate,  int? ageMonths,  double? latitude,  double? longitude,  String? addressLabel,  bool? deliveryAvailable,  int? deliveryRadiusKm,  double? deliveryPrice)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String title,  String? description,  AnimalBreed breed,  double price,  bool? priceNegotiable,  String region,  AnimalGender? gender,  int? ageMonths,  double? latitude,  double? longitude,  String? addressLabel,  bool? deliveryAvailable,  double? deliveryPrice)  $default,) {final _that = this;
 switch (_that) {
 case _AnnonceRequestModel():
-return $default(_that.title,_that.description,_that.breed,_that.estimatedWeight,_that.price,_that.priceNegotiable,_that.region,_that.gender,_that.birthDate,_that.ageMonths,_that.latitude,_that.longitude,_that.addressLabel,_that.deliveryAvailable,_that.deliveryRadiusKm,_that.deliveryPrice);case _:
+return $default(_that.title,_that.description,_that.breed,_that.price,_that.priceNegotiable,_that.region,_that.gender,_that.ageMonths,_that.latitude,_that.longitude,_that.addressLabel,_that.deliveryAvailable,_that.deliveryPrice);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -209,10 +206,10 @@ return $default(_that.title,_that.description,_that.breed,_that.estimatedWeight,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String title,  String? description,  String breed,  double? estimatedWeight,  double price,  bool? priceNegotiable,  String region,  AnimalGender? gender,  String? birthDate,  int? ageMonths,  double? latitude,  double? longitude,  String? addressLabel,  bool? deliveryAvailable,  int? deliveryRadiusKm,  double? deliveryPrice)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String title,  String? description,  AnimalBreed breed,  double price,  bool? priceNegotiable,  String region,  AnimalGender? gender,  int? ageMonths,  double? latitude,  double? longitude,  String? addressLabel,  bool? deliveryAvailable,  double? deliveryPrice)?  $default,) {final _that = this;
 switch (_that) {
 case _AnnonceRequestModel() when $default != null:
-return $default(_that.title,_that.description,_that.breed,_that.estimatedWeight,_that.price,_that.priceNegotiable,_that.region,_that.gender,_that.birthDate,_that.ageMonths,_that.latitude,_that.longitude,_that.addressLabel,_that.deliveryAvailable,_that.deliveryRadiusKm,_that.deliveryPrice);case _:
+return $default(_that.title,_that.description,_that.breed,_that.price,_that.priceNegotiable,_that.region,_that.gender,_that.ageMonths,_that.latitude,_that.longitude,_that.addressLabel,_that.deliveryAvailable,_that.deliveryPrice);case _:
   return null;
 
 }
@@ -224,24 +221,21 @@ return $default(_that.title,_that.description,_that.breed,_that.estimatedWeight,
 @JsonSerializable()
 
 class _AnnonceRequestModel extends AnnonceRequestModel {
-  const _AnnonceRequestModel({required this.title, this.description, required this.breed, this.estimatedWeight, required this.price, this.priceNegotiable, required this.region, this.gender, this.birthDate, this.ageMonths, this.latitude, this.longitude, this.addressLabel, this.deliveryAvailable, this.deliveryRadiusKm, this.deliveryPrice}): super._();
+  const _AnnonceRequestModel({required this.title, this.description, required this.breed, required this.price, this.priceNegotiable, required this.region, this.gender, this.ageMonths, this.latitude, this.longitude, this.addressLabel, this.deliveryAvailable, this.deliveryPrice}): super._();
   factory _AnnonceRequestModel.fromJson(Map<String, dynamic> json) => _$AnnonceRequestModelFromJson(json);
 
 @override final  String title;
 @override final  String? description;
-@override final  String breed;
-@override final  double? estimatedWeight;
+@override final  AnimalBreed breed;
 @override final  double price;
 @override final  bool? priceNegotiable;
 @override final  String region;
 @override final  AnimalGender? gender;
-@override final  String? birthDate;
 @override final  int? ageMonths;
 @override final  double? latitude;
 @override final  double? longitude;
 @override final  String? addressLabel;
 @override final  bool? deliveryAvailable;
-@override final  int? deliveryRadiusKm;
 @override final  double? deliveryPrice;
 
 /// Create a copy of AnnonceRequestModel
@@ -257,16 +251,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AnnonceRequestModel&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.breed, breed) || other.breed == breed)&&(identical(other.estimatedWeight, estimatedWeight) || other.estimatedWeight == estimatedWeight)&&(identical(other.price, price) || other.price == price)&&(identical(other.priceNegotiable, priceNegotiable) || other.priceNegotiable == priceNegotiable)&&(identical(other.region, region) || other.region == region)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.birthDate, birthDate) || other.birthDate == birthDate)&&(identical(other.ageMonths, ageMonths) || other.ageMonths == ageMonths)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.addressLabel, addressLabel) || other.addressLabel == addressLabel)&&(identical(other.deliveryAvailable, deliveryAvailable) || other.deliveryAvailable == deliveryAvailable)&&(identical(other.deliveryRadiusKm, deliveryRadiusKm) || other.deliveryRadiusKm == deliveryRadiusKm)&&(identical(other.deliveryPrice, deliveryPrice) || other.deliveryPrice == deliveryPrice));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AnnonceRequestModel&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.breed, breed) || other.breed == breed)&&(identical(other.price, price) || other.price == price)&&(identical(other.priceNegotiable, priceNegotiable) || other.priceNegotiable == priceNegotiable)&&(identical(other.region, region) || other.region == region)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.ageMonths, ageMonths) || other.ageMonths == ageMonths)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.addressLabel, addressLabel) || other.addressLabel == addressLabel)&&(identical(other.deliveryAvailable, deliveryAvailable) || other.deliveryAvailable == deliveryAvailable)&&(identical(other.deliveryPrice, deliveryPrice) || other.deliveryPrice == deliveryPrice));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,title,description,breed,estimatedWeight,price,priceNegotiable,region,gender,birthDate,ageMonths,latitude,longitude,addressLabel,deliveryAvailable,deliveryRadiusKm,deliveryPrice);
+int get hashCode => Object.hash(runtimeType,title,description,breed,price,priceNegotiable,region,gender,ageMonths,latitude,longitude,addressLabel,deliveryAvailable,deliveryPrice);
 
 @override
 String toString() {
-  return 'AnnonceRequestModel(title: $title, description: $description, breed: $breed, estimatedWeight: $estimatedWeight, price: $price, priceNegotiable: $priceNegotiable, region: $region, gender: $gender, birthDate: $birthDate, ageMonths: $ageMonths, latitude: $latitude, longitude: $longitude, addressLabel: $addressLabel, deliveryAvailable: $deliveryAvailable, deliveryRadiusKm: $deliveryRadiusKm, deliveryPrice: $deliveryPrice)';
+  return 'AnnonceRequestModel(title: $title, description: $description, breed: $breed, price: $price, priceNegotiable: $priceNegotiable, region: $region, gender: $gender, ageMonths: $ageMonths, latitude: $latitude, longitude: $longitude, addressLabel: $addressLabel, deliveryAvailable: $deliveryAvailable, deliveryPrice: $deliveryPrice)';
 }
 
 
@@ -277,7 +271,7 @@ abstract mixin class _$AnnonceRequestModelCopyWith<$Res> implements $AnnonceRequ
   factory _$AnnonceRequestModelCopyWith(_AnnonceRequestModel value, $Res Function(_AnnonceRequestModel) _then) = __$AnnonceRequestModelCopyWithImpl;
 @override @useResult
 $Res call({
- String title, String? description, String breed, double? estimatedWeight, double price, bool? priceNegotiable, String region, AnimalGender? gender, String? birthDate, int? ageMonths, double? latitude, double? longitude, String? addressLabel, bool? deliveryAvailable, int? deliveryRadiusKm, double? deliveryPrice
+ String title, String? description, AnimalBreed breed, double price, bool? priceNegotiable, String region, AnimalGender? gender, int? ageMonths, double? latitude, double? longitude, String? addressLabel, bool? deliveryAvailable, double? deliveryPrice
 });
 
 
@@ -294,24 +288,21 @@ class __$AnnonceRequestModelCopyWithImpl<$Res>
 
 /// Create a copy of AnnonceRequestModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? title = null,Object? description = freezed,Object? breed = null,Object? estimatedWeight = freezed,Object? price = null,Object? priceNegotiable = freezed,Object? region = null,Object? gender = freezed,Object? birthDate = freezed,Object? ageMonths = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? addressLabel = freezed,Object? deliveryAvailable = freezed,Object? deliveryRadiusKm = freezed,Object? deliveryPrice = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? title = null,Object? description = freezed,Object? breed = null,Object? price = null,Object? priceNegotiable = freezed,Object? region = null,Object? gender = freezed,Object? ageMonths = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? addressLabel = freezed,Object? deliveryAvailable = freezed,Object? deliveryPrice = freezed,}) {
   return _then(_AnnonceRequestModel(
 title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,breed: null == breed ? _self.breed : breed // ignore: cast_nullable_to_non_nullable
-as String,estimatedWeight: freezed == estimatedWeight ? _self.estimatedWeight : estimatedWeight // ignore: cast_nullable_to_non_nullable
-as double?,price: null == price ? _self.price : price // ignore: cast_nullable_to_non_nullable
+as AnimalBreed,price: null == price ? _self.price : price // ignore: cast_nullable_to_non_nullable
 as double,priceNegotiable: freezed == priceNegotiable ? _self.priceNegotiable : priceNegotiable // ignore: cast_nullable_to_non_nullable
 as bool?,region: null == region ? _self.region : region // ignore: cast_nullable_to_non_nullable
 as String,gender: freezed == gender ? _self.gender : gender // ignore: cast_nullable_to_non_nullable
-as AnimalGender?,birthDate: freezed == birthDate ? _self.birthDate : birthDate // ignore: cast_nullable_to_non_nullable
-as String?,ageMonths: freezed == ageMonths ? _self.ageMonths : ageMonths // ignore: cast_nullable_to_non_nullable
+as AnimalGender?,ageMonths: freezed == ageMonths ? _self.ageMonths : ageMonths // ignore: cast_nullable_to_non_nullable
 as int?,latitude: freezed == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
 as double?,longitude: freezed == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
 as double?,addressLabel: freezed == addressLabel ? _self.addressLabel : addressLabel // ignore: cast_nullable_to_non_nullable
 as String?,deliveryAvailable: freezed == deliveryAvailable ? _self.deliveryAvailable : deliveryAvailable // ignore: cast_nullable_to_non_nullable
-as bool?,deliveryRadiusKm: freezed == deliveryRadiusKm ? _self.deliveryRadiusKm : deliveryRadiusKm // ignore: cast_nullable_to_non_nullable
-as int?,deliveryPrice: freezed == deliveryPrice ? _self.deliveryPrice : deliveryPrice // ignore: cast_nullable_to_non_nullable
+as bool?,deliveryPrice: freezed == deliveryPrice ? _self.deliveryPrice : deliveryPrice // ignore: cast_nullable_to_non_nullable
 as double?,
   ));
 }
