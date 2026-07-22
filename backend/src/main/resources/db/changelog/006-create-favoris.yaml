@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      id: 006-create-favoris-table
+      author: chana9
+      changes:
+        - createTable:
+            tableName: favoris
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: acheteur_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: annonce_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_favoris_annonce
+                    referencedTableName: annonces
+                    referencedColumnNames: id
+                    deleteCascade: true
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: NOW()
+        - addUniqueConstraint:
+            columnNames: acheteur_id, annonce_id
+            constraintName: idx_favoris_unique
+            tableName: favoris
+      rollback:
+        - dropTable:
+            tableName: favoris
