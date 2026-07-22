@@ -1,7 +1,4 @@
 databaseChangeLog:
-
-
-
   - changeSet:
       id: 007-add-original-filename-to-annonce-medias
       author: chana9

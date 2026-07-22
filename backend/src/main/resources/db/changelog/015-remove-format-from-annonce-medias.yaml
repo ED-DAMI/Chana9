@@ -22,3 +22,30 @@ databaseChangeLog:
             ALTER TABLE annonce_medias
             ADD CONSTRAINT chk_media_format
             CHECK (format IN ('JPEG','PNG','HEIC','WEBP'));
+- changeSet:
+    id: 016-drop-columns-annonces
+    author: chana9
+    changes:
+      - dropColumn:
+          tableName: annonces
+          columnName: estimated_weight
+      - dropColumn:
+          tableName: annonces
+          columnName: delivery_radius_km
+      - dropColumn:
+          tableName: annonces
+          columnName: is_top_lot
+    rollback:
+      - addColumn:
+          tableName: annonces
+          columns:
+            - column:
+                name: estimated_weight
+                type: numeric(6,2)
+            - column:
+                name: delivery_radius_km
+                type: integer
+            - column:
+                name: is_top_lot
+                type: boolean
+                defaultValueBoolean: false
