@@ -121,6 +121,7 @@ def authenticate():
             return None
 
         print(f"[AUTH] ✅ JWT récupéré avec succès")
+        print("token ",token)
         return token
 
     except requests.exceptions.HTTPError as e:
@@ -166,19 +167,6 @@ def main():
     if not token:
         print("\n[STOP] Impossible de continuer sans JWT.")
         return
-
-    # 2. Génération des annonces
-    print(f"\n[ANNONCES] Création de {NOMBRE_ANNONCES} annonces...\n")
-    created = 0
-
-    for i in range(1, NOMBRE_ANNONCES + 1):
-        payload = generate_annonce_payload()
-        result = create_annonce(token, SELLER_ID, payload, i)
-        if result:
-            created += 1
-        sleep(PAUSE_ENTRE_REQUETES)
-
-    print(f"\n[FIN] {created}/{NOMBRE_ANNONCES} annonces créées avec succès.")
 
 
 if __name__ == "__main__":

@@ -181,6 +181,11 @@ class _AnnonceDetailView extends StatelessWidget {
                       icon: Icons.location_on_outlined,
                       label: 'Région',
                       value: annonce.region),
+                  if (annonce.distanceKm != null)
+                    _InfoRow(
+                        icon: Icons.social_distance_outlined,
+                        label: 'Distance',
+                        value: '${annonce.distanceKm!.toStringAsFixed(1)} km'),
                   if (annonce.addressLabel != null)
                     _InfoRow(
                         icon: Icons.place_outlined,
