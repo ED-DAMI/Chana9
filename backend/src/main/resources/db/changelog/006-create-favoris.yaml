@@ -1,10 +1,11 @@
 databaseChangeLog:
+
   - changeSet:
-      id: 006-create-favoris-table
+      id: 006-create-favorites-table
       author: chana9
       changes:
         - createTable:
-            tableName: favoris
+            tableName: favorites
             columns:
               - column:
                   name: id
@@ -14,7 +15,7 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: acheteur_id
+                  name: buyer_id
                   type: uuid
                   constraints:
                     nullable: false
@@ -23,18 +24,34 @@ databaseChangeLog:
                   type: uuid
                   constraints:
                     nullable: false
-                    foreignKeyName: fk_favoris_annonce
-                    referencedTableName: annonces
-                    referencedColumnNames: id
+                    foreignKeyName: fk_favorite_annonce
+                    references: annonces(id)
                     deleteCascade: true
               - column:
                   name: created_at
                   type: timestamp
                   defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+
         - addUniqueConstraint:
-            columnNames: acheteur_id, annonce_id
-            constraintName: idx_favoris_unique
-            tableName: favoris
+            tableName: favorites
+            constraintName: uq_favorite
+            columnNames: buyer_id, annonce_id
+
+        - createIndex:
+            tableName: favorites
+            indexName: idx_favorite_buyer_id
+            columns:
+              - column:
+                  name: buyer_id
+
+        - createIndex:
+            tableName: favorites
+            indexName: idx_favorite_annonce_id
+            columns:
+              - column:
+                  name: annonce_id
       rollback:
         - dropTable:
-            tableName: favoris
+            tableName: favorites

@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 007-create-notifications-table
+      id: 009-create-notifications-table
       author: chana9
       changes:
         - createTable:

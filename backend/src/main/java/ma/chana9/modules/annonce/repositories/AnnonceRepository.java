@@ -23,22 +23,35 @@ public interface AnnonceRepository extends JpaRepository<Annonce, UUID>, JpaSpec
     @Query("SELECT a FROM Annonce a WHERE a.status = :status AND a.expiresAt < :now")
     List<Annonce> findExpired(@Param("status") AnnonceStatus status, @Param("now") LocalDateTime now);
 
-    @Query("SELECT a FROM Annonce a WHERE a.isTopLot = true AND a.topLotExpiresAt < :now")
+    @Query("SELECT a FROM Annonce a WHERE a.topLotExpiresAt IS NOT NULL AND a.topLotExpiresAt < :now")
     List<Annonce> findExpiredTopLots(@Param("now") LocalDateTime now);
 
     @Modifying
     @Query("UPDATE Annonce a SET a.status = :status WHERE a.id IN :ids")
     void updateStatusByIds(@Param("ids") List<UUID> ids, @Param("status") AnnonceStatus status);
 
-    @Query("""
-            SELECT a FROM Annonce a
+    @Query(
+            value = """
+            SELECT a.* FROM annonces a
             WHERE a.status = 'ACTIVE'
-            AND function('ST_DWithin',
-                a.location,
-                function('ST_MakePoint', :lng, :lat),
-                :radiusMeters) = true
-            ORDER BY function('ST_Distance', a.location, function('ST_MakePoint', :lng, :lat))
-            """)
+            AND ST_DWithin(
+                a.location::geography,
+                ST_SetSRID(ST_MakePoint(:lng, :lat), 4326)::geography,
+                :radiusMeters
+            )
+            ORDER BY a.location <-> ST_SetSRID(ST_MakePoint(:lng, :lat), 4326)
+            """,
+            countQuery = """
+            SELECT COUNT(*) FROM annonces a
+            WHERE a.status = 'ACTIVE'
+            AND ST_DWithin(
+                a.location::geography,
+                ST_SetSRID(ST_MakePoint(:lng, :lat), 4326)::geography,
+                :radiusMeters
+            )
+            """,
+            nativeQuery = true
+    )
     Page<Annonce> findNearby(
             @Param("lat") double lat,
             @Param("lng") double lng,

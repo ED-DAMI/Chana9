@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: 004-create-annonce-medias-table
-      author: chana9
+      author: ED-DAMI
       changes:
         - createTable:
             tableName: annonce_medias

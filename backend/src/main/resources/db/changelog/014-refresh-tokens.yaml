@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 011-create-refresh-tokens-table
+      id: 014-create-refresh-tokens-table
       author: ED-DAMI
       changes:
         - createTable:

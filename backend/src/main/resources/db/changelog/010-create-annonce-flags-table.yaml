@@ -1,0 +1,108 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 010-create-annonce-flags-table
+      author: chana9
+      changes:
+        - createTable:
+            tableName: annonce_flags
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: annonce_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_flag_annonce
+                    references: annonces(id)
+                    deleteCascade: true
+              - column:
+                  name: reporter_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: reason
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: comment
+                  type: text
+              - column:
+                  name: status
+                  type: varchar(20)
+                  defaultValue: PENDING
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: reviewed_at
+                  type: timestamp
+              - column:
+                  name: reviewed_by
+                  type: uuid
+
+        - addUniqueConstraint:
+            tableName: annonce_flags
+            constraintName: uq_annonce_flag
+            columnNames: annonce_id, reporter_id
+
+        - createIndex:
+            tableName: annonce_flags
+            indexName: idx_flag_annonce_id
+            columns:
+              - column:
+                  name: annonce_id
+
+        - createIndex:
+            tableName: annonce_flags
+            indexName: idx_flag_status
+            columns:
+              - column:
+                  name: status
+      rollback:
+        - dropTable:
+            tableName: annonce_flags
+
+  - changeSet:
+      id: 005-add-check-constraints-annonce-flags
+      author: chana9
+      changes:
+        - sql:
+            sql: >
+              ALTER TABLE annonce_flags
+              ADD CONSTRAINT chk_flag_reason
+              CHECK (reason IN (
+                'MISLEADING_PHOTOS',
+                'FALSE_INFORMATION',
+                'DUPLICATE_ANNONCE',
+                'ABUSIVE_PRICE',
+                'HIDDEN_FEES',
+                'UNRESPONSIVE_SELLER',
+                'FRAUDULENT_SELLER',
+                'ANIMAL_DOES_NOT_EXIST',
+                'SICK_ANIMAL',
+                'STOLEN_ANIMAL',
+                'INAPPROPRIATE_CONTENT',
+                'OTHER'
+              ));
+              ALTER TABLE annonce_flags
+              ADD CONSTRAINT chk_flag_status
+              CHECK (status IN ('PENDING','REVIEWED','REJECTED'));
+      rollback:
+        - sql:
+            sql: >
+              ALTER TABLE annonce_flags DROP CONSTRAINT chk_flag_reason;
+              ALTER TABLE annonce_flags DROP CONSTRAINT chk_flag_status;

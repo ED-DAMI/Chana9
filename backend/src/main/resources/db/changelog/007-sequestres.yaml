@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 005-create-sequestres-table
+      id: 007-create-sequestres-table
       author: chana9
       changes:
         - createTable:

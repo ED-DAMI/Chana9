@@ -10,10 +10,10 @@ import java.util.UUID;
 
 @Entity
 @Table(
-        name = "annonce_signalements",
+        name = "annonce_reports",
         uniqueConstraints = @UniqueConstraint(
-                name = "idx_signalement_unique",
-                columnNames = {"annonce_id", "signaleur_id"}
+                name = "uq_annonce_report",
+                columnNames = {"annonce_id", "reporter_id"}
         )
 )
 @Getter
@@ -31,7 +31,7 @@ public class AnnonceReport {
     @JoinColumn(name = "annonce_id", nullable = false)
     private Annonce annonce;
 
-    @Column(name = "signaleur_id", nullable = false)
+    @Column(name = "reporter_id", nullable = false)
     private UUID reporterId;
 
     @Enumerated(EnumType.STRING)
@@ -42,17 +42,22 @@ public class AnnonceReport {
     private String comment;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 20)
+    @Column(length = 20, nullable = false)
     @Builder.Default
     private ReportStatus status = ReportStatus.PENDING;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "traite_at")
+    @Column(name = "processed_at")
     private LocalDateTime processedAt;
 
-    @Column(name = "traite_par")
+    @Column(name = "processed_by")
     private UUID processedBy;
 
+    @PrePersist
+    void onCreate() {
+        createdAt = LocalDateTime.now();
+        if (status == null) status = ReportStatus.PENDING;
+    }
 }

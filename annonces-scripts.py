@@ -1,8 +1,4 @@
 #!/usr/bin/env python3
-"""
-Script de génération d'annonces pour chana9.ma
-Authentification → JWT → Création des annonces
-"""
 
 import requests
 import json

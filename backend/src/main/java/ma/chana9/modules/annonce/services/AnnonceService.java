@@ -6,6 +6,7 @@ import ma.chana9.modules.annonce.dto.*;
 import ma.chana9.modules.annonce.entities.*;
 import ma.chana9.modules.annonce.repositories.*;
 import ma.chana9.shared.config.AnnonceConstants;
+import ma.chana9.shared.enums.AnimalBreed;
 import ma.chana9.shared.enums.AnnonceStatus;
 import ma.chana9.shared.enums.FlagStatus;
 import org.locationtech.jts.geom.*;
@@ -40,16 +41,13 @@ public class AnnonceService {
 				.title(request.title())
 				.description(request.description())
 				.breed(request.breed())
-				.estimatedWeight(request.estimatedWeight())
 				.price(request.price())
 				.priceNegotiable(request.priceNegotiable())
 				.region(request.region())
 				.gender(request.gender())
-				.birthDate(request.birthDate())
 				.ageMonths(request.ageMonths())
 				.addressLabel(request.addressLabel())
 				.deliveryAvailable(request.deliveryAvailable())
-				.deliveryRadiusKm(request.deliveryRadiusKm())
 				.deliveryPrice(request.deliveryPrice())
 				.location(buildPoint(request.latitude(), request.longitude()))
 				.sellerId(sellerId)
@@ -68,16 +66,13 @@ public class AnnonceService {
 		annonce.setTitle(request.title());
 		annonce.setDescription(request.description());
 		annonce.setBreed(request.breed());
-		annonce.setEstimatedWeight(request.estimatedWeight());
 		annonce.setPrice(request.price());
 		annonce.setPriceNegotiable(request.priceNegotiable());
 		annonce.setRegion(request.region());
 		annonce.setGender(request.gender());
-		annonce.setBirthDate(request.birthDate());
 		annonce.setAgeMonths(request.ageMonths());
 		annonce.setAddressLabel(request.addressLabel());
 		annonce.setDeliveryAvailable(request.deliveryAvailable());
-		annonce.setDeliveryRadiusKm(request.deliveryRadiusKm());
 		annonce.setDeliveryPrice(request.deliveryPrice());
 		annonce.setLocation(buildPoint(request.latitude(), request.longitude()));
 
@@ -139,7 +134,6 @@ public class AnnonceService {
 	@Transactional
 	public AnnonceResponse activateTopLot(UUID id, UUID sellerId, int durationDays) {
 		Annonce annonce = findOwnedOrThrow(id, sellerId);
-		annonce.setIsTopLot(true);
 		annonce.setTopLotExpiresAt(LocalDateTime.now().plusDays(durationDays));
 		return annonceMapper.toResponse(annonceRepository.save(annonce));
 	}
@@ -194,7 +188,7 @@ public class AnnonceService {
 	public AnnonceAlert createAlert(UUID buyerId, AnnonceAlertRequest request) {
 		return annonceAlertRepository.save(AnnonceAlert.builder()
 				.buyerId(buyerId)
-				.breed(request.breed())
+				.breed(AnimalBreed.valueOf(request.breed()))
 				.region(request.region())
 				.radiusKm(request.radiusKm())
 				.maxPrice(request.maxPrice())

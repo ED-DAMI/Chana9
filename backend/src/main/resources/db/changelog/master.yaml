@@ -6,22 +6,31 @@ databaseChangeLog:
       file: db/changelog/002-otp-codes.yaml
       relativeToChangelogFile: false
   - include:
-      file: db/changelog/004-enable-postgis-extension.yaml
-      relativeToChangelogFile: false
-  - include:
       file: db/changelog/003-annonces.yaml
       relativeToChangelogFile: false
   - include:
-      file: db/changelog/005-sequestres.yaml
+      file: db/changelog/004-create-annonce-medias.yaml
       relativeToChangelogFile: false
   - include:
-      file: db/changelog/006-messages.yaml
+      file: db/changelog/005-create-annonce-reports-table.yaml
       relativeToChangelogFile: false
   - include:
-      file: db/changelog/007-notifications.yaml
+      file: db/changelog/006-create-favoris.yaml
       relativeToChangelogFile: false
   - include:
-      file: db/changelog/011-refresh-tokens.yaml
+      file: db/changelog/007-sequestres.yaml
+      relativeToChangelogFile: false
+  - include:
+      file: db/changelog/008-messages.yaml
+      relativeToChangelogFile: false
+  - include:
+      file: db/changelog/009-notifications.yaml
+      relativeToChangelogFile: false
+  - include:
+      file: db/changelog/010-create-annonce-flags-table.yaml
+      relativeToChangelogFile: false
+  - include:
+      file: db/changelog/011-create-annonce-alerts-table.yaml
       relativeToChangelogFile: false
   - include:
       file: db/changelog/012-token-blacklist.yaml
@@ -30,6 +39,5 @@ databaseChangeLog:
       file: db/changelog/013-audit-log.yaml
       relativeToChangelogFile: false
   - include:
-      file: db/changelog/014-alter-users-and-annonce-medias.yaml
+      file: db/changelog/014-refresh-tokens.yaml
       relativeToChangelogFile: false
-
