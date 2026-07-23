@@ -10,10 +10,10 @@ import java.util.UUID;
 
 @Entity
 @Table(
-        name = "annonce_signalements",
+        name = "annonce_flags",
         uniqueConstraints = @UniqueConstraint(
-                name = "idx_signalement_unique",
-                columnNames = {"annonce_id", "signaleur_id"}
+                name = "uq_annonce_flag",
+                columnNames = {"annonce_id", "reporter_id"}
         )
 )
 @Getter
@@ -31,7 +31,7 @@ public class AnnonceFlag {
     @JoinColumn(name = "annonce_id", nullable = false)
     private Annonce annonce;
 
-    @Column(name = "signaleur_id", nullable = false)
+    @Column(name = "reporter_id", nullable = false)
     private UUID reporterId;
 
     @Enumerated(EnumType.STRING)
@@ -42,18 +42,22 @@ public class AnnonceFlag {
     private String comment;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 20)
+    @Column(length = 20, nullable = false)
     @Builder.Default
     private FlagStatus status = FlagStatus.PENDING;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "traite_at")
+    @Column(name = "reviewed_at")
     private LocalDateTime reviewedAt;
 
-    @Column(name = "traite_par")
+    @Column(name = "reviewed_by")
     private UUID reviewedBy;
 
-
+    @PrePersist
+    void onCreate() {
+        createdAt = LocalDateTime.now();
+        if (status == null) status = FlagStatus.PENDING;
+    }
 }

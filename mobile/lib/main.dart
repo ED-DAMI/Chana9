@@ -11,6 +11,8 @@ import 'features/annonces/presentation/pages/annonce_list_page.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/pages/login_page.dart';
 import 'features/auth/presentation/pages/splash_page.dart';
+import 'features/profile/presentation/pages/my_annonces_page.dart';
+import 'features/profile/presentation/pages/profile_page.dart';
 import 'injection_container.dart' as di;
 
 void main() async {
@@ -26,12 +28,8 @@ class Chana9App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<AuthBloc>(
-          create: (_) => GetIt.instance<AuthBloc>(),
-        ),
-        BlocProvider<AnnonceBloc>(
-          create: (_) => GetIt.instance<AnnonceBloc>(),
-        ),
+        BlocProvider<AuthBloc>(create: (_) => GetIt.instance<AuthBloc>()),
+        BlocProvider<AnnonceBloc>(create: (_) => GetIt.instance<AnnonceBloc>()),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
@@ -56,47 +54,104 @@ Widget _splashBuilder(BuildContext context, GoRouterState state) {
 }
 
 Widget _loginBuilder(BuildContext context, GoRouterState state) {
-  return LoginPage(
-    onLoginSuccess: () => context.go('/annonces'),
-  );
+  return LoginPage(onLoginSuccess: () => context.go('/annonces'));
 }
 
-Widget _annoncesBuilder(BuildContext context, GoRouterState state) {
-  return const AnnonceListPage();
-}
+class _ShellPage extends StatelessWidget {
+  final Widget child;
 
-Widget _annonceNewBuilder(BuildContext context, GoRouterState state) {
-  return const AnnonceFormPage();
-}
+  const _ShellPage({required this.child});
 
-Widget _annonceDetailBuilder(BuildContext context, GoRouterState state) {
-  return AnnonceDetailPage(
-    annonceId: state.pathParameters['id']!,
-  );
+  int _locationToIndex(String location) {
+    if (location.startsWith('/profile')) return 2;
+    return 0;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final location = GoRouterState.of(context).uri.toString();
+    final currentIndex = _locationToIndex(location);
+
+    return Scaffold(
+      body: child,
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: currentIndex,
+        onDestinationSelected: (index) {
+          switch (index) {
+            case 0:
+              context.go('/annonces');
+              break;
+            case 1:
+              context.go('/annonces/new');
+              break;
+            case 2:
+              context.go('/profile');
+              break;
+          }
+        },
+        destinations: [
+          const NavigationDestination(
+            icon: Icon(Icons.home_outlined),
+            selectedIcon: Icon(Icons.home),
+            label: 'Annonces',
+          ),
+          NavigationDestination(
+            icon: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.add, color: Colors.white, size: 22),
+            ),
+            label: 'Publier',
+          ),
+          const NavigationDestination(
+            icon: Icon(Icons.person_outline),
+            selectedIcon: Icon(Icons.person),
+            label: 'Profil',
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 final GoRouter _router = GoRouter(
   initialLocation: '/splash',
   routes: [
-    GoRoute(
-      path: '/splash',
-      builder: _splashBuilder,
-    ),
-    GoRoute(
-      path: '/login',
-      builder: _loginBuilder,
-    ),
-    GoRoute(
-      path: '/annonces',
-      builder: _annoncesBuilder,
+    GoRoute(path: '/splash', builder: _splashBuilder),
+    GoRoute(path: '/login', builder: _loginBuilder),
+    ShellRoute(
+      builder: (context, state, child) => _ShellPage(child: child),
       routes: [
         GoRoute(
-          path: 'new',
-          builder: _annonceNewBuilder,
+          path: '/annonces',
+          builder: (context, state) => const AnnonceListPage(),
+          routes: [
+            GoRoute(
+              path: 'new',
+              builder: (context, state) => const AnnonceFormPage(),
+            ),
+            GoRoute(
+              path: ':id',
+              builder: (context, state) => AnnonceDetailPage(
+                annonceId: state.pathParameters['id']!,
+              ),
+            ),
+          ],
         ),
         GoRoute(
-          path: ':id',
-          builder: _annonceDetailBuilder,
+          path: '/profile',
+          builder: (context, state) => const ProfilePage(),
+          routes: [
+            GoRoute(
+              path: 'my-annonces/:sellerId',
+              builder: (context, state) => MyAnnoncesPage(
+                sellerId: state.pathParameters['sellerId']!,
+              ),
+            ),
+          ],
         ),
       ],
     ),

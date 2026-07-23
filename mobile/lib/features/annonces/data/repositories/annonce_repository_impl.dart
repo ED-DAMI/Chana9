@@ -1,7 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:ma_chana9_app/core/error/failure.dart';
-import '../../../../shared/enums/animal_gender.dart';
+import 'package:ma_chana9_app/shared/enums/animal_breed.dart';
+import 'package:ma_chana9_app/shared/enums/animal_gender.dart';
 import '../../../../shared/model/paginated/paginated_response.dart';
 import '../models/annonce_alert_request_model.dart';
 import '../models/annonce_request_model.dart';
@@ -27,19 +28,17 @@ class AnnonceRepositoryImpl implements AnnonceRepository {
   }
 
   @override
-  Future<Either<Failure, Annonce>> createAnnonce(
-      Map<String, dynamic> body) =>
+  Future<Either<Failure, Annonce>> createAnnonce(Map<String, dynamic> body) =>
       _execute(() async {
-        final request = _bodyToRequest(body);
-        return (await remoteDataSource.create(request)).toEntity();
+        return (await remoteDataSource.create(_bodyToRequest(body))).toEntity();
       });
 
   @override
   Future<Either<Failure, Annonce>> updateAnnonce(
       String id, Map<String, dynamic> body) =>
       _execute(() async {
-        final request = _bodyToRequest(body);
-        return (await remoteDataSource.update(id, request)).toEntity();
+        return (await remoteDataSource.update(id, _bodyToRequest(body)))
+            .toEntity();
       });
 
   @override
@@ -51,19 +50,14 @@ class AnnonceRepositoryImpl implements AnnonceRepository {
 
   @override
   Future<Either<Failure, Annonce>> getAnnonceById(String id) =>
-      _execute(() async =>
-          (await remoteDataSource.findById(id)).toEntity());
+      _execute(() async => (await remoteDataSource.findById(id)).toEntity());
 
   @override
   Future<Either<Failure, PaginatedResponse<Annonce>>> searchAnnonces(
       AnnonceSearchRequestModel request,
       {int page = 0, int size = 20}) =>
       _execute(() async {
-        final result = await remoteDataSource.search(
-          request,
-          page: page,
-          size: size,
-        );
+        final result = await remoteDataSource.search(request, page: page, size: size);
         return result.map((m) => m.toEntity());
       });
 
@@ -72,11 +66,7 @@ class AnnonceRepositoryImpl implements AnnonceRepository {
       String sellerId,
       {int page = 0, int size = 20}) =>
       _execute(() async {
-        final result = await remoteDataSource.findBySeller(
-          sellerId,
-          page: page,
-          size: size,
-        );
+        final result = await remoteDataSource.findBySeller(sellerId, page: page, size: size);
         return result.map((m) => m.toEntity());
       });
 
@@ -102,8 +92,7 @@ class AnnonceRepositoryImpl implements AnnonceRepository {
       });
 
   @override
-  Future<Either<Failure, Unit>> activateTopLot(
-      String id, int durationDays) =>
+  Future<Either<Failure, Unit>> activateTopLot(String id, int durationDays) =>
       _execute(() async {
         await remoteDataSource.activateTopLot(id, durationDays);
         return unit;
@@ -135,24 +124,20 @@ class AnnonceRepositoryImpl implements AnnonceRepository {
   Future<Either<Failure, PaginatedResponse<Annonce>>> getFavorites(
       {int page = 0, int size = 20}) =>
       _execute(() async {
-        final result = await remoteDataSource.findFavorites(
-          page: page,
-          size: size,
-        );
+        final result = await remoteDataSource.findFavorites(page: page, size: size);
         return result.map((m) => m.toEntity());
       });
 
   @override
   Future<Either<Failure, Unit>> createAlert(Map<String, dynamic> body) =>
       _execute(() async {
-        final request = AnnonceAlertRequestModel(
+        await remoteDataSource.createAlert(AnnonceAlertRequestModel(
           breed: body['breed'] as String?,
           region: body['region'] as String?,
           radiusKm: body['radiusKm'] as int?,
           maxPrice: (body['maxPrice'] as num?)?.toDouble(),
           minAgeMonths: body['minAgeMonths'] as int?,
-        );
-        await remoteDataSource.createAlert(request);
+        ));
         return unit;
       });
 
@@ -171,31 +156,26 @@ class AnnonceRepositoryImpl implements AnnonceRepository {
   Future<Either<Failure, AnnonceMedia>> uploadMedia(
       String annonceId, String filePath) =>
       _execute(() async {
-        final model =
-        await remoteDataSource.uploadMedia(annonceId, filePath);
-        return model.toEntity();
+        return (await remoteDataSource.uploadMedia(annonceId, filePath))
+            .toEntity();
       });
-
 
   AnnonceRequestModel _bodyToRequest(Map<String, dynamic> body) {
     return AnnonceRequestModel(
       title: body['title'] as String,
       description: body['description'] as String?,
-      breed: body['breed'] as String,
-      estimatedWeight: (body['estimatedWeight'] as num?)?.toDouble(),
+      breed: AnimalBreed.values.byName(body['breed'] as String),
       price: (body['price'] as num).toDouble(),
       priceNegotiable: body['priceNegotiable'] as bool?,
       region: body['region'] as String,
       gender: body['gender'] != null
           ? AnimalGenderExtension.fromString(body['gender'] as String)
           : null,
-      birthDate: body['birthDate'] as String?,
       ageMonths: body['ageMonths'] as int?,
       latitude: (body['latitude'] as num?)?.toDouble(),
       longitude: (body['longitude'] as num?)?.toDouble(),
       addressLabel: body['addressLabel'] as String?,
       deliveryAvailable: body['deliveryAvailable'] as bool?,
-      deliveryRadiusKm: body['deliveryRadiusKm'] as int?,
       deliveryPrice: (body['deliveryPrice'] as num?)?.toDouble(),
     );
   }

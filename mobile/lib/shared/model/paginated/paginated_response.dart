@@ -22,13 +22,13 @@ class PaginatedResponse<T> {
       T Function(Object?) fromJsonT,
       ) {
     return PaginatedResponse(
-      content: (json['content'] as List).map(fromJsonT).toList(),
-      totalElements: (json['totalElements'] as num).toInt(),
-      totalPages: (json['totalPages'] as num).toInt(),
-      number: (json['number'] as num).toInt(),
-      size: (json['size'] as num).toInt(),
-      first: json['first'] as bool,
-      last: json['last'] as bool,
+      content: (json['content'] as List? ?? []).map(fromJsonT).toList(),
+      totalElements: (json['totalElements'] as num?)?.toInt() ?? 0,
+      totalPages: (json['totalPages'] as num?)?.toInt() ?? 0,
+      number: (json['number'] as num?)?.toInt() ?? 0,
+      size: (json['size'] as num?)?.toInt() ?? 0,
+      first: json['first'] as bool? ?? true,
+      last: json['last'] as bool? ?? false,
     );
   }
 

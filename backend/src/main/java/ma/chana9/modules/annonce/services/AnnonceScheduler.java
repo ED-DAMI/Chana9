@@ -37,7 +37,6 @@ public class AnnonceScheduler {
         if (expired.isEmpty()) return;
 
         expired.forEach(a -> {
-            a.setIsTopLot(false);
             a.setTopLotExpiresAt(null);
         });
         annonceRepository.saveAll(expired);

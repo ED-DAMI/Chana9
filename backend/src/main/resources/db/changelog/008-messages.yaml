@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 006-create-messages-table
+      id: 008-create-messages-table
       author: chana9
       changes:
         - createTable:

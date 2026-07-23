@@ -44,8 +44,13 @@ class _AnnoncePhotoCarouselState extends State<AnnoncePhotoCarousel> {
             itemCount: medias.length,
             onPageChanged: (index) => setState(() => _currentIndex = index),
             itemBuilder: (context, index) {
+              // Nettoyage de l'URL pour éviter les problèmes de slash
+              final imageUrl = medias[index].url.startsWith('http')
+                  ? medias[index].url
+                  : "${ApiConstants.baseUrl_photos}/${medias[index].url}".replaceAll('(?<!:)/{2,}', '/');
+
               return CachedNetworkImage(
-                imageUrl: "${ApiConstants.baseUrl_photos}/${medias[index].url}",
+                imageUrl: imageUrl,
                 fit: BoxFit.cover,
                 width: double.infinity,
                 placeholder: (context, url) => Container(
@@ -87,7 +92,6 @@ class _AnnoncePhotoCarouselState extends State<AnnoncePhotoCarousel> {
               ),
             ),
 
-          // Dots en bas
           if (medias.length > 1)
             Positioned(
               bottom: 12,
@@ -97,7 +101,7 @@ class _AnnoncePhotoCarouselState extends State<AnnoncePhotoCarousel> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(
                   medias.length,
-                  (index) => AnimatedContainer(
+                      (index) => AnimatedContainer(
                     duration: const Duration(milliseconds: 250),
                     margin: const EdgeInsets.symmetric(horizontal: 3),
                     width: _currentIndex == index ? 20 : 7,
@@ -113,14 +117,12 @@ class _AnnoncePhotoCarouselState extends State<AnnoncePhotoCarousel> {
               ),
             ),
 
-          // Badge Top Lot
           if (widget.annonce.isTopLot)
             Positioned(
               top: 12,
               left: 12,
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   color: Colors.amber.shade700,
                   borderRadius: BorderRadius.circular(6),
@@ -154,7 +156,7 @@ class _Placeholder extends StatelessWidget {
 
   const _Placeholder({required this.annonce, required this.height});
 
-  Color _colorForBreed(String breed) {
+  Color _colorForBreed(String breedName) {
     final colors = [
       const Color(0xFF81C784),
       const Color(0xFF64B5F6),
@@ -162,21 +164,24 @@ class _Placeholder extends StatelessWidget {
       const Color(0xFFBA68C8),
       const Color(0xFF4DB6AC),
     ];
-    return colors[breed.length % colors.length];
+    return colors[breedName.length % colors.length];
   }
 
   @override
   Widget build(BuildContext context) {
+    final breedName = annonce.breed.name;
+
     return Container(
       height: height,
-      color: _colorForBreed(annonce.breed),
+      width: double.infinity,
+      color: _colorForBreed(breedName),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Text('🐑', style: TextStyle(fontSize: 64)),
           const SizedBox(height: 8),
           Text(
-            annonce.breed,
+            breedName.toUpperCase(),
             style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,

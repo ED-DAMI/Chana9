@@ -8,11 +8,11 @@ import java.util.UUID;
 
 @Entity
 @Table(
-    name = "favoris",
-    uniqueConstraints = @UniqueConstraint(
-        name = "idx_favoris_unique",
-        columnNames = {"acheteur_id", "annonce_id"}
-    )
+        name = "favorites",
+        uniqueConstraints = @UniqueConstraint(
+                name = "uq_favorite",
+                columnNames = {"buyer_id", "annonce_id"}
+        )
 )
 @Getter
 @Setter
@@ -25,14 +25,18 @@ public class Favorite {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "acheteur_id", nullable = false)
+    @Column(name = "buyer_id", nullable = false)
     private UUID buyerId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "annonce_id", nullable = false)
     private Annonce annonce;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @PrePersist
+    void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
 }

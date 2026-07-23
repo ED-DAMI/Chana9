@@ -15,7 +15,6 @@ class AnnoncePostInfo extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Titre
           Text(
             annonce.title,
             style: theme.textTheme.titleMedium?.copyWith(
@@ -24,7 +23,6 @@ class AnnoncePostInfo extends StatelessWidget {
           ),
           const SizedBox(height: 6),
 
-          // Prix + négociable
           Row(
             children: [
               Text(
@@ -52,24 +50,18 @@ class AnnoncePostInfo extends StatelessWidget {
           ),
           const SizedBox(height: 8),
 
-          // Infos clés en chips
           Wrap(
             spacing: 6,
             runSpacing: 4,
             children: [
               _InfoChip(
                 icon: Icons.pets_outlined,
-                label: annonce.breed,
+                label: annonce.breed.name,
               ),
               if (annonce.gender != null)
                 _InfoChip(
                   icon: Icons.transgender,
                   label: annonce.gender!.name == 'male' ? 'Mâle' : 'Femelle',
-                ),
-              if (annonce.estimatedWeight != null)
-                _InfoChip(
-                  icon: Icons.monitor_weight_outlined,
-                  label: '${annonce.estimatedWeight!.toStringAsFixed(0)} kg',
                 ),
               if (annonce.effectiveAgeMonths != null)
                 _InfoChip(

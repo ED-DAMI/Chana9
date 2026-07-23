@@ -1,6 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:ma_chana9_app/shared/enums/animal_breed.dart';
 import 'package:ma_chana9_app/shared/enums/animal_gender.dart';
 import '../../data/models/annonce_search_request_model.dart';
+
+const _moroccanRegions = [
+  'Tanger-Tétouan-Al Hoceïma',
+  'Oriental',
+  'Fès-Meknès',
+  'Rabat-Salé-Kénitra',
+  'Béni Mellal-Khénifra',
+  'Casablanca-Settat',
+  'Marrakech-Safi',
+  'Drâa-Tafilalet',
+  'Souss-Massa',
+  'Guelmim-Oued Noun',
+  'Laâyoune-Sakia El Hamra',
+  'Dakhla-Oued Ed-Dahab',
+];
 
 class AnnonceFilterSheet extends StatefulWidget {
   final AnnonceSearchRequestModel initialFilter;
@@ -17,13 +33,13 @@ class AnnonceFilterSheet extends StatefulWidget {
 }
 
 class _AnnonceFilterSheetState extends State<AnnonceFilterSheet> {
-  late final TextEditingController _breedController;
-  late final TextEditingController _regionController;
   late final TextEditingController _minPriceController;
   late final TextEditingController _maxPriceController;
   late final TextEditingController _minWeightController;
   late final TextEditingController _maxWeightController;
 
+  AnimalBreed? _selectedBreed;
+  String? _selectedRegion;
   AnimalGender? _gender;
   bool? _deliveryAvailable;
   bool? _priceNegotiable;
@@ -34,16 +50,11 @@ class _AnnonceFilterSheetState extends State<AnnonceFilterSheet> {
   void initState() {
     super.initState();
     final f = widget.initialFilter;
-    _breedController = TextEditingController(text: f.breed ?? '');
-    _regionController = TextEditingController(text: f.region ?? '');
-    _minPriceController =
-        TextEditingController(text: f.minPrice?.toString() ?? '');
-    _maxPriceController =
-        TextEditingController(text: f.maxPrice?.toString() ?? '');
-    _minWeightController =
-        TextEditingController(text: f.minWeight?.toString() ?? '');
-    _maxWeightController =
-        TextEditingController(text: f.maxWeight?.toString() ?? '');
+    _minPriceController = TextEditingController(text: f.minPrice?.toString() ?? '');
+    _maxPriceController = TextEditingController(text: f.maxPrice?.toString() ?? '');
+    _minWeightController = TextEditingController(text: f.minWeight?.toString() ?? '');
+    _maxWeightController = TextEditingController(text: f.maxWeight?.toString() ?? '');
+    _selectedRegion = f.region;
     _gender = f.gender;
     _deliveryAvailable = f.deliveryAvailable;
     _priceNegotiable = f.priceNegotiable;
@@ -53,8 +64,6 @@ class _AnnonceFilterSheetState extends State<AnnonceFilterSheet> {
 
   @override
   void dispose() {
-    _breedController.dispose();
-    _regionController.dispose();
     _minPriceController.dispose();
     _maxPriceController.dispose();
     _minWeightController.dispose();
@@ -64,8 +73,8 @@ class _AnnonceFilterSheetState extends State<AnnonceFilterSheet> {
 
   void _reset() {
     setState(() {
-      _breedController.clear();
-      _regionController.clear();
+      _selectedBreed = null;
+      _selectedRegion = null;
       _minPriceController.clear();
       _maxPriceController.clear();
       _minWeightController.clear();
@@ -79,13 +88,9 @@ class _AnnonceFilterSheetState extends State<AnnonceFilterSheet> {
   }
 
   void _apply() {
-    final filter = AnnonceSearchRequestModel(
-      breed: _breedController.text.trim().isEmpty
-          ? null
-          : _breedController.text.trim(),
-      region: _regionController.text.trim().isEmpty
-          ? null
-          : _regionController.text.trim(),
+    widget.onApply(AnnonceSearchRequestModel(
+      breed: _selectedBreed?.name,
+      region: _selectedRegion,
       minPrice: double.tryParse(_minPriceController.text),
       maxPrice: double.tryParse(_maxPriceController.text),
       minWeight: double.tryParse(_minWeightController.text),
@@ -95,9 +100,39 @@ class _AnnonceFilterSheetState extends State<AnnonceFilterSheet> {
       priceNegotiable: _priceNegotiable,
       eligibleForAid: _eligibleForAid,
       topLotOnly: _topLotOnly,
-    );
-    widget.onApply(filter);
+    ));
     Navigator.of(context).pop();
+  }
+
+  String _breedLabel(AnimalBreed breed) {
+    const labels = {
+      AnimalBreed.sardi: 'Sardi',
+      AnimalBreed.timahdite: 'Timahdite',
+      AnimalBreed.beniGuil: 'Béni Guil',
+      AnimalBreed.dokkali: 'Dokkali',
+      AnimalBreed.rehami: 'Rehami',
+      AnimalBreed.boujaad: 'Boujaad',
+      AnimalBreed.oulmesZaer: 'Oulmes-Zaer',
+      AnimalBreed.beniAhsen: 'Béni Ahsen',
+      AnimalBreed.daMan: 'Da\'Man',
+      AnimalBreed.draa: 'Draa',
+      AnimalBreed.naineDeMontagne: 'Naine de montagne',
+      AnimalBreed.chevreduRiff: 'Chèvre du Riff',
+      AnimalBreed.chevreDeLaayoune: 'Chèvre de Laâyoune',
+      AnimalBreed.blondeDAquitaine: 'Blonde d\'Aquitaine',
+      AnimalBreed.frisonnePieNoire: 'Frisonne Pie Noire',
+      AnimalBreed.montbeliarde: 'Montbéliarde',
+      AnimalBreed.bruneAtlas: 'Brune Atlas',
+      AnimalBreed.ougda: 'Ougda',
+      AnimalBreed.dromadaireSahraouii: 'Dromadaire Sahraoui',
+      AnimalBreed.dromadaireGuelmim: 'Dromadaire Guelmim',
+      AnimalBreed.barbe: 'Barbe',
+      AnimalBreed.arabeBarbe: 'Arabe-Barbe',
+      AnimalBreed.aneBeldi: 'Âne Beldi',
+      AnimalBreed.mulet: 'Mulet',
+      AnimalBreed.other: 'Autre',
+    };
+    return labels[breed] ?? breed.name;
   }
 
   @override
@@ -113,12 +148,10 @@ class _AnnonceFilterSheetState extends State<AnnonceFilterSheet> {
         return Container(
           decoration: BoxDecoration(
             color: theme.scaffoldBackgroundColor,
-            borderRadius:
-            const BorderRadius.vertical(top: Radius.circular(20)),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
           ),
           child: Column(
             children: [
-              // Handle
               Padding(
                 padding: const EdgeInsets.only(top: 12),
                 child: Container(
@@ -130,11 +163,8 @@ class _AnnonceFilterSheetState extends State<AnnonceFilterSheet> {
                   ),
                 ),
               ),
-
-              // Header
               Padding(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 child: Row(
                   children: [
                     Text(
@@ -143,32 +173,47 @@ class _AnnonceFilterSheetState extends State<AnnonceFilterSheet> {
                           ?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     const Spacer(),
-                    TextButton(
-                      onPressed: _reset,
-                      child: const Text('Réinitialiser'),
-                    ),
+                    TextButton(onPressed: _reset, child: const Text('Réinitialiser')),
                   ],
                 ),
               ),
               const Divider(height: 1),
-
-              // Contenu
               Expanded(
                 child: ListView(
                   controller: scrollController,
                   padding: const EdgeInsets.all(16),
                   children: [
-                    _SectionTitle(title: 'Race & Région'),
-                    _FilterTextField(
-                      controller: _breedController,
-                      label: 'Race',
-                      hint: 'ex: Sardi, Timahdite, Boujad...',
+                    _SectionTitle(title: 'Race'),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 4,
+                      children: AnimalBreed.values.map((breed) {
+                        final selected = _selectedBreed == breed;
+                        return FilterChip(
+                          label: Text(_breedLabel(breed)),
+                          selected: selected,
+                          onSelected: (_) => setState(() {
+                            _selectedBreed = selected ? null : breed;
+                          }),
+                        );
+                      }).toList(),
                     ),
-                    const SizedBox(height: 12),
-                    _FilterTextField(
-                      controller: _regionController,
-                      label: 'Région',
-                      hint: 'ex: Casablanca-Settat',
+                    const SizedBox(height: 20),
+
+                    _SectionTitle(title: 'Région'),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 4,
+                      children: _moroccanRegions.map((region) {
+                        final selected = _selectedRegion == region;
+                        return FilterChip(
+                          label: Text(region),
+                          selected: selected,
+                          onSelected: (_) => setState(() {
+                            _selectedRegion = selected ? null : region;
+                          }),
+                        );
+                      }).toList(),
                     ),
                     const SizedBox(height: 20),
 
@@ -270,8 +315,6 @@ class _AnnonceFilterSheetState extends State<AnnonceFilterSheet> {
                   ],
                 ),
               ),
-
-              // Bouton appliquer
               Padding(
                 padding: EdgeInsets.fromLTRB(
                   16,
@@ -283,13 +326,14 @@ class _AnnonceFilterSheetState extends State<AnnonceFilterSheet> {
                   onPressed: _apply,
                   style: FilledButton.styleFrom(
                     minimumSize: const Size.fromHeight(52),
+                    backgroundColor: Theme.of(context).colorScheme.primary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
                   child: const Text(
                     'Appliquer les filtres',
-                    style: TextStyle(fontSize: 16),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -342,12 +386,9 @@ class _FilterTextField extends StatelessWidget {
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         isDense: true,
-        contentPadding:
-        const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       ),
     );
   }

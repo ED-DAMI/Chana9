@@ -1,0 +1,57 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 006-create-favorites-table
+      author: chana9
+      changes:
+        - createTable:
+            tableName: favorites
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: buyer_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: annonce_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_favorite_annonce
+                    references: annonces(id)
+                    deleteCascade: true
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+
+        - addUniqueConstraint:
+            tableName: favorites
+            constraintName: uq_favorite
+            columnNames: buyer_id, annonce_id
+
+        - createIndex:
+            tableName: favorites
+            indexName: idx_favorite_buyer_id
+            columns:
+              - column:
+                  name: buyer_id
+
+        - createIndex:
+            tableName: favorites
+            indexName: idx_favorite_annonce_id
+            columns:
+              - column:
+                  name: annonce_id
+      rollback:
+        - dropTable:
+            tableName: favorites

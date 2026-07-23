@@ -1,16 +1,15 @@
+
 package ma.chana9.modules.annonce.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-
+import ma.chana9.shared.enums.AnimalBreed;
 import ma.chana9.shared.enums.AnimalGender;
 import ma.chana9.shared.enums.AnnonceStatus;
 import org.locationtech.jts.geom.Point;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -34,11 +33,9 @@ public class Annonce {
     @Column(columnDefinition = "text")
     private String description;
 
-    @Column(name = "breed", nullable = false, length = 100)
-    private String breed;
-
-    @Column(name = "estimated_weight", precision = 6, scale = 2)
-    private BigDecimal estimatedWeight;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "breed", nullable = false, length = 50)
+    private AnimalBreed breed;
 
     @Column(name = "price", nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
@@ -59,9 +56,6 @@ public class Annonce {
     @Column(name = "gender", length = 10)
     private AnimalGender gender;
 
-    @Column(name = "birth_date")
-    private LocalDate birthDate;
-
     @Column(name = "age_months")
     private Integer ageMonths;
 
@@ -75,15 +69,8 @@ public class Annonce {
     @Builder.Default
     private Boolean deliveryAvailable = false;
 
-    @Column(name = "delivery_radius_km")
-    private Integer deliveryRadiusKm;
-
     @Column(name = "delivery_price", precision = 8, scale = 2)
     private BigDecimal deliveryPrice;
-
-    @Column(name = "is_top_lot")
-    @Builder.Default
-    private Boolean isTopLot = false;
 
     @Column(name = "top_lot_expires_at")
     private LocalDateTime topLotExpiresAt;
@@ -94,18 +81,42 @@ public class Annonce {
     @Column(name = "seller_id", nullable = false)
     private UUID sellerId;
 
-    @OneToMany(mappedBy = "annonce", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "annonce", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Builder.Default
     private List<AnnonceMedia> medias = new ArrayList<>();
 
-    @OneToMany(mappedBy = "annonce", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "annonce", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Builder.Default
     private List<AnnonceReport> reports = new ArrayList<>();
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
+    public boolean isTopLot() {
+        return topLotExpiresAt != null && topLotExpiresAt.isAfter(LocalDateTime.now());
+    }
+
+    public boolean isEligibleForAid() {
+        return ageMonths != null && ageMonths >= 12;
+    }
+
+    public Integer getEffectiveAgeMonths() {
+        return ageMonths;
+    }
+
+    @PrePersist
+    void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+        if (status == null) status = AnnonceStatus.ACTIVE;
+        if (expiresAt == null) expiresAt = createdAt.plusDays(30);
+    }
+
+    @PreUpdate
+    void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 }

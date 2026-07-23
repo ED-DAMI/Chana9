@@ -1,10 +1,11 @@
+
 package ma.chana9.modules.annonce.dto;
 
 import jakarta.validation.constraints.*;
+import ma.chana9.shared.enums.AnimalBreed;
 import ma.chana9.shared.enums.AnimalGender;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 public record AnnonceRequest(
 
@@ -13,11 +14,8 @@ public record AnnonceRequest(
 
         String description,
 
-        @NotBlank @Size(max = 100)
-        String breed,
-
-        @DecimalMin("0.0")
-        BigDecimal estimatedWeight,
+        @NotNull
+        AnimalBreed breed,
 
         @NotNull @DecimalMin("0.01")
         BigDecimal price,
@@ -29,8 +27,6 @@ public record AnnonceRequest(
 
         AnimalGender gender,
 
-        LocalDate birthDate,
-
         @Min(0)
         Integer ageMonths,
 
@@ -41,9 +37,6 @@ public record AnnonceRequest(
         String addressLabel,
 
         Boolean deliveryAvailable,
-
-        @Min(0)
-        Integer deliveryRadiusKm,
 
         @DecimalMin("0.0")
         BigDecimal deliveryPrice

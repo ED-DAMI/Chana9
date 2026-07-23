@@ -1,11 +1,11 @@
 package ma.chana9.modules.annonce.dto;
 
 import lombok.*;
+import ma.chana9.shared.enums.AnimalBreed;
 import ma.chana9.shared.enums.AnimalGender;
 import ma.chana9.shared.enums.AnnonceStatus;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -16,17 +16,16 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class AnnonceResponse {
+
     private UUID id;
     private String title;
     private String description;
-    private String breed;
-    private BigDecimal estimatedWeight;
+    private AnimalBreed breed;
     private BigDecimal price;
     private Boolean priceNegotiable;
     private String region;
     private AnnonceStatus status;
     private AnimalGender gender;
-    private LocalDate birthDate;
     private Integer ageMonths;
     private Integer effectiveAgeMonths;
     private Boolean eligibleForAid;
@@ -35,7 +34,6 @@ public class AnnonceResponse {
     private Double longitude;
     private Double distanceKm;
     private Boolean deliveryAvailable;
-    private Integer deliveryRadiusKm;
     private BigDecimal deliveryPrice;
     private Boolean isTopLot;
     private LocalDateTime topLotExpiresAt;

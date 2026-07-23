@@ -1,0 +1,57 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004-create-annonce-medias-table
+      author: ED-DAMI
+      changes:
+        - createTable:
+            tableName: annonce_medias
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: annonce_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_media_annonce
+                    referencedTableName: annonces
+                    referencedColumnNames: id
+                    deleteCascade: true
+              - column:
+                  name: url
+                  type: varchar(512)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: original_filename
+                  type: varchar(255)
+              - column:
+                  name: content_type
+                  type: varchar(50)
+              - column:
+                  name: size_bytes
+                  type: bigint
+              - column:
+                  name: media_order
+                  type: integer
+                  defaultValueNumeric: 0
+              - column:
+                  name: is_cover
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+      rollback:
+        - dropTable:
+            tableName: annonce_medias
