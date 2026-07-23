@@ -60,4 +60,6 @@ public interface AnnonceRepository extends JpaRepository<Annonce, UUID>, JpaSpec
     );
 
     long countBySellerIdAndStatus(UUID sellerId, AnnonceStatus status);
+
+    long countByUserId(UUID id);
 }

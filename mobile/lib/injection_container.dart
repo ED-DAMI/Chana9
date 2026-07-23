@@ -11,12 +11,10 @@ import 'features/annonces/annonces_injection.dart';
 final sl = GetIt.instance;
 
 Future<void> init() async {
-  // ── External ──────────────────────────────────────────────────────────────
   sl.registerLazySingleton<FlutterSecureStorage>(
         () => const FlutterSecureStorage(),
   );
 
-  // ── Core ──────────────────────────────────────────────────────────────────
   sl.registerLazySingleton<TokenStorage>(
         () => TokenStorage(sl<FlutterSecureStorage>()),
   );
