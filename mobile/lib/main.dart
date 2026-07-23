@@ -28,12 +28,8 @@ class Chana9App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<AuthBloc>(
-          create: (_) => GetIt.instance<AuthBloc>(),
-        ),
-        BlocProvider<AnnonceBloc>(
-          create: (_) => GetIt.instance<AnnonceBloc>(),
-        ),
+        BlocProvider<AuthBloc>(create: (_) => GetIt.instance<AuthBloc>()),
+        BlocProvider<AnnonceBloc>(create: (_) => GetIt.instance<AnnonceBloc>()),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
@@ -44,8 +40,6 @@ class Chana9App extends StatelessWidget {
     );
   }
 }
-
-// ── Builders ──────────────────────────────────────────────────────────────────
 
 Widget _splashBuilder(BuildContext context, GoRouterState state) {
   return SplashPage(
@@ -60,12 +54,8 @@ Widget _splashBuilder(BuildContext context, GoRouterState state) {
 }
 
 Widget _loginBuilder(BuildContext context, GoRouterState state) {
-  return LoginPage(
-    onLoginSuccess: () => context.go('/annonces'),
-  );
+  return LoginPage(onLoginSuccess: () => context.go('/annonces'));
 }
-
-// ── Shell avec bottom navigation ─────────────────────────────────────────────
 
 class _ShellPage extends StatelessWidget {
   final Widget child;
@@ -73,7 +63,7 @@ class _ShellPage extends StatelessWidget {
   const _ShellPage({required this.child});
 
   int _locationToIndex(String location) {
-    if (location.startsWith('/profile')) return 1;
+    if (location.startsWith('/profile')) return 2;
     return 0;
   }
 
@@ -92,17 +82,31 @@ class _ShellPage extends StatelessWidget {
               context.go('/annonces');
               break;
             case 1:
+              context.go('/annonces/new');
+              break;
+            case 2:
               context.go('/profile');
               break;
           }
         },
-        destinations: const [
-          NavigationDestination(
+        destinations: [
+          const NavigationDestination(
             icon: Icon(Icons.home_outlined),
             selectedIcon: Icon(Icons.home),
             label: 'Annonces',
           ),
           NavigationDestination(
+            icon: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.add, color: Colors.white, size: 22),
+            ),
+            label: 'Publier',
+          ),
+          const NavigationDestination(
             icon: Icon(Icons.person_outline),
             selectedIcon: Icon(Icons.person),
             label: 'Profil',
@@ -113,19 +117,11 @@ class _ShellPage extends StatelessWidget {
   }
 }
 
-// ── Router ────────────────────────────────────────────────────────────────────
-
 final GoRouter _router = GoRouter(
   initialLocation: '/splash',
   routes: [
-    GoRoute(
-      path: '/splash',
-      builder: _splashBuilder,
-    ),
-    GoRoute(
-      path: '/login',
-      builder: _loginBuilder,
-    ),
+    GoRoute(path: '/splash', builder: _splashBuilder),
+    GoRoute(path: '/login', builder: _loginBuilder),
     ShellRoute(
       builder: (context, state, child) => _ShellPage(child: child),
       routes: [

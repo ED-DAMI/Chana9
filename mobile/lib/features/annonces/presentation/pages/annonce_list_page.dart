@@ -6,7 +6,6 @@ import '../widgets/annonce_post_card.dart';
 import '../widgets/annonce_filter_sheet.dart';
 import 'package:go_router/go_router.dart';
 
-
 class AnnonceListPage extends StatefulWidget {
   const AnnonceListPage({super.key});
 
@@ -37,15 +36,15 @@ class _AnnonceListPageState extends State<AnnonceListPage> {
   void _loadAnnonces({bool reset = false}) {
     if (reset) _currentPage = 0;
     context.read<AnnonceBloc>().add(AnnonceEvent.searchAnnonces(
-          request: _currentFilter,
-          page: _currentPage,
-          size: _pageSize,
-        ));
+      request: _currentFilter,
+      page: _currentPage,
+      size: _pageSize,
+    ));
   }
 
   void _onScroll() {
     if (_scrollController.position.pixels >=
-            _scrollController.position.maxScrollExtent - 300 &&
+        _scrollController.position.maxScrollExtent - 300 &&
         !_isFetchingMore) {
       final state = context.read<AnnonceBloc>().state;
       state.maybeWhen(
@@ -90,17 +89,13 @@ class _AnnonceListPageState extends State<AnnonceListPage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 1,
-        title: Row(
-          children: [
-            Text(
-              'Chana9',
-              style: TextStyle(
-                color: theme.colorScheme.primary,
-                fontWeight: FontWeight.bold,
-                fontSize: 22,
-              ),
-            ),
-          ],
+        title: Text(
+          'Chana9',
+          style: TextStyle(
+            color: theme.colorScheme.primary,
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+          ),
         ),
         actions: [
           IconButton(
@@ -118,8 +113,7 @@ class _AnnonceListPageState extends State<AnnonceListPage> {
       body: BlocConsumer<AnnonceBloc, AnnonceState>(
         listener: (context, state) {
           state.maybeWhen(
-            annonceListLoaded: (_) =>
-                setState(() => _isFetchingMore = false),
+            annonceListLoaded: (_) => setState(() => _isFetchingMore = false),
             failure: (_) => setState(() => _isFetchingMore = false),
             orElse: () {},
           );
@@ -134,14 +128,12 @@ class _AnnonceListPageState extends State<AnnonceListPage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text('🐑',
-                          style: TextStyle(fontSize: 64)),
+                      const Text('🐑', style: TextStyle(fontSize: 64)),
                       const SizedBox(height: 16),
                       Text(
                         'Aucune annonce trouvée',
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          color: Colors.grey,
-                        ),
+                        style: theme.textTheme.titleMedium
+                            ?.copyWith(color: Colors.grey),
                       ),
                       const SizedBox(height: 12),
                       TextButton(
@@ -160,9 +152,9 @@ class _AnnonceListPageState extends State<AnnonceListPage> {
                 },
                 child: ListView.builder(
                   controller: _scrollController,
+                  padding: const EdgeInsets.only(bottom: 80),
                   itemCount: data.content.length + (_isFetchingMore ? 1 : 0),
                   itemBuilder: (context, index) {
-
                     if (index == data.content.length) {
                       return const Padding(
                         padding: EdgeInsets.all(16),
@@ -171,14 +163,11 @@ class _AnnonceListPageState extends State<AnnonceListPage> {
                         ),
                       );
                     }
-
                     final annonce = data.content[index];
                     return AnnoncePostCard(
                       annonce: annonce,
-                      onTap: () =>
-                          context.push('/annonces/${annonce.id}'),
-                      onContact: () =>
-                          context.push('/annonces/${annonce.id}'),
+                      onTap: () => context.push('/annonces/${annonce.id}'),
+                      onContact: () => context.push('/annonces/${annonce.id}'),
                     );
                   },
                 ),
@@ -188,8 +177,7 @@ class _AnnonceListPageState extends State<AnnonceListPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.error_outline,
-                      size: 48, color: Colors.red),
+                  const Icon(Icons.error_outline, size: 48, color: Colors.red),
                   const SizedBox(height: 12),
                   Text(message, textAlign: TextAlign.center),
                   const SizedBox(height: 16),
@@ -203,11 +191,6 @@ class _AnnonceListPageState extends State<AnnonceListPage> {
             orElse: () => const SizedBox.shrink(),
           );
         },
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.push('/annonces/new'),
-        icon: const Icon(Icons.add),
-        label: const Text('Publier'),
       ),
     );
   }
