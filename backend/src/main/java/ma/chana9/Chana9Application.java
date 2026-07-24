@@ -23,8 +23,8 @@ public class Chana9Application {
     public static void main(String[] args) {
         SpringApplication.run(Chana9Application.class, args);
     }
- 
-    CommandLineRunner start(UserRepository userRepo, PasswordEncoder encoder){
+
+     CommandLineRunner start(UserRepository userRepo, PasswordEncoder encoder){
         return args ->{
             User admin=new User();
             admin.setFullName("mohamed ED-DAMI");
@@ -33,7 +33,7 @@ public class Chana9Application {
             admin.setKycVerified(true);
             admin.setCreatedAt(LocalDateTime.now());
             admin.setPasswordHash(encoder.encode("20032003"));
-
+            userRepo.save(admin);
             User user1 = new User();
             user1.setFullName("Ahmed Benali");
             user1.setRole(Role.ELEVEUR);

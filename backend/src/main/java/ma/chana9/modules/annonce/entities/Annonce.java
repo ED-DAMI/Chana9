@@ -3,6 +3,7 @@ package ma.chana9.modules.annonce.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import ma.chana9.modules.user.User;
 import ma.chana9.shared.enums.AnimalBreed;
 import ma.chana9.shared.enums.AnimalGender;
 import ma.chana9.shared.enums.AnnonceStatus;
@@ -78,8 +79,9 @@ public class Annonce {
     @Column(name = "expires_at")
     private LocalDateTime expiresAt;
 
-    @Column(name = "seller_id", nullable = false)
-    private UUID sellerId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seller_id", nullable = false)
+    private User seller;
 
     @OneToMany(mappedBy = "annonce", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Builder.Default

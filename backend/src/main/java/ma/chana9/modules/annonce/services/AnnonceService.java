@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import ma.chana9.modules.annonce.dto.*;
 import ma.chana9.modules.annonce.entities.*;
 import ma.chana9.modules.annonce.repositories.*;
+import ma.chana9.modules.user.User;
+import ma.chana9.modules.user.UserRepository;
 import ma.chana9.shared.config.AnnonceConstants;
 import ma.chana9.shared.enums.AnimalBreed;
 import ma.chana9.shared.enums.AnnonceStatus;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -27,16 +30,18 @@ public class AnnonceService {
 	private static final int METERS_PER_KM = 1000;
 
 	private final AnnonceRepository      annonceRepository;
-	private final AnnonceMediaRepository annonceMediaRepository;
 	private final AnnonceFlagRepository  annonceFlagRepository;
 	private final FavoriteRepository     favoriteRepository;
 	private final AnnonceAlertRepository annonceAlertRepository;
 	private final AnnonceMapper          annonceMapper;
 	private final GeometryFactory        geometryFactory =
 			new GeometryFactory(new PrecisionModel(), SRID);
+	private final UserRepository userRepository;
 
 	@Transactional
 	public AnnonceResponse create(AnnonceRequest request, UUID sellerId) {
+		User seller = userRepository.findById(sellerId).get();
+
 		Annonce annonce = Annonce.builder()
 				.title(request.title())
 				.description(request.description())
@@ -50,7 +55,7 @@ public class AnnonceService {
 				.deliveryAvailable(request.deliveryAvailable())
 				.deliveryPrice(request.deliveryPrice())
 				.location(buildPoint(request.latitude(), request.longitude()))
-				.sellerId(sellerId)
+				.seller(seller)
 				.status(AnnonceStatus.ACTIVE)
 				.build();
 
@@ -62,7 +67,6 @@ public class AnnonceService {
 	@Transactional
 	public AnnonceResponse update(UUID id, AnnonceRequest request, UUID sellerId) {
 		Annonce annonce = findOwnedOrThrow(id, sellerId);
-
 		annonce.setTitle(request.title());
 		annonce.setDescription(request.description());
 		annonce.setBreed(request.breed());
@@ -221,7 +225,7 @@ public class AnnonceService {
 
 	private Annonce findOwnedOrThrow(UUID id, UUID sellerId) {
 		Annonce annonce = findOrThrow(id);
-		if (!annonce.getSellerId().equals(sellerId)) {
+		if (!annonce.getSeller().getId().equals(sellerId)) {
 			throw new IllegalStateException("annonce.access.denied id=%s".formatted(id));
 		}
 		return annonce;

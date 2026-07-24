@@ -60,13 +60,6 @@ public class AuthController {
 		return authService.sendResetOtp(request, httpRequest);
 	}
 
-//	@PostMapping(ApiPaths.Auth.RESET_PASSWORD)
-//	public AuthResponse resetPassword(
-//			@Valid @RequestBody PasswordResetRequest request,
-//			HttpServletRequest httpRequest) {
-//		return authService.resetPassword(request, httpRequest);
-//	}
-
 	@PostMapping(ApiPaths.Auth.LOGOUT)
 	@PreAuthorize("isAuthenticated()")
 	public ApiResponse<Void> logout(

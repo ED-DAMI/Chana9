@@ -15,22 +15,24 @@ abstract class UserModel with _$UserModel {
     String? fullName,
     required Role role,
     required bool kycVerified,
-    DateTime? kycSubmittedAt,
+    String? profilePhotoUrl,
+    String? region,
+    required bool active,
     required DateTime createdAt,
-    required DateTime updatedAt,
   }) = _UserModel;
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>
       _$UserModelFromJson(json);
 
   User toEntity() => User(
-        id: id,
-        phone: phone,
-        fullName: fullName,
-        role: role,
-        kycVerified: kycVerified,
-        kycSubmittedAt: kycSubmittedAt,
-        createdAt: createdAt,
-        updatedAt: updatedAt,
-      );
+    id: id,
+    phone: phone,
+    fullName: fullName,
+    role: role,
+    kycVerified: kycVerified,
+    profilePhotoUrl: profilePhotoUrl,
+    region: region,
+    active: active,
+    createdAt: createdAt,
+  );
 }

@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$User {
 
- String get id; String get phone; String? get fullName; Role get role; bool get kycVerified; DateTime? get kycSubmittedAt; DateTime get createdAt; DateTime get updatedAt;
+ String get id; String get phone; String? get fullName; Role get role; bool get kycVerified; String? get profilePhotoUrl; String? get region; bool get active; DateTime get createdAt;
 /// Create a copy of User
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $UserCopyWith<User> get copyWith => _$UserCopyWithImpl<User>(this as User, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is User&&(identical(other.id, id) || other.id == id)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.role, role) || other.role == role)&&(identical(other.kycVerified, kycVerified) || other.kycVerified == kycVerified)&&(identical(other.kycSubmittedAt, kycSubmittedAt) || other.kycSubmittedAt == kycSubmittedAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is User&&(identical(other.id, id) || other.id == id)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.role, role) || other.role == role)&&(identical(other.kycVerified, kycVerified) || other.kycVerified == kycVerified)&&(identical(other.profilePhotoUrl, profilePhotoUrl) || other.profilePhotoUrl == profilePhotoUrl)&&(identical(other.region, region) || other.region == region)&&(identical(other.active, active) || other.active == active)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,phone,fullName,role,kycVerified,kycSubmittedAt,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,phone,fullName,role,kycVerified,profilePhotoUrl,region,active,createdAt);
 
 @override
 String toString() {
-  return 'User(id: $id, phone: $phone, fullName: $fullName, role: $role, kycVerified: $kycVerified, kycSubmittedAt: $kycSubmittedAt, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'User(id: $id, phone: $phone, fullName: $fullName, role: $role, kycVerified: $kycVerified, profilePhotoUrl: $profilePhotoUrl, region: $region, active: $active, createdAt: $createdAt)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $UserCopyWith<$Res>  {
   factory $UserCopyWith(User value, $Res Function(User) _then) = _$UserCopyWithImpl;
 @useResult
 $Res call({
- String id, String phone, String? fullName, Role role, bool kycVerified, DateTime? kycSubmittedAt, DateTime createdAt, DateTime updatedAt
+ String id, String phone, String? fullName, Role role, bool kycVerified, String? profilePhotoUrl, String? region, bool active, DateTime createdAt
 });
 
 
@@ -62,16 +62,17 @@ class _$UserCopyWithImpl<$Res>
 
 /// Create a copy of User
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? phone = null,Object? fullName = freezed,Object? role = null,Object? kycVerified = null,Object? kycSubmittedAt = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? phone = null,Object? fullName = freezed,Object? role = null,Object? kycVerified = null,Object? profilePhotoUrl = freezed,Object? region = freezed,Object? active = null,Object? createdAt = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,phone: null == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
 as String,fullName: freezed == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
 as String?,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
 as Role,kycVerified: null == kycVerified ? _self.kycVerified : kycVerified // ignore: cast_nullable_to_non_nullable
-as bool,kycSubmittedAt: freezed == kycSubmittedAt ? _self.kycSubmittedAt : kycSubmittedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as bool,profilePhotoUrl: freezed == profilePhotoUrl ? _self.profilePhotoUrl : profilePhotoUrl // ignore: cast_nullable_to_non_nullable
+as String?,region: freezed == region ? _self.region : region // ignore: cast_nullable_to_non_nullable
+as String?,active: null == active ? _self.active : active // ignore: cast_nullable_to_non_nullable
+as bool,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
 }
@@ -157,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String phone,  String? fullName,  Role role,  bool kycVerified,  DateTime? kycSubmittedAt,  DateTime createdAt,  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String phone,  String? fullName,  Role role,  bool kycVerified,  String? profilePhotoUrl,  String? region,  bool active,  DateTime createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _User() when $default != null:
-return $default(_that.id,_that.phone,_that.fullName,_that.role,_that.kycVerified,_that.kycSubmittedAt,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.phone,_that.fullName,_that.role,_that.kycVerified,_that.profilePhotoUrl,_that.region,_that.active,_that.createdAt);case _:
   return orElse();
 
 }
@@ -178,10 +179,10 @@ return $default(_that.id,_that.phone,_that.fullName,_that.role,_that.kycVerified
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String phone,  String? fullName,  Role role,  bool kycVerified,  DateTime? kycSubmittedAt,  DateTime createdAt,  DateTime updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String phone,  String? fullName,  Role role,  bool kycVerified,  String? profilePhotoUrl,  String? region,  bool active,  DateTime createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _User():
-return $default(_that.id,_that.phone,_that.fullName,_that.role,_that.kycVerified,_that.kycSubmittedAt,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.phone,_that.fullName,_that.role,_that.kycVerified,_that.profilePhotoUrl,_that.region,_that.active,_that.createdAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +199,10 @@ return $default(_that.id,_that.phone,_that.fullName,_that.role,_that.kycVerified
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String phone,  String? fullName,  Role role,  bool kycVerified,  DateTime? kycSubmittedAt,  DateTime createdAt,  DateTime updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String phone,  String? fullName,  Role role,  bool kycVerified,  String? profilePhotoUrl,  String? region,  bool active,  DateTime createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _User() when $default != null:
-return $default(_that.id,_that.phone,_that.fullName,_that.role,_that.kycVerified,_that.kycSubmittedAt,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.phone,_that.fullName,_that.role,_that.kycVerified,_that.profilePhotoUrl,_that.region,_that.active,_that.createdAt);case _:
   return null;
 
 }
@@ -213,7 +214,7 @@ return $default(_that.id,_that.phone,_that.fullName,_that.role,_that.kycVerified
 
 
 class _User implements User {
-  const _User({required this.id, required this.phone, this.fullName, required this.role, required this.kycVerified, this.kycSubmittedAt, required this.createdAt, required this.updatedAt});
+  const _User({required this.id, required this.phone, this.fullName, required this.role, required this.kycVerified, this.profilePhotoUrl, this.region, required this.active, required this.createdAt});
   
 
 @override final  String id;
@@ -221,9 +222,10 @@ class _User implements User {
 @override final  String? fullName;
 @override final  Role role;
 @override final  bool kycVerified;
-@override final  DateTime? kycSubmittedAt;
+@override final  String? profilePhotoUrl;
+@override final  String? region;
+@override final  bool active;
 @override final  DateTime createdAt;
-@override final  DateTime updatedAt;
 
 /// Create a copy of User
 /// with the given fields replaced by the non-null parameter values.
@@ -235,16 +237,16 @@ _$UserCopyWith<_User> get copyWith => __$UserCopyWithImpl<_User>(this, _$identit
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _User&&(identical(other.id, id) || other.id == id)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.role, role) || other.role == role)&&(identical(other.kycVerified, kycVerified) || other.kycVerified == kycVerified)&&(identical(other.kycSubmittedAt, kycSubmittedAt) || other.kycSubmittedAt == kycSubmittedAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _User&&(identical(other.id, id) || other.id == id)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.role, role) || other.role == role)&&(identical(other.kycVerified, kycVerified) || other.kycVerified == kycVerified)&&(identical(other.profilePhotoUrl, profilePhotoUrl) || other.profilePhotoUrl == profilePhotoUrl)&&(identical(other.region, region) || other.region == region)&&(identical(other.active, active) || other.active == active)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,phone,fullName,role,kycVerified,kycSubmittedAt,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,phone,fullName,role,kycVerified,profilePhotoUrl,region,active,createdAt);
 
 @override
 String toString() {
-  return 'User(id: $id, phone: $phone, fullName: $fullName, role: $role, kycVerified: $kycVerified, kycSubmittedAt: $kycSubmittedAt, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'User(id: $id, phone: $phone, fullName: $fullName, role: $role, kycVerified: $kycVerified, profilePhotoUrl: $profilePhotoUrl, region: $region, active: $active, createdAt: $createdAt)';
 }
 
 
@@ -255,7 +257,7 @@ abstract mixin class _$UserCopyWith<$Res> implements $UserCopyWith<$Res> {
   factory _$UserCopyWith(_User value, $Res Function(_User) _then) = __$UserCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String phone, String? fullName, Role role, bool kycVerified, DateTime? kycSubmittedAt, DateTime createdAt, DateTime updatedAt
+ String id, String phone, String? fullName, Role role, bool kycVerified, String? profilePhotoUrl, String? region, bool active, DateTime createdAt
 });
 
 
@@ -272,16 +274,17 @@ class __$UserCopyWithImpl<$Res>
 
 /// Create a copy of User
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? phone = null,Object? fullName = freezed,Object? role = null,Object? kycVerified = null,Object? kycSubmittedAt = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? phone = null,Object? fullName = freezed,Object? role = null,Object? kycVerified = null,Object? profilePhotoUrl = freezed,Object? region = freezed,Object? active = null,Object? createdAt = null,}) {
   return _then(_User(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,phone: null == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
 as String,fullName: freezed == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
 as String?,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
 as Role,kycVerified: null == kycVerified ? _self.kycVerified : kycVerified // ignore: cast_nullable_to_non_nullable
-as bool,kycSubmittedAt: freezed == kycSubmittedAt ? _self.kycSubmittedAt : kycSubmittedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as bool,profilePhotoUrl: freezed == profilePhotoUrl ? _self.profilePhotoUrl : profilePhotoUrl // ignore: cast_nullable_to_non_nullable
+as String?,region: freezed == region ? _self.region : region // ignore: cast_nullable_to_non_nullable
+as String?,active: null == active ? _self.active : active // ignore: cast_nullable_to_non_nullable
+as bool,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
 }

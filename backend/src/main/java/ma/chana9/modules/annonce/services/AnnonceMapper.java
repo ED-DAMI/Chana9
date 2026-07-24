@@ -9,7 +9,6 @@ import org.locationtech.jts.geom.Point;
 import org.mapstruct.*;
 
 import java.util.List;
-
 @Mapper(componentModel = "spring")
 public interface AnnonceMapper {
 
@@ -19,6 +18,7 @@ public interface AnnonceMapper {
     @Mapping(target = "isTopLot",           expression = "java(annonce.isTopLot())")
     @Mapping(target = "eligibleForAid",     expression = "java(annonce.isEligibleForAid())")
     @Mapping(target = "effectiveAgeMonths", expression = "java(annonce.getEffectiveAgeMonths())")
+    @Mapping(target = "sellerId",           source = "seller.id")
     AnnonceResponse toResponse(Annonce annonce);
 
     @Mapping(target = "latitude",           expression = "java(getY(annonce.getLocation()))")
@@ -26,6 +26,7 @@ public interface AnnonceMapper {
     @Mapping(target = "isTopLot",           expression = "java(annonce.isTopLot())")
     @Mapping(target = "eligibleForAid",     expression = "java(annonce.isEligibleForAid())")
     @Mapping(target = "effectiveAgeMonths", expression = "java(annonce.getEffectiveAgeMonths())")
+    @Mapping(target = "sellerId",           source = "annonce.seller.id")
     AnnonceResponse toResponse(Annonce annonce, @Context Double distanceKm);
 
     @AfterMapping
@@ -35,7 +36,7 @@ public interface AnnonceMapper {
     }
 
     List<AnnonceMediaResponse> toMediaResponses(List<AnnonceMedia> medias);
-    AnnonceMediaResponse       toMediaResponse(AnnonceMedia media);
+    AnnonceMediaResponse toMediaResponse(AnnonceMedia media);
 
     default Double getY(Point p) { return p != null ? p.getY() : null; }
     default Double getX(Point p) { return p != null ? p.getX() : null; }

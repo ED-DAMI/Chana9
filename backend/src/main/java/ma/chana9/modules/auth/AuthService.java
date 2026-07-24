@@ -11,10 +11,7 @@ import ma.chana9.modules.auth.dto.PasswordResetRequest;
 import ma.chana9.modules.auth.dto.RefreshRequest;
 import ma.chana9.modules.auth.dto.RegisterRequest;
 import ma.chana9.modules.notification.OtpService;
-import ma.chana9.modules.user.OtpCode;
-import ma.chana9.modules.user.OtpCodeRepository;
-import ma.chana9.modules.user.User;
-import ma.chana9.modules.user.UserRepository;
+import ma.chana9.modules.user.*;
 import ma.chana9.shared.audit.service.AuditService;
 import ma.chana9.shared.constants.AuditConstants;
 import ma.chana9.shared.constants.ErrorKeys;
@@ -38,14 +35,14 @@ public class AuthService {
 	private final MessageResolver messageResolver;
 	private final AuditService auditService;
 	private final PasswordEncoder passwordEncoder;
-	private final AuthMapper authMapper;
+	private final UserMapper userMapper;
 
 	public AuthResponse register(RegisterRequest request, HttpServletRequest httpRequest) {
 		if (userRepository.findByPhone(request.phone()).isPresent()) {
 			throw new ApiException(ErrorKeys.Auth.PHONE_ALREADY_EXISTS);
 		}
 
-		User user = authMapper.toUser(request, passwordEncoder.encode(request.password()));
+		User user = userMapper.toUser(request, passwordEncoder.encode(request.password()));
 		userRepository.save(user);
 
 		auditService.logSuccess(AuditAction.REGISTER, user.getId());
@@ -73,7 +70,7 @@ public class AuthService {
 		return AuthResponse.builder()
 				.accessToken(accessToken)
 				.refreshToken(refreshToken)
-				.user(authMapper.toUserDTO(user))
+				.user(userMapper.toDto(user))
 				.accessTokenExpiresIn(tokenService.accessTokenExpiresIn())
 				.refreshTokenExpiresIn(tokenService.refreshTokenExpiresIn())
 				.message(messageResolver.resolve(MessageKeys.Auth.LOGIN_SUCCESS))

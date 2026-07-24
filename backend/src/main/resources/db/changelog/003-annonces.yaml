@@ -5,6 +5,9 @@ databaseChangeLog:
       changes:
         - sql:
             sql: CREATE EXTENSION IF NOT EXISTS postgis;
+      rollback:
+        - sql:
+            sql: DROP EXTENSION IF EXISTS postgis;
 
   - changeSet:
       id: 003-create-annonces-table
@@ -50,7 +53,7 @@ databaseChangeLog:
               - column:
                   name: status
                   type: varchar(20)
-                  defaultValue: 'ACTIVE'
+                  defaultValue: ACTIVE
               - column:
                   name: gender
                   type: varchar(10)
@@ -59,7 +62,7 @@ databaseChangeLog:
                   type: integer
               - column:
                   name: location
-                  type: geometry(Point, 4326)
+                  type: geometry(Point,4326)
               - column:
                   name: address_label
                   type: varchar(255)
@@ -98,10 +101,91 @@ databaseChangeLog:
             tableName: annonces
 
   - changeSet:
-      id: 003-add-annonce-constraints
+      id: 003-add-annonces-indexes-and-fk
       author: chana9
       changes:
+        - addForeignKeyConstraint:
+            baseTableName: annonces
+            baseColumnNames: seller_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_annonce_seller
+            onDelete: CASCADE
+
         - sql:
-            sql: >
-              ALTER TABLE annonces ADD CONSTRAINT chk_annonce_status CHECK (status IN ('ACTIVE', 'SOLD', 'EXPIRED', 'HIDDEN', 'PENDING'));
-              ALTER TABLE annonces ADD CONSTRAINT chk_annonce_gender CHECK (gender IN ('MALE', 'FEMALE'));
+            sql: >-
+              ALTER TABLE annonces
+              ADD CONSTRAINT chk_annonce_status
+              CHECK (status IN ('ACTIVE', 'SOLD', 'EXPIRED', 'HIDDEN', 'PENDING'));
+
+        - sql:
+            sql: >-
+              ALTER TABLE annonces
+              ADD CONSTRAINT chk_annonce_gender
+              CHECK (gender IS NULL OR gender IN ('MALE', 'FEMALE'));
+
+        - createIndex:
+            indexName: idx_annonces_seller_id
+            tableName: annonces
+            columns:
+              - column:
+                  name: seller_id
+
+        - createIndex:
+            indexName: idx_annonces_status
+            tableName: annonces
+            columns:
+              - column:
+                  name: status
+
+        - createIndex:
+            indexName: idx_annonces_breed
+            tableName: annonces
+            columns:
+              - column:
+                  name: breed
+
+        - createIndex:
+            indexName: idx_annonces_region
+            tableName: annonces
+            columns:
+              - column:
+                  name: region
+
+        - createIndex:
+            indexName: idx_annonces_expires_at
+            tableName: annonces
+            columns:
+              - column:
+                  name: expires_at
+
+        - sql:
+            sql: CREATE INDEX idx_annonces_location ON annonces USING GIST (location);
+
+      rollback:
+        - dropForeignKeyConstraint:
+            baseTableName: annonces
+            constraintName: fk_annonce_seller
+        - sql:
+            sql: >-
+              ALTER TABLE annonces DROP CONSTRAINT IF EXISTS chk_annonce_status;
+        - sql:
+            sql: >-
+              ALTER TABLE annonces DROP CONSTRAINT IF EXISTS chk_annonce_gender;
+        - dropIndex:
+            indexName: idx_annonces_seller_id
+            tableName: annonces
+        - dropIndex:
+            indexName: idx_annonces_status
+            tableName: annonces
+        - dropIndex:
+            indexName: idx_annonces_breed
+            tableName: annonces
+        - dropIndex:
+            indexName: idx_annonces_region
+            tableName: annonces
+        - dropIndex:
+            indexName: idx_annonces_expires_at
+            tableName: annonces
+        - sql:
+            sql: DROP INDEX IF EXISTS idx_annonces_location;

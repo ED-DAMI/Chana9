@@ -151,7 +151,7 @@ public class UserService {
 	public UserStatsDTO getUserStats(UUID targetUserId) {
 		User user = findUserById(targetUserId);
 
-		long totalAnnonces = annonceRepository.countByUserId(user.getId());
+		long totalAnnonces = annonceRepository.countBySeller_Id(user.getId());
 
 		return new UserStatsDTO(
 				totalAnnonces,
