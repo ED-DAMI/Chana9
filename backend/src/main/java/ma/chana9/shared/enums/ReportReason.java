@@ -1,9 +1,10 @@
 package ma.chana9.shared.enums;
 
 public enum ReportReason {
-    ABUSIVE_PRICE,
-    ANIMAL_DOES_NOT_EXIST,
-    MISLEADING_PHOTOS,
-    FRAUDULENT_SELLER,
-    OTHER
+        FRAUD_OR_SCAM,
+        WRONG_INFORMATION,
+        UNHEALTHY_ANIMAL,
+        DUPLICATE,
+        INAPPROPRIATE_MEDIA,
+        OTHER
 }

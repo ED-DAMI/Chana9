@@ -1,45 +1,44 @@
 package ma.chana9.modules.annonce.dto;
 
-import lombok.*;
-import ma.chana9.shared.enums.AnimalBreed;
-import ma.chana9.shared.enums.AnimalGender;
-import ma.chana9.shared.enums.AnnonceStatus;
+import ma.chana9.shared.enums.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class AnnonceResponse {
+public record AnnonceResponse(
 
-    private UUID id;
-    private String title;
-    private String description;
-    private AnimalBreed breed;
-    private BigDecimal price;
-    private Boolean priceNegotiable;
-    private String region;
-    private AnnonceStatus status;
-    private AnimalGender gender;
-    private Integer ageMonths;
-    private Integer effectiveAgeMonths;
-    private Boolean eligibleForAid;
-    private String addressLabel;
-    private Double latitude;
-    private Double longitude;
-    private Double distanceKm;
-    private Boolean deliveryAvailable;
-    private BigDecimal deliveryPrice;
-    private Boolean isTopLot;
-    private LocalDateTime topLotExpiresAt;
-    private LocalDateTime expiresAt;
-    private UUID sellerId;
-    private List<AnnonceMediaResponse> medias;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-}
+        UUID id,
+        String title,
+        String description,
+        AnimalBreed breed,
+        AnimalGender gender,
+        Integer ageMonths,
+        BigDecimal weightKg,
+        AnimalDentition dentition,
+        String onssaTagNumber,
+        BigDecimal price,
+        PriceType priceType,
+        Boolean priceNegotiable,
+        Integer headCount,
+        String region,
+        String addressLabel,
+        Double latitude,
+        Double longitude,
+        Double distanceKm,
+        Boolean deliveryAvailable,
+        BigDecimal deliveryPrice,
+        Boolean boardingAvailable,
+        BigDecimal boardingDailyPrice,
+        AnnonceStatus status,
+        Boolean isTopLot,
+        LocalDateTime topLotExpiresAt,
+        Long viewsCount,
+        Long favoritesCount,
+        LocalDateTime expiresAt,
+        UUID sellerId,
+        List<AnnonceMediaResponse> medias,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt
+) {}

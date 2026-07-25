@@ -10,9 +10,13 @@ import java.util.UUID;
 @Table(
         name = "favorites",
         uniqueConstraints = @UniqueConstraint(
-                name = "uq_favorite",
+                name = "uq_buyer_annonce_favorite",
                 columnNames = {"buyer_id", "annonce_id"}
-        )
+        ),
+        indexes = {
+                @Index(name = "idx_favorites_buyer_id", columnList = "buyer_id"),
+                @Index(name = "idx_favorites_annonce_id", columnList = "annonce_id")
+        }
 )
 @Getter
 @Setter
@@ -32,11 +36,11 @@ public class Favorite {
     @JoinColumn(name = "annonce_id", nullable = false)
     private Annonce annonce;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     @PrePersist
-    void onCreate() {
+    protected void onCreate() {
         createdAt = LocalDateTime.now();
     }
 }

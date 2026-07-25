@@ -1,7 +1,8 @@
 databaseChangeLog:
+
   - changeSet:
-      id: 004-create-annonce-medias-table
-      author: ED-DAMI
+      id: 003-create-annonce-medias-table
+      author: chana9
       changes:
         - createTable:
             tableName: annonce_medias
@@ -18,9 +19,8 @@ databaseChangeLog:
                   type: uuid
                   constraints:
                     nullable: false
-                    foreignKeyName: fk_media_annonce
-                    referencedTableName: annonces
-                    referencedColumnNames: id
+                    foreignKeyName: fk_annonce_medias_annonce
+                    references: annonces(id)
                     deleteCascade: true
               - column:
                   name: url
@@ -37,21 +37,42 @@ databaseChangeLog:
                   name: size_bytes
                   type: bigint
               - column:
-                  name: media_order
+                  name: display_order
                   type: integer
                   defaultValueNumeric: 0
               - column:
                   name: is_cover
                   type: boolean
                   defaultValueBoolean: false
-                  constraints:
-                    nullable: false
               - column:
                   name: created_at
                   type: timestamp
                   defaultValueComputed: NOW()
                   constraints:
                     nullable: false
-      rollback:
-        - dropTable:
+
+        - createIndex:
             tableName: annonce_medias
+            indexName: idx_annonce_medias_annonce_id
+            columns:
+              - column:
+                  name: annonce_id
+        - createIndex:
+            tableName: annonce_medias
+            indexName: idx_annonce_medias_is_cover
+            columns:
+              - column:
+                  name: is_cover
+
+  - changeSet:
+      id: 003-check-annonce-medias-display-order
+      author: chana9
+      changes:
+        - sql:
+            sql: >
+              ALTER TABLE annonce_medias
+              ADD CONSTRAINT chk_annonce_medias_display_order
+              CHECK (display_order >= 0);
+      rollback:
+        - sql:
+            sql: ALTER TABLE annonce_medias DROP CONSTRAINT chk_annonce_medias_display_order;

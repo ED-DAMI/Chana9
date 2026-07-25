@@ -1,0 +1,119 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 003-create-annonce-alerts-table
+      author: chana9
+      changes:
+        - createTable:
+            tableName: annonce_alerts
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: breed
+                  type: varchar(30)
+              - column:
+                  name: region
+                  type: varchar(100)
+              - column:
+                  name: min_price
+                  type: numeric(10,2)
+              - column:
+                  name: max_price
+                  type: numeric(10,2)
+              - column:
+                  name: dentition
+                  type: varchar(20)
+              - column:
+                  name: is_active
+                  type: boolean
+                  defaultValueBoolean: true
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+
+        - createIndex:
+            tableName: annonce_alerts
+            indexName: idx_annonce_alerts_user_id
+            columns:
+              - column:
+                  name: user_id
+        - createIndex:
+            tableName: annonce_alerts
+            indexName: idx_annonce_alerts_is_active
+            columns:
+              - column:
+                  name: is_active
+        - createIndex:
+            tableName: annonce_alerts
+            indexName: idx_annonce_alerts_breed
+            columns:
+              - column:
+                  name: breed
+        - createIndex:
+            tableName: annonce_alerts
+            indexName: idx_annonce_alerts_region
+            columns:
+              - column:
+                  name: region
+
+  - changeSet:
+      id: 003-check-annonce-alerts-breed
+      author: chana9
+      changes:
+        - sql:
+            sql: >
+              ALTER TABLE annonce_alerts
+              ADD CONSTRAINT chk_annonce_alerts_breed
+              CHECK (breed IS NULL OR breed IN (
+                'SARDI','TIMAHDITE','BENI_GUIL','D_MAN','BOUJAAD','BERGUI',
+                'DRAA','NOIR_DU_SUD','ATLAS',
+                'OULMES_ZAER','NOIR_PIE','BRUNE_ATLAS',
+                'CROSSBRED','OTHER'
+              ));
+      rollback:
+        - sql:
+            sql: ALTER TABLE annonce_alerts DROP CONSTRAINT chk_annonce_alerts_breed;
+
+  - changeSet:
+      id: 003-check-annonce-alerts-dentition
+      author: chana9
+      changes:
+        - sql:
+            sql: >
+              ALTER TABLE annonce_alerts
+              ADD CONSTRAINT chk_annonce_alerts_dentition
+              CHECK (dentition IS NULL OR dentition IN (
+                'MILK_TEETH','TWO_TEETH','FOUR_TEETH','SIX_TEETH','FULL_MOUTH'
+              ));
+      rollback:
+        - sql:
+            sql: ALTER TABLE annonce_alerts DROP CONSTRAINT chk_annonce_alerts_dentition;
+
+  - changeSet:
+      id: 003-check-annonce-alerts-price-range
+      author: chana9
+      changes:
+        - sql:
+            sql: >
+              ALTER TABLE annonce_alerts
+              ADD CONSTRAINT chk_annonce_alerts_price_range
+              CHECK (
+                min_price IS NULL OR max_price IS NULL OR min_price <= max_price
+              );
+      rollback:
+        - sql:
+            sql: ALTER TABLE annonce_alerts DROP CONSTRAINT chk_annonce_alerts_price_range;

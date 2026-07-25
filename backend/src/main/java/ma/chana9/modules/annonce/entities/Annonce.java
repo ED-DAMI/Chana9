@@ -1,12 +1,9 @@
-
 package ma.chana9.modules.annonce.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import ma.chana9.modules.user.User;
-import ma.chana9.shared.enums.AnimalBreed;
-import ma.chana9.shared.enums.AnimalGender;
-import ma.chana9.shared.enums.AnnonceStatus;
+
+import ma.chana9.shared.enums.*;
 import org.locationtech.jts.geom.Point;
 
 import java.math.BigDecimal;
@@ -16,7 +13,16 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "annonces")
+@Table(
+        name = "annonces",
+        indexes = {
+                @Index(name = "idx_annonces_status_breed", columnList = "status, breed"),
+                @Index(name = "idx_annonces_region", columnList = "region"),
+                @Index(name = "idx_annonces_seller_id", columnList = "seller_id"),
+                @Index(name = "idx_annonces_expires_at", columnList = "expires_at"),
+                @Index(name = "idx_annonces_top_lot_expires_at", columnList = "top_lot_expires_at")
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -35,36 +41,50 @@ public class Annonce {
     private String description;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "breed", nullable = false, length = 50)
+    @Column(nullable = false, length = 30)
     private AnimalBreed breed;
 
-    @Column(name = "price", nullable = false, precision = 10, scale = 2)
-    private BigDecimal price;
-
-    @Column(name = "price_negotiable")
-    @Builder.Default
-    private Boolean priceNegotiable = false;
-
-    @Column(nullable = false, length = 100)
-    private String region;
-
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", length = 20)
-    @Builder.Default
-    private AnnonceStatus status = AnnonceStatus.ACTIVE;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "gender", length = 10)
+    @Column(length = 10)
     private AnimalGender gender;
 
     @Column(name = "age_months")
     private Integer ageMonths;
 
-    @Column(name = "location", columnDefinition = "geometry(Point, 4326)")
-    private Point location;
+    @Column(name = "weight_kg", precision = 6, scale = 2)
+    private BigDecimal weightKg;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private AnimalDentition dentition;
+
+    @Column(name = "onssa_tag_number", length = 50)
+    private String onssaTagNumber;
+
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal price;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "price_type", length = 20)
+    @Builder.Default
+    private PriceType priceType = PriceType.FIXED;
+
+    @Column(name = "price_negotiable")
+    @Builder.Default
+    private Boolean priceNegotiable = false;
+
+    @Column(name = "head_count")
+    @Builder.Default
+    private Integer headCount = 1;
+
+    @Column(nullable = false, length = 100)
+    private String region;
 
     @Column(name = "address_label", length = 255)
     private String addressLabel;
+
+    @Column(columnDefinition = "geometry(Point, 4326)")
+    private Point location;
 
     @Column(name = "delivery_available")
     @Builder.Default
@@ -73,25 +93,44 @@ public class Annonce {
     @Column(name = "delivery_price", precision = 8, scale = 2)
     private BigDecimal deliveryPrice;
 
+    @Column(name = "boarding_available")
+    @Builder.Default
+    private Boolean boardingAvailable = false;
+
+    @Column(name = "boarding_daily_price", precision = 6, scale = 2)
+    private BigDecimal boardingDailyPrice;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    @Builder.Default
+    private AnnonceStatus status = AnnonceStatus.ACTIVE;
+
     @Column(name = "top_lot_expires_at")
     private LocalDateTime topLotExpiresAt;
 
-    @Column(name = "expires_at")
+    @Column(name = "views_count")
+    @Builder.Default
+    private Long viewsCount = 0L;
+
+    @Column(name = "favorites_count")
+    @Builder.Default
+    private Long favoritesCount = 0L;
+
+    @Column(name = "expires_at", nullable = false)
     private LocalDateTime expiresAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seller_id", nullable = false)
-    private User seller;
+    @Column(name = "seller_id", nullable = false)
+    private UUID sellerId;
 
-    @OneToMany(mappedBy = "annonce", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "annonce", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<AnnonceMedia> medias = new ArrayList<>();
 
-    @OneToMany(mappedBy = "annonce", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "annonce", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<AnnonceReport> reports = new ArrayList<>();
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at", nullable = false)
@@ -102,15 +141,14 @@ public class Annonce {
     }
 
     public boolean isEligibleForAid() {
+        if (dentition != null) {
+            return dentition != AnimalDentition.MILK_TEETH;
+        }
         return ageMonths != null && ageMonths >= 12;
     }
 
-    public Integer getEffectiveAgeMonths() {
-        return ageMonths;
-    }
-
     @PrePersist
-    void onCreate() {
+    protected void onCreate() {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
         if (status == null) status = AnnonceStatus.ACTIVE;
@@ -118,7 +156,7 @@ public class Annonce {
     }
 
     @PreUpdate
-    void onUpdate() {
+    protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
 }

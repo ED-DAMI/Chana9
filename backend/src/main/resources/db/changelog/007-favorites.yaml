@@ -1,7 +1,7 @@
 databaseChangeLog:
 
   - changeSet:
-      id: 006-create-favorites-table
+      id: 003-create-favorites-table
       author: chana9
       changes:
         - createTable:
@@ -24,7 +24,7 @@ databaseChangeLog:
                   type: uuid
                   constraints:
                     nullable: false
-                    foreignKeyName: fk_favorite_annonce
+                    foreignKeyName: fk_favorites_annonce
                     references: annonces(id)
                     deleteCascade: true
               - column:
@@ -36,22 +36,18 @@ databaseChangeLog:
 
         - addUniqueConstraint:
             tableName: favorites
-            constraintName: uq_favorite
+            constraintName: uq_buyer_annonce_favorite
             columnNames: buyer_id, annonce_id
 
         - createIndex:
             tableName: favorites
-            indexName: idx_favorite_buyer_id
+            indexName: idx_favorites_buyer_id
             columns:
               - column:
                   name: buyer_id
-
         - createIndex:
             tableName: favorites
-            indexName: idx_favorite_annonce_id
+            indexName: idx_favorites_annonce_id
             columns:
               - column:
                   name: annonce_id
-      rollback:
-        - dropTable:
-            tableName: favorites

@@ -1,14 +1,21 @@
 package ma.chana9.modules.annonce.dto;
 
 import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Min;
+import ma.chana9.shared.enums.AnimalBreed;
+import ma.chana9.shared.enums.AnimalDentition;
 
 import java.math.BigDecimal;
 
 public record AnnonceAlertRequest(
-        String breed,
+
+        AnimalBreed breed,
         String region,
-        @Min(1) Integer radiusKm,
-        @DecimalMin("0.0") BigDecimal maxPrice,
-        @Min(0) Integer minAgeMonths
+
+        @DecimalMin("0.0")
+        BigDecimal minPrice,
+
+        @DecimalMin("0.0")
+        BigDecimal maxPrice,
+
+        AnimalDentition dentition
 ) {}

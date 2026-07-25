@@ -10,7 +10,6 @@ import ma.chana9.modules.user.UserRepository;
 import ma.chana9.shared.config.AnnonceConstants;
 import ma.chana9.shared.enums.AnimalBreed;
 import ma.chana9.shared.enums.AnnonceStatus;
-import ma.chana9.shared.enums.FlagStatus;
 import org.locationtech.jts.geom.*;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -18,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
