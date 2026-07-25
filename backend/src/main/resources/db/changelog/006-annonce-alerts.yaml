@@ -15,7 +15,7 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: user_id
+                  name: buyer_id
                   type: uuid
                   constraints:
                     nullable: false
@@ -50,7 +50,7 @@ databaseChangeLog:
             indexName: idx_annonce_alerts_user_id
             columns:
               - column:
-                  name: user_id
+                  name: buyer_id
         - createIndex:
             tableName: annonce_alerts
             indexName: idx_annonce_alerts_is_active

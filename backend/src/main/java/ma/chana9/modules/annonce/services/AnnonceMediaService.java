@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,7 +34,7 @@ public class AnnonceMediaService {
         Annonce annonce = annonceRepository.findById(annonceId)
                 .orElseThrow(() -> new ApiException(ErrorKeys.Annonce.NOT_FOUND));
 
-        if (!annonce.getSeller().getId().equals(sellerId)) {
+        if (!annonce.getSellerId().equals(sellerId)) {
             throw new ApiException(ErrorKeys.Annonce.FORBIDDEN);
         }
 
@@ -51,9 +50,8 @@ public class AnnonceMediaService {
                 .originalFilename(file.getOriginalFilename())
                 .contentType(file.getContentType())
                 .sizeBytes(file.getSize())
-                .order((int)count)
+                .displayOrder((int)count)
                 .build();
-
         return annonceMediaRepository.save(media);
     }
 
@@ -62,7 +60,7 @@ public class AnnonceMediaService {
         AnnonceMedia media = annonceMediaRepository.findById(mediaId)
                 .orElseThrow(() -> new ApiException(ErrorKeys.Annonce.MEDIA_NOT_FOUND));
 
-        if (!media.getAnnonce().getSeller().getId().equals(sellerId)) {
+        if (!media.getAnnonce().getSellerId().equals(sellerId)) {
             throw new ApiException(ErrorKeys.Annonce.FORBIDDEN);
         }
 
@@ -72,6 +70,6 @@ public class AnnonceMediaService {
     }
 
     public List<AnnonceMedia> findByAnnonce(UUID annonceId) {
-        return annonceMediaRepository.findByAnnonceIdOrderByOrderAsc(annonceId);
+        return annonceMediaRepository.findByAnnonceIdOrderByDisplayOrderAsc(annonceId);
     }
 }

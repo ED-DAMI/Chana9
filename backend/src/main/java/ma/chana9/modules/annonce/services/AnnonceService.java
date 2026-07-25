@@ -28,7 +28,6 @@ public class AnnonceService {
 	private static final int METERS_PER_KM = 1000;
 
 	private final AnnonceRepository      annonceRepository;
-	private final AnnonceFlagRepository  annonceFlagRepository;
 	private final FavoriteRepository     favoriteRepository;
 	private final AnnonceAlertRepository annonceAlertRepository;
 	private final AnnonceMapper          annonceMapper;
@@ -38,8 +37,6 @@ public class AnnonceService {
 
 	@Transactional
 	public AnnonceResponse create(AnnonceRequest request, UUID sellerId) {
-		User seller = userRepository.findById(sellerId).get();
-
 		Annonce annonce = Annonce.builder()
 				.title(request.title())
 				.description(request.description())
@@ -53,10 +50,9 @@ public class AnnonceService {
 				.deliveryAvailable(request.deliveryAvailable())
 				.deliveryPrice(request.deliveryPrice())
 				.location(buildPoint(request.latitude(), request.longitude()))
-				.seller(seller)
+				.sellerId(sellerId)
 				.status(AnnonceStatus.ACTIVE)
 				.build();
-
 		Annonce saved = annonceRepository.save(annonce);
 		notifyMatchingAlerts(saved);
 		return annonceMapper.toResponse(saved);
@@ -77,7 +73,6 @@ public class AnnonceService {
 		annonce.setDeliveryAvailable(request.deliveryAvailable());
 		annonce.setDeliveryPrice(request.deliveryPrice());
 		annonce.setLocation(buildPoint(request.latitude(), request.longitude()));
-
 		return annonceMapper.toResponse(annonceRepository.save(annonce));
 	}
 
@@ -140,29 +135,6 @@ public class AnnonceService {
 		return annonceMapper.toResponse(annonceRepository.save(annonce));
 	}
 
-	@Transactional
-	public void flag(UUID annonceId, UUID reporterId, AnnonceFlagRequest request) {
-		if (annonceFlagRepository.existsByAnnonceIdAndReporterId(annonceId, reporterId)) {
-			throw new IllegalStateException("annonce.flag.already.reported");
-		}
-
-		Annonce annonce = findOrThrow(annonceId);
-
-		annonceFlagRepository.save(AnnonceFlag.builder()
-				.annonce(annonce)
-				.reporterId(reporterId)
-				.reason(request.reason())
-				.comment(request.comment())
-				.status(FlagStatus.PENDING)
-				.build());
-
-		long pendingCount = annonceFlagRepository.countByAnnonceIdAndStatus(annonceId, FlagStatus.PENDING);
-		if (pendingCount >= AnnonceConstants.AUTO_SUSPEND_FLAG_THRESHOLD) {
-			annonce.setStatus(AnnonceStatus.SUSPENDED);
-			annonceRepository.save(annonce);
-			log.info("annonce.auto.suspended id={} flags={}", annonceId, pendingCount);
-		}
-	}
 
 	@Transactional
 	public void addFavorite(UUID annonceId, UUID buyerId) {
@@ -189,12 +161,12 @@ public class AnnonceService {
 	@Transactional
 	public AnnonceAlert createAlert(UUID buyerId, AnnonceAlertRequest request) {
 		return annonceAlertRepository.save(AnnonceAlert.builder()
-				.buyerId(buyerId)
-				.breed(AnimalBreed.valueOf(request.breed()))
+						.buyerId(buyerId)
+				.breed(request.breed())
 				.region(request.region())
-				.radiusKm(request.radiusKm())
 				.maxPrice(request.maxPrice())
-				.minAgeMonths(request.minAgeMonths())
+						.dentition(request.dentition())
+						.minPrice(request.minPrice())
 				.active(true)
 				.build());
 	}
@@ -223,7 +195,7 @@ public class AnnonceService {
 
 	private Annonce findOwnedOrThrow(UUID id, UUID sellerId) {
 		Annonce annonce = findOrThrow(id);
-		if (!annonce.getSeller().getId().equals(sellerId)) {
+		if (!annonce.getSellerId().equals(sellerId)) {
 			throw new IllegalStateException("annonce.access.denied id=%s".formatted(id));
 		}
 		return annonce;

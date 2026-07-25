@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public record AnnonceAlertResponse(
         UUID id,
-        UUID userId,
+        UUID buyerId,
         AnimalBreed breed,
         String region,
         BigDecimal minPrice,

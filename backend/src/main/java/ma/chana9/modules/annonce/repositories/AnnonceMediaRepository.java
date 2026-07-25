@@ -12,15 +12,11 @@ import java.util.UUID;
 
 public interface AnnonceMediaRepository extends JpaRepository<AnnonceMedia, UUID> {
 
-    List<AnnonceMedia> findByAnnonceIdOrderByOrderAsc(UUID annonceId);
-
-    Optional<AnnonceMedia> findByAnnonceIdAndIsCoverTrue(UUID annonceId);
+    List<AnnonceMedia> findByAnnonceIdOrderByDisplayOrderAsc(UUID annonceId);
 
     long countByAnnonceId(UUID annonceId);
 
     @Modifying
     @Query("UPDATE AnnonceMedia m SET m.isCover = false WHERE m.annonce.id = :annonceId")
     void clearCoverByAnnonceId(@Param("annonceId") UUID annonceId);
-
-    List<AnnonceMedia> findByAnnonceIdOrderByOrder(UUID annonceId);
 }

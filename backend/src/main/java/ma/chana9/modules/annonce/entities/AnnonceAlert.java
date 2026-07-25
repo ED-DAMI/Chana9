@@ -30,8 +30,8 @@ public class AnnonceAlert {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "user_id", nullable = false)
-    private UUID userId;
+    @Column(name = "buyer_id", nullable = false)
+    private UUID buyerId;
 
     @Enumerated(EnumType.STRING)
     @Column(length = 30)
