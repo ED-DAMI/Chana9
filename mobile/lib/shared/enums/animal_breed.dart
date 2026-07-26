@@ -23,5 +23,12 @@ enum AnimalBreed {
   arabeBarbe,
   aneBeldi,
   mulet,
-  other,
+  other;
+
+  static AnimalBreed fromJson(dynamic value) {
+    return AnimalBreed.values.firstWhere(
+          (e) => e.name == value.toString(),
+      orElse: () => AnimalBreed.other,
+    );
+  }
 }

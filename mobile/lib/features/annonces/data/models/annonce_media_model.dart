@@ -10,7 +10,7 @@ abstract class AnnonceMediaModel with _$AnnonceMediaModel {
   const factory AnnonceMediaModel({
     required String id,
     required String url,
-    @JsonKey(name: 'order') required int order,
+    @JsonKey(name: 'displayOrder') required int order,
     @JsonKey(name: 'isCover') required bool isCover,
   }) = _AnnonceMediaModel;
 

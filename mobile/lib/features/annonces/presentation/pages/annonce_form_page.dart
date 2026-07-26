@@ -5,7 +5,8 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ma_chana9_app/shared/enums/animal_gender.dart';
-import 'package:ma_chana9_app/shared/enums/animal_breed.dart'; // Import ajouté
+import 'package:ma_chana9_app/shared/enums/animal_breed.dart';
+import '../../../../shared/enums/animal_dentition.dart';
 import '../../domain/entities/annonce.dart';
 import '../bloc/annonce_bloc.dart';
 
@@ -39,25 +40,26 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
   final List<XFile> _photos = [];
   final ImagePicker _picker = ImagePicker();
 
-  // Données de l'animal
-  AnimalBreed? _selectedBreed; // Changé de Controller à Enum
+  // Étape Animal
+  AnimalBreed? _selectedBreed;
   AnimalGender? _gender;
+  AnimalDentition? _dentition;
   final _weightController = TextEditingController();
   final _ageController = TextEditingController();
+  final _onssaController = TextEditingController();
+  final _headCountController = TextEditingController();
   bool _eligibleForAid = false;
 
-  // Détails annonce
+  // Étape Prix & Détails
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _priceController = TextEditingController();
   bool _priceNegotiable = false;
 
-  // Localisation
+  // Étape Localisation
   String? _selectedRegion;
   String? _selectedCity;
   final _addressController = TextEditingController();
-
-  // Livraison
   bool _deliveryAvailable = false;
   final _deliveryPriceController = TextEditingController();
 
@@ -76,8 +78,11 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
   void _prefill(Annonce a) {
     _selectedBreed = a.breed;
     _gender = a.gender;
+    _dentition = a.dentition;
     _ageController.text = a.ageMonths?.toString() ?? '';
-    _eligibleForAid = a.eligibleForAid;
+    _weightController.text = a.weightKg?.toString() ?? '';
+    _onssaController.text = a.onssaTagNumber ?? '';
+    _headCountController.text = a.headCount?.toString() ?? '';
     _titleController.text = a.title;
     _descriptionController.text = a.description ?? '';
     _priceController.text = a.price.toString();
@@ -94,6 +99,8 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
   void dispose() {
     _weightController.dispose();
     _ageController.dispose();
+    _onssaController.dispose();
+    _headCountController.dispose();
     _titleController.dispose();
     _descriptionController.dispose();
     _priceController.dispose();
@@ -102,7 +109,6 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
     super.dispose();
   }
 
-  // --- Logique de Localisation ---
   Future<void> _detectLocation() async {
     setState(() => _isLocating = true);
     try {
@@ -121,7 +127,6 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
           _longitude = position.longitude;
           _addressController.text = "${place.street ?? ''}, ${place.subLocality ?? ''}".trim();
 
-          // Tentative de mapping automatique de la région
           for (var region in kMoroccoRegionsAndCities.keys) {
             if (place.administrativeArea?.contains(region) ?? false) {
               _selectedRegion = region;
@@ -141,22 +146,25 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red));
   }
 
-  // --- Soumission ---
   Map<String, dynamic> _buildBody() {
     return {
       'title': _titleController.text.trim(),
-      'breed': _selectedBreed?.name, // Envoi du nom de l'enum
+      'breed': _selectedBreed?.name,
       'price': double.tryParse(_priceController.text) ?? 0.0,
       'priceNegotiable': _priceNegotiable,
       'region': _selectedRegion ?? '',
       'eligibleForAid': _eligibleForAid,
       'deliveryAvailable': _deliveryAvailable,
       'description': _descriptionController.text.trim(),
-      'gender': _gender?.name, // Utilisation de .name au lieu de .value
+      'gender': _gender?.name,
       'ageMonths': int.tryParse(_ageController.text),
       'addressLabel': _selectedCity != null ? '$_selectedCity, ${_addressController.text}' : _addressController.text,
       'latitude': _latitude,
       'longitude': _longitude,
+      if (_weightController.text.isNotEmpty) 'weightKg': double.tryParse(_weightController.text),
+      if (_onssaController.text.isNotEmpty) 'onssaTagNumber': _onssaController.text.trim(),
+      if (_headCountController.text.isNotEmpty) 'headCount': int.tryParse(_headCountController.text),
+      if (_dentition != null) 'dentition': _dentition!.name,
       if (_deliveryAvailable) 'deliveryPrice': double.tryParse(_deliveryPriceController.text),
     };
   }
@@ -222,10 +230,15 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
                   content: _AnimalStep(
                     selectedBreed: _selectedBreed,
                     ageController: _ageController,
+                    weightController: _weightController,
                     gender: _gender,
+                    dentition: _dentition,
+                    onssaController: _onssaController,
+                    headCountController: _headCountController,
                     eligibleForAid: _eligibleForAid,
                     onBreedChanged: (b) => setState(() => _selectedBreed = b),
                     onGenderChanged: (g) => setState(() => _gender = g),
+                    onDentitionChanged: (d) => setState(() => _dentition = d),
                     onEligibleChanged: (v) => setState(() => _eligibleForAid = v),
                   ),
                 ),
@@ -306,53 +319,6 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
 
 // --- Sous-widgets des étapes ---
 
-class _AnimalStep extends StatelessWidget {
-  final AnimalBreed? selectedBreed;
-  final TextEditingController ageController;
-  final AnimalGender? gender;
-  final bool eligibleForAid;
-  final ValueChanged<AnimalBreed?> onBreedChanged;
-  final ValueChanged<AnimalGender?> onGenderChanged;
-  final ValueChanged<bool> onEligibleChanged;
-
-  const _AnimalStep({
-    required this.selectedBreed, required this.ageController, required this.gender,
-    required this.eligibleForAid, required this.onBreedChanged, required this.onGenderChanged,
-    required this.onEligibleChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        DropdownButtonFormField<AnimalBreed>(
-          value: selectedBreed,
-          decoration: const InputDecoration(labelText: 'Race *', border: OutlineInputBorder()),
-          items: AnimalBreed.values.map((b) => DropdownMenuItem(value: b, child: Text(b.name))).toList(),
-          onChanged: onBreedChanged,
-          validator: (v) => v == null ? 'Race requise' : null,
-        ),
-        const SizedBox(height: 12),
-        SegmentedButton<AnimalGender?>(
-          segments: const [
-            ButtonSegment(value: AnimalGender.male, label: Text('Mâle')),
-            ButtonSegment(value: AnimalGender.female, label: Text('Femelle')),
-          ],
-          selected: {gender},
-          onSelectionChanged: (val) => onGenderChanged(val.first),
-        ),
-        const SizedBox(height: 12),
-        TextField(controller: ageController, decoration: const InputDecoration(labelText: 'Âge (mois)', border: OutlineInputBorder()), keyboardType: TextInputType.number),
-        SwitchListTile(title: const Text('Éligible aide agricole'), value: eligibleForAid, onChanged: onEligibleChanged),
-      ],
-    );
-  }
-}
-
-// Les widgets _PhotoStep, _AnnonceStep, _LocationStep et _FormField
-// doivent être conservés avec les ajustements de contrôleurs faits ci-dessus.
-// (Inclus dans la réponse pour complétude si nécessaire)
-
 class _PhotoStep extends StatelessWidget {
   final List<XFile> photos;
   final VoidCallback onAdd;
@@ -377,6 +343,105 @@ class _PhotoStep extends StatelessWidget {
   }
 }
 
+class _AnimalStep extends StatelessWidget {
+  final AnimalBreed? selectedBreed;
+  final TextEditingController ageController;
+  final TextEditingController weightController;
+  final AnimalGender? gender;
+  final AnimalDentition? dentition;
+  final TextEditingController onssaController;
+  final TextEditingController headCountController;
+  final bool eligibleForAid;
+  final ValueChanged<AnimalBreed?> onBreedChanged;
+  final ValueChanged<AnimalGender?> onGenderChanged;
+  final ValueChanged<AnimalDentition?> onDentitionChanged;
+  final ValueChanged<bool> onEligibleChanged;
+
+  const _AnimalStep({
+    required this.selectedBreed,
+    required this.ageController,
+    required this.weightController,
+    required this.gender,
+    required this.dentition,
+    required this.onssaController,
+    required this.headCountController,
+    required this.eligibleForAid,
+    required this.onBreedChanged,
+    required this.onGenderChanged,
+    required this.onDentitionChanged,
+    required this.onEligibleChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        DropdownButtonFormField<AnimalBreed>(
+          value: selectedBreed,
+          decoration: const InputDecoration(labelText: 'Race *', border: OutlineInputBorder()),
+          items: AnimalBreed.values.map((b) => DropdownMenuItem(value: b, child: Text(b.name))).toList(),
+          onChanged: onBreedChanged,
+          validator: (v) => v == null ? 'Race requise' : null,
+        ),
+        const SizedBox(height: 12),
+        SegmentedButton<AnimalGender?>(
+          segments: const [
+            ButtonSegment(value: null, label: Text('Non précisé')),
+            ButtonSegment(value: AnimalGender.male, label: Text('Mâle')),
+            ButtonSegment(value: AnimalGender.female, label: Text('Femelle')),
+          ],
+          selected: {gender},
+          onSelectionChanged: (val) => onGenderChanged(val.first),
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: ageController,
+                decoration: const InputDecoration(labelText: 'Âge (mois)', border: OutlineInputBorder()),
+                keyboardType: TextInputType.number,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: TextField(
+                controller: weightController,
+                decoration: const InputDecoration(labelText: 'Poids (kg)', border: OutlineInputBorder()),
+                keyboardType: TextInputType.number,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        DropdownButtonFormField<AnimalDentition>(
+          value: dentition,
+          decoration: const InputDecoration(labelText: 'Dentition', border: OutlineInputBorder()),
+          hint: const Text('Sélectionner'),
+          items: AnimalDentition.values.map((d) => DropdownMenuItem(value: d, child: Text(d.displayName))).toList(),
+          onChanged: onDentitionChanged,
+        ),
+        const SizedBox(height: 12),
+        TextField(
+          controller: headCountController,
+          decoration: const InputDecoration(labelText: 'Nombre de têtes', border: OutlineInputBorder()),
+          keyboardType: TextInputType.number,
+        ),
+        const SizedBox(height: 12),
+        TextField(
+          controller: onssaController,
+          decoration: const InputDecoration(labelText: 'N° tag ONSSA (optionnel)', border: OutlineInputBorder()),
+        ),
+        SwitchListTile(
+          title: const Text('Éligible aide agricole'),
+          value: eligibleForAid,
+          onChanged: onEligibleChanged,
+        ),
+      ],
+    );
+  }
+}
+
 class _AnnonceStep extends StatelessWidget {
   final TextEditingController titleController;
   final TextEditingController descriptionController;
@@ -385,8 +450,11 @@ class _AnnonceStep extends StatelessWidget {
   final ValueChanged<bool> onNegotiableChanged;
 
   const _AnnonceStep({
-    required this.titleController, required this.descriptionController,
-    required this.priceController, required this.priceNegotiable, required this.onNegotiableChanged,
+    required this.titleController,
+    required this.descriptionController,
+    required this.priceController,
+    required this.priceNegotiable,
+    required this.onNegotiableChanged,
   });
 
   @override
@@ -417,10 +485,17 @@ class _LocationStep extends StatelessWidget {
   final bool hasLocation;
 
   const _LocationStep({
-    required this.selectedRegion, required this.selectedCity, required this.addressController,
-    required this.deliveryAvailable, required this.deliveryPriceController,
-    required this.onRegionChanged, required this.onCityChanged, required this.onDeliveryChanged,
-    required this.onDetectLocation, required this.isLocating, required this.hasLocation,
+    required this.selectedRegion,
+    required this.selectedCity,
+    required this.addressController,
+    required this.deliveryAvailable,
+    required this.deliveryPriceController,
+    required this.onRegionChanged,
+    required this.onCityChanged,
+    required this.onDeliveryChanged,
+    required this.onDetectLocation,
+    required this.isLocating,
+    required this.hasLocation,
   });
 
   @override
