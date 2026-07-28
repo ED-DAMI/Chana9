@@ -104,15 +104,6 @@ public class AnnonceController {
         return ApiResponse.success(null, annonceService.activateTopLot(id, userId, durationDays));
     }
 
-    @PostMapping("/{id}/flag")
-    @PreAuthorize("isAuthenticated()")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void flag(
-            @PathVariable UUID id,
-            @Valid @RequestBody AnnonceFlagRequest request,
-            @AuthenticationPrincipal UUID userId) {
-        annonceService.flag(id, userId, request);
-    }
 
     @PostMapping("/{id}/favorites")
     @PreAuthorize("hasRole('ACHETEUR')")

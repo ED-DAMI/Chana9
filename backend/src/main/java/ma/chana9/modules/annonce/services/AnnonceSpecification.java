@@ -25,7 +25,7 @@ public class AnnonceSpecification {
             if (request.breed() != null) {
                 predicates.add(cb.like(
                         cb.lower(root.get(EntityFields.AnnonceFields.BREED)),
-                        "%%%s%%".formatted(request.breed().toLowerCase())
+                        "%%%s%%".formatted(request.breed())
                 ));
             }
 
@@ -44,12 +44,12 @@ public class AnnonceSpecification {
                 predicates.add(cb.lessThanOrEqualTo(root.get(EntityFields.AnnonceFields.PRICE), request.maxPrice()));
             }
 
-            if (request.minWeight() != null) {
-                predicates.add(cb.greaterThanOrEqualTo(root.get(EntityFields.AnnonceFields.ESTIMATED_WEIGHT), request.minWeight()));
+            if (request.minWeightKg() != null) {
+                predicates.add(cb.greaterThanOrEqualTo(root.get(EntityFields.AnnonceFields.ESTIMATED_WEIGHT), request.minWeightKg()));
             }
 
-            if (request.maxWeight() != null) {
-                predicates.add(cb.lessThanOrEqualTo(root.get(EntityFields.AnnonceFields.ESTIMATED_WEIGHT), request.maxWeight()));
+            if (request.maxWeightKg() != null) {
+                predicates.add(cb.lessThanOrEqualTo(root.get(EntityFields.AnnonceFields.ESTIMATED_WEIGHT), request.maxWeightKg()));
             }
 
             if (request.gender() != null) {

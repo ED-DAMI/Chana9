@@ -2,6 +2,8 @@ package ma.chana9.modules.annonce.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import ma.chana9.modules.user.User;
 import ma.chana9.shared.enums.ReportReason;
 import ma.chana9.shared.enums.ReportStatus;
 
@@ -12,9 +14,14 @@ import java.util.UUID;
 @Table(
         name = "annonce_reports",
         uniqueConstraints = @UniqueConstraint(
-                name = "uq_annonce_report",
+                name = "uq_annonce_reporter",
                 columnNames = {"annonce_id", "reporter_id"}
-        )
+        ),
+        indexes = {
+                @Index(name = "idx_annonce_reports_annonce_id", columnList = "annonce_id"),
+                @Index(name = "idx_annonce_reports_reporter_id", columnList = "reporter_id"),
+                @Index(name = "idx_annonce_reports_status", columnList = "status")
+        }
 )
 @Getter
 @Setter
@@ -42,21 +49,22 @@ public class AnnonceReport {
     private String comment;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 20, nullable = false)
+    @Column(length = 20)
     @Builder.Default
     private ReportStatus status = ReportStatus.PENDING;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "processed_at")
     private LocalDateTime processedAt;
 
-    @Column(name = "processed_by")
-    private UUID processedBy;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "processed_by")
+    private User processedBy;
 
     @PrePersist
-    void onCreate() {
+    protected void onCreate() {
         createdAt = LocalDateTime.now();
         if (status == null) status = ReportStatus.PENDING;
     }

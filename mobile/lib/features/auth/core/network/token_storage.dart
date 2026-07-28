@@ -29,9 +29,10 @@ class TokenStorage {
       fullName: user.fullName,
       role: user.role,
       kycVerified: user.kycVerified,
-      kycSubmittedAt: user.kycSubmittedAt,
+      profilePhotoUrl: user.profilePhotoUrl,
+      region: user.region,
+      active: user.active,
       createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
     );
     await _storage.write(
       key: _cachedUserKey,

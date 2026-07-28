@@ -1,4 +1,3 @@
-
 package ma.chana9.modules.annonce.services;
 
 import ma.chana9.modules.annonce.dto.AnnonceMediaResponse;
@@ -13,29 +12,55 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface AnnonceMapper {
 
-    @Mapping(target = "latitude",           expression = "java(getY(annonce.getLocation()))")
-    @Mapping(target = "longitude",          expression = "java(getX(annonce.getLocation()))")
-    @Mapping(target = "distanceKm",         ignore = true)
-    @Mapping(target = "isTopLot",           expression = "java(annonce.isTopLot())")
-    @Mapping(target = "eligibleForAid",     expression = "java(annonce.isEligibleForAid())")
-    @Mapping(target = "effectiveAgeMonths", expression = "java(annonce.getEffectiveAgeMonths())")
+    @Mapping(target = "latitude",       expression = "java(getY(annonce.getLocation()))")
+    @Mapping(target = "longitude",      expression = "java(getX(annonce.getLocation()))")
+    @Mapping(target = "distanceKm",     ignore = true)
+    @Mapping(target = "isTopLot",       expression = "java(annonce.isTopLot())")
+    @Mapping(target = "sellerId",       source = "sellerId")
     AnnonceResponse toResponse(Annonce annonce);
 
-    @Mapping(target = "latitude",           expression = "java(getY(annonce.getLocation()))")
-    @Mapping(target = "longitude",          expression = "java(getX(annonce.getLocation()))")
-    @Mapping(target = "isTopLot",           expression = "java(annonce.isTopLot())")
-    @Mapping(target = "eligibleForAid",     expression = "java(annonce.isEligibleForAid())")
-    @Mapping(target = "effectiveAgeMonths", expression = "java(annonce.getEffectiveAgeMonths())")
-    AnnonceResponse toResponse(Annonce annonce, @Context Double distanceKm);
-
-    @AfterMapping
-    default void applyDistance(@Context Double distanceKm,
-                               @MappingTarget AnnonceResponse.AnnonceResponseBuilder target) {
-        if (distanceKm != null) target.distanceKm(distanceKm);
+    default AnnonceResponse toResponse(Annonce annonce, Double distanceKm) {
+        AnnonceResponse base = toResponse(annonce);
+        return new AnnonceResponse(
+                base.id(),
+                base.title(),
+                base.description(),
+                base.breed(),
+                base.gender(),
+                base.ageMonths(),
+                base.weightKg(),
+                base.dentition(),
+                base.onssaTagNumber(),
+                base.price(),
+                base.priceType(),
+                base.priceNegotiable(),
+                base.headCount(),
+                base.region(),
+                base.addressLabel(),
+                base.latitude(),
+                base.longitude(),
+                distanceKm,
+                base.deliveryAvailable(),
+                base.deliveryPrice(),
+                base.boardingAvailable(),
+                base.boardingDailyPrice(),
+                base.status(),
+                base.isTopLot(),
+                base.topLotExpiresAt(),
+                base.viewsCount(),
+                base.favoritesCount(),
+                base.expiresAt(),
+                base.sellerId(),
+                base.medias(),
+                base.createdAt(),
+                base.updatedAt()
+        );
     }
 
     List<AnnonceMediaResponse> toMediaResponses(List<AnnonceMedia> medias);
-    AnnonceMediaResponse       toMediaResponse(AnnonceMedia media);
+
+    @Mapping(target = "displayOrder", source = "displayOrder")
+    AnnonceMediaResponse toMediaResponse(AnnonceMedia media);
 
     default Double getY(Point p) { return p != null ? p.getY() : null; }
     default Double getX(Point p) { return p != null ? p.getX() : null; }

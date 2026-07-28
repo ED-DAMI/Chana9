@@ -1,7 +1,7 @@
 databaseChangeLog:
 
   - changeSet:
-      id: 004-create-annonce-reports-table
+      id: 003-create-annonce-reports-table
       author: chana9
       changes:
         - createTable:
@@ -19,7 +19,7 @@ databaseChangeLog:
                   type: uuid
                   constraints:
                     nullable: false
-                    foreignKeyName: fk_report_annonce
+                    foreignKeyName: fk_annonce_reports_annonce
                     references: annonces(id)
                     deleteCascade: true
               - column:
@@ -39,8 +39,6 @@ databaseChangeLog:
                   name: status
                   type: varchar(20)
                   defaultValue: PENDING
-                  constraints:
-                    nullable: false
               - column:
                   name: created_at
                   type: timestamp
@@ -53,49 +51,63 @@ databaseChangeLog:
               - column:
                   name: processed_by
                   type: uuid
+                  constraints:
+                    foreignKeyName: fk_annonce_reports_processed_by
+                    references: users(id)
 
         - addUniqueConstraint:
             tableName: annonce_reports
-            constraintName: uq_annonce_report
+            constraintName: uq_annonce_reporter
             columnNames: annonce_id, reporter_id
 
         - createIndex:
             tableName: annonce_reports
-            indexName: idx_report_annonce_id
+            indexName: idx_annonce_reports_annonce_id
             columns:
               - column:
                   name: annonce_id
-
         - createIndex:
             tableName: annonce_reports
-            indexName: idx_report_status
+            indexName: idx_annonce_reports_reporter_id
+            columns:
+              - column:
+                  name: reporter_id
+        - createIndex:
+            tableName: annonce_reports
+            indexName: idx_annonce_reports_status
             columns:
               - column:
                   name: status
-      rollback:
-        - dropTable:
-            tableName: annonce_reports
 
   - changeSet:
-      id: 004-add-check-constraints-annonce-reports
+      id: 003-check-annonce-reports-reason
       author: chana9
       changes:
         - sql:
             sql: >
               ALTER TABLE annonce_reports
-              ADD CONSTRAINT chk_report_reason
+              ADD CONSTRAINT chk_annonce_reports_reason
               CHECK (reason IN (
-                'ABUSIVE_PRICE',
-                'ANIMAL_DOES_NOT_EXIST',
-                'MISLEADING_PHOTOS',
-                'FRAUDULENT_SELLER',
+                'FRAUD_OR_SCAM',
+                'WRONG_INFORMATION',
+                'UNHEALTHY_ANIMAL',
+                'DUPLICATE',
+                'INAPPROPRIATE_MEDIA',
                 'OTHER'
               ));
-              ALTER TABLE annonce_reports
-              ADD CONSTRAINT chk_report_status
-              CHECK (status IN ('PENDING','PROCESSED','REJECTED'));
       rollback:
         - sql:
+            sql: ALTER TABLE annonce_reports DROP CONSTRAINT chk_annonce_reports_reason;
+
+  - changeSet:
+      id: 003-check-annonce-reports-status
+      author: chana9
+      changes:
+        - sql:
             sql: >
-              ALTER TABLE annonce_reports DROP CONSTRAINT chk_report_reason;
-              ALTER TABLE annonce_reports DROP CONSTRAINT chk_report_status;
+              ALTER TABLE annonce_reports
+              ADD CONSTRAINT chk_annonce_reports_status
+              CHECK (status IN ('PENDING','APPROVED','REJECTED'));
+      rollback:
+        - sql:
+            sql: ALTER TABLE annonce_reports DROP CONSTRAINT chk_annonce_reports_status;

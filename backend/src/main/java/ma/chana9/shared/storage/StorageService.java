@@ -1,6 +1,7 @@
 package ma.chana9.shared.storage;
 
 import lombok.RequiredArgsConstructor;
+import ma.chana9.shared.exception.ApiException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -9,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,55 +26,97 @@ public class StorageService {
             "image/webp"
     );
 
-    public String saveAnnonceMedia(MultipartFile file, String annonceId) throws IOException {
+    public String saveAnnonceMedia(MultipartFile file, String annonceId) {
         validate(file);
         String filename = generateFilename(file);
-        Path dir = createDirs(properties.getAnnonceOriginalDir(annonceId));
-        Files.copy(file.getInputStream(), dir.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
-        return "annonces/" + annonceId + "/original/" + filename;
+        try {
+            Path dir = createDirs(properties.getAnnonceOriginalDir(annonceId));
+            Files.copy(file.getInputStream(), dir.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
+            return "annonces/" + annonceId + "/original/" + filename;
+        } catch (IOException e) {
+            throw new ApiException("Erreur lors de la sauvegarde du média de l'annonce : " + e.getMessage());
+        }
     }
 
-    public String saveUserAvatar(MultipartFile file, String userId) throws IOException {
+    public String saveUserAvatar(MultipartFile file, String userId) {
         validate(file);
         String filename = generateFilename(file);
-        Path dir = createDirs(properties.getUserAvatarDir(userId));
-        Files.copy(file.getInputStream(), dir.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
-        return "users/" + userId + "/avatar/" + filename;
+        try {
+            Path dir = createDirs(properties.getUserAvatarDir(userId));
+            Files.copy(file.getInputStream(), dir.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
+            return "users/" + userId + "/avatar/" + filename;
+        } catch (IOException e) {
+            throw new ApiException("Erreur lors de la sauvegarde de l'avatar : " + e.getMessage());
+        }
     }
 
-    public String saveUserKyc(MultipartFile file, String userId, String type) throws IOException {
+    public String saveUserKyc(MultipartFile file, String userId, String type) {
         validate(file);
         String filename = type + getExtension(file);
-        Path dir = createDirs(properties.getUserKycDir(userId));
-        Files.copy(file.getInputStream(), dir.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
-        return "users/" + userId + "/kyc/" + filename;
+        try {
+            Path dir = createDirs(properties.getUserKycDir(userId));
+            Files.copy(file.getInputStream(), dir.resolve(filename), StandardCopyOption.REPLACE_EXISTING);
+            return "users/" + userId + "/kyc/" + filename;
+        } catch (IOException e) {
+            throw new ApiException("Erreur lors de la sauvegarde du document KYC : " + e.getMessage());
+        }
     }
 
-    public void delete(String relativePath) throws IOException {
-        Path path = Paths.get(properties.getRootDir()).resolve(relativePath);
-        Files.deleteIfExists(path);
+    public void delete(String relativePath) {
+        if (relativePath == null || relativePath.isBlank()) {
+            return;
+        }
+        try {
+            Path rootPath = Paths.get(properties.getRootDir()).toAbsolutePath().normalize();
+            Path targetPath = rootPath.resolve(relativePath).normalize();
+
+            if (!targetPath.startsWith(rootPath)) {
+                throw new ApiException("Accès au fichier non autorisé.");
+            }
+
+            Files.deleteIfExists(targetPath);
+        } catch (IOException e) {
+            throw new ApiException("Erreur lors de la suppression du fichier : " + e.getMessage());
+        }
     }
 
-    public void deleteAnnonceDir(String annonceId) throws IOException {
-        Path dir = Paths.get(properties.getAnnoncesDir(annonceId));
-        if (Files.exists(dir)) {
-            Files.walk(dir)
-                    .sorted(java.util.Comparator.reverseOrder())
-                    .forEach(p -> {
-                        try { Files.delete(p); } catch (IOException ignored) {}
-                    });
+    public void deleteAnnonceDir(String annonceId) {
+        if (annonceId == null || annonceId.isBlank()) {
+            return;
+        }
+        try {
+            Path rootPath = Paths.get(properties.getRootDir()).toAbsolutePath().normalize();
+            Path dir = rootPath.resolve("annonces/" + annonceId).normalize();
+
+            if (!dir.startsWith(rootPath)) {
+                throw new ApiException("Accès au répertoire non autorisé.");
+            }
+
+            if (Files.exists(dir)) {
+                try (var walk = Files.walk(dir)) {
+                    walk.sorted(Comparator.reverseOrder())
+                            .forEach(p -> {
+                                try {
+                                    Files.delete(p);
+                                } catch (IOException ignored) {}
+                            });
+                }
+            }
+        } catch (IOException e) {
+            throw new ApiException("Erreur lors de la suppression du dossier de l'annonce : " + e.getMessage());
         }
     }
 
     private void validate(MultipartFile file) {
-        if (file.isEmpty()) {
-            throw new IllegalArgumentException("File is empty");
+        if (file == null || file.isEmpty()) {
+            throw new ApiException("Le fichier est vide.");
         }
-        if (!ALLOWED_TYPES.contains(file.getContentType())) {
-            throw new IllegalArgumentException("File type not allowed: " + file.getContentType());
+        String contentType = file.getContentType();
+        if (contentType == null || !ALLOWED_TYPES.contains(contentType)) {
+            throw new ApiException("Type de fichier non autorisé. Formats acceptés : JPEG, PNG, WEBP.");
         }
         if (file.getSize() > properties.getMaxFileSizeBytes()) {
-            throw new IllegalArgumentException("File size exceeds limit");
+            throw new ApiException("La taille du fichier dépasse la limite autorisée.");
         }
     }
 
@@ -88,9 +132,13 @@ public class StorageService {
         return ".jpg";
     }
 
-    private Path createDirs(String dir) throws IOException {
-        Path path = Paths.get(dir);
-        Files.createDirectories(path);
-        return path;
+    private Path createDirs(String dir) {
+        try {
+            Path path = Paths.get(dir);
+            Files.createDirectories(path);
+            return path;
+        } catch (IOException e) {
+            throw new ApiException("Impossible de créer le répertoire de stockage : " + e.getMessage());
+        }
     }
 }

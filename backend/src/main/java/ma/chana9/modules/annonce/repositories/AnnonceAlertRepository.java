@@ -23,7 +23,7 @@ public interface AnnonceAlertRepository extends JpaRepository<AnnonceAlert, UUID
           AND (a.breed   IS NULL OR a.breed   = :#{#annonce.breed})
           AND (a.region  IS NULL OR a.region  = :#{#annonce.region})
           AND (a.maxPrice IS NULL OR a.maxPrice >= :#{#annonce.price})
-          AND (a.minAgeMonths IS NULL OR a.minAgeMonths <= :#{#annonce.ageMonths})
+          AND (a.dentition IS NULL OR a.dentition = :#{#annonce.dentition})
         """)
     long countMatchingAlerts(@Param("annonce") Annonce annonce);
 }

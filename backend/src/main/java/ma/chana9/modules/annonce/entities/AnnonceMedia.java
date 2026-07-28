@@ -2,13 +2,18 @@ package ma.chana9.modules.annonce.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import ma.chana9.shared.enums.MediaFormat;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "annonce_medias")
+@Table(
+        name = "annonce_medias",
+        indexes = {
+                @Index(name = "idx_annonce_medias_annonce_id", columnList = "annonce_id"),
+                @Index(name = "idx_annonce_medias_is_cover", columnList = "is_cover")
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -36,19 +41,19 @@ public class AnnonceMedia {
     @Column(name = "size_bytes")
     private Long sizeBytes;
 
-    @Column(name = "media_order")
+    @Column(name = "display_order")
     @Builder.Default
-    private Integer order = 0;
+    private Integer displayOrder = 0;
 
-    @Column(name = "is_cover", nullable = false)
+    @Column(name = "is_cover")
     @Builder.Default
     private Boolean isCover = false;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     @PrePersist
-    void onCreate() {
+    protected void onCreate() {
         createdAt = LocalDateTime.now();
     }
 }

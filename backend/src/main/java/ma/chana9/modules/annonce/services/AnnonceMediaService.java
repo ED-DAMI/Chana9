@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,21 +43,16 @@ public class AnnonceMediaService {
             throw new ApiException(ErrorKeys.Annonce.MAX_MEDIAS_REACHED);
         }
 
-        try {
-            String url = storageService.saveAnnonceMedia(file, annonceId.toString());
-            AnnonceMedia media = AnnonceMedia.builder()
-                    .annonce(annonce)
-                    .url(url)
-                    .originalFilename(file.getOriginalFilename())
-                    .contentType(file.getContentType())
-                    .sizeBytes(file.getSize())
-                    .order((int)count)
-                    .build();
-
-            return annonceMediaRepository.save(media);
-        } catch (IOException e) {
-            throw new ApiException(ErrorKeys.Storage.UPLOAD_FAILED);
-        }
+        String url = storageService.saveAnnonceMedia(file, annonceId.toString());
+        AnnonceMedia media = AnnonceMedia.builder()
+                .annonce(annonce)
+                .url(url)
+                .originalFilename(file.getOriginalFilename())
+                .contentType(file.getContentType())
+                .sizeBytes(file.getSize())
+                .displayOrder((int)count)
+                .build();
+        return annonceMediaRepository.save(media);
     }
 
     @Transactional
@@ -70,16 +64,12 @@ public class AnnonceMediaService {
             throw new ApiException(ErrorKeys.Annonce.FORBIDDEN);
         }
 
-        try {
-            storageService.delete(media.getUrl());
-        } catch (IOException e) {
-            throw new ApiException(ErrorKeys.Storage.DELETE_FAILED);
-        }
+        storageService.delete(media.getUrl());
 
         annonceMediaRepository.delete(media);
     }
 
     public List<AnnonceMedia> findByAnnonce(UUID annonceId) {
-        return annonceMediaRepository.findByAnnonceIdOrderByOrderAsc(annonceId);
+        return annonceMediaRepository.findByAnnonceIdOrderByDisplayOrderAsc(annonceId);
     }
 }

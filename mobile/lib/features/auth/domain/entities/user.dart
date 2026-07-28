@@ -11,8 +11,9 @@ abstract class User with _$User {
     String? fullName,
     required Role role,
     required bool kycVerified,
-    DateTime? kycSubmittedAt,
+    String? profilePhotoUrl,
+    String? region,
+    required bool active,
     required DateTime createdAt,
-    required DateTime updatedAt,
   }) = _User;
 }

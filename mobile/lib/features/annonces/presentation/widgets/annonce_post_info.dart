@@ -32,18 +32,18 @@ class AnnoncePostInfo extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              if (annonce.priceType != null) ...[
+                const SizedBox(width: 6),
+                _Badge(
+                  label: annonce.priceType!.displayName,
+                  color: Colors.grey.shade600,
+                ),
+              ],
               if (annonce.priceNegotiable) ...[
-                const SizedBox(width: 8),
+                const SizedBox(width: 6),
                 _Badge(
                   label: 'Négociable',
                   color: Colors.green.shade600,
-                ),
-              ],
-              if (annonce.eligibleForAid) ...[
-                const SizedBox(width: 6),
-                _Badge(
-                  label: 'Aide éligible',
-                  color: Colors.blue.shade600,
                 ),
               ],
             ],
@@ -63,16 +63,48 @@ class AnnoncePostInfo extends StatelessWidget {
                   icon: Icons.transgender,
                   label: annonce.gender!.name == 'male' ? 'Mâle' : 'Femelle',
                 ),
-              if (annonce.effectiveAgeMonths != null)
+              if (annonce.ageMonths != null)
                 _InfoChip(
                   icon: Icons.cake_outlined,
-                  label: '${annonce.effectiveAgeMonths} mois',
+                  label: '${annonce.ageMonths} mois',
+                ),
+              if (annonce.weightKg != null)
+                _InfoChip(
+                  icon: Icons.monitor_weight_outlined,
+                  label: '${annonce.weightKg} kg',
+                ),
+              if (annonce.headCount != null && annonce.headCount! > 1)
+                _InfoChip(
+                  icon: Icons.group_outlined,
+                  label: '${annonce.headCount} têtes',
+                ),
+              if (annonce.dentition != null)
+                _InfoChip(
+                  icon: Icons.info_outline,
+                  label: annonce.dentition!.displayName,
                 ),
               if (annonce.deliveryAvailable)
                 _InfoChip(
                   icon: Icons.local_shipping_outlined,
                   label: 'Livraison',
                   color: Colors.blue.shade700,
+                ),
+              if (annonce.boardingAvailable == true)
+                _InfoChip(
+                  icon: Icons.home_outlined,
+                  label: 'Pension',
+                  color: Colors.purple.shade700,
+                ),
+              if (annonce.onssaTagNumber != null)
+                _InfoChip(
+                  icon: Icons.verified_outlined,
+                  label: 'ONSSA',
+                  color: Colors.green.shade700,
+                ),
+              if (annonce.distanceKm != null)
+                _InfoChip(
+                  icon: Icons.social_distance_outlined,
+                  label: '${annonce.distanceKm!.toStringAsFixed(1)} km',
                 ),
             ],
           ),

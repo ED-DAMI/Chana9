@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AnnonceMediaModel {
 
- String get id; String get url;@JsonKey(name: 'order') int get order;@JsonKey(name: 'isCover') bool get isCover;
+ String get id; String get url;@JsonKey(name: 'displayOrder') int get order;@JsonKey(name: 'isCover') bool get isCover;
 /// Create a copy of AnnonceMediaModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $AnnonceMediaModelCopyWith<$Res>  {
   factory $AnnonceMediaModelCopyWith(AnnonceMediaModel value, $Res Function(AnnonceMediaModel) _then) = _$AnnonceMediaModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String url,@JsonKey(name: 'order') int order,@JsonKey(name: 'isCover') bool isCover
+ String id, String url,@JsonKey(name: 'displayOrder') int order,@JsonKey(name: 'isCover') bool isCover
 });
 
 
@@ -156,7 +156,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String url, @JsonKey(name: 'order')  int order, @JsonKey(name: 'isCover')  bool isCover)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String url, @JsonKey(name: 'displayOrder')  int order, @JsonKey(name: 'isCover')  bool isCover)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AnnonceMediaModel() when $default != null:
 return $default(_that.id,_that.url,_that.order,_that.isCover);case _:
@@ -177,7 +177,7 @@ return $default(_that.id,_that.url,_that.order,_that.isCover);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String url, @JsonKey(name: 'order')  int order, @JsonKey(name: 'isCover')  bool isCover)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String url, @JsonKey(name: 'displayOrder')  int order, @JsonKey(name: 'isCover')  bool isCover)  $default,) {final _that = this;
 switch (_that) {
 case _AnnonceMediaModel():
 return $default(_that.id,_that.url,_that.order,_that.isCover);case _:
@@ -197,7 +197,7 @@ return $default(_that.id,_that.url,_that.order,_that.isCover);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String url, @JsonKey(name: 'order')  int order, @JsonKey(name: 'isCover')  bool isCover)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String url, @JsonKey(name: 'displayOrder')  int order, @JsonKey(name: 'isCover')  bool isCover)?  $default,) {final _that = this;
 switch (_that) {
 case _AnnonceMediaModel() when $default != null:
 return $default(_that.id,_that.url,_that.order,_that.isCover);case _:
@@ -212,12 +212,12 @@ return $default(_that.id,_that.url,_that.order,_that.isCover);case _:
 @JsonSerializable()
 
 class _AnnonceMediaModel extends AnnonceMediaModel {
-  const _AnnonceMediaModel({required this.id, required this.url, @JsonKey(name: 'order') required this.order, @JsonKey(name: 'isCover') required this.isCover}): super._();
+  const _AnnonceMediaModel({required this.id, required this.url, @JsonKey(name: 'displayOrder') required this.order, @JsonKey(name: 'isCover') required this.isCover}): super._();
   factory _AnnonceMediaModel.fromJson(Map<String, dynamic> json) => _$AnnonceMediaModelFromJson(json);
 
 @override final  String id;
 @override final  String url;
-@override@JsonKey(name: 'order') final  int order;
+@override@JsonKey(name: 'displayOrder') final  int order;
 @override@JsonKey(name: 'isCover') final  bool isCover;
 
 /// Create a copy of AnnonceMediaModel
@@ -253,7 +253,7 @@ abstract mixin class _$AnnonceMediaModelCopyWith<$Res> implements $AnnonceMediaM
   factory _$AnnonceMediaModelCopyWith(_AnnonceMediaModel value, $Res Function(_AnnonceMediaModel) _then) = __$AnnonceMediaModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String url,@JsonKey(name: 'order') int order,@JsonKey(name: 'isCover') bool isCover
+ String id, String url,@JsonKey(name: 'displayOrder') int order,@JsonKey(name: 'isCover') bool isCover
 });
 
 

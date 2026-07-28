@@ -9,7 +9,6 @@ import lombok.Data;
 @Component
 @ConfigurationProperties(prefix = "app.audit")
 public class AuditProperties {
-
     private boolean async;
     private int retainDays;
 }

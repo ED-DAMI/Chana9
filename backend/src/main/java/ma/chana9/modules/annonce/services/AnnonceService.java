@@ -5,10 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import ma.chana9.modules.annonce.dto.*;
 import ma.chana9.modules.annonce.entities.*;
 import ma.chana9.modules.annonce.repositories.*;
+import ma.chana9.modules.user.User;
+import ma.chana9.modules.user.UserRepository;
 import ma.chana9.shared.config.AnnonceConstants;
 import ma.chana9.shared.enums.AnimalBreed;
 import ma.chana9.shared.enums.AnnonceStatus;
-import ma.chana9.shared.enums.FlagStatus;
 import org.locationtech.jts.geom.*;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -27,13 +28,12 @@ public class AnnonceService {
 	private static final int METERS_PER_KM = 1000;
 
 	private final AnnonceRepository      annonceRepository;
-	private final AnnonceMediaRepository annonceMediaRepository;
-	private final AnnonceFlagRepository  annonceFlagRepository;
 	private final FavoriteRepository     favoriteRepository;
 	private final AnnonceAlertRepository annonceAlertRepository;
 	private final AnnonceMapper          annonceMapper;
 	private final GeometryFactory        geometryFactory =
 			new GeometryFactory(new PrecisionModel(), SRID);
+	private final UserRepository userRepository;
 
 	@Transactional
 	public AnnonceResponse create(AnnonceRequest request, UUID sellerId) {
@@ -53,7 +53,6 @@ public class AnnonceService {
 				.sellerId(sellerId)
 				.status(AnnonceStatus.ACTIVE)
 				.build();
-
 		Annonce saved = annonceRepository.save(annonce);
 		notifyMatchingAlerts(saved);
 		return annonceMapper.toResponse(saved);
@@ -62,7 +61,6 @@ public class AnnonceService {
 	@Transactional
 	public AnnonceResponse update(UUID id, AnnonceRequest request, UUID sellerId) {
 		Annonce annonce = findOwnedOrThrow(id, sellerId);
-
 		annonce.setTitle(request.title());
 		annonce.setDescription(request.description());
 		annonce.setBreed(request.breed());
@@ -75,7 +73,6 @@ public class AnnonceService {
 		annonce.setDeliveryAvailable(request.deliveryAvailable());
 		annonce.setDeliveryPrice(request.deliveryPrice());
 		annonce.setLocation(buildPoint(request.latitude(), request.longitude()));
-
 		return annonceMapper.toResponse(annonceRepository.save(annonce));
 	}
 
@@ -138,29 +135,6 @@ public class AnnonceService {
 		return annonceMapper.toResponse(annonceRepository.save(annonce));
 	}
 
-	@Transactional
-	public void flag(UUID annonceId, UUID reporterId, AnnonceFlagRequest request) {
-		if (annonceFlagRepository.existsByAnnonceIdAndReporterId(annonceId, reporterId)) {
-			throw new IllegalStateException("annonce.flag.already.reported");
-		}
-
-		Annonce annonce = findOrThrow(annonceId);
-
-		annonceFlagRepository.save(AnnonceFlag.builder()
-				.annonce(annonce)
-				.reporterId(reporterId)
-				.reason(request.reason())
-				.comment(request.comment())
-				.status(FlagStatus.PENDING)
-				.build());
-
-		long pendingCount = annonceFlagRepository.countByAnnonceIdAndStatus(annonceId, FlagStatus.PENDING);
-		if (pendingCount >= AnnonceConstants.AUTO_SUSPEND_FLAG_THRESHOLD) {
-			annonce.setStatus(AnnonceStatus.SUSPENDED);
-			annonceRepository.save(annonce);
-			log.info("annonce.auto.suspended id={} flags={}", annonceId, pendingCount);
-		}
-	}
 
 	@Transactional
 	public void addFavorite(UUID annonceId, UUID buyerId) {
@@ -187,12 +161,12 @@ public class AnnonceService {
 	@Transactional
 	public AnnonceAlert createAlert(UUID buyerId, AnnonceAlertRequest request) {
 		return annonceAlertRepository.save(AnnonceAlert.builder()
-				.buyerId(buyerId)
-				.breed(AnimalBreed.valueOf(request.breed()))
+						.buyerId(buyerId)
+				.breed(request.breed())
 				.region(request.region())
-				.radiusKm(request.radiusKm())
 				.maxPrice(request.maxPrice())
-				.minAgeMonths(request.minAgeMonths())
+						.dentition(request.dentition())
+						.minPrice(request.minPrice())
 				.active(true)
 				.build());
 	}

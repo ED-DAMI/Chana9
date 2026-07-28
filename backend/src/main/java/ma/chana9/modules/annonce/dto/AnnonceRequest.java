@@ -1,9 +1,7 @@
-
 package ma.chana9.modules.annonce.dto;
 
 import jakarta.validation.constraints.*;
-import ma.chana9.shared.enums.AnimalBreed;
-import ma.chana9.shared.enums.AnimalGender;
+import ma.chana9.shared.enums.*;
 
 import java.math.BigDecimal;
 
@@ -17,27 +15,45 @@ public record AnnonceRequest(
         @NotNull
         AnimalBreed breed,
 
-        @NotNull @DecimalMin("0.01")
-        BigDecimal price,
-
-        Boolean priceNegotiable,
-
-        @NotBlank @Size(max = 100)
-        String region,
-
         AnimalGender gender,
 
         @Min(0)
         Integer ageMonths,
 
-        Double latitude,
-        Double longitude,
+        @DecimalMin("0.0")
+        BigDecimal weightKg,
+
+        AnimalDentition dentition,
+
+        @Size(max = 50)
+        String onssaTagNumber,
+
+        @NotNull @DecimalMin("0.01")
+        BigDecimal price,
+
+        PriceType priceType,
+
+        Boolean priceNegotiable,
+
+        @Min(1)
+        Integer headCount,
+
+        @NotBlank @Size(max = 100)
+        String region,
 
         @Size(max = 255)
         String addressLabel,
 
+        Double latitude,
+        Double longitude,
+
         Boolean deliveryAvailable,
 
         @DecimalMin("0.0")
-        BigDecimal deliveryPrice
+        BigDecimal deliveryPrice,
+
+        Boolean boardingAvailable,
+
+        @DecimalMin("0.0")
+        BigDecimal boardingDailyPrice
 ) {}

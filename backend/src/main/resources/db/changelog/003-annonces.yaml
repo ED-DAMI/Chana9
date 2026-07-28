@@ -5,7 +5,6 @@ databaseChangeLog:
       changes:
         - sql:
             sql: CREATE EXTENSION IF NOT EXISTS postgis;
-
   - changeSet:
       id: 003-create-annonces-table
       author: chana9
@@ -30,27 +29,9 @@ databaseChangeLog:
                   type: text
               - column:
                   name: breed
-                  type: varchar(50)
+                  type: varchar(30)
                   constraints:
                     nullable: false
-              - column:
-                  name: price
-                  type: decimal(10,2)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: price_negotiable
-                  type: boolean
-                  defaultValueBoolean: false
-              - column:
-                  name: region
-                  type: varchar(100)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: status
-                  type: varchar(20)
-                  defaultValue: 'ACTIVE'
               - column:
                   name: gender
                   type: varchar(10)
@@ -58,24 +39,76 @@ databaseChangeLog:
                   name: age_months
                   type: integer
               - column:
-                  name: location
-                  type: geometry(Point, 4326)
+                  name: weight_kg
+                  type: numeric(6,2)
+              - column:
+                  name: dentition
+                  type: varchar(20)
+              - column:
+                  name: onssa_tag_number
+                  type: varchar(50)
+              - column:
+                  name: price
+                  type: numeric(10,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: price_type
+                  type: varchar(20)
+                  defaultValue: FIXED
+              - column:
+                  name: price_negotiable
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: head_count
+                  type: integer
+                  defaultValueNumeric: 1
+              - column:
+                  name: region
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
               - column:
                   name: address_label
                   type: varchar(255)
+              - column:
+                  name: location
+                  type: geometry(Point, 4326)
               - column:
                   name: delivery_available
                   type: boolean
                   defaultValueBoolean: false
               - column:
                   name: delivery_price
-                  type: decimal(8,2)
+                  type: numeric(8,2)
+              - column:
+                  name: boarding_available
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: boarding_daily_price
+                  type: numeric(6,2)
+              - column:
+                  name: status
+                  type: varchar(20)
+                  defaultValue: ACTIVE
               - column:
                   name: top_lot_expires_at
                   type: timestamp
               - column:
+                  name: views_count
+                  type: bigint
+                  defaultValueNumeric: 0
+              - column:
+                  name: favorites_count
+                  type: bigint
+                  defaultValueNumeric: 0
+              - column:
                   name: expires_at
                   type: timestamp
+                  constraints:
+                    nullable: false
               - column:
                   name: seller_id
                   type: uuid
@@ -93,15 +126,162 @@ databaseChangeLog:
                   defaultValueComputed: NOW()
                   constraints:
                     nullable: false
-      rollback:
-        - dropTable:
+
+        - createIndex:
             tableName: annonces
+            indexName: idx_annonces_status_breed
+            columns:
+              - column:
+                  name: status
+              - column:
+                  name: breed
+        - createIndex:
+            tableName: annonces
+            indexName: idx_annonces_region
+            columns:
+              - column:
+                  name: region
+        - createIndex:
+            tableName: annonces
+            indexName: idx_annonces_seller_id
+            columns:
+              - column:
+                  name: seller_id
+        - createIndex:
+            tableName: annonces
+            indexName: idx_annonces_expires_at
+            columns:
+              - column:
+                  name: expires_at
+        - createIndex:
+            tableName: annonces
+            indexName: idx_annonces_top_lot_expires_at
+            columns:
+              - column:
+                  name: top_lot_expires_at
 
   - changeSet:
-      id: 003-add-annonce-constraints
+      id: 003-create-spatial-index-annonces-location
       author: chana9
       changes:
         - sql:
             sql: >
-              ALTER TABLE annonces ADD CONSTRAINT chk_annonce_status CHECK (status IN ('ACTIVE', 'SOLD', 'EXPIRED', 'HIDDEN', 'PENDING'));
-              ALTER TABLE annonces ADD CONSTRAINT chk_annonce_gender CHECK (gender IN ('MALE', 'FEMALE'));
+              CREATE INDEX idx_annonces_location
+              ON annonces USING GIST (location);
+      rollback:
+        - sql:
+            sql: DROP INDEX IF EXISTS idx_annonces_location;
+
+  - changeSet:
+      id: 003-check-annonces-status
+      author: chana9
+      changes:
+        - sql:
+            sql: >
+              ALTER TABLE annonces
+              ADD CONSTRAINT chk_annonces_status
+              CHECK (status IN ('ACTIVE','RESERVED','SOLD','EXPIRED','SUSPENDED'));
+      rollback:
+        - sql:
+            sql: ALTER TABLE annonces DROP CONSTRAINT chk_annonces_status;
+
+  - changeSet:
+      id: 003-check-annonces-breed
+      author: chana9
+      changes:
+        - sql:
+            sql: >
+              ALTER TABLE annonces
+              ADD CONSTRAINT chk_annonces_breed
+              CHECK (breed IN (
+                'SARDI','TIMAHDITE','BENI_GUIL','D_MAN','BOUJAAD','BERGUI',
+                'DRAA','NOIR_DU_SUD','ATLAS',
+                'OULMES_ZAER','NOIR_PIE','BRUNE_ATLAS',
+                'CROSSBRED','OTHER'
+              ));
+      rollback:
+        - sql:
+            sql: ALTER TABLE annonces DROP CONSTRAINT chk_annonces_breed;
+
+  - changeSet:
+      id: 003-check-annonces-gender
+      author: chana9
+      changes:
+        - sql:
+            sql: >
+              ALTER TABLE annonces
+              ADD CONSTRAINT chk_annonces_gender
+              CHECK (gender IN ('MALE','FEMALE'));
+      rollback:
+        - sql:
+            sql: ALTER TABLE annonces DROP CONSTRAINT chk_annonces_gender;
+
+  - changeSet:
+      id: 003-check-annonces-dentition
+      author: chana9
+      changes:
+        - sql:
+            sql: >
+              ALTER TABLE annonces
+              ADD CONSTRAINT chk_annonces_dentition
+              CHECK (dentition IN (
+                'MILK_TEETH','TWO_TEETH','FOUR_TEETH','SIX_TEETH','FULL_MOUTH'
+              ));
+      rollback:
+        - sql:
+            sql: ALTER TABLE annonces DROP CONSTRAINT chk_annonces_dentition;
+
+  - changeSet:
+      id: 003-check-annonces-price-type
+      author: chana9
+      changes:
+        - sql:
+            sql: >
+              ALTER TABLE annonces
+              ADD CONSTRAINT chk_annonces_price_type
+              CHECK (price_type IN ('FIXED','NEGOTIABLE','PER_KG'));
+      rollback:
+        - sql:
+            sql: ALTER TABLE annonces DROP CONSTRAINT chk_annonces_price_type;
+
+  - changeSet:
+      id: 003-check-annonces-price-positive
+      author: chana9
+      changes:
+        - sql:
+            sql: >
+              ALTER TABLE annonces
+              ADD CONSTRAINT chk_annonces_price_positive
+              CHECK (price > 0);
+      rollback:
+        - sql:
+            sql: ALTER TABLE annonces DROP CONSTRAINT chk_annonces_price_positive;
+
+  - changeSet:
+      id: 003-check-annonces-head-count
+      author: chana9
+      changes:
+        - sql:
+            sql: >
+              ALTER TABLE annonces
+              ADD CONSTRAINT chk_annonces_head_count_positive
+              CHECK (head_count >= 1);
+      rollback:
+        - sql:
+            sql: ALTER TABLE annonces DROP CONSTRAINT chk_annonces_head_count_positive;
+
+  - changeSet:
+      id: 003-check-annonces-boarding
+      author: chana9
+      changes:
+        - sql:
+            sql: >
+              ALTER TABLE annonces
+              ADD CONSTRAINT chk_annonces_boarding_coherence
+              CHECK (
+                boarding_available = false
+                OR (boarding_available = true AND boarding_daily_price IS NOT NULL)
+              );
+      rollback:
+        - sql:
+            sql: ALTER TABLE annonces DROP CONSTRAINT chk_annonces_boarding_coherence;

@@ -18,8 +18,6 @@ public interface AnnonceRepository extends JpaRepository<Annonce, UUID>, JpaSpec
 
     Page<Annonce> findBySellerId(UUID sellerId, Pageable pageable);
 
-    Page<Annonce> findBySellerIdAndStatus(UUID sellerId, AnnonceStatus status, Pageable pageable);
-
     @Query("SELECT a FROM Annonce a WHERE a.status = :status AND a.expiresAt < :now")
     List<Annonce> findExpired(@Param("status") AnnonceStatus status, @Param("now") LocalDateTime now);
 
@@ -60,4 +58,6 @@ public interface AnnonceRepository extends JpaRepository<Annonce, UUID>, JpaSpec
     );
 
     long countBySellerIdAndStatus(UUID sellerId, AnnonceStatus status);
+
+    long countBySellerId(UUID sellerId);
 }

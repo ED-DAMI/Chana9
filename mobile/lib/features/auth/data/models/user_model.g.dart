@@ -12,11 +12,10 @@ _UserModel _$UserModelFromJson(Map<String, dynamic> json) => _UserModel(
   fullName: json['fullName'] as String?,
   role: $enumDecode(_$RoleEnumMap, json['role']),
   kycVerified: json['kycVerified'] as bool,
-  kycSubmittedAt: json['kycSubmittedAt'] == null
-      ? null
-      : DateTime.parse(json['kycSubmittedAt'] as String),
+  profilePhotoUrl: json['profilePhotoUrl'] as String?,
+  region: json['region'] as String?,
+  active: json['active'] as bool,
   createdAt: DateTime.parse(json['createdAt'] as String),
-  updatedAt: DateTime.parse(json['updatedAt'] as String),
 );
 
 Map<String, dynamic> _$UserModelToJson(_UserModel instance) =>
@@ -26,9 +25,10 @@ Map<String, dynamic> _$UserModelToJson(_UserModel instance) =>
       'fullName': instance.fullName,
       'role': instance.role,
       'kycVerified': instance.kycVerified,
-      'kycSubmittedAt': instance.kycSubmittedAt?.toIso8601String(),
+      'profilePhotoUrl': instance.profilePhotoUrl,
+      'region': instance.region,
+      'active': instance.active,
       'createdAt': instance.createdAt.toIso8601String(),
-      'updatedAt': instance.updatedAt.toIso8601String(),
     };
 
 const _$RoleEnumMap = {
