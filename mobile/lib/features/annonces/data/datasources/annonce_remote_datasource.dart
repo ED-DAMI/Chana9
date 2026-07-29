@@ -5,6 +5,7 @@ import 'package:ma_chana9_app/core/network/token_storage.dart';
 import 'package:ma_chana9_app/shared/model/paginated/paginated_response.dart';
 import '../models/annonce_model.dart';
 import '../models/annonce_media_model.dart';
+import '../models/annonce_report_request_model.dart';
 import '../models/annonce_request_model.dart';
 import '../models/annonce_search_request_model.dart';
 import '../models/annonce_alert_request_model.dart';
@@ -17,24 +18,21 @@ abstract class AnnonceRemoteDataSource {
   Future<PaginatedResponse<AnnonceModel>> search(
       AnnonceSearchRequestModel request, {
         int page = 0,
-        int size = 20,
-      });
+        int size = 20});
   Future<PaginatedResponse<AnnonceModel>> findBySeller(
       String sellerId, {
         int page = 0,
-        int size = 20,
-      });
+        int size = 20});
   Future<AnnonceModel> suspend(String id);
   Future<AnnonceModel> reactivate(String id);
   Future<AnnonceModel> markAsSold(String id);
   Future<AnnonceModel> activateTopLot(String id, int durationDays);
-  Future<void> flag(String id, Map<String, dynamic> body);
   Future<void> addFavorite(String id);
   Future<void> removeFavorite(String id);
   Future<PaginatedResponse<AnnonceModel>> findFavorites({
     int page = 0,
-    int size = 20,
-  });
+    int size = 20});
+  Future<void> reportAnnonce(String id, AnnonceReportRequestModel request);
   Future<void> createAlert(AnnonceAlertRequestModel request);
   Future<void> deleteAlert(String alertId);
   Future<List<Map<String, dynamic>>> findAlertsByBuyer();
@@ -87,8 +85,7 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
   Future<PaginatedResponse<AnnonceModel>> search(
       AnnonceSearchRequestModel request, {
         int page = 0,
-        int size = 20,
-      }) async {
+        int size = 20}) async {
     final response = await dioClient.get(
       '$_base/search',
       queryParameters: {
@@ -107,8 +104,7 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
   Future<PaginatedResponse<AnnonceModel>> findBySeller(
       String sellerId, {
         int page = 0,
-        int size = 20,
-      }) async {
+        int size = 20}) async {
     final response = await dioClient.get(
       '$_base/seller/$sellerId',
       queryParameters: {'page': page, 'size': size},
@@ -144,11 +140,6 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
   }
 
   @override
-  Future<void> flag(String id, Map<String, dynamic> body) async {
-    await dioClient.post('$_base/$id/flag', data: body);
-  }
-
-  @override
   Future<void> addFavorite(String id) async {
     await dioClient.post('$_base/$id/favorites');
   }
@@ -161,8 +152,7 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
   @override
   Future<PaginatedResponse<AnnonceModel>> findFavorites({
     int page = 0,
-    int size = 20,
-  }) async {
+    int size = 20}) async {
     final response = await dioClient.get(
       '$_base/favorites',
       queryParameters: {'page': page, 'size': size},
@@ -171,6 +161,11 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
       _extractData(response.data),
           (json) => AnnonceModel.fromJson(json as Map<String, dynamic>),
     );
+  }
+
+  @override
+  Future<void> reportAnnonce(String id, AnnonceReportRequestModel request) async {
+    await dioClient.post('$_base/$id/reports', data: request.toJson());
   }
 
   @override
@@ -193,8 +188,7 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
   }
 
   @override
-  Future<AnnonceMediaModel> uploadMedia(
-      String annonceId, String filePath) async {
+  Future<AnnonceMediaModel> uploadMedia(String annonceId, String filePath) async {
     final fileName = filePath.split('/').last;
     final formData = FormData.fromMap({
       'file': await MultipartFile.fromFile(filePath, filename: fileName),

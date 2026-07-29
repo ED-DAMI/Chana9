@@ -86,7 +86,7 @@ extension AnnonceDetailEventPatterns on AnnonceDetailEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Load value)?  load,TResult Function( _Suspend value)?  suspend,TResult Function( _Reactivate value)?  reactivate,TResult Function( _MarkAsSold value)?  markAsSold,TResult Function( _ActivateTopLot value)?  activateTopLot,TResult Function( _Flag value)?  flag,TResult Function( _AddFavorite value)?  addFavorite,TResult Function( _Delete value)?  delete,TResult Function( _Update value)?  update,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Load value)?  load,TResult Function( _Suspend value)?  suspend,TResult Function( _Reactivate value)?  reactivate,TResult Function( _MarkAsSold value)?  markAsSold,TResult Function( _ActivateTopLot value)?  activateTopLot,TResult Function( _Report value)?  report,TResult Function( _AddFavorite value)?  addFavorite,TResult Function( _RemoveFavorite value)?  removeFavorite,TResult Function( _Delete value)?  delete,TResult Function( _Update value)?  update,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _Load() when load != null:
@@ -94,9 +94,10 @@ return load(_that);case _Suspend() when suspend != null:
 return suspend(_that);case _Reactivate() when reactivate != null:
 return reactivate(_that);case _MarkAsSold() when markAsSold != null:
 return markAsSold(_that);case _ActivateTopLot() when activateTopLot != null:
-return activateTopLot(_that);case _Flag() when flag != null:
-return flag(_that);case _AddFavorite() when addFavorite != null:
-return addFavorite(_that);case _Delete() when delete != null:
+return activateTopLot(_that);case _Report() when report != null:
+return report(_that);case _AddFavorite() when addFavorite != null:
+return addFavorite(_that);case _RemoveFavorite() when removeFavorite != null:
+return removeFavorite(_that);case _Delete() when delete != null:
 return delete(_that);case _Update() when update != null:
 return update(_that);case _:
   return orElse();
@@ -116,7 +117,7 @@ return update(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Load value)  load,required TResult Function( _Suspend value)  suspend,required TResult Function( _Reactivate value)  reactivate,required TResult Function( _MarkAsSold value)  markAsSold,required TResult Function( _ActivateTopLot value)  activateTopLot,required TResult Function( _Flag value)  flag,required TResult Function( _AddFavorite value)  addFavorite,required TResult Function( _Delete value)  delete,required TResult Function( _Update value)  update,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Load value)  load,required TResult Function( _Suspend value)  suspend,required TResult Function( _Reactivate value)  reactivate,required TResult Function( _MarkAsSold value)  markAsSold,required TResult Function( _ActivateTopLot value)  activateTopLot,required TResult Function( _Report value)  report,required TResult Function( _AddFavorite value)  addFavorite,required TResult Function( _RemoveFavorite value)  removeFavorite,required TResult Function( _Delete value)  delete,required TResult Function( _Update value)  update,}){
 final _that = this;
 switch (_that) {
 case _Load():
@@ -124,9 +125,10 @@ return load(_that);case _Suspend():
 return suspend(_that);case _Reactivate():
 return reactivate(_that);case _MarkAsSold():
 return markAsSold(_that);case _ActivateTopLot():
-return activateTopLot(_that);case _Flag():
-return flag(_that);case _AddFavorite():
-return addFavorite(_that);case _Delete():
+return activateTopLot(_that);case _Report():
+return report(_that);case _AddFavorite():
+return addFavorite(_that);case _RemoveFavorite():
+return removeFavorite(_that);case _Delete():
 return delete(_that);case _Update():
 return update(_that);case _:
   throw StateError('Unexpected subclass');
@@ -145,7 +147,7 @@ return update(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Load value)?  load,TResult? Function( _Suspend value)?  suspend,TResult? Function( _Reactivate value)?  reactivate,TResult? Function( _MarkAsSold value)?  markAsSold,TResult? Function( _ActivateTopLot value)?  activateTopLot,TResult? Function( _Flag value)?  flag,TResult? Function( _AddFavorite value)?  addFavorite,TResult? Function( _Delete value)?  delete,TResult? Function( _Update value)?  update,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Load value)?  load,TResult? Function( _Suspend value)?  suspend,TResult? Function( _Reactivate value)?  reactivate,TResult? Function( _MarkAsSold value)?  markAsSold,TResult? Function( _ActivateTopLot value)?  activateTopLot,TResult? Function( _Report value)?  report,TResult? Function( _AddFavorite value)?  addFavorite,TResult? Function( _RemoveFavorite value)?  removeFavorite,TResult? Function( _Delete value)?  delete,TResult? Function( _Update value)?  update,}){
 final _that = this;
 switch (_that) {
 case _Load() when load != null:
@@ -153,9 +155,10 @@ return load(_that);case _Suspend() when suspend != null:
 return suspend(_that);case _Reactivate() when reactivate != null:
 return reactivate(_that);case _MarkAsSold() when markAsSold != null:
 return markAsSold(_that);case _ActivateTopLot() when activateTopLot != null:
-return activateTopLot(_that);case _Flag() when flag != null:
-return flag(_that);case _AddFavorite() when addFavorite != null:
-return addFavorite(_that);case _Delete() when delete != null:
+return activateTopLot(_that);case _Report() when report != null:
+return report(_that);case _AddFavorite() when addFavorite != null:
+return addFavorite(_that);case _RemoveFavorite() when removeFavorite != null:
+return removeFavorite(_that);case _Delete() when delete != null:
 return delete(_that);case _Update() when update != null:
 return update(_that);case _:
   return null;
@@ -174,16 +177,17 @@ return update(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String id)?  load,TResult Function( String id)?  suspend,TResult Function( String id)?  reactivate,TResult Function( String id)?  markAsSold,TResult Function( String id,  int durationDays)?  activateTopLot,TResult Function( String id,  Map<String, dynamic> body)?  flag,TResult Function( String id)?  addFavorite,TResult Function( String id)?  delete,TResult Function( String id,  Map<String, dynamic> body)?  update,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String id)?  load,TResult Function( String id)?  suspend,TResult Function( String id)?  reactivate,TResult Function( String id)?  markAsSold,TResult Function( String id,  int durationDays)?  activateTopLot,TResult Function( String id,  String reason,  String? comment)?  report,TResult Function( String id)?  addFavorite,TResult Function( String id)?  removeFavorite,TResult Function( String id)?  delete,TResult Function( String id,  Map<String, dynamic> body)?  update,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Load() when load != null:
 return load(_that.id);case _Suspend() when suspend != null:
 return suspend(_that.id);case _Reactivate() when reactivate != null:
 return reactivate(_that.id);case _MarkAsSold() when markAsSold != null:
 return markAsSold(_that.id);case _ActivateTopLot() when activateTopLot != null:
-return activateTopLot(_that.id,_that.durationDays);case _Flag() when flag != null:
-return flag(_that.id,_that.body);case _AddFavorite() when addFavorite != null:
-return addFavorite(_that.id);case _Delete() when delete != null:
+return activateTopLot(_that.id,_that.durationDays);case _Report() when report != null:
+return report(_that.id,_that.reason,_that.comment);case _AddFavorite() when addFavorite != null:
+return addFavorite(_that.id);case _RemoveFavorite() when removeFavorite != null:
+return removeFavorite(_that.id);case _Delete() when delete != null:
 return delete(_that.id);case _Update() when update != null:
 return update(_that.id,_that.body);case _:
   return orElse();
@@ -203,16 +207,17 @@ return update(_that.id,_that.body);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String id)  load,required TResult Function( String id)  suspend,required TResult Function( String id)  reactivate,required TResult Function( String id)  markAsSold,required TResult Function( String id,  int durationDays)  activateTopLot,required TResult Function( String id,  Map<String, dynamic> body)  flag,required TResult Function( String id)  addFavorite,required TResult Function( String id)  delete,required TResult Function( String id,  Map<String, dynamic> body)  update,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String id)  load,required TResult Function( String id)  suspend,required TResult Function( String id)  reactivate,required TResult Function( String id)  markAsSold,required TResult Function( String id,  int durationDays)  activateTopLot,required TResult Function( String id,  String reason,  String? comment)  report,required TResult Function( String id)  addFavorite,required TResult Function( String id)  removeFavorite,required TResult Function( String id)  delete,required TResult Function( String id,  Map<String, dynamic> body)  update,}) {final _that = this;
 switch (_that) {
 case _Load():
 return load(_that.id);case _Suspend():
 return suspend(_that.id);case _Reactivate():
 return reactivate(_that.id);case _MarkAsSold():
 return markAsSold(_that.id);case _ActivateTopLot():
-return activateTopLot(_that.id,_that.durationDays);case _Flag():
-return flag(_that.id,_that.body);case _AddFavorite():
-return addFavorite(_that.id);case _Delete():
+return activateTopLot(_that.id,_that.durationDays);case _Report():
+return report(_that.id,_that.reason,_that.comment);case _AddFavorite():
+return addFavorite(_that.id);case _RemoveFavorite():
+return removeFavorite(_that.id);case _Delete():
 return delete(_that.id);case _Update():
 return update(_that.id,_that.body);case _:
   throw StateError('Unexpected subclass');
@@ -231,16 +236,17 @@ return update(_that.id,_that.body);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String id)?  load,TResult? Function( String id)?  suspend,TResult? Function( String id)?  reactivate,TResult? Function( String id)?  markAsSold,TResult? Function( String id,  int durationDays)?  activateTopLot,TResult? Function( String id,  Map<String, dynamic> body)?  flag,TResult? Function( String id)?  addFavorite,TResult? Function( String id)?  delete,TResult? Function( String id,  Map<String, dynamic> body)?  update,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String id)?  load,TResult? Function( String id)?  suspend,TResult? Function( String id)?  reactivate,TResult? Function( String id)?  markAsSold,TResult? Function( String id,  int durationDays)?  activateTopLot,TResult? Function( String id,  String reason,  String? comment)?  report,TResult? Function( String id)?  addFavorite,TResult? Function( String id)?  removeFavorite,TResult? Function( String id)?  delete,TResult? Function( String id,  Map<String, dynamic> body)?  update,}) {final _that = this;
 switch (_that) {
 case _Load() when load != null:
 return load(_that.id);case _Suspend() when suspend != null:
 return suspend(_that.id);case _Reactivate() when reactivate != null:
 return reactivate(_that.id);case _MarkAsSold() when markAsSold != null:
 return markAsSold(_that.id);case _ActivateTopLot() when activateTopLot != null:
-return activateTopLot(_that.id,_that.durationDays);case _Flag() when flag != null:
-return flag(_that.id,_that.body);case _AddFavorite() when addFavorite != null:
-return addFavorite(_that.id);case _Delete() when delete != null:
+return activateTopLot(_that.id,_that.durationDays);case _Report() when report != null:
+return report(_that.id,_that.reason,_that.comment);case _AddFavorite() when addFavorite != null:
+return addFavorite(_that.id);case _RemoveFavorite() when removeFavorite != null:
+return removeFavorite(_that.id);case _Delete() when delete != null:
 return delete(_that.id);case _Update() when update != null:
 return update(_that.id,_that.body);case _:
   return null;
@@ -585,50 +591,45 @@ as int,
 /// @nodoc
 
 
-class _Flag implements AnnonceDetailEvent {
-  const _Flag({required this.id, required final  Map<String, dynamic> body}): _body = body;
+class _Report implements AnnonceDetailEvent {
+  const _Report({required this.id, required this.reason, this.comment});
   
 
 @override final  String id;
- final  Map<String, dynamic> _body;
- Map<String, dynamic> get body {
-  if (_body is EqualUnmodifiableMapView) return _body;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableMapView(_body);
-}
-
+ final  String reason;
+ final  String? comment;
 
 /// Create a copy of AnnonceDetailEvent
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-_$FlagCopyWith<_Flag> get copyWith => __$FlagCopyWithImpl<_Flag>(this, _$identity);
+_$ReportCopyWith<_Report> get copyWith => __$ReportCopyWithImpl<_Report>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Flag&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other._body, _body));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Report&&(identical(other.id, id) || other.id == id)&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.comment, comment) || other.comment == comment));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,const DeepCollectionEquality().hash(_body));
+int get hashCode => Object.hash(runtimeType,id,reason,comment);
 
 @override
 String toString() {
-  return 'AnnonceDetailEvent.flag(id: $id, body: $body)';
+  return 'AnnonceDetailEvent.report(id: $id, reason: $reason, comment: $comment)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class _$FlagCopyWith<$Res> implements $AnnonceDetailEventCopyWith<$Res> {
-  factory _$FlagCopyWith(_Flag value, $Res Function(_Flag) _then) = __$FlagCopyWithImpl;
+abstract mixin class _$ReportCopyWith<$Res> implements $AnnonceDetailEventCopyWith<$Res> {
+  factory _$ReportCopyWith(_Report value, $Res Function(_Report) _then) = __$ReportCopyWithImpl;
 @override @useResult
 $Res call({
- String id, Map<String, dynamic> body
+ String id, String reason, String? comment
 });
 
 
@@ -636,20 +637,21 @@ $Res call({
 
 }
 /// @nodoc
-class __$FlagCopyWithImpl<$Res>
-    implements _$FlagCopyWith<$Res> {
-  __$FlagCopyWithImpl(this._self, this._then);
+class __$ReportCopyWithImpl<$Res>
+    implements _$ReportCopyWith<$Res> {
+  __$ReportCopyWithImpl(this._self, this._then);
 
-  final _Flag _self;
-  final $Res Function(_Flag) _then;
+  final _Report _self;
+  final $Res Function(_Report) _then;
 
 /// Create a copy of AnnonceDetailEvent
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? body = null,}) {
-  return _then(_Flag(
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? reason = null,Object? comment = freezed,}) {
+  return _then(_Report(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,body: null == body ? _self._body : body // ignore: cast_nullable_to_non_nullable
-as Map<String, dynamic>,
+as String,reason: null == reason ? _self.reason : reason // ignore: cast_nullable_to_non_nullable
+as String,comment: freezed == comment ? _self.comment : comment // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -714,6 +716,72 @@ class __$AddFavoriteCopyWithImpl<$Res>
 /// with the given fields replaced by the non-null parameter values.
 @override @pragma('vm:prefer-inline') $Res call({Object? id = null,}) {
   return _then(_AddFavorite(
+null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class _RemoveFavorite implements AnnonceDetailEvent {
+  const _RemoveFavorite(this.id);
+  
+
+@override final  String id;
+
+/// Create a copy of AnnonceDetailEvent
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$RemoveFavoriteCopyWith<_RemoveFavorite> get copyWith => __$RemoveFavoriteCopyWithImpl<_RemoveFavorite>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RemoveFavorite&&(identical(other.id, id) || other.id == id));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,id);
+
+@override
+String toString() {
+  return 'AnnonceDetailEvent.removeFavorite(id: $id)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$RemoveFavoriteCopyWith<$Res> implements $AnnonceDetailEventCopyWith<$Res> {
+  factory _$RemoveFavoriteCopyWith(_RemoveFavorite value, $Res Function(_RemoveFavorite) _then) = __$RemoveFavoriteCopyWithImpl;
+@override @useResult
+$Res call({
+ String id
+});
+
+
+
+
+}
+/// @nodoc
+class __$RemoveFavoriteCopyWithImpl<$Res>
+    implements _$RemoveFavoriteCopyWith<$Res> {
+  __$RemoveFavoriteCopyWithImpl(this._self, this._then);
+
+  final _RemoveFavorite _self;
+  final $Res Function(_RemoveFavorite) _then;
+
+/// Create a copy of AnnonceDetailEvent
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,}) {
+  return _then(_RemoveFavorite(
 null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,
   ));

@@ -10,11 +10,13 @@ abstract class AnnonceDetailEvent with _$AnnonceDetailEvent {
     required String id,
     required int durationDays,
   }) = _ActivateTopLot;
-  const factory AnnonceDetailEvent.flag({
+  const factory AnnonceDetailEvent.report({
     required String id,
-    required Map<String, dynamic> body,
-  }) = _Flag;
+    required String reason,
+    String? comment,
+  }) = _Report;
   const factory AnnonceDetailEvent.addFavorite(String id) = _AddFavorite;
+  const factory AnnonceDetailEvent.removeFavorite(String id) = _RemoveFavorite;
   const factory AnnonceDetailEvent.delete(String id) = _Delete;
   const factory AnnonceDetailEvent.update({
     required String id,

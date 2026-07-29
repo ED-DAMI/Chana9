@@ -5,6 +5,7 @@ import 'package:ma_chana9_app/shared/enums/animal_breed.dart';
 import 'package:ma_chana9_app/shared/enums/animal_gender.dart';
 import '../../../../shared/model/paginated/paginated_response.dart';
 import '../models/annonce_alert_request_model.dart';
+import '../models/annonce_report_request_model.dart';
 import '../models/annonce_request_model.dart';
 import '../../domain/entities/annonce.dart';
 import '../../domain/entities/annonce_media.dart';
@@ -29,17 +30,14 @@ class AnnonceRepositoryImpl implements AnnonceRepository {
 
   @override
   Future<Either<Failure, Annonce>> createAnnonce(Map<String, dynamic> body) =>
-      _execute(() async {
-        return (await remoteDataSource.create(_bodyToRequest(body))).toEntity();
-      });
+      _execute(() async =>
+          (await remoteDataSource.create(_bodyToRequest(body))).toEntity());
 
   @override
   Future<Either<Failure, Annonce>> updateAnnonce(
       String id, Map<String, dynamic> body) =>
-      _execute(() async {
-        return (await remoteDataSource.update(id, _bodyToRequest(body)))
-            .toEntity();
-      });
+      _execute(() async =>
+          (await remoteDataSource.update(id, _bodyToRequest(body))).toEntity());
 
   @override
   Future<Either<Failure, Unit>> deleteAnnonce(String id) =>
@@ -99,14 +97,6 @@ class AnnonceRepositoryImpl implements AnnonceRepository {
       });
 
   @override
-  Future<Either<Failure, Unit>> flagAnnonce(
-      String id, Map<String, dynamic> body) =>
-      _execute(() async {
-        await remoteDataSource.flag(id, body);
-        return unit;
-      });
-
-  @override
   Future<Either<Failure, Unit>> addFavorite(String id) =>
       _execute(() async {
         await remoteDataSource.addFavorite(id);
@@ -126,6 +116,17 @@ class AnnonceRepositoryImpl implements AnnonceRepository {
       _execute(() async {
         final result = await remoteDataSource.findFavorites(page: page, size: size);
         return result.map((m) => m.toEntity());
+      });
+
+  @override
+  Future<Either<Failure, Unit>> reportAnnonce(
+      String id, String reason, String? comment) =>
+      _execute(() async {
+        await remoteDataSource.reportAnnonce(
+          id,
+          AnnonceReportRequestModel(reason: reason, comment: comment),
+        );
+        return unit;
       });
 
   @override
@@ -155,10 +156,8 @@ class AnnonceRepositoryImpl implements AnnonceRepository {
   @override
   Future<Either<Failure, AnnonceMedia>> uploadMedia(
       String annonceId, String filePath) =>
-      _execute(() async {
-        return (await remoteDataSource.uploadMedia(annonceId, filePath))
-            .toEntity();
-      });
+      _execute(() async =>
+          (await remoteDataSource.uploadMedia(annonceId, filePath)).toEntity());
 
   AnnonceRequestModel _bodyToRequest(Map<String, dynamic> body) {
     return AnnonceRequestModel(
@@ -180,3 +179,4 @@ class AnnonceRepositoryImpl implements AnnonceRepository {
     );
   }
 }
+

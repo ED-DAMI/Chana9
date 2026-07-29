@@ -12,7 +12,7 @@ import 'domain/usecases/create_alert.dart';
 import 'domain/usecases/create_annonce.dart';
 import 'domain/usecases/delete_alert.dart';
 import 'domain/usecases/delete_annonce.dart';
-import 'domain/usecases/flag_annonce.dart';
+import 'domain/usecases/report_annonce.dart';
 import 'domain/usecases/get_alerts_by_buyer.dart';
 import 'domain/usecases/get_annonce_by_id.dart';
 import 'domain/usecases/get_annonces_by_seller.dart';
@@ -24,7 +24,7 @@ import 'domain/usecases/search_annonces.dart';
 import 'domain/usecases/suspend_annonce.dart';
 import 'domain/usecases/update_annonce.dart';
 import 'presentation/bloc/annonce_bloc.dart';
-import 'presentation/bloc/annonce_detail_bloc.dart'; 
+import 'presentation/bloc/annonce_detail_bloc.dart';
 
 void registerAnnoncesDependencies(GetIt sl) {
   sl.registerLazySingleton<AnnonceRemoteDataSource>(
@@ -48,14 +48,14 @@ void registerAnnoncesDependencies(GetIt sl) {
   sl.registerLazySingleton(() => ReactivateAnnonce(sl<AnnonceRepository>()));
   sl.registerLazySingleton(() => MarkAsSold(sl<AnnonceRepository>()));
   sl.registerLazySingleton(() => ActivateTopLot(sl<AnnonceRepository>()));
-  sl.registerLazySingleton(() => FlagAnnonce(sl<AnnonceRepository>()));
+  sl.registerLazySingleton(() => ReportAnnonce(sl<AnnonceRepository>()));
   sl.registerLazySingleton(() => AddFavorite(sl<AnnonceRepository>()));
   sl.registerLazySingleton(() => RemoveFavorite(sl<AnnonceRepository>()));
   sl.registerLazySingleton(() => GetFavorites(sl<AnnonceRepository>()));
   sl.registerLazySingleton(() => CreateAlert(sl<AnnonceRepository>()));
   sl.registerLazySingleton(() => DeleteAlert(sl<AnnonceRepository>()));
   sl.registerLazySingleton(() => GetAlertsByBuyer(sl<AnnonceRepository>()));
-  sl.registerCachedFactory(() => UploadMedia(sl<AnnonceRepository>()));
+  sl.registerLazySingleton(() => UploadMedia(sl<AnnonceRepository>()));
 
   sl.registerFactory(() => AnnonceBloc(
     searchAnnonces: sl(),
@@ -75,8 +75,9 @@ void registerAnnoncesDependencies(GetIt sl) {
     reactivateAnnonce: sl(),
     markAsSold: sl(),
     activateTopLot: sl(),
-    flagAnnonce: sl(),
+    reportAnnonce: sl(),
     addFavorite: sl(),
+    removeFavorite: sl(),
     deleteAnnonce: sl(),
     updateAnnonce: sl(),
   ));

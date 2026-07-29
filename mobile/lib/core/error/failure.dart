@@ -7,19 +7,21 @@ part 'failure.freezed.dart';
 abstract class Failure with _$Failure {
   const Failure._();
 
-  const factory Failure.server(String message) = ServerFailure;
+  const factory Failure.server(String message, {int? statusCode}) = ServerFailure;
   const factory Failure.network(String message) = NetworkFailure;
   const factory Failure.unauthorized() = UnauthorizedFailure;
   const factory Failure.notFound() = NotFoundFailure;
   const factory Failure.unknown(String message) = UnknownFailure;
 
   String get message => when(
-    server: (m) => m,
+    server: (m, _) => m,
     network: (m) => m,
     unauthorized: () => 'Session expirée, veuillez vous reconnecter',
     notFound: () => 'Ressource introuvable',
     unknown: (m) => m,
   );
+
+  int? get statusCode => whenOrNull(server: (_, code) => code);
 
   static Failure fromDioException(DioException e) {
     switch (e.type) {
@@ -43,21 +45,21 @@ abstract class Failure with _$Failure {
 
     switch (code) {
       case 400:
-        return Failure.server(serverMsg ?? 'Requête invalide');
+        return Failure.server(serverMsg ?? 'Requête invalide', statusCode: 400);
       case 401:
         return const Failure.unauthorized();
       case 403:
-        return const Failure.server('Accès refusé');
+        return Failure.server('Accès refusé', statusCode: 403);
       case 404:
         return const Failure.notFound();
       case 409:
-        return Failure.server(serverMsg ?? 'Conflit de données');
+        return Failure.server(serverMsg ?? 'Conflit de données', statusCode: 409);
       case 422:
-        return Failure.server(serverMsg ?? 'Données invalides');
+        return Failure.server(serverMsg ?? 'Données invalides', statusCode: 422);
       case 500:
-        return const Failure.server('Erreur serveur interne');
+        return Failure.server('Erreur serveur interne', statusCode: 500);
       default:
-        return Failure.server(serverMsg ?? 'Erreur HTTP $code');
+        return Failure.server(serverMsg ?? 'Erreur HTTP $code', statusCode: code);
     }
   }
 }
