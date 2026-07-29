@@ -2,12 +2,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../domain/entities/annonce.dart';
 import '../../domain/usecases/get_annonce_by_id.dart';
+import '../../domain/usecases/report_annonce.dart';
 import '../../domain/usecases/suspend_annonce.dart';
 import '../../domain/usecases/reactivate_annonce.dart';
 import '../../domain/usecases/mark_as_sold.dart';
 import '../../domain/usecases/activate_top_lot.dart';
-import '../../domain/usecases/flag_annonce.dart';
 import '../../domain/usecases/add_favorite.dart';
+import '../../domain/usecases/remove_favorite.dart';
 import '../../domain/usecases/delete_annonce.dart';
 import '../../domain/usecases/update_annonce.dart';
 
@@ -21,8 +22,9 @@ class AnnonceDetailBloc extends Bloc<AnnonceDetailEvent, AnnonceDetailState> {
   final ReactivateAnnonce reactivateAnnonce;
   final MarkAsSold markAsSold;
   final ActivateTopLot activateTopLot;
-  final FlagAnnonce flagAnnonce;
+  final ReportAnnonce reportAnnonce;
   final AddFavorite addFavorite;
+  final RemoveFavorite removeFavorite;
   final DeleteAnnonce deleteAnnonce;
   final UpdateAnnonce updateAnnonce;
 
@@ -32,8 +34,9 @@ class AnnonceDetailBloc extends Bloc<AnnonceDetailEvent, AnnonceDetailState> {
     required this.reactivateAnnonce,
     required this.markAsSold,
     required this.activateTopLot,
-    required this.flagAnnonce,
+    required this.reportAnnonce,
     required this.addFavorite,
+    required this.removeFavorite,
     required this.deleteAnnonce,
     required this.updateAnnonce,
   }) : super(const AnnonceDetailState.initial()) {
@@ -42,8 +45,9 @@ class AnnonceDetailBloc extends Bloc<AnnonceDetailEvent, AnnonceDetailState> {
     on<_Reactivate>(_onReactivate);
     on<_MarkAsSold>(_onMarkAsSold);
     on<_ActivateTopLot>(_onActivateTopLot);
-    on<_Flag>(_onFlag);
+    on<_Report>(_onReport);
     on<_AddFavorite>(_onAddFavorite);
+    on<_RemoveFavorite>(_onRemoveFavorite);
     on<_Delete>(_onDelete);
     on<_Update>(_onUpdate);
   }
@@ -114,10 +118,22 @@ class AnnonceDetailBloc extends Bloc<AnnonceDetailEvent, AnnonceDetailState> {
     );
   }
 
-  Future<void> _onFlag(_Flag event, Emitter<AnnonceDetailState> emit) async {
-    final result = await flagAnnonce(FlagAnnonceParams(id: event.id, body: event.body));
+  Future<void> _onReport(_Report event, Emitter<AnnonceDetailState> emit) async {
+    final result = await reportAnnonce(ReportAnnonceParams(
+      id: event.id,
+      reason: event.reason,
+      comment: event.comment,
+    ));
     result.fold(
-          (f) => emit(AnnonceDetailState.failure(f.message)),
+          (f) {
+        if (f.statusCode == 409) {
+          emit(const AnnonceDetailState.failure('Vous avez déjà signalé cette annonce'));
+        } else if (f.statusCode == 403) {
+          emit(const AnnonceDetailState.failure('Vous ne pouvez pas signaler votre propre annonce'));
+        } else {
+          emit(AnnonceDetailState.failure(f.message));
+        }
+      },
           (_) async {
         final r = await getAnnonceById(GetAnnonceByIdParams(id: event.id));
         r.fold(
@@ -131,6 +147,26 @@ class AnnonceDetailBloc extends Bloc<AnnonceDetailEvent, AnnonceDetailState> {
   Future<void> _onAddFavorite(_AddFavorite event, Emitter<AnnonceDetailState> emit) async {
     final result = await addFavorite(AddFavoriteParams(id: event.id));
     result.fold(
+          (f) {
+        if (f.statusCode == 409) {
+          emit(const AnnonceDetailState.failure('Déjà ajouté aux favoris'));
+        } else {
+          emit(AnnonceDetailState.failure(f.message));
+        }
+      },
+          (_) async {
+        final r = await getAnnonceById(GetAnnonceByIdParams(id: event.id));
+        r.fold(
+              (f) => emit(AnnonceDetailState.failure(f.message)),
+              (a) => emit(AnnonceDetailState.actionSuccess(a)),
+        );
+      },
+    );
+  }
+
+  Future<void> _onRemoveFavorite(_RemoveFavorite event, Emitter<AnnonceDetailState> emit) async {
+    final result = await removeFavorite(RemoveFavoriteParams(id: event.id));
+    result.fold(
           (f) => emit(AnnonceDetailState.failure(f.message)),
           (_) async {
         final r = await getAnnonceById(GetAnnonceByIdParams(id: event.id));
@@ -142,11 +178,12 @@ class AnnonceDetailBloc extends Bloc<AnnonceDetailEvent, AnnonceDetailState> {
     );
   }
 
+
   Future<void> _onDelete(_Delete event, Emitter<AnnonceDetailState> emit) async {
     emit(const AnnonceDetailState.loading());
     final result = await deleteAnnonce(DeleteAnnonceParams(id: event.id));
     result.fold(
-          (f) => emit(AnnonceDetailState.failure(f.message)),
+    (f) => emit(AnnonceDetailState.failure(f.message)),
           (_) => emit(const AnnonceDetailState.deleted()),
     );
   }

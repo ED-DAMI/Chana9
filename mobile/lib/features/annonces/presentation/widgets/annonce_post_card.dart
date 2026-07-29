@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/entities/annonce.dart';
-import '../bloc/annonce_bloc.dart';
-import 'annonce_photo_carousel.dart';
-import 'annonce_post_header.dart';
-import 'annonce_post_info.dart';
-import 'annonce_post_actions.dart';
+import '../bloc/annonce_detail_bloc.dart';
+import '../widgets/annonce_photo_carousel.dart';
+import '../widgets/annonce_post_header.dart';
+import '../widgets/annonce_post_info.dart';
+import '../widgets/annonce_post_actions.dart';
+import 'package:ma_chana9_app/features/annonces/presentation/pages/report_sheet.dart';
 
 class AnnoncePostCard extends StatefulWidget {
   final Annonce annonce;
@@ -33,12 +34,12 @@ class _AnnoncePostCardState extends State<AnnoncePostCard> {
     setState(() => _isFavorite = !_isFavorite);
     if (_isFavorite) {
       context
-          .read<AnnonceBloc>()
-          .add(AnnonceEvent.addFavorite(widget.annonce.id));
+          .read<AnnonceDetailBloc>()
+          .add(AnnonceDetailEvent.addFavorite(widget.annonce.id));
     } else {
       context
-          .read<AnnonceBloc>()
-          .add(AnnonceEvent.removeFavorite(widget.annonce.id));
+          .read<AnnonceDetailBloc>()
+          .add(AnnonceDetailEvent.removeFavorite(widget.annonce.id));
     }
   }
 
@@ -67,10 +68,15 @@ class _AnnoncePostCardState extends State<AnnoncePostCard> {
               title: const Text('Signaler cette annonce'),
               onTap: () {
                 Navigator.pop(context);
-                context.read<AnnonceBloc>().add(AnnonceEvent.flagAnnonce(
-                      id: widget.annonce.id,
-                      body: {'reason': 'inappropriate'},
-                    ));
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (_) => BlocProvider.value(
+                    value: context.read<AnnonceDetailBloc>(),
+                    child: ReportSheet(annonceId: widget.annonce.id),
+                  ),
+                );
               },
             ),
             ListTile(
@@ -99,21 +105,13 @@ class _AnnoncePostCardState extends State<AnnoncePostCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── Header ────────────────────────────────────────────────
             AnnoncePostHeader(
               annonce: widget.annonce,
               onMoreTap: () => _showMoreMenu(context),
             ),
-
-            // ── Carousel photos ───────────────────────────────────────
             AnnoncePhotoCarousel(annonce: widget.annonce),
-
             const SizedBox(height: 10),
-
-            // ── Infos ─────────────────────────────────────────────────
             AnnoncePostInfo(annonce: widget.annonce),
-
-            // ── Description ───────────────────────────────────────────
             if (description != null && description.isNotEmpty) ...[
               const SizedBox(height: 8),
               Padding(
@@ -154,10 +152,7 @@ class _AnnoncePostCardState extends State<AnnoncePostCard> {
                 ),
               ),
             ],
-
             const SizedBox(height: 10),
-
-            // ── Actions ───────────────────────────────────────────────
             AnnoncePostActions(
               annonce: widget.annonce,
               isFavorite: _isFavorite,

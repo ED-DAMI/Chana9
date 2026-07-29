@@ -5,13 +5,15 @@ import lombok.extern.slf4j.Slf4j;
 import ma.chana9.modules.annonce.dto.*;
 import ma.chana9.modules.annonce.entities.*;
 import ma.chana9.modules.annonce.repositories.*;
-import ma.chana9.modules.user.User;
 import ma.chana9.modules.user.UserRepository;
 import ma.chana9.shared.config.AnnonceConstants;
-import ma.chana9.shared.enums.AnimalBreed;
+import ma.chana9.shared.constants.ErrorKeys;
 import ma.chana9.shared.enums.AnnonceStatus;
+import ma.chana9.shared.enums.ReportStatus;
+import ma.chana9.shared.exception.ApiException;
 import org.locationtech.jts.geom.*;
 import org.springframework.data.domain.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +32,7 @@ public class AnnonceService {
 	private final AnnonceRepository      annonceRepository;
 	private final FavoriteRepository     favoriteRepository;
 	private final AnnonceAlertRepository annonceAlertRepository;
+	private final AnnonceReportRepository annonceReportRepository;
 	private final AnnonceMapper          annonceMapper;
 	private final GeometryFactory        geometryFactory =
 			new GeometryFactory(new PrecisionModel(), SRID);
@@ -135,21 +138,30 @@ public class AnnonceService {
 		return annonceMapper.toResponse(annonceRepository.save(annonce));
 	}
 
+	// ── Favoris ───────────────────────────────────────────────────────────────
 
 	@Transactional
 	public void addFavorite(UUID annonceId, UUID buyerId) {
 		if (favoriteRepository.existsByBuyerIdAndAnnonceId(buyerId, annonceId)) {
-			throw new IllegalStateException("annonce.favorite.already.added");
+			throw new ApiException(HttpStatus.CONFLICT, ErrorKeys.Favorite.ALREADY_ADDED);
 		}
+		Annonce annonce = findOrThrow(annonceId);
 		favoriteRepository.save(Favorite.builder()
 				.buyerId(buyerId)
-				.annonce(findOrThrow(annonceId))
+				.annonce(annonce)
 				.build());
+		annonceRepository.incrementFavoritesCount(annonceId);
+		log.info("favorite.added buyerId={} annonceId={}", buyerId, annonceId);
 	}
 
 	@Transactional
 	public void removeFavorite(UUID annonceId, UUID buyerId) {
+		if (!favoriteRepository.existsByBuyerIdAndAnnonceId(buyerId, annonceId)) {
+			throw new ApiException(HttpStatus.NOT_FOUND, ErrorKeys.Favorite.NOT_FOUND);
+		}
 		favoriteRepository.deleteByBuyerIdAndAnnonceId(buyerId, annonceId);
+		annonceRepository.decrementFavoritesCount(annonceId);
+		log.info("favorite.removed buyerId={} annonceId={}", buyerId, annonceId);
 	}
 
 	@Transactional(readOnly = true)
@@ -158,15 +170,53 @@ public class AnnonceService {
 				.map(fav -> annonceMapper.toResponse(fav.getAnnonce()));
 	}
 
+	// ── Reports ───────────────────────────────────────────────────────────────
+
+	@Transactional
+	public AnnonceReportResponse report(UUID annonceId, UUID reporterId, AnnonceReportRequest request) {
+		Annonce annonce = findOrThrow(annonceId);
+
+		if (annonce.getSellerId().equals(reporterId)) {
+			throw new ApiException(HttpStatus.FORBIDDEN, ErrorKeys.Report.OWN_ANNONCE);
+		}
+
+		if (annonceReportRepository.existsByAnnonceIdAndReporterId(annonceId, reporterId)) {
+			throw new ApiException(HttpStatus.CONFLICT, ErrorKeys.Report.ALREADY_REPORTED);
+		}
+
+		AnnonceReport report = AnnonceReport.builder()
+				.annonce(annonce)
+				.reporterId(reporterId)
+				.reason(request.reason())
+				.comment(request.comment())
+				.status(ReportStatus.PENDING)
+				.build();
+
+		AnnonceReport saved = annonceReportRepository.save(report);
+
+		long pendingCount = annonceReportRepository.countByAnnonceIdAndStatus(annonceId, ReportStatus.PENDING);
+		if (pendingCount >= AnnonceConstants.AUTO_SUSPEND_REPORT_THRESHOLD) {
+			annonce.setStatus(AnnonceStatus.SUSPENDED);
+			annonceRepository.save(annonce);
+			log.warn("annonce.auto-suspended annonceId={} pendingReports={}", annonceId, pendingCount);
+		}
+
+		log.info("annonce.reported annonceId={} reporterId={} reason={}", annonceId, reporterId, request.reason());
+
+		return toReportResponse(saved);
+	}
+
+	// ── Alertes ───────────────────────────────────────────────────────────────
+
 	@Transactional
 	public AnnonceAlert createAlert(UUID buyerId, AnnonceAlertRequest request) {
 		return annonceAlertRepository.save(AnnonceAlert.builder()
-						.buyerId(buyerId)
+				.buyerId(buyerId)
 				.breed(request.breed())
 				.region(request.region())
 				.maxPrice(request.maxPrice())
-						.dentition(request.dentition())
-						.minPrice(request.minPrice())
+				.dentition(request.dentition())
+				.minPrice(request.minPrice())
 				.active(true)
 				.build());
 	}
@@ -181,6 +231,8 @@ public class AnnonceService {
 		return annonceAlertRepository.findByBuyerId(buyerId);
 	}
 
+	// ── Helpers ───────────────────────────────────────────────────────────────
+
 	private void notifyMatchingAlerts(Annonce annonce) {
 		long matchCount = annonceAlertRepository.countMatchingAlerts(annonce);
 		if (matchCount > 0) {
@@ -190,13 +242,13 @@ public class AnnonceService {
 
 	private Annonce findOrThrow(UUID id) {
 		return annonceRepository.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("annonce.not.found id=%s".formatted(id)));
+				.orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, ErrorKeys.Annonce.NOT_FOUND));
 	}
 
 	private Annonce findOwnedOrThrow(UUID id, UUID sellerId) {
 		Annonce annonce = findOrThrow(id);
 		if (!annonce.getSellerId().equals(sellerId)) {
-			throw new IllegalStateException("annonce.access.denied id=%s".formatted(id));
+			throw new ApiException(HttpStatus.FORBIDDEN, ErrorKeys.Annonce.FORBIDDEN);
 		}
 		return annonce;
 	}
@@ -204,5 +256,17 @@ public class AnnonceService {
 	private Point buildPoint(Double latitude, Double longitude) {
 		if (latitude == null || longitude == null) return null;
 		return geometryFactory.createPoint(new Coordinate(longitude, latitude));
+	}
+
+	private AnnonceReportResponse toReportResponse(AnnonceReport report) {
+		return new AnnonceReportResponse(
+				report.getId(),
+				report.getAnnonce().getId(),
+				report.getReporterId(),
+				report.getReason(),
+				report.getComment(),
+				report.getStatus(),
+				report.getCreatedAt()
+		);
 	}
 }

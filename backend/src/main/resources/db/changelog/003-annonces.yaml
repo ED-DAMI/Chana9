@@ -194,10 +194,12 @@ databaseChangeLog:
               ALTER TABLE annonces
               ADD CONSTRAINT chk_annonces_breed
               CHECK (breed IN (
-                'SARDI','TIMAHDITE','BENI_GUIL','D_MAN','BOUJAAD','BERGUI',
-                'DRAA','NOIR_DU_SUD','ATLAS',
-                'OULMES_ZAER','NOIR_PIE','BRUNE_ATLAS',
-                'CROSSBRED','OTHER'
+                'SARDI','TIMAHDITE','BENI_GUIL','DOKKALI','REHAMI','BOUJAAD',
+                'OULMES_ZAER','BENI_AHSEN','D_MAN','DRAA','NAINE_DE_MONTAGNE',
+                'CHEVRE_DU_RIFF','CHEVRE_DE_LAAYOUNE','BLONDE_D_AQUITAINE',
+                'FRISONNE_PIE_NOIRE','MONTBELIARDE','BRUNE_ATLAS','OUGDA',
+                'DROMADAIRE_SAHRAOUI','DROMADAIRE_GUELMIM','BARBE','ARABE_BARBE',
+                'ANE_BELDI','MULET','OTHER'
               ));
       rollback:
         - sql:

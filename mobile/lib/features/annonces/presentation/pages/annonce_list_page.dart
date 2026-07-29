@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/models/annonce_search_request_model.dart';
 import '../bloc/annonce_bloc.dart';
+import '../bloc/annonce_detail_bloc.dart';
 import '../widgets/annonce_post_card.dart';
 import '../widgets/annonce_filter_sheet.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../injection_container.dart';
 
 class AnnonceListPage extends StatefulWidget {
   const AnnonceListPage({super.key});
@@ -164,10 +166,14 @@ class _AnnonceListPageState extends State<AnnonceListPage> {
                       );
                     }
                     final annonce = data.content[index];
-                    return AnnoncePostCard(
-                      annonce: annonce,
-                      onTap: () => context.push('/annonces/${annonce.id}'),
-                      onContact: () => context.push('/annonces/${annonce.id}'),
+                    return BlocProvider(
+                      create: (_) => sl<AnnonceDetailBloc>(),
+                      child: AnnoncePostCard(
+                        annonce: annonce,
+                        onTap: () => context.push('/annonces/${annonce.id}'),
+                        onContact: () =>
+                            context.push('/annonces/${annonce.id}'),
+                      ),
                     );
                   },
                 ),

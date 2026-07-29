@@ -55,19 +55,19 @@ public class UserController {
 	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/me/kyc")
 	public ApiResponse<Void> submitKyc(
-			@AuthenticationPrincipal AppUserDetails auth,
+			 @AuthenticationPrincipal UUID userId,
 			@RequestParam("cin") String cin,
 			@RequestParam("cinPhoto") MultipartFile cinPhoto,
 			@RequestParam("selfie") MultipartFile selfie) {
-		userService.submitKyc(auth.getId(), cin, cinPhoto, selfie);
+		userService.submitKyc(userId, cin, cinPhoto, selfie);
 		return ApiResponse.success(messageResolver.resolve(MessageKeys.DEFAULT), null);
 	}
 	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/me/kyc")
-	public ApiResponse<String> getKycStatus(@AuthenticationPrincipal AppUserDetails auth) {
+	public ApiResponse<String> getKycStatus(@AuthenticationPrincipal UUID userId) {
 		return ApiResponse.success(
 				messageResolver.resolve(MessageKeys.DEFAULT),
-				userService.getKycStatus(auth.getId())
+				userService.getKycStatus(userId)
 		);
 	}
 
@@ -143,9 +143,9 @@ public class UserController {
 
 	@PutMapping("/me/password")
 	public ApiResponse<Void> changePassword(
-			@AuthenticationPrincipal AppUserDetails auth,
+			@AuthenticationPrincipal UUID userId,
 			@Valid @RequestBody PasswordUpdateDTO dto) {
-		userService.changePassword(auth.getId(), dto);
+		userService.changePassword(userId, dto);
 		return ApiResponse.success(messageResolver.resolve(MessageKeys.DEFAULT), null);
 	}
 
@@ -158,8 +158,8 @@ public class UserController {
 	}
 
 	@DeleteMapping("/me/sessions")
-	public ApiResponse<Void> revokeAllSessions(@AuthenticationPrincipal AppUserDetails auth) {
-		userService.revokeAllSessions(auth.getId());
+	public ApiResponse<Void> revokeAllSessions(@AuthenticationPrincipal UUID userId) {
+		userService.revokeAllSessions(userId);
 		return ApiResponse.success(messageResolver.resolve(MessageKeys.DEFAULT), null);
 	}
 }

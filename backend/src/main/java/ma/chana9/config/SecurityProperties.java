@@ -9,7 +9,6 @@ import lombok.Data;
 @Component
 @ConfigurationProperties(prefix = "app.security")
 public class SecurityProperties {
-
     private int maxRefreshTokensPerUser;
     private String cleanupCron;
     private String refreshCleanupCron;

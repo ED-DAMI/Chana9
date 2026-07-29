@@ -44,7 +44,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-
         String token = header.substring(SecurityConstants.BEARER_PREFIX.length());
         try {
             tokenService.parseClaims(token);

@@ -131,10 +131,10 @@ return unknown(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String message)?  server,TResult Function( String message)?  network,TResult Function()?  unauthorized,TResult Function()?  notFound,TResult Function( String message)?  unknown,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String message,  int? statusCode)?  server,TResult Function( String message)?  network,TResult Function()?  unauthorized,TResult Function()?  notFound,TResult Function( String message)?  unknown,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case ServerFailure() when server != null:
-return server(_that.message);case NetworkFailure() when network != null:
+return server(_that.message,_that.statusCode);case NetworkFailure() when network != null:
 return network(_that.message);case UnauthorizedFailure() when unauthorized != null:
 return unauthorized();case NotFoundFailure() when notFound != null:
 return notFound();case UnknownFailure() when unknown != null:
@@ -156,10 +156,10 @@ return unknown(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String message)  server,required TResult Function( String message)  network,required TResult Function()  unauthorized,required TResult Function()  notFound,required TResult Function( String message)  unknown,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String message,  int? statusCode)  server,required TResult Function( String message)  network,required TResult Function()  unauthorized,required TResult Function()  notFound,required TResult Function( String message)  unknown,}) {final _that = this;
 switch (_that) {
 case ServerFailure():
-return server(_that.message);case NetworkFailure():
+return server(_that.message,_that.statusCode);case NetworkFailure():
 return network(_that.message);case UnauthorizedFailure():
 return unauthorized();case NotFoundFailure():
 return notFound();case UnknownFailure():
@@ -180,10 +180,10 @@ return unknown(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String message)?  server,TResult? Function( String message)?  network,TResult? Function()?  unauthorized,TResult? Function()?  notFound,TResult? Function( String message)?  unknown,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String message,  int? statusCode)?  server,TResult? Function( String message)?  network,TResult? Function()?  unauthorized,TResult? Function()?  notFound,TResult? Function( String message)?  unknown,}) {final _that = this;
 switch (_that) {
 case ServerFailure() when server != null:
-return server(_that.message);case NetworkFailure() when network != null:
+return server(_that.message,_that.statusCode);case NetworkFailure() when network != null:
 return network(_that.message);case UnauthorizedFailure() when unauthorized != null:
 return unauthorized();case NotFoundFailure() when notFound != null:
 return notFound();case UnknownFailure() when unknown != null:
@@ -199,10 +199,11 @@ return unknown(_that.message);case _:
 
 
 class ServerFailure extends Failure {
-  const ServerFailure(this.message): super._();
+  const ServerFailure(this.message, {this.statusCode}): super._();
   
 
  final  String message;
+ final  int? statusCode;
 
 /// Create a copy of Failure
 /// with the given fields replaced by the non-null parameter values.
@@ -214,16 +215,16 @@ $ServerFailureCopyWith<ServerFailure> get copyWith => _$ServerFailureCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ServerFailure&&(identical(other.message, message) || other.message == message));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ServerFailure&&(identical(other.message, message) || other.message == message)&&(identical(other.statusCode, statusCode) || other.statusCode == statusCode));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message);
+int get hashCode => Object.hash(runtimeType,message,statusCode);
 
 @override
 String toString() {
-  return 'Failure.server(message: $message)';
+  return 'Failure.server(message: $message, statusCode: $statusCode)';
 }
 
 
@@ -234,7 +235,7 @@ abstract mixin class $ServerFailureCopyWith<$Res> implements $FailureCopyWith<$R
   factory $ServerFailureCopyWith(ServerFailure value, $Res Function(ServerFailure) _then) = _$ServerFailureCopyWithImpl;
 @useResult
 $Res call({
- String message
+ String message, int? statusCode
 });
 
 
@@ -251,10 +252,11 @@ class _$ServerFailureCopyWithImpl<$Res>
 
 /// Create a copy of Failure
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? message = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? message = null,Object? statusCode = freezed,}) {
   return _then(ServerFailure(
 null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
-as String,
+as String,statusCode: freezed == statusCode ? _self.statusCode : statusCode // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 
