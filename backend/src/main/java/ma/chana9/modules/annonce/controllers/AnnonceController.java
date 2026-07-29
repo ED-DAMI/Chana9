@@ -30,8 +30,8 @@ public class AnnonceController {
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<AnnonceResponse> create(
             @Valid @RequestBody AnnonceRequest request,
-            @AuthenticationPrincipal UUID userID) {
-        return ApiResponse.success("200", annonceService.create(request, userID));
+            @AuthenticationPrincipal AppUserDetails userDetails) {
+        return ApiResponse.success(null, annonceService.create(request, userDetails.getId()));
     }
 
     @PutMapping("/{id}")
@@ -39,8 +39,8 @@ public class AnnonceController {
     public ApiResponse<AnnonceResponse> update(
             @PathVariable UUID id,
             @Valid @RequestBody AnnonceRequest request,
-            @AuthenticationPrincipal UUID userId) {
-        return ApiResponse.success("200", annonceService.update(id, request, userId));
+            @AuthenticationPrincipal AppUserDetails userDetails) {
+        return ApiResponse.success(null, annonceService.update(id, request, userDetails.getId()));
     }
 
     @DeleteMapping("/{id}")
@@ -54,16 +54,16 @@ public class AnnonceController {
 
     @GetMapping("/{id}")
     public ApiResponse<AnnonceResponse> findById(@PathVariable UUID id) {
-        return ApiResponse.success("200", annonceService.findById(id));
+        return ApiResponse.success(null, annonceService.findById(id));
     }
-
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/search")
     public ApiResponse<Page<AnnonceResponse>> search(
             @Valid AnnonceSearchRequest request,
             Pageable pageable) {
-        return ApiResponse.success("200", annonceService.search(request, pageable));
+        return ApiResponse.success(null, annonceService.search(request, pageable));
     }
-
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/seller/{sellerId}")
     public ApiResponse<Page<AnnonceResponse>> findBySeller(
             @PathVariable UUID sellerId,
@@ -75,16 +75,16 @@ public class AnnonceController {
     @PreAuthorize("isAuthenticated()")
     public ApiResponse<AnnonceResponse> suspend(
             @PathVariable UUID id,
-            @AuthenticationPrincipal UUID userId) {
-        return ApiResponse.success(null, annonceService.suspend(id, userId));
+            @AuthenticationPrincipal AppUserDetails userDetails) {
+        return ApiResponse.success(null, annonceService.suspend(id, userDetails.getId()));
     }
 
     @PatchMapping("/{id}/reactivate")
     @PreAuthorize("isAuthenticated()")
     public ApiResponse<AnnonceResponse> reactivate(
             @PathVariable UUID id,
-            @AuthenticationPrincipal UUID userId) {
-        return ApiResponse.success(null, annonceService.reactivate(id, userId));
+            @AuthenticationPrincipal AppUserDetails userDetails) {
+        return ApiResponse.success(null, annonceService.reactivate(id, userDetails.getId()));
     }
 
     @PatchMapping("/{id}/sold")
@@ -100,10 +100,9 @@ public class AnnonceController {
     public ApiResponse<AnnonceResponse> activateTopLot(
             @PathVariable UUID id,
             @PathVariable int durationDays,
-            @AuthenticationPrincipal UUID userId) {
-        return ApiResponse.success(null, annonceService.activateTopLot(id, userId, durationDays));
+            @AuthenticationPrincipal AppUserDetails userDetails) {
+        return ApiResponse.success(null, annonceService.activateTopLot(id, userDetails.getId(), durationDays));
     }
-
 
     @PostMapping("/{id}/favorites")
     @PreAuthorize("hasRole('ACHETEUR')")
@@ -119,16 +118,26 @@ public class AnnonceController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeFavorite(
             @PathVariable UUID id,
-            @AuthenticationPrincipal UUID userId) {
-        annonceService.removeFavorite(id, userId);
+            @AuthenticationPrincipal AppUserDetails userDetails) {
+        annonceService.removeFavorite(id, userDetails.getId());
     }
 
     @GetMapping("/favorites")
     @PreAuthorize("hasRole('ACHETEUR')")
     public ApiResponse<Page<AnnonceResponse>> findFavorites(
-            @AuthenticationPrincipal UUID userId,
+            @AuthenticationPrincipal AppUserDetails userDetails,
             Pageable pageable) {
-        return ApiResponse.success("200", annonceService.findFavorites(userId, pageable));
+        return ApiResponse.success(null, annonceService.findFavorites(userDetails.getId(), pageable));
+    }
+
+    @PostMapping("/{id}/reports")
+    @PreAuthorize("isAuthenticated()")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ApiResponse<AnnonceReportResponse> report(
+            @PathVariable UUID id,
+            @Valid @RequestBody AnnonceReportRequest request,
+            @AuthenticationPrincipal AppUserDetails userDetails) {
+        return ApiResponse.success(null, annonceService.report(id, userDetails.getId(), request));
     }
 
     @PostMapping("/alerts")
@@ -136,8 +145,8 @@ public class AnnonceController {
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<AnnonceAlert> createAlert(
             @Valid @RequestBody AnnonceAlertRequest request,
-            @AuthenticationPrincipal UUID userId) {
-        return ApiResponse.success(null, annonceService.createAlert(userId ,request));
+            @AuthenticationPrincipal AppUserDetails userDetails) {
+        return ApiResponse.success(null, annonceService.createAlert(userDetails.getId(), request));
     }
 
     @DeleteMapping("/alerts/{alertId}")
@@ -145,14 +154,14 @@ public class AnnonceController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteAlert(
             @PathVariable UUID alertId,
-            @AuthenticationPrincipal UUID userId) {
-        annonceService.deleteAlert(alertId, userId);
+            @AuthenticationPrincipal AppUserDetails userDetails) {
+        annonceService.deleteAlert(alertId, userDetails.getId());
     }
 
     @GetMapping("/alerts")
     @PreAuthorize("hasRole('ACHETEUR')")
     public ApiResponse<List<AnnonceAlert>> findAlerts(
-            @AuthenticationPrincipal UUID userId) {
-        return ApiResponse.success("200", annonceService.findAlertsByBuyer(userId));
+            @AuthenticationPrincipal AppUserDetails userDetails) {
+        return ApiResponse.success(null, annonceService.findAlertsByBuyer(userDetails.getId()));
     }
 }

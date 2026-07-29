@@ -42,7 +42,6 @@ public class ApiPaths {
         public static final String TOP_LOT       = "/{id}/top-lot";
         public static final String ADMIN         = "/admin";
     }
-
     @UtilityClass
     public static class Sequestres {
         public static final String BASE          = API_V1 + "/sequestres";

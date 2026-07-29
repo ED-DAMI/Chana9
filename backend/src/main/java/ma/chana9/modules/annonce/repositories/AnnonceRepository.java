@@ -28,6 +28,14 @@ public interface AnnonceRepository extends JpaRepository<Annonce, UUID>, JpaSpec
     @Query("UPDATE Annonce a SET a.status = :status WHERE a.id IN :ids")
     void updateStatusByIds(@Param("ids") List<UUID> ids, @Param("status") AnnonceStatus status);
 
+    @Modifying
+    @Query("UPDATE Annonce a SET a.favoritesCount = a.favoritesCount + 1 WHERE a.id = :id")
+    void incrementFavoritesCount(@Param("id") UUID id);
+
+    @Modifying
+    @Query("UPDATE Annonce a SET a.favoritesCount = GREATEST(a.favoritesCount - 1, 0) WHERE a.id = :id")
+    void decrementFavoritesCount(@Param("id") UUID id);
+
     @Query(
             value = """
             SELECT a.* FROM annonces a

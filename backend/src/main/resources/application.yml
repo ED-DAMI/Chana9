@@ -17,7 +17,11 @@ spring:
       enabled: true
       max-file-size: 5MB
       max-request-size: 20MB
-
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: false
+    mapper:
+      accept-case-insensitive-enums: true
 app:
   jwt:
     secret: ${JWT_SECRET}
@@ -42,3 +46,5 @@ logging:
   level:
     org.springframework.security: TRACE
     ma.chana9: DEBUG
+    org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver: DEBUG
+    org.springframework.web: DEBUG

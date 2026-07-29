@@ -24,7 +24,7 @@ public record AnnonceRequest(
         BigDecimal weightKg,
 
         AnimalDentition dentition,
-
+        
         @Size(max = 50)
         String onssaTagNumber,
 

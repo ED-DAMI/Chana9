@@ -1,148 +1,149 @@
+#!/bin/bash
+
+REPO="ED-DAMI/Chana9"
+
+echo "Creating US-01: Création et Publication d'une Annonce..."
 gh issue create \
-  --repo "ED-DAMI/Chana9" \
-  --title "feat(form): liste déroulante des régions et villes marocaines pour le champ localisation" \
-  --body "## Problème
-Le champ région est un champ texte libre, ce qui entraîne des valeurs incohérentes en base de données.
+  --repo "$REPO" \
+  --title "feat(annonce): US-01 — Création et Publication d'une Annonce" \
+  --label "user-story,annonce" \
+  --body "## User Story
+En tant qu'éleveur (Kassab) connecté,
+Je veux pouvoir créer et publier une annonce de vente de bétail,
+Afin que les acheteurs puissent trouver et consulter mon annonce.
 
-## Solution
-Remplacer par deux DropdownButton cascadés :
-1. Sélection de la région → filtre les villes disponibles
-2. Sélection de la ville dans la région choisie
+---
 
-## Régions et villes officielles du Maroc
+## Critères d'Acceptation
 
-### 1. Tanger-Tétouan-Al Hoceïma
-Tanger, Tétouan, Al Hoceïma, Larache, Chefchaouen, Ouezzane, Mdiq, Fnideq
+### CA 1 — Saisie des champs obligatoires
+- [ ] Le formulaire contient : Titre (ou génération automatique), Espèce / Race, Prix (Fixe / Négociable / Au Kilo), Localisation / Ville, Au moins une photo (Cover)
+- [ ] Le bouton \"Publier\" est désactivé tant que tous les champs obligatoires ne sont pas renseignés
+- [ ] Le bouton \"Publier\" devient actif une fois tous les champs obligatoires remplis
 
-### 2. Oriental
-Oujda, Nador, Berkane, Taourirt, Jerada, Guercif, Driouch, Figuig
+### CA 2 — Validation des attributs métiers
+- [ ] Si \`weightKg\` est renseigné, il doit être strictement supérieur à 0 kg (\`@DecimalMin(inclusive = false)\`)
+- [ ] Si \`onssaTagNumber\` est renseigné, il doit respecter le format alphanumérique (\`@Pattern(regexp = \"^[A-Za-z0-9]{4,20}\$\")\`)
+- [ ] Si \`boardingAvailable = true\`, alors \`boardingDailyPrice\` est obligatoire (validator cross-field \`@ValidBoardingCoherence\`)
 
-### 3. Fès-Meknès
-Fès, Meknès, Taza, Ifrane, Khénifra, Sefrou, Moulay Yacoub, El Hajeb, Boulemane
+### CA 3 — Statut après soumission
+- [ ] Une annonce soumise passe en statut \`PENDING_VALIDATION\`
+- [ ] L'annonce en \`PENDING_VALIDATION\` n'apparaît pas dans la recherche publique
+- [ ] \`AnnonceStatus\` contient la valeur \`PENDING_VALIDATION\` côté backend et Flutter
 
-### 4. Rabat-Salé-Kénitra
-Rabat, Salé, Kénitra, Témara, Skhirate, Khémisset, Sidi Kacem, Sidi Slimane
+---
 
-### 5. Béni Mellal-Khénifra
-Béni Mellal, Khénifra, Khouribga, Fquih Ben Salah, Azilal
+## Tâches techniques
 
-### 6. Casablanca-Settat
-Casablanca, Settat, Mohammedia, El Jadida, Berrechid, Benslimane, Médiouna, Nouaceur
+### Backend
+- [ ] Ajouter \`PENDING_VALIDATION\` dans \`AnnonceStatus\`
+- [ ] Mettre à jour le \`CHECK constraint\` DB
+- [ ] \`AnnonceService.create()\` passe en \`PENDING_VALIDATION\` au lieu de \`ACTIVE\`
+- [ ] \`AnnonceSpecification\` exclut \`PENDING_VALIDATION\` des résultats publics
+- [ ] Ajouter \`@ValidBoardingCoherence\` validator cross-field
+- [ ] Corriger \`@DecimalMin\` sur \`weightKg\`
+- [ ] Ajouter \`@Pattern\` sur \`onssaTagNumber\`
 
-### 7. Marrakech-Safi
-Marrakech, Safi, Essaouira, El Kelaa des Sraghna, Chichaoua, Al Haouz, Youssoufia, Rehamna
+### Flutter
+- [ ] Ajouter \`PENDING_VALIDATION\` dans l'enum \`AnnonceStatus\`
+- [ ] Désactiver le bouton Publier si champs obligatoires manquants
+- [ ] Afficher les erreurs de validation champ par champ"
 
-### 8. Drâa-Tafilalet
-Errachidia, Ouarzazate, Zagora, Tinghir, Midelt
+echo ""
+echo "Creating US-02: Consultation et Recherche d'Annonces..."
+gh issue create \
+  --repo "$REPO" \
+  --title "feat(annonce): US-02 — Consultation et Recherche d'Annonces" \
+  --label "user-story,annonce" \
+  --body "## User Story
+En tant qu'acheteur,
+Je veux pouvoir consulter le détail d'une annonce et rechercher des annonces par critères,
+Afin de trouver le bétail qui correspond à mes besoins.
 
-### 9. Souss-Massa
-Agadir, Taroudannt, Tiznit, Chtouka Aït Baha, Inezgane-Aït Melloul, Tata
+---
 
-### 10. Guelmim-Oued Noun
-Guelmim, Sidi Ifni, Assa-Zag, Tan-Tan
+## Critères d'Acceptation
 
-### 11. Laâyoune-Sakia El Hamra
-Laâyoune, Boujdour, Tarfaya, Es-Semara
+### CA 1 — Affichage des détails d'une annonce
+- [ ] La fiche affiche la photo de couverture et la galerie de médias
+- [ ] La fiche affiche le badge d'âge religieux / dentition (Jadaâ, Thni, Rbaâ, Sdess, Jameâ)
+- [ ] La fiche affiche le macaron d'authentification ONSSA si \`onssaTagNumber\` est présent
+- [ ] Le compteur \`viewsCount\` est incrémenté de +1 à chaque consultation
+- [ ] La galerie photos est consultable en plein écran avec zoom et swipe
 
-### 12. Dakhla-Oued Ed-Dahab
-Dakhla, Aousserd
+### CA 2 — Filtrage multi-critères
+- [ ] Les filtres disponibles : Race, Poids (min/max), Région/Ville, Prix (min/max), Genre, Dentition, Livraison, Pension
+- [ ] Le système retourne uniquement les annonces avec \`status = ACTIVE\`
+- [ ] Les annonces \`PENDING_VALIDATION\` / \`SUSPENDED\` / \`EXPIRED\` sont exclues des résultats
+- [ ] Les filtres actifs sont affichés sous forme de chips dans la liste
 
-## Implémentation Flutter
+---
 
-\`\`\`dart
-const Map<String, List<String>> kMoroccoRegionsAndCities = {
-  'Tanger-Tétouan-Al Hoceïma': [
-    'Tanger', 'Tétouan', 'Al Hoceïma', 'Larache',
-    'Chefchaouen', 'Ouezzane', 'Mdiq', 'Fnideq',
-  ],
-  'Oriental': [
-    'Oujda', 'Nador', 'Berkane', 'Taourirt',
-    'Jerada', 'Guercif', 'Driouch', 'Figuig',
-  ],
-  'Fès-Meknès': [
-    'Fès', 'Meknès', 'Taza', 'Ifrane',
-    'Khénifra', 'Sefrou', 'Moulay Yacoub', 'El Hajeb', 'Boulemane',
-  ],
-  'Rabat-Salé-Kénitra': [
-    'Rabat', 'Salé', 'Kénitra', 'Témara',
-    'Skhirate', 'Khémisset', 'Sidi Kacem', 'Sidi Slimane',
-  ],
-  'Béni Mellal-Khénifra': [
-    'Béni Mellal', 'Khénifra', 'Khouribga',
-    'Fquih Ben Salah', 'Azilal',
-  ],
-  'Casablanca-Settat': [
-    'Casablanca', 'Settat', 'Mohammedia', 'El Jadida',
-    'Berrechid', 'Benslimane', 'Médiouna', 'Nouaceur',
-  ],
-  'Marrakech-Safi': [
-    'Marrakech', 'Safi', 'Essaouira', 'El Kelaa des Sraghna',
-    'Chichaoua', 'Al Haouz', 'Youssoufia', 'Rehamna',
-  ],
-  'Drâa-Tafilalet': [
-    'Errachidia', 'Ouarzazate', 'Zagora', 'Tinghir', 'Midelt',
-  ],
-  'Souss-Massa': [
-    'Agadir', 'Taroudannt', 'Tiznit',
-    'Chtouka Aït Baha', 'Inezgane-Aït Melloul', 'Tata',
-  ],
-  'Guelmim-Oued Noun': [
-    'Guelmim', 'Sidi Ifni', 'Assa-Zag', 'Tan-Tan',
-  ],
-  'Laâyoune-Sakia El Hamra': [
-    'Laâyoune', 'Boujdour', 'Tarfaya', 'Es-Semara',
-  ],
-  'Dakhla-Oued Ed-Dahab': [
-    'Dakhla', 'Aousserd',
-  ],
-};
-\`\`\`
+## Tâches techniques
 
-\`\`\`dart
-// Widget cascadé région → ville
-String? _selectedRegion;
-String? _selectedCity;
+### Backend
+- [ ] \`AnnonceService.findById()\` incrémente \`viewsCount\` via \`@Modifying @Query\`
+- [ ] Ajouter les labels dentition : \`MILK_TEETH → Snan el-Hlib\`, \`TWO_TEETH → Thni\`, \`FOUR_TEETH → Rbaâ\`, \`SIX_TEETH → Sdess\`, \`FULL_MOUTH → Jameâ\`
+- [ ] \`AnnonceSpecification\` filtre sur \`status = ACTIVE\` uniquement
+- [ ] Ajouter filtre par \`dentition\` dans \`AnnonceSearchRequest\` et \`AnnonceSpecification\`
 
-// Dropdown Région
-DropdownButtonFormField<String>(
-  value: _selectedRegion,
-  decoration: InputDecoration(
-    labelText: 'Région *',
-    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-  ),
-  items: kMoroccoRegionsAndCities.keys.map((region) =>
-    DropdownMenuItem(value: region, child: Text(region)),
-  ).toList(),
-  onChanged: (value) => setState(() {
-    _selectedRegion = value;
-    _selectedCity = null; // reset ville
-  }),
-  validator: (v) => v == null ? 'Région requise' : null,
-),
+### Flutter
+- [ ] \`AnnonceDetailPage\` affiche badge dentition avec label arabe/darija
+- [ ] Badge ONSSA visible si \`onssaTagNumber != null\`
+- [ ] Galerie plein écran avec zoom et swipe (\`photo_view\` ou \`interactive_viewer\`)
+- [ ] Skeleton loader sur \`AnnonceListPage\`
+- [ ] Chips filtres actifs visibles dans la liste
+- [ ] Ajouter \`dentition\` dans \`AnnonceFilterSheet\` et \`AnnonceSearchRequestModel\`"
 
-const SizedBox(height: 12),
+echo ""
+echo "Creating US-03: Favoris et Signalement..."
+gh issue create \
+  --repo "$REPO" \
+  --title "feat(annonce): US-03 — Favoris et Signalement (Reports)" \
+  --label "user-story,annonce" \
+  --body "## User Story
+En tant qu'acheteur,
+Je veux pouvoir ajouter des annonces à mes favoris et signaler les annonces abusives,
+Afin de retrouver facilement les annonces qui m'intéressent et contribuer à la qualité de la marketplace.
 
-// Dropdown Ville (filtré par région)
-DropdownButtonFormField<String>(
-  value: _selectedCity,
-  decoration: InputDecoration(
-    labelText: 'Ville',
-    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-  ),
-  items: (_selectedRegion != null
-    ? kMoroccoRegionsAndCities[_selectedRegion]!
-    : <String>[])
-    .map((city) => DropdownMenuItem(value: city, child: Text(city)))
-    .toList(),
-  onChanged: _selectedRegion == null
-    ? null
-    : (value) => setState(() => _selectedCity = value),
-),
-\`\`\`
+---
 
-## Impact
-- Cohérence totale des données région/ville en base
-- Filtres de recherche par région et ville fiables
-- UX améliorée avec sélection cascadée
-- Le champ ville est désactivé tant que la région n'est pas choisie" \
-  --label "enhancement,mobile"
+## Critères d'Acceptation
+
+### CA 1 — Ajout aux favoris (Unicité)
+- [ ] L'icône Cœur est visible sur la fiche annonce et dans la liste
+- [ ] Un clic ajoute l'annonce aux favoris de l'acheteur
+- [ ] Un second clic supprime l'annonce des favoris (toggle)
+- [ ] La contrainte \`uq_buyer_annonce_favorite\` empêche les doublons en base
+- [ ] Une page \"Mes Favoris\" liste toutes les annonces sauvegardées
+- [ ] Le compteur \`favoritesCount\` de l'annonce est mis à jour
+
+### CA 2 — Signalement d'une annonce abusive
+- [ ] Un bouton \"Signaler\" est accessible depuis la fiche annonce
+- [ ] L'utilisateur sélectionne un motif parmi \`ReportReason\` : \`FRAUD_OR_SCAM\`, \`WRONG_INFORMATION\`, \`UNHEALTHY_ANIMAL\`, \`DUPLICATE\`, \`INAPPROPRIATE_MEDIA\`, \`OTHER\`
+- [ ] Un commentaire optionnel peut être ajouté
+- [ ] Le signalement est créé avec le statut \`PENDING\`
+- [ ] Un utilisateur ne peut pas re-signaler la même annonce (\`uq_annonce_reporter\`)
+- [ ] Une alerte est envoyée au tableau de bord administrateur
+
+---
+
+## Tâches techniques
+
+### Backend
+- [ ] Vérifier que \`POST /{id}/favorites\` retourne 409 si déjà en favori
+- [ ] \`AnnonceService.addFavorite()\` incrémente \`favoritesCount\`
+- [ ] \`AnnonceService.removeFavorite()\` décrémente \`favoritesCount\`
+- [ ] \`POST /{id}/reports\` — endpoint de signalement (renommer depuis \`/flag\`)
+- [ ] Notification admin après création d'un report (Spring Event ou Firebase)
+- [ ] Retourner \`AnnonceReportResponse\` DTO au lieu de l'entité
+
+### Flutter
+- [ ] Icône Cœur toggle sur \`AnnoncePostCard\` et \`AnnonceDetailPage\`
+- [ ] Page \"Mes Favoris\" avec liste paginée
+- [ ] Bottom sheet de signalement avec sélection \`ReportReason\` + commentaire
+- [ ] Message de confirmation après signalement
+- [ ] Bloquer le bouton signaler si déjà signalé (gestion erreur 409)"
+
+echo ""
+echo "✅ Les 3 User Stories ont été créées sur $REPO"

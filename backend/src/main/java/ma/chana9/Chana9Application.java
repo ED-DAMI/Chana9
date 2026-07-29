@@ -23,7 +23,6 @@ public class Chana9Application {
     public static void main(String[] args) {
         SpringApplication.run(Chana9Application.class, args);
     }
-
      CommandLineRunner start(UserRepository userRepo, PasswordEncoder encoder){
         return args ->{
             User admin=new User();
@@ -60,7 +59,6 @@ public class Chana9Application {
             user3.setCreatedAt(LocalDateTime.now());
             user3.setPasswordHash(encoder.encode("password789"));
             userRepo.save(user3);
-
         };
    }
 }
