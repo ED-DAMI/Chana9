@@ -8,6 +8,7 @@ import 'features/annonces/presentation/bloc/annonce_bloc.dart';
 import 'features/annonces/presentation/pages/annonce_detail_page.dart';
 import 'features/annonces/presentation/pages/annonce_form_page.dart';
 import 'features/annonces/presentation/pages/annonce_list_page.dart';
+import 'features/annonces/presentation/pages/favorites_page.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/pages/login_page.dart';
 import 'features/auth/presentation/pages/splash_page.dart';
@@ -125,6 +126,10 @@ final GoRouter _router = GoRouter(
     ShellRoute(
       builder: (context, state, child) => _ShellPage(child: child),
       routes: [
+        GoRoute(
+        path: '/profile/favorites',
+        builder: (context, state) => const FavoritesPage(),
+      ),
         GoRoute(
           path: '/annonces',
           builder: (context, state) => const AnnonceListPage(),
