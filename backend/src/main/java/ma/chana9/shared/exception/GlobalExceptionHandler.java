@@ -2,8 +2,10 @@ package ma.chana9.shared.exception;
 
 import java.util.Locale;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
@@ -11,7 +13,7 @@ import org.springframework.web.context.request.WebRequest;
 import lombok.RequiredArgsConstructor;
 import ma.chana9.shared.constants.ErrorKeys;
 import ma.chana9.shared.response.ApiResponse;
-
+@Slf4j
 @RestControllerAdvice
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
@@ -21,6 +23,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<ApiResponse<Void>> handleApiException(ApiException exception, WebRequest request) {
         Locale locale = request.getLocale();
+        log.error("Unexpected error", exception);
         return ResponseEntity.status(exception.getStatus())
                 .body(ApiResponse.error(resolve(exception.getMessageKey(), locale)));
     }

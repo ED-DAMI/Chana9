@@ -1,6 +1,6 @@
 class ApiConstants {
-  static const String baseUrl = 'http://192.168.1.92:8080/api/v1';
-  static const String baseUrl_photos = 'http://192.168.1.92/uploads';
+  static const String baseUrl = 'http://192.168.1.21:8080/api/v1';
+  static const String baseUrl_photos = 'http://192.168.1.21/uploads';
   static const String login = '/auth/login';
   static const String verifyOtp = '/auth/verify-otp';
   static const String annonces = '/annonces';

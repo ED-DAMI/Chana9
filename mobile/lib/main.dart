@@ -32,11 +32,18 @@ class Chana9App extends StatelessWidget {
         BlocProvider<AuthBloc>(create: (_) => GetIt.instance<AuthBloc>()),
         BlocProvider<AnnonceBloc>(create: (_) => GetIt.instance<AnnonceBloc>()),
       ],
-      child: MaterialApp.router(
-        debugShowCheckedModeBanner: false,
-        title: 'Chana9',
-        theme: AppTheme.lightTheme,
-        routerConfig: _router,
+      child: BlocListener<AuthBloc, AuthState>(
+        listener: (context, state) {
+          state.whenOrNull(
+            unauthenticated: () => _router.go('/login'),
+          );
+        },
+        child: MaterialApp.router(
+          debugShowCheckedModeBanner: false,
+          title: 'Chana9',
+          theme: AppTheme.lightTheme,
+          routerConfig: _router,
+        ),
       ),
     );
   }
@@ -127,10 +134,6 @@ final GoRouter _router = GoRouter(
       builder: (context, state, child) => _ShellPage(child: child),
       routes: [
         GoRoute(
-        path: '/profile/favorites',
-        builder: (context, state) => const FavoritesPage(),
-      ),
-        GoRoute(
           path: '/annonces',
           builder: (context, state) => const AnnonceListPage(),
           routes: [
@@ -155,6 +158,10 @@ final GoRouter _router = GoRouter(
               builder: (context, state) => MyAnnoncesPage(
                 sellerId: state.pathParameters['sellerId']!,
               ),
+            ),
+            GoRoute(
+              path: 'favorites',
+              builder: (context, state) => const FavoritesPage(),
             ),
           ],
         ),
