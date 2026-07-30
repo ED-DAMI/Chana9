@@ -16,6 +16,8 @@ import 'features/profile/presentation/pages/my_annonces_page.dart';
 import 'features/profile/presentation/pages/profile_page.dart';
 import 'injection_container.dart' as di;
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await di.init();
@@ -127,6 +129,7 @@ class _ShellPage extends StatelessWidget {
 
 final GoRouter _router = GoRouter(
   initialLocation: '/splash',
+  navigatorKey: navigatorKey,
   routes: [
     GoRoute(path: '/splash', builder: _splashBuilder),
     GoRoute(path: '/login', builder: _loginBuilder),

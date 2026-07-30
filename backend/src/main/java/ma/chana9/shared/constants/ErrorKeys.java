@@ -17,6 +17,7 @@ public class ErrorKeys {
         public static final String INVALID_CREDENTIALS         = "error.auth.invalid-credentials";
         public static final String PHONE_ALREADY_EXISTS        = "error.auth.phone-already-exists";
         public static final String PHONE_NOT_FOUND             = "error.auth.phone-not-found";
+        public static final String ACCESS_DENIED = "error.auth.access-denied";
     }
 
     @UtilityClass

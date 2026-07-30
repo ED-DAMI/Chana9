@@ -8,7 +8,10 @@ class DioClientFactory {
   static const String _baseUrl = ApiConstants.baseUrl;
   static const String _tokenKey = 'access_token';
 
-  static DioClient create(FlutterSecureStorage secureStorage) {
+  static DioClient create(
+      FlutterSecureStorage secureStorage, {
+        required void Function() onUnauthorized,
+      }) {
     final dio = Dio(
       BaseOptions(
         baseUrl: _baseUrl,
@@ -35,14 +38,14 @@ class DioClientFactory {
         },
         onError: (DioException error, handler) async {
           if (error.response?.statusCode == 401) {
-            await secureStorage.delete(key: _tokenKey);
+            await secureStorage.deleteAll();
+            onUnauthorized();
           }
           handler.next(error);
         },
       ),
     );
 
-    
     assert(() {
       dio.interceptors.add(LogInterceptor(
         requestBody: true,
