@@ -109,7 +109,6 @@ class _AnnonceDetailView extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Titre + badge statut
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -140,7 +139,6 @@ class _AnnonceDetailView extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
 
-                  // Prix
                   Row(
                     children: [
                       Text(
@@ -237,7 +235,6 @@ class _AnnonceDetailView extends StatelessWidget {
 
                   const Divider(height: 32),
 
-                  // Livraison & Pension
                   _SectionTitle(title: 'Services'),
                   if (annonce.deliveryAvailable)
                     _InfoRow(

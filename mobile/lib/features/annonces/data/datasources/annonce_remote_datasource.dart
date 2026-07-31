@@ -99,7 +99,6 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
           (json) => AnnonceModel.fromJson(json as Map<String, dynamic>),
     );
   }
-
   @override
   Future<PaginatedResponse<AnnonceModel>> findBySeller(
       String sellerId, {
@@ -114,13 +113,11 @@ class AnnonceRemoteDataSourceImpl implements AnnonceRemoteDataSource {
           (json) => AnnonceModel.fromJson(json as Map<String, dynamic>),
     );
   }
-
   @override
   Future<AnnonceModel> suspend(String id) async {
     final response = await dioClient.patch('$_base/$id/suspend');
     return AnnonceModel.fromJson(_extractData(response.data));
   }
-
   @override
   Future<AnnonceModel> reactivate(String id) async {
     final response = await dioClient.patch('$_base/$id/reactivate');
