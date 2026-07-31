@@ -4,7 +4,6 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class AuditConstants {
-
     public static final String USER_ENTITY = "USER";
     public static final String SYSTEM_ENTITY = "SYSTEM";
     public static final String TOKEN_ENTITY = "TOKEN";
