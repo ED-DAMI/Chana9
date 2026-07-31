@@ -7,15 +7,11 @@ import ma.chana9.shared.enums.AnimalDentition;
 import java.math.BigDecimal;
 
 public record AnnonceAlertRequest(
-
         AnimalBreed breed,
         String region,
-
         @DecimalMin("0.0")
         BigDecimal minPrice,
-
         @DecimalMin("0.0")
         BigDecimal maxPrice,
-
         AnimalDentition dentition
 ) {}

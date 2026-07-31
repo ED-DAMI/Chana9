@@ -1,0 +1,111 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 014-create-contact-unlocks-table
+      author: chana9
+      changes:
+        - createTable:
+            tableName: contact_unlocks
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: buyer_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_contact_unlocks_buyer
+                    references: users(id)
+              - column:
+                  name: annonce_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_contact_unlocks_annonce
+                    references: annonces(id)
+              - column:
+                  name: amount
+                  type: numeric(10,2)
+                  defaultValueNumeric: 20.00
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(20)
+                  defaultValue: PENDING
+                  constraints:
+                    nullable: false
+              - column:
+                  name: transaction_id
+                  type: varchar(100)
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: completed_at
+                  type: timestamp
+
+        - addUniqueConstraint:
+            tableName: contact_unlocks
+            constraintName: uq_contact_unlock_buyer_annonce
+            columnNames: buyer_id, annonce_id
+
+        - addUniqueConstraint:
+            tableName: contact_unlocks
+            constraintName: uq_contact_unlock_transaction_id
+            columnNames: transaction_id
+
+        - createIndex:
+            tableName: contact_unlocks
+            indexName: idx_contact_unlocks_buyer_id
+            columns:
+              - column:
+                  name: buyer_id
+
+        - createIndex:
+            tableName: contact_unlocks
+            indexName: idx_contact_unlocks_annonce_id
+            columns:
+              - column:
+                  name: annonce_id
+
+        - createIndex:
+            tableName: contact_unlocks
+            indexName: idx_contact_unlocks_transaction_id
+            columns:
+              - column:
+                  name: transaction_id
+
+  - changeSet:
+      id: 014-check-contact-unlocks-status
+      author: chana9
+      changes:
+        - sql:
+            sql: >
+              ALTER TABLE contact_unlocks
+              ADD CONSTRAINT chk_contact_unlocks_status
+              CHECK (status IN ('PENDING','COMPLETED','FAILED'));
+      rollback:
+        - sql:
+            sql: ALTER TABLE contact_unlocks DROP CONSTRAINT chk_contact_unlocks_status;
+
+  - changeSet:
+      id: 014-check-contact-unlocks-amount
+      author: chana9
+      changes:
+        - sql:
+            sql: >
+              ALTER TABLE contact_unlocks
+              ADD CONSTRAINT chk_contact_unlocks_amount_positive
+              CHECK (amount > 0);
+      rollback:
+        - sql:
+            sql: ALTER TABLE contact_unlocks DROP CONSTRAINT chk_contact_unlocks_amount_positive;

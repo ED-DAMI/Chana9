@@ -45,4 +45,13 @@ public class ErrorKeys {
         public static final String UPLOAD_FAILED = "error.storage.upload-failed";
         public static final String DELETE_FAILED = "error.storage.delete-failed";
     }
+    @UtilityClass
+    public static class Payment {
+        public static final String ALREADY_UNLOCKED      = "error.payment.already-unlocked";
+        public static final String OWN_ANNONCE           = "error.payment.own-annonce";
+        public static final String BUYER_NOT_FOUND       = "error.payment.buyer-not-found";
+        public static final String TRANSACTION_NOT_FOUND = "error.payment.transaction-not-found";
+        public static final String INVALID_SIGNATURE     = "error.payment.invalid-signature";
+        public static final String NOT_UNLOCKED          = "error.payment.not-unlocked";
+    }
 }
