@@ -9,12 +9,7 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AuthBloc, AuthState>(
-      listener: (context, state) {
-        state.whenOrNull(
-          unauthenticated: () => context.go('/login'),
-        );
-      },
+    return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
         final user = state.whenOrNull(
           authenticated: (user) => user,
@@ -142,7 +137,7 @@ class _ProfileMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Material(
       color: Colors.white,
       child: Column(
         children: [
@@ -176,17 +171,17 @@ class _ProfileMenu extends StatelessWidget {
   void _confirmLogout(BuildContext context) {
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: const Text('Déconnexion'),
         content: const Text('Êtes-vous sûr de vouloir vous déconnecter ?'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Navigator.of(dialogContext).pop(),
             child: const Text('Annuler'),
           ),
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.of(dialogContext).pop();
               context.read<AuthBloc>().add(const AuthEvent.logout());
             },
             child: const Text('Déconnexion',

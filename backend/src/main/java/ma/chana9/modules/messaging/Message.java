@@ -22,11 +22,9 @@ import ma.chana9.modules.user.User;
 @Getter
 @Setter
 public class Message {
-
     @Id
     @UuidGenerator
     private UUID id;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id", nullable = false)
     private User sender;

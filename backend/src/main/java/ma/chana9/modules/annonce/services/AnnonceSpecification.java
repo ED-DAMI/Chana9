@@ -15,7 +15,6 @@ import java.util.List;
 
 @UtilityClass
 public class AnnonceSpecification {
-
     public static Specification<Annonce> from(AnnonceSearchRequest request) {
         return (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
@@ -23,9 +22,9 @@ public class AnnonceSpecification {
             predicates.add(cb.equal(root.get(EntityFields.AnnonceFields.STATUS), AnnonceStatus.ACTIVE));
 
             if (request.breed() != null) {
-                predicates.add(cb.like(
-                        cb.lower(root.get(EntityFields.AnnonceFields.BREED)),
-                        "%%%s%%".formatted(request.breed())
+                predicates.add(cb.equal(
+                        root.get(EntityFields.AnnonceFields.BREED),
+                        request.breed()
                 ));
             }
 

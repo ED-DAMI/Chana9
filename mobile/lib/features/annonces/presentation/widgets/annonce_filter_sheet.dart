@@ -89,7 +89,7 @@ class _AnnonceFilterSheetState extends State<AnnonceFilterSheet> {
 
   void _apply() {
     widget.onApply(AnnonceSearchRequestModel(
-      breed: _selectedBreed?.name,
+      breed: _selectedBreed?.backendValue,
       region: _selectedRegion,
       minPrice: double.tryParse(_minPriceController.text),
       maxPrice: double.tryParse(_maxPriceController.text),
