@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../bloc/auth_bloc.dart';
 import '../widgets/phone_field.dart';
 import '../widgets/password_field.dart';
@@ -38,6 +39,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       body: BlocConsumer<AuthBloc, AuthState>(
@@ -68,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       const SizedBox(height: 32),
                       Text(
-                        'Chana9',
+                        l10n.appName,
                         style: theme.textTheme.displaySmall?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: theme.colorScheme.primary,
@@ -77,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'Connectez-vous à votre compte',
+                        l10n.connectToAccount,
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: Colors.grey.shade600,
                         ),
@@ -105,8 +107,8 @@ class _LoginPageState extends State<LoginPage> {
                                   color: Colors.white,
                                 ),
                               )
-                            : const Text(
-                                'Se connecter',
+                            : Text(
+                                l10n.loginButton,
                                 style: TextStyle(fontSize: 16),
                               ),
                       ),

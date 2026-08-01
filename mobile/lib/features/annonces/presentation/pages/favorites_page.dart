@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../injection_container.dart';
 import '../bloc/annonce_bloc.dart';
@@ -62,9 +63,10 @@ class _FavoritesPageState extends State<FavoritesPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Mes favoris')),
+      appBar: AppBar(title: Text(l10n.myFavorites)),
       body: BlocConsumer<AnnonceBloc, AnnonceState>(
         listener: (context, state) {
           state.maybeWhen(
@@ -85,7 +87,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                       const Text('🤍', style: TextStyle(fontSize: 64)),
                       const SizedBox(height: 16),
                       Text(
-                        'Aucun favori',
+                        l10n.noFavorites,
                         style: theme.textTheme.titleMedium
                             ?.copyWith(color: Colors.grey),
                       ),
@@ -136,7 +138,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                   const SizedBox(height: 16),
                   FilledButton(
                     onPressed: () => _load(reset: true),
-                    child: const Text('Réessayer'),
+                    child: Text(l10n.retry),
                   ),
                 ],
               ),

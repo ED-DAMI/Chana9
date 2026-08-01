@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ma_chana9_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:ma_chana9_app/main.dart';
+import 'package:ma_chana9_app/shared/bloc/locale_bloc.dart';
 
 import 'core/network/dio_client.dart';
 import 'core/network/dio_client_factory.dart';
@@ -33,4 +34,7 @@ Future<void> init() async {
 
   registerAuthDependencies(sl);
   registerAnnoncesDependencies(sl);
+  sl.registerLazySingleton<LocaleBloc>(
+    () => LocaleBloc(storage: sl<FlutterSecureStorage>()),
+  );
 }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ma_chana9_app/core/constants/api_constants.dart';
 import 'package:ma_chana9_app/injection_container.dart';
+import 'package:ma_chana9_app/shared/localization/locale_labels.dart';
 import '../../../annonces/domain/entities/annonce.dart';
 import '../../../annonces/presentation/pages/annonce_form_page.dart';
 import '../../../annonces/presentation/bloc/annonce_bloc.dart';
@@ -35,12 +37,13 @@ class _MyAnnoncesPageState extends State<MyAnnoncesPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 1,
-        title: const Text('Mes annonces'),
+        title: Text(l10n.myAnnonces),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
@@ -72,12 +75,12 @@ class _MyAnnoncesPageState extends State<MyAnnoncesPage> {
                       const Text('🐑',
                           style: TextStyle(fontSize: 64)),
                       const SizedBox(height: 16),
-                      const Text('Vous n\'avez pas encore d\'annonces'),
+                      Text(l10n.noMyAnnonces),
                       const SizedBox(height: 16),
                       FilledButton.icon(
                         onPressed: () => context.push('/annonces/new'),
                         icon: const Icon(Icons.add),
-                        label: const Text('Créer une annonce'),
+                        label: Text(l10n.createAnnonce),
                       ),
                     ],
                   ),
@@ -110,7 +113,7 @@ class _MyAnnoncesPageState extends State<MyAnnoncesPage> {
                   const SizedBox(height: 16),
                   FilledButton(
                     onPressed: _load,
-                    child: const Text('Réessayer'),
+                    child: Text(l10n.retry),
                   ),
                 ],
               ),

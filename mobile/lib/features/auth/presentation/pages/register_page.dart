@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ma_chana9_app/shared/localization/locale_labels.dart';
 import '../bloc/auth_bloc.dart';
 import '../widgets/phone_field.dart';
 import '../widgets/password_field.dart';
@@ -20,21 +22,6 @@ class _RegisterPageState extends State<RegisterPage> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   String? _selectedRegion;
-
-  static const _moroccanRegions = [
-    'Tanger-Tétouan-Al Hoceïma',
-    'Oriental',
-    'Fès-Meknès',
-    'Rabat-Salé-Kénitra',
-    'Béni Mellal-Khénifra',
-    'Casablanca-Settat',
-    'Marrakech-Safi',
-    'Drâa-Tafilalet',
-    'Souss-Massa',
-    'Guelmim-Oued Noun',
-    'Laâyoune-Sakia El Hamra',
-    'Dakhla-Oued Ed-Dahab',
-  ];
 
   @override
   void dispose() {
@@ -62,9 +49,10 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Créer un compte')),
+      appBar: AppBar(title: Text(l10n.register)),
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           state.whenOrNull(
@@ -97,7 +85,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     TextFormField(
                       controller: _fullNameController,
                       decoration: InputDecoration(
-                        labelText: 'Nom complet (optionnel)',
+                        labelText: l10n.fullNameOptional,
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12)),
                       ),
@@ -111,13 +99,13 @@ class _RegisterPageState extends State<RegisterPage> {
                       controller: _confirmPasswordController,
                       obscureText: true,
                       decoration: InputDecoration(
-                        labelText: 'Confirmer le mot de passe',
+                        labelText: l10n.confirmPassword,
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12)),
                       ),
                       validator: (value) {
                         if (value != _passwordController.text) {
-                          return 'Les mots de passe ne correspondent pas';
+                          return l10n.passwordMismatch;
                         }
                         return null;
                       },
@@ -126,14 +114,14 @@ class _RegisterPageState extends State<RegisterPage> {
                     DropdownButtonFormField<String>(
                       value: _selectedRegion,
                       decoration: InputDecoration(
-                        labelText: 'Région (optionnel)',
+                        labelText: l10n.regionOptional,
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12)),
                       ),
-                      items: _moroccanRegions
+                      items: moroccanRegions
                           .map((r) => DropdownMenuItem(
                         value: r,
-                        child: Text(r),
+                        child: Text(localizedRegion(context, r)),
                       ))
                           .toList(),
                       onChanged: (v) => setState(() => _selectedRegion = v),
@@ -156,8 +144,8 @@ class _RegisterPageState extends State<RegisterPage> {
                           color: Colors.white,
                         ),
                       )
-                          : const Text(
-                        'Créer mon compte',
+                          : Text(
+                        l10n.registerButton,
                         style: TextStyle(fontSize: 16),
                       ),
                     ),

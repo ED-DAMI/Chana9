@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../data/models/annonce_search_request_model.dart';
 import '../bloc/annonce_bloc.dart';
 import '../bloc/annonce_detail_bloc.dart';
@@ -7,6 +8,7 @@ import '../widgets/annonce_post_card.dart';
 import '../widgets/annonce_filter_sheet.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../injection_container.dart';
+import 'package:ma_chana9_app/shared/widgets/language_selector.dart';
 
 class AnnonceListPage extends StatefulWidget {
   const AnnonceListPage({super.key});
@@ -85,6 +87,7 @@ class _AnnonceListPageState extends State<AnnonceListPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
@@ -92,7 +95,7 @@ class _AnnonceListPageState extends State<AnnonceListPage> {
         backgroundColor: Colors.white,
         elevation: 1,
         title: Text(
-          'Chana9',
+          l10n.appName,
           style: TextStyle(
             color: theme.colorScheme.primary,
             fontWeight: FontWeight.bold,
@@ -103,13 +106,14 @@ class _AnnonceListPageState extends State<AnnonceListPage> {
           IconButton(
             icon: const Icon(Icons.tune),
             onPressed: _openFilterSheet,
-            tooltip: 'Filtres',
+            tooltip: l10n.filterAnnonces,
           ),
           IconButton(
             icon: const Icon(Icons.search),
             onPressed: _openFilterSheet,
-            tooltip: 'Rechercher',
+            tooltip: l10n.searchAnnonces,
           ),
+          const LanguageSelector(),
         ],
       ),
       body: BlocConsumer<AnnonceBloc, AnnonceState>(
@@ -133,14 +137,14 @@ class _AnnonceListPageState extends State<AnnonceListPage> {
                       const Text('🐑', style: TextStyle(fontSize: 64)),
                       const SizedBox(height: 16),
                       Text(
-                        'Aucune annonce trouvée',
+                        l10n.noAnnoncesFound,
                         style: theme.textTheme.titleMedium
                             ?.copyWith(color: Colors.grey),
                       ),
                       const SizedBox(height: 12),
                       TextButton(
                         onPressed: () => _loadAnnonces(reset: true),
-                        child: const Text('Réessayer'),
+                        child: Text(l10n.retry),
                       ),
                     ],
                   ),
@@ -189,7 +193,7 @@ class _AnnonceListPageState extends State<AnnonceListPage> {
                   const SizedBox(height: 16),
                   FilledButton(
                     onPressed: () => _loadAnnonces(reset: true),
-                    child: const Text('Réessayer'),
+                    child: Text(l10n.retry),
                   ),
                 ],
               ),
