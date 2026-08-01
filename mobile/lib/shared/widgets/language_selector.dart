@@ -4,7 +4,7 @@ import 'package:ma_chana9_app/core/constants/app_locale.dart';
 import 'package:ma_chana9_app/shared/bloc/locale_bloc.dart';
 import 'package:ma_chana9_app/shared/bloc/locale_event.dart';
 import 'package:ma_chana9_app/shared/bloc/locale_state.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ma_chana9_app/l10n/app_localizations.dart';
 
 class LanguageSelector extends StatelessWidget {
   final bool showText;

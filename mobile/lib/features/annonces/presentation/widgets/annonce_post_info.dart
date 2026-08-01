@@ -35,7 +35,7 @@ class AnnoncePostInfo extends StatelessWidget {
               if (annonce.priceType != null) ...[
                 const SizedBox(width: 6),
                 _Badge(
-                  label: annonce.priceType!.displayName,
+                  label: annonce.priceType!.name,
                   color: Colors.grey.shade600,
                 ),
               ],
@@ -81,7 +81,7 @@ class AnnoncePostInfo extends StatelessWidget {
               if (annonce.dentition != null)
                 _InfoChip(
                   icon: Icons.info_outline,
-                  label: annonce.dentition!.displayName,
+                  label: annonce.dentition!.name,
                 ),
               if (annonce.deliveryAvailable)
                 _InfoChip(

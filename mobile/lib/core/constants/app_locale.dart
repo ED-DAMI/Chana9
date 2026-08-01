@@ -8,4 +8,5 @@ class AppLocale {
 
   static const supported = [fr, ar, en, zgh];
   static const fallback = fr;
+  static const materialSupported = [fr, ar, en];
 }

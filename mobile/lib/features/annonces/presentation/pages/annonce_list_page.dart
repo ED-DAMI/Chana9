@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ma_chana9_app/l10n/app_localizations.dart';
 import '../../data/models/annonce_search_request_model.dart';
 import '../bloc/annonce_bloc.dart';
 import '../bloc/annonce_detail_bloc.dart';

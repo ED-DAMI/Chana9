@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ma_chana9_app/l10n/app_localizations.dart';
 import 'package:ma_chana9_app/shared/enums/annonce_status.dart';
 import 'package:ma_chana9_app/shared/enums/role.dart';
 
@@ -56,7 +56,6 @@ extension AnnonceStatusLocalization on AnnonceStatus {
       AnnonceStatus.suspended => l10n.statusSuspended,
       AnnonceStatus.sold => l10n.statusSold,
       AnnonceStatus.expired => l10n.error,
-      AnnonceStatus.deleted => l10n.delete,
       AnnonceStatus.draft => l10n.edit,
     };
   }

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ma_chana9_app/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ma_chana9_app/core/constants/api_constants.dart';
 import 'package:ma_chana9_app/injection_container.dart';
-import 'package:ma_chana9_app/shared/localization/locale_labels.dart';
 import '../../../annonces/domain/entities/annonce.dart';
 import '../../../annonces/presentation/pages/annonce_form_page.dart';
 import '../../../annonces/presentation/bloc/annonce_bloc.dart';

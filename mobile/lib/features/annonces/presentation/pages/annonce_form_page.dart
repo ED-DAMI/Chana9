@@ -418,7 +418,7 @@ class _AnimalStep extends StatelessWidget {
           value: dentition,
           decoration: const InputDecoration(labelText: 'Dentition', border: OutlineInputBorder()),
           hint: const Text('Sélectionner'),
-          items: AnimalDentition.values.map((d) => DropdownMenuItem(value: d, child: Text(d.displayName))).toList(),
+          items: AnimalDentition.values.map((d) => DropdownMenuItem(value: d, child: Text(d.name))).toList(),
           onChanged: onDentitionChanged,
         ),
         const SizedBox(height: 12),

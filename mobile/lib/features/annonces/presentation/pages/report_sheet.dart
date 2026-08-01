@@ -91,7 +91,7 @@ class _ReportSheetState extends State<ReportSheet> {
                     children: [
                       ...ReportReason.values.map((reason) {
                         return RadioListTile<ReportReason>(
-                          title: Text(reason.label),
+                          title: Text(reason.value),
                           value: reason,
                           groupValue: _selectedReason,
                           onChanged: (v) => setState(() => _selectedReason = v),

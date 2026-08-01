@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
@@ -20,6 +19,7 @@ import 'features/auth/presentation/pages/splash_page.dart';
 import 'features/profile/presentation/pages/my_annonces_page.dart';
 import 'features/profile/presentation/pages/profile_page.dart';
 import 'injection_container.dart' as di;
+import 'l10n/app_localizations.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -50,7 +50,7 @@ class Chana9App extends StatelessWidget {
           builder: (context, localeState) {
             return MaterialApp.router(
               debugShowCheckedModeBanner: false,
-              onGenerateTitle: (context) => AppLocalizations.of(context).appName,
+              title: 'Chana9',
               theme: AppTheme.lightTheme,
               routerConfig: _router,
               locale: localeState.locale,
@@ -63,9 +63,12 @@ class Chana9App extends StatelessWidget {
               ],
               builder: (context, child) {
                 final locale = Localizations.localeOf(context);
-                final isRtl = locale.languageCode == AppLocale.ar.languageCode || locale.languageCode == AppLocale.zgh.languageCode;
+                final isRtl =
+                    locale.languageCode == AppLocale.ar.languageCode ||
+                        locale.languageCode == AppLocale.zgh.languageCode;
                 return Directionality(
-                  textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
+                  textDirection:
+                  isRtl ? TextDirection.rtl : TextDirection.ltr,
                   child: child ?? const SizedBox.shrink(),
                 );
               },
