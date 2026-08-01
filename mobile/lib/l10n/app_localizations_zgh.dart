@@ -24,49 +24,49 @@ class AppLocalizationsZgh extends AppLocalizations {
   String get logout => 'ⴰⴼⴼⵓⵖ';
 
   @override
-  String get phone => 'Téléphone';
+  String get phone => 'ⵜⵉⵍⵉⴼⵓⵏ';
 
   @override
-  String get password => 'Mot de passe';
+  String get password => 'ⴰⵡⴹⴰⵍ';
 
   @override
-  String get confirmPassword => 'Confirmer le mot de passe';
+  String get confirmPassword => 'ⵙⵏⵜⵍ ⴰⵡⴹⴰⵍ';
 
   @override
-  String get fullName => 'Nom complet';
+  String get fullName => 'ⵉⵙⵎ ⴰⵎⴰⵜⵜⴰ';
 
   @override
-  String get loginButton => 'Se connecter';
+  String get loginButton => 'ⴽⵛⵎ';
 
   @override
-  String get registerButton => 'Créer mon compte';
+  String get registerButton => 'ⴽⵛⵎ ⴷⴰⵖ';
 
   @override
-  String get noAccount => 'Vous n\'avez pas de compte ?';
+  String get noAccount => 'ⵓⵔ ⵜⵔⵉⵜ ⴰⵃⵙⴰⴱ?';
 
   @override
-  String get alreadyAccount => 'Vous avez déjà un compte ?';
+  String get alreadyAccount => 'ⵉⵍⵍⴰ ⴷⴰⵖ ⵡⴰⵃⵙⴰⴱ ⵏⵏⴽ?';
 
   @override
-  String get savedCredentials => 'Identifiants enregistrés';
+  String get savedCredentials => 'ⵉⴷ ⵏ ⵜⵡⵓⵔⵉ ⵉⵃⵟⵟⴰⵏ';
 
   @override
-  String get sessionExpired => 'Session expirée';
+  String get sessionExpired => 'ⵜⴼⵓⵜ ⵜⵎⵔⵉⵜ';
 
   @override
-  String get changePassword => 'Changer le mot de passe';
+  String get changePassword => 'ⵙⵏⴼⵍ ⴰⵡⴹⴰⵍ';
 
   @override
-  String get currentPassword => 'Mot de passe actuel';
+  String get currentPassword => 'ⴰⵡⴹⴰⵍ ⴰⵎⴰⵏⵓ';
 
   @override
-  String get newPassword => 'Nouveau mot de passe';
+  String get newPassword => 'ⴰⵡⴹⴰⵍ ⴰⵎⴰⵢⵏⵓ';
 
   @override
-  String get passwordMismatch => 'Les mots de passe ne correspondent pas';
+  String get passwordMismatch => 'ⵉⵡⴹⴰⵍⵏ ⵓⵔ ⵙⵎⵎⴰⴽⵏ';
 
   @override
-  String get passwordMinLength => 'Minimum 6 caractères';
+  String get passwordMinLength => 'ⵉⵎⵉⵔ 6 ⵏ ⵉⵙⴽⴽⵉⵍⵏ';
 
   @override
   String get annonces => 'ⵉⵄⵍⴰⵏⵏ';
@@ -81,582 +81,581 @@ class AppLocalizationsZgh extends AppLocalizations {
   String get favorites => 'ⵉⵎⵖⵍⴰⵏ';
 
   @override
-  String get searchAnnonces => 'Rechercher';
+  String get searchAnnonces => 'ⵔⵣⵓ';
 
   @override
-  String get filterAnnonces => 'Filtres';
+  String get filterAnnonces => 'ⵉⵙⴼⵍⵉⵏ';
 
   @override
-  String get applyFilters => 'Appliquer les filtres';
+  String get applyFilters => 'ⵙⵙⵎⵔⵙ ⵉⵙⴼⵍⵉⵏ';
 
   @override
-  String get resetFilters => 'Réinitialiser';
+  String get resetFilters => 'ⵙⵏⴼⵍ';
 
   @override
-  String get breed => 'Race';
+  String get breed => 'ⴰⵣⵔⴼ';
 
   @override
-  String get region => 'Région';
+  String get region => 'ⵜⴰⵎⵏⴰⴹⵜ';
 
   @override
-  String get price => 'Prix';
+  String get price => 'ⴰⵣⵡⵍ';
 
   @override
-  String get weight => 'Poids';
+  String get weight => 'ⴰⵣⵡⵓ';
 
   @override
-  String get gender => 'Genre';
+  String get gender => 'ⴰⵏⴰⵡ';
 
   @override
-  String get age => 'Âge';
+  String get age => 'ⵜⵉⴳⴰⵡⵜ';
 
   @override
-  String get male => 'Mâle';
+  String get male => 'ⴰⴼⵔⵓⵅ';
 
   @override
-  String get female => 'Femelle';
+  String get female => 'ⵜⴰⴼⵔⵓⵅⵜ';
 
   @override
-  String get all => 'Tous';
+  String get all => 'ⴽⵓⵍⵍⵓ';
 
   @override
-  String get deliveryAvailable => 'Livraison disponible';
+  String get deliveryAvailable => 'ⵜⵉⵍⴰⵡⵜ ⵜⵍⵍⴰ';
 
   @override
-  String get priceNegotiable => 'Prix négociable';
+  String get priceNegotiable => 'ⴰⵣⵡⵍ ⵉⵜⵜⵡⴰⵙⵙⵏⴰ';
 
   @override
-  String get eligibleForAid => 'Éligible aux aides';
+  String get eligibleForAid => 'ⵉⵙⵜⴰⵢ ⵉ ⵓⵎⴷⴷⵓ';
 
   @override
-  String get topLotOnly => 'Top Lot uniquement';
+  String get topLotOnly => 'ⵉⵄⵍⴰⵏⵏ ⵉⵎⵇⵇⵓⵔⵏ ⴽⴰⵏ';
 
   @override
-  String get noAnnoncesFound => 'Aucune annonce trouvée';
+  String get noAnnoncesFound => 'ⵓⵔ ⵉⵜⵜⵡⴰⴼ ⵡⴰⵢⵢⵓ ⵡⵄⵍⴰⵏ';
 
   @override
-  String get retry => 'Réessayer';
+  String get retry => 'ⵔⵏⵓ ⴰⵙⵙⴰⵢ';
 
   @override
-  String get description => 'Description';
+  String get description => 'ⴰⵏⵏⴰⵍ';
 
   @override
-  String get noDescription => 'Aucune description fournie.';
+  String get noDescription => 'ⵓⵔ ⵉⵍⵍⵉ ⵡⴰⵏⵏⴰⵍ.';
 
   @override
-  String get location => 'Localisation';
+  String get location => 'ⴰⵙⵉⵡⴹ';
 
   @override
-  String get delivery => 'Livraison';
+  String get delivery => 'ⵜⵉⵍⴰⵡⵜ';
 
   @override
-  String get boarding => 'Pension';
+  String get boarding => 'ⴰⵙⵓⴼⵖ';
 
   @override
-  String get markAsSold => 'Marquer vendu';
+  String get markAsSold => 'ⵙⵎⵔ ⵉⵜⵜⵡⴰⴷⴷⴰ';
 
   @override
-  String get suspend => 'Suspendre';
+  String get suspend => 'ⴽⵓⵎⵙ';
 
   @override
-  String get reactivate => 'Réactiver';
+  String get reactivate => 'ⵔⵏⵓ ⴰⵙⴽⴰⵔ';
 
   @override
-  String get promote => 'Promouvoir';
+  String get promote => 'ⵙⵙⵔⵙ';
 
   @override
-  String get deleteAnnonce => 'Supprimer l\'annonce';
+  String get deleteAnnonce => 'ⴽⴽⵙ ⵡⴰⵄⵍⴰⵏ';
 
   @override
-  String get confirmDelete => 'Confirmer la suppression';
+  String get confirmDelete => 'ⵙⵏⵜⵍ ⴰⴽⴽⵙ';
 
   @override
-  String get irreversible => 'Cette action est irréversible.';
+  String get irreversible => 'ⵜⴰⵎⵙⴽⴰⵔⵜ ⴰⴷ ⵓⵔ ⵜⵜⵡⴰⵔⵏⵓ.';
 
   @override
-  String get cancel => 'Annuler';
+  String get cancel => 'ⵅⴼⵙ';
 
   @override
-  String get confirm => 'Confirmer';
+  String get confirm => 'ⵙⵏⵜⵍ';
 
   @override
-  String get report => 'Signaler';
+  String get report => 'ⴱⵍⵍⵖ';
 
   @override
-  String get reportReason => 'Raison du signalement';
+  String get reportReason => 'ⵜⴰⵏⵣⵣⵓⵢⵜ ⵏ ⵓⴱⵍⵍⵖ';
 
   @override
-  String get reportComment => 'Commentaire (optionnel)';
+  String get reportComment => 'ⴰⵙⵙⵏⵜⵉ (ⵓⵔ ⵉⵇⵇⴰⵏ)';
 
   @override
-  String get sendReport => 'Envoyer le signalement';
+  String get sendReport => 'ⴰⵣⵏ ⴰⴱⵍⵍⵖ';
 
   @override
-  String get addFavorite => 'Ajouter aux favoris';
+  String get addFavorite => 'ⵔⵏⵓ ⵖ ⵉⵎⵖⵍⴰⵏ';
 
   @override
-  String get removeFavorite => 'Retirer des favoris';
+  String get removeFavorite => 'ⴽⴽⵙ ⵖ ⵉⵎⵖⵍⴰⵏ';
 
   @override
-  String get alreadyFavorited => 'Déjà ajouté aux favoris';
+  String get alreadyFavorited => 'ⵉⵜⵜⵡⴰⵔⵏⴰ ⵖ ⵉⵎⵖⵍⴰⵏ';
 
   @override
-  String get alreadyReported => 'Vous avez déjà signalé cette annonce';
+  String get alreadyReported => 'ⵜⴱⵍⵍⵖⴷ ⵖⴼ ⵡⴰⵄⵍⴰⵏ ⴰⴷ';
 
   @override
-  String get cannotReportOwn =>
-      'Vous ne pouvez pas signaler votre propre annonce';
+  String get cannotReportOwn => 'ⵓⵔ ⵜⵣⵎⵉⵔⴷ ⴰⴷ ⵜⴱⵍⵍⵖⴷ ⵖⴼ ⵡⴰⵄⵍⴰⵏ ⵏⵏⴽ';
 
   @override
-  String get fraudOrScam => 'Arnaque / Fraude';
+  String get fraudOrScam => 'ⵜⴰⵎⵖⵓⵔⵜ / ⵜⴰⵔⵉⵙⵙⵉⵜ';
 
   @override
-  String get wrongInformation => 'Informations incorrectes';
+  String get wrongInformation => 'ⵉⵏⴼⵓⵙⵏ ⵓⵔ ⵉⴳⵉⵏ';
 
   @override
-  String get unhealthyAnimal => 'Animal en mauvaise santé';
+  String get unhealthyAnimal => 'ⵓⵍⵓⵙ ⵓⵔ ⵉⵥⵉⵍⵏ';
 
   @override
-  String get duplicate => 'Annonce en double';
+  String get duplicate => 'ⴰⵄⵍⴰⵏ ⵉⵜⵜⵡⴰⵍⵡⴰⵍ';
 
   @override
-  String get inappropriateMedia => 'Photos inappropriées';
+  String get inappropriateMedia => 'ⵜⵉⵡⵍⴰⴼⵉⵏ ⵓⵔ ⵉⵍⵍⴰⵏ';
 
   @override
-  String get other => 'Autre';
+  String get other => 'ⵢⴰⴹⵏ';
 
   @override
-  String get sardi => 'Sardi';
+  String get sardi => 'ⴰⵙⴰⵔⴷⵉ';
 
   @override
-  String get timahdite => 'Timahdite';
+  String get timahdite => 'ⵜⵉⵎⵃⴹⵉⵜ';
 
   @override
-  String get beniGuil => 'Béni Guil';
+  String get beniGuil => 'ⴱⵏⵉ ⴳⵉⵍ';
 
   @override
-  String get dokkali => 'Dokkali';
+  String get dokkali => 'ⴷⵓⴽⴽⴰⵍⵉ';
 
   @override
-  String get rehami => 'Rehami';
+  String get rehami => 'ⵔⵃⴰⵎⵉ';
 
   @override
-  String get boujaad => 'Boujaad';
+  String get boujaad => 'ⴱⵓⵊⵄⴰⴷ';
 
   @override
-  String get oulmesZaer => 'Oulmès-Zaër';
+  String get oulmesZaer => 'ⵓⵍⵎⵙ ⵣⴰⵢⵔ';
 
   @override
-  String get beniAhsen => 'Béni Ahsen';
+  String get beniAhsen => 'ⴱⵏⵉ ⴰⵃⵙⵏ';
 
   @override
-  String get daMan => 'Da\'Man';
+  String get daMan => 'ⴷⴰⵎⴰⵏ';
 
   @override
-  String get draa => 'Drâa';
+  String get draa => 'ⴷⵔⵄⴰ';
 
   @override
-  String get naineDeMontagne => 'Naine de montagne';
+  String get naineDeMontagne => 'ⵜⴰⴼⵓⵏⴰⵙⵜ ⵏ ⵓⴷⵔⴰⵔ';
 
   @override
-  String get chevreduRiff => 'Chèvre du Rif';
+  String get chevreduRiff => 'ⵜⴰⴼⵓⵏⴰⵙⵜ ⵏ ⵔⵉⴼ';
 
   @override
-  String get chevreDeLaayoune => 'Chèvre de Laâyoune';
+  String get chevreDeLaayoune => 'ⵜⴰⴼⵓⵏⴰⵙⵜ ⵏ ⵍⵄⵢⵓⵏ';
 
   @override
-  String get blondeDAquitaine => 'Blonde d\'Aquitaine';
+  String get blondeDAquitaine => 'ⴱⵍⵓⵏⴷ ⴷⴰⵇⵉⵜⵉⵏ';
 
   @override
-  String get frisonnePieNoire => 'Frisonne Pie Noire';
+  String get frisonnePieNoire => 'ⴼⵔⵉⵣⵢⴰⵏ';
 
   @override
-  String get montbeliarde => 'Montbéliarde';
+  String get montbeliarde => 'ⵎⵓⵏⵜⴱⵍⵢⴰⵔⴷ';
 
   @override
-  String get bruneAtlas => 'Brune Atlas';
+  String get bruneAtlas => 'ⵜⴰⵣⴳⵣⴰⵡⵜ ⵏ ⵓⴷⵔⴰⵔ';
 
   @override
-  String get ougda => 'Ougda';
+  String get ougda => 'ⵓⵊⴷⴰ';
 
   @override
-  String get dromadaireSahraouii => 'Dromadaire Sahraoui';
+  String get dromadaireSahraouii => 'ⴰⵍⵓⵍⵓ ⵏ ⵜⵏⴹⵓⴼⵜ';
 
   @override
-  String get dromadaireGuelmim => 'Dromadaire Guelmim';
+  String get dromadaireGuelmim => 'ⴰⵍⵓⵍⵓ ⵏ ⴳⵍⵎⵉⵎ';
 
   @override
-  String get barbe => 'Barbe';
+  String get barbe => 'ⴰⴱⴰⵔⴱⴰⵔ';
 
   @override
-  String get arabeBarbe => 'Arabe-Barbe';
+  String get arabeBarbe => 'ⴰⵄⵔⴰⴱ ⴰⴱⴰⵔⴱⴰⵔ';
 
   @override
-  String get aneBeldi => 'Âne Beldi';
+  String get aneBeldi => 'ⴰⵙⵔⴷⵓⵏ ⴰⴱⵍⴷⵉ';
 
   @override
-  String get mulet => 'Mulet';
+  String get mulet => 'ⴰⴱⵖⵍ';
 
   @override
-  String get regionTangerTetouanAlHoceima => 'Tanger-Tétouan-Al Hoceïma';
+  String get regionTangerTetouanAlHoceima => 'ⵟⴰⵏⵊⴰ - ⵟⵉⵟⵡⴰⵏ - ⵍⵃⵓⵙⵉⵎⴰ';
 
   @override
-  String get regionOriental => 'Oriental';
+  String get regionOriental => 'ⵜⴰⵔⵡⴰ ⵜⴰⵎⴰⴼⵍⵍⴰⵙⵜ';
 
   @override
-  String get regionFesMeknes => 'Fès-Meknès';
+  String get regionFesMeknes => 'ⴼⴰⵙ - ⵎⴽⵏⴰⵙ';
 
   @override
-  String get regionRabatSaleKenitra => 'Rabat-Salé-Kénitra';
+  String get regionRabatSaleKenitra => 'ⵕⵕⴱⴰⵟ - ⵙⵍⴰ - ⵇⵏⵉⵟⵕⴰ';
 
   @override
-  String get regionBeniMellalKhenifra => 'Béni Mellal-Khénifra';
+  String get regionBeniMellalKhenifra => 'ⴱⵏⵉ ⵎⵍⵍⴰⵍ - ⵅⵏⵉⴼⵕⴰ';
 
   @override
-  String get regionCasablancaSettat => 'Casablanca-Settat';
+  String get regionCasablancaSettat => 'ⴰⵏⴼⴰ - ⵙⵟⵟⴰⵜ';
 
   @override
-  String get regionMarrakechSafi => 'Marrakech-Safi';
+  String get regionMarrakechSafi => 'ⵎⵕⵕⴰⴽⵛ - ⴰⵚⴼⵉ';
 
   @override
-  String get regionDraaTafilalet => 'Drâa-Tafilalet';
+  String get regionDraaTafilalet => 'ⴷⵔⵄⴰ - ⵜⴰⴼⵉⵍⴰⵍⵜ';
 
   @override
-  String get regionSoussMassa => 'Souss-Massa';
+  String get regionSoussMassa => 'ⵙⵓⵙ - ⵎⴰⵙⵙⴰ';
 
   @override
-  String get regionGuelmimOuedNoun => 'Guelmim-Oued Noun';
+  String get regionGuelmimOuedNoun => 'ⴳⵍⵎⵉⵎ - ⵡⴰⴷ ⵏⵓⵏ';
 
   @override
-  String get regionLaayouneSakiaElHamra => 'Laâyoune-Sakia El Hamra';
+  String get regionLaayouneSakiaElHamra => 'ⵍⵄⵢⵓⵏ - ⵙⴰⵇⵢⴰ ⵍⵃⴰⵎⵕⴰ';
 
   @override
-  String get regionDakhlaOuedEdDahab => 'Dakhla-Oued Ed-Dahab';
+  String get regionDakhlaOuedEdDahab => 'ⴷⴷⴰⵅⵍⴰ - ⵡⴰⴷ ⴷⴷⴰⵀⴰⴱ';
 
   @override
-  String get myProfile => 'Mon profil';
+  String get myProfile => 'ⴰⵎⵍⴰⴼ ⵉⵏⵓ';
 
   @override
-  String get myAnnonces => 'Mes annonces';
+  String get myAnnonces => 'ⵉⵄⵍⴰⵏⵏ ⵉⵏⵓ';
 
   @override
-  String get myFavorites => 'Mes favoris';
+  String get myFavorites => 'ⵉⵎⵖⵍⴰⵏ ⵉⵏⵓ';
 
   @override
-  String get myAlerts => 'Mes alertes';
+  String get myAlerts => 'ⵉⵏⴱⴹⴰⵏ ⵉⵏⵓ';
 
   @override
-  String get editProfile => 'Modifier le profil';
+  String get editProfile => 'ⵙⵏⴼⵍ ⴰⵎⵍⴰⴼ';
 
   @override
-  String get saveChanges => 'Enregistrer';
+  String get saveChanges => 'ⵃⵟⵟ';
 
   @override
-  String get kycVerified => 'Vérifié';
+  String get kycVerified => 'ⵉⵜⵡⴰⵙⵙⵏ';
 
   @override
-  String get notVerified => 'Non vérifié';
+  String get notVerified => 'ⵓⵔ ⵉⵜⵡⴰⵙⵙⵏ';
 
   @override
-  String get kycVerification => 'Vérification KYC';
+  String get kycVerification => 'ⴰⵙⵙⵏⵜⵉ ⴽⵢⵛ';
 
   @override
-  String get activeSessions => 'Sessions actives';
+  String get activeSessions => 'ⵜⵉⵎⵔⵉⵡⵉⵏ ⵉⵍⵎⵎⴰ';
 
   @override
-  String get revokeAll => 'Révoquer tout';
+  String get revokeAll => 'ⴽⴽⵙ ⴽⵓⵍⵍⵓ';
 
   @override
-  String get role => 'Rôle';
+  String get role => 'ⴰⵏⴰⵡ';
 
   @override
-  String get seller => 'Vendeur';
+  String get seller => 'ⴰⵣⵣⴰⵢ';
 
   @override
-  String get buyer => 'Acheteur';
+  String get buyer => 'ⴰⵙⵔⵔⵓⵢ';
 
   @override
-  String get admin => 'Admin';
+  String get admin => 'ⴰⵏⴱⴹⵉ';
 
   @override
-  String get loading => 'Chargement...';
+  String get loading => 'ⵉⵜⵜⵡⴰⵔⵏⵓ...';
 
   @override
-  String get error => 'Erreur';
+  String get error => 'ⵜⴰⵖⵍⵜ';
 
   @override
-  String get success => 'Succès';
+  String get success => 'ⵉⵥⵍⵉ';
 
   @override
-  String get save => 'Enregistrer';
+  String get save => 'ⵃⵟⵟ';
 
   @override
-  String get edit => 'Modifier';
+  String get edit => 'ⵙⵏⴼⵍ';
 
   @override
-  String get delete => 'Supprimer';
+  String get delete => 'ⴽⴽⵙ';
 
   @override
-  String get share => 'Partager';
+  String get share => 'ⵙⵙⵎⵔⵙ';
 
   @override
-  String get contact => 'Contacter';
+  String get contact => 'ⵎⵢⴰⵡⴰⴹ';
 
   @override
-  String get mad => 'MAD';
+  String get mad => 'ⴷⵔⵀⵎ';
 
   @override
-  String get months => 'mois';
+  String get months => 'ⵉⵢⵢⵉⵔⵏ';
 
   @override
-  String get km => 'km';
+  String get km => 'ⴽⵎ';
 
   @override
-  String get fullNameOptional => 'Nom complet (optionnel)';
+  String get fullNameOptional => 'ⵉⵙⵎ ⴰⵎⴰⵜⵜⴰ (ⵓⵔ ⵉⵇⵇⴰⵏ)';
 
   @override
-  String get regionOptional => 'Région (optionnel)';
+  String get regionOptional => 'ⵜⴰⵎⵏⴰⴹⵜ (ⵓⵔ ⵉⵇⵇⴰⵏ)';
 
   @override
-  String get connectToAccount => 'Connectez-vous à votre compte';
+  String get connectToAccount => 'ⴽⵛⵎ ⵖ ⵓⵃⵙⴰⴱ ⵏⵏⴽ';
 
   @override
-  String get user => 'Utilisateur';
+  String get user => 'ⴰⵙⵎⵔⵙ';
 
   @override
-  String get verifiedCheck => 'Vérifié ✓';
+  String get verifiedCheck => 'ⵉⵜⵡⴰⵙⵙⵏ ✓';
 
   @override
-  String get logoutConfirm => 'Êtes-vous sûr de vouloir vous déconnecter ?';
+  String get logoutConfirm => 'ⵜⵔⵉⴷ ⴰⴷ ⵜⴼⴼⵖⴷ?';
 
   @override
-  String get reportAnnonce => 'Signaler l\'annonce';
+  String get reportAnnonce => 'ⴱⵍⵍⵖ ⵖⴼ ⵡⴰⵄⵍⴰⵏ';
 
   @override
-  String get reportThisAnnonce => 'Signaler cette annonce';
+  String get reportThisAnnonce => 'ⴱⵍⵍⵖ ⵖⴼ ⵡⴰⵄⵍⴰⵏ ⴰⴷ';
 
   @override
-  String get viewMore => 'Voir plus...';
+  String get viewMore => 'ⵥⵕ ⵓⴳⴳⴰⵔ...';
 
   @override
-  String get viewLess => 'Voir moins';
+  String get viewLess => 'ⵥⵕ ⵢⴰⵜ';
 
   @override
-  String get message => 'Message';
+  String get message => 'ⵜⴰⴱⵔⴰⵜ';
 
   @override
-  String get call => 'Appeler';
+  String get call => 'ⴱⴷⴷⵓ';
 
   @override
-  String get services => 'Services';
+  String get services => 'ⵜⵉⵡⵓⵔⵉⵡⵉⵏ';
 
   @override
-  String get features => 'Caractéristiques';
+  String get features => 'ⵉⵏⵉⴳⴰⵏ';
 
   @override
-  String get address => 'Adresse';
+  String get address => 'ⵜⴰⵏⵙⴰ';
 
   @override
-  String get distance => 'Distance';
+  String get distance => 'ⴰⴳⵎⵎⴰⴹ';
 
   @override
-  String get headCount => 'Nombre de têtes';
+  String get headCount => 'ⴰⵎⴹⴰⵏ ⵏ ⵉⵉⵙⵡⵉ';
 
   @override
-  String get views => 'Vues';
+  String get views => 'ⵉⵜⵜⵡⴰⵏⵏⴰⵏ';
 
   @override
-  String get statusSold => 'VENDU';
+  String get statusSold => 'ⵉⵜⵡⴰⴷⴷⴰ';
 
   @override
-  String get statusSuspended => 'SUSPENDU';
+  String get statusSuspended => 'ⵉⵜⵡⴰⵙⵡⵓⵔⴹ';
 
   @override
-  String get available => 'Disponible';
+  String get available => 'ⵉⵍⵍⴰ';
 
   @override
-  String get noServiceAvailable => 'Aucun service disponible';
+  String get noServiceAvailable => 'ⵓⵔ ⵜⵍⵍⵉ ⵜⵡⵓⵔⵉ';
 
   @override
-  String get newAnnonce => 'Nouvelle annonce';
+  String get newAnnonce => 'ⴰⵄⵍⴰⵏ ⴰⵎⴰⵢⵏⵓ';
 
   @override
-  String get photos => 'Photos';
+  String get photos => 'ⵜⵉⵡⵍⴰⴼⵉⵏ';
 
   @override
-  String get animal => 'L\'animal';
+  String get animal => 'ⵓⵍⵓⵙ';
 
   @override
-  String get priceDetails => 'Prix & Détails';
+  String get priceDetails => 'ⴰⵣⵡⵍ & ⵉⴼⵔⴷⵉⵙⵏ';
 
   @override
-  String get next => 'Suivant';
+  String get next => 'ⴷⴰⵜ';
 
   @override
-  String get back => 'Retour';
+  String get back => 'ⴷⴰⵖ';
 
   @override
-  String get camera => 'Appareil photo';
+  String get camera => 'ⵜⴰⴳⵏⵣⴰ';
 
   @override
-  String get gallery => 'Galerie';
+  String get gallery => 'ⵜⵉⵡⵍⴰⴼⵉⵏ';
 
   @override
-  String get breedRequired => 'Race requise';
+  String get breedRequired => 'ⴰⵣⵔⴼ ⵉⵇⵇⴰⵏ';
 
   @override
-  String get unspecified => 'Non précisé';
+  String get unspecified => 'ⵓⵔ ⵉⴱⴰⵢⵏ';
 
   @override
-  String get select => 'Sélectionner';
+  String get select => 'ⴼⵔⵓ';
 
   @override
-  String get onssaTag => 'N° tag ONSSA (optionnel)';
+  String get onssaTag => 'ⵏⵓⵎⵕⵓ ⵏ ⵉⵏⵣⵓ ⵏ ⵓⵏⵙⵙⴰ (ⵓⵔ ⵉⵇⵇⴰⵏ)';
 
   @override
-  String get agriAidEligible => 'Éligible aide agricole';
+  String get agriAidEligible => 'ⵉⵙⵜⴰⵢ ⵉ ⵓⵎⴷⴷⵓ ⴰⴼⵍⵍⴰⵃ';
 
   @override
-  String get title => 'Titre';
+  String get title => 'ⴰⵣⵡⴰⵔ';
 
   @override
-  String get required => 'Requis';
+  String get required => 'ⵉⵇⵇⴰⵏ';
 
   @override
-  String get deliveryPossible => 'Livraison possible';
+  String get deliveryPossible => 'ⵜⵉⵍⴰⵡⵜ ⵜⵣⵎⵎⵔ';
 
   @override
-  String get deliveryFees => 'Frais de livraison';
+  String get deliveryFees => 'ⵉⵙⵓⴼⴼⵖ ⵏ ⵜⵉⵍⴰⵡⵜ';
 
   @override
-  String get city => 'Ville';
+  String get city => 'ⵜⴰⵎⴷⵉⵏⵜ';
 
   @override
-  String get preciseAddress => 'Adresse précise';
+  String get preciseAddress => 'ⵜⴰⵏⵙⴰ ⵜⴰⴷⵖⵔⴰⵏⵜ';
 
   @override
-  String get locateMe => 'Me géolocaliser';
+  String get locateMe => 'ⴰⴼ ⴰⵙⵉⵡⴹ ⵉⵏⵓ';
 
   @override
-  String get locationOk => 'Position OK';
+  String get locationOk => 'ⴰⵙⵉⵡⴹ ⵉⵥⵍⵉ';
 
   @override
-  String get locationError => 'Erreur de localisation';
+  String get locationError => 'ⵜⴰⵖⵍⵜ ⵏ ⵓⵙⵉⵡⴹ';
 
   @override
-  String get addAtLeastOnePhoto => 'Veuillez ajouter au moins une photo';
+  String get addAtLeastOnePhoto => 'ⵔⵏⵓ ⵢⴰⵜ ⵜⵡⵍⴰⴼⵜ ⴰⵎⵎⴰ';
 
   @override
-  String get actionSuccess => 'Action effectuée avec succès ✅';
+  String get actionSuccess => 'ⵜⵓⴽⴽⵙⵜ ⵜⵎⵙⴽⴰⵔⵜ ✅';
 
   @override
-  String get reportSent => 'Signalement envoyé';
+  String get reportSent => 'ⵉⵜⵡⴰⵣⵏ ⵡⴰⴱⵍⵍⵖ';
 
   @override
-  String get noFavorites => 'Aucun favori';
+  String get noFavorites => 'ⵓⵔ ⵍⵍⵉⵏ ⵉⵎⵖⵍⴰⵏ';
 
   @override
-  String get noMyAnnonces => 'Vous n\'avez pas encore d\'annonces';
+  String get noMyAnnonces => 'ⵓⵔ ⵉⵍⵍⵉ ⵡⴰⵢⵢⵓ ⵡⴰⵄⵍⴰⵏ ⵉⵏⵓ';
 
   @override
-  String get createAnnonce => 'Créer une annonce';
+  String get createAnnonce => 'ⴽⵛⵛⵎ ⴰⵄⵍⴰⵏ';
 
   @override
-  String get securePayment => 'Paiement sécurisé';
+  String get securePayment => 'ⴰⵙⵓⴷⵔ ⵉⵥⵍⵉ';
 
   @override
-  String get escrowPage => 'Page de séquestre / paiement';
+  String get escrowPage => 'ⵜⴰⵙⵏⵜⴰⵢⵜ ⵏ ⵡⵓⵙⵓⴷⵔ';
 
   @override
-  String get messaging => 'Messagerie';
+  String get messaging => 'ⵜⵉⴱⵔⴰⵜⵉⵏ';
 
   @override
-  String get conversationOngoing => 'Conversation en cours';
+  String get conversationOngoing => 'ⵜⴰⵎⵔⵙⴰⵍⵜ ⵜⵍⵍⴰ';
 
   @override
-  String get sellerLabel => 'Vendeur';
+  String get sellerLabel => 'ⴰⵣⵣⴰⵢ';
 
   @override
-  String get justNow => 'À l\'instant';
+  String get justNow => 'ⴷⴰⵖ';
 
   @override
   String minutesAgo(int count) {
-    return 'Il y a $count min';
+    return 'ⵣⴳ $count ⵏ ⵜⵓⴷⴷⴰⵔⵜ';
   }
 
   @override
   String hoursAgo(int count) {
-    return 'Il y a $count h';
+    return 'ⵣⴳ $count ⵏ ⵜⵙⵔⴰⴳⵜ';
   }
 
   @override
   String daysAgo(int count) {
-    return 'Il y a $count j';
+    return 'ⵣⴳ $count ⵏ ⵡⴰⵙⵙ';
   }
 
   @override
   String get language => 'ⵜⵓⵜⵍⴰⵢⵜ';
 
   @override
-  String get french => 'Français';
+  String get french => 'ⵜⴰⴼⵕⴰⵏⵙⵉⵙⵜ';
 
   @override
-  String get arabic => 'العربية';
+  String get arabic => 'ⵜⴰⵄⵕⴰⴱⵜ';
 
   @override
-  String get english => 'English';
+  String get english => 'ⵜⴰⵏⴳⵍⵉⵣⵜ';
 
   @override
-  String get tamazight => 'Tamazight (ⵜⴰⵎⴰⵣⵉⵖⵜ)';
+  String get tamazight => 'ⵜⴰⵎⴰⵣⵉⵖⵜ';
 
   @override
-  String get fixedPrice => 'Prix fixe';
+  String get fixedPrice => 'ⴰⵣⵡⵍ ⵉⵎⵙⵙⵓⴼⵖ';
 
   @override
-  String get perHead => 'Par tête';
+  String get perHead => 'ⵉ ⵢⵉⵡⵙⵉ';
 
   @override
-  String get perKg => 'Par kg';
+  String get perKg => 'ⵉ ⴽⵉⵍⵓ';
 
   @override
-  String get milkTeeth => 'Dents de lait';
+  String get milkTeeth => 'ⵉⵊⵊ ⴰⵎⵥⵢⴰⵏ';
 
   @override
-  String get twoTeeth => '2 dents';
+  String get twoTeeth => 'ⵙⵉⵏ ⵉⵊⵊ (ⵜⵏⵉ)';
 
   @override
-  String get fourTeeth => '4 dents';
+  String get fourTeeth => 'ⴽⴽⵓⵥ ⵉⵊⵊ (ⵕⴱⵄⵉ)';
 
   @override
-  String get sixTeeth => '6 dents';
+  String get sixTeeth => 'ⵚⴹⵉⵚ ⵉⵊⵊ (ⵙⴷⴰⵙⵉ)';
 
   @override
-  String get fullMouth => 'Bouche complète';
+  String get fullMouth => 'ⵉⵊⵊ ⴰⵎⴰⵜⵜⴰ (ⵊⴰⵎⵄⵉ)';
 
   @override
-  String get phoneRequired => 'Le numéro de téléphone est requis';
+  String get phoneRequired => 'ⵜⵉⵍⵉⴼⵓⵏ ⵉⵇⵇⴰⵏ';
 
   @override
-  String get invalidPhone => 'Numéro de téléphone invalide';
+  String get invalidPhone => 'ⵜⵉⵍⵉⴼⵓⵏ ⵓⵔ ⵉⴳⵉⵏ';
 
   @override
-  String get passwordRequired => 'Le mot de passe est requis';
+  String get passwordRequired => 'ⴰⵡⴹⴰⵍ ⵉⵇⵇⴰⵏ';
 
   @override
-  String get deletionQuestion => 'Supprimer l\'annonce ?';
+  String get deletionQuestion => 'ⵜⵔⵉⴷ ⴰⴷ ⵜⴽⴽⵙⴷ ⵡⴰⵄⵍⴰⵏ?';
 
   @override
-  String get promoteTopLot => 'Promouvoir (Top Lot)';
+  String get promoteTopLot => 'ⵙⵙⵔⵙ (ⵜⵓⴱ ⵍⵓⵜ)';
 
   @override
-  String get topLot => 'TOP LOT';
+  String get topLot => 'ⵜⵓⴱ ⵍⵓⵜ';
 
   @override
-  String get allFields => 'Tous';
+  String get allFields => 'ⴽⵓⵍⵍⵓ';
 
   @override
-  String get min => 'Min';
+  String get min => 'ⴰⵎⵥⵢⴰⵏ';
 
   @override
-  String get max => 'Max';
+  String get max => 'ⴰⵎⵇⵇⵔⴰⵏ';
 }
