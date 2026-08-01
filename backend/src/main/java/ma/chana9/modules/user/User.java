@@ -23,7 +23,6 @@ import ma.chana9.shared.enums.Role;
 @Getter
 @Setter
 public class User {
-
     @Id
     @UuidGenerator
     private UUID id;

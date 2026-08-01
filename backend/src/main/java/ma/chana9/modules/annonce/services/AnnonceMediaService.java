@@ -21,7 +21,6 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class AnnonceMediaService {
-
     private final AnnonceRepository annonceRepository;
     private final AnnonceMediaRepository annonceMediaRepository;
     private final StorageService storageService;
