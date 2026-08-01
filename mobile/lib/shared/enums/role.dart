@@ -14,8 +14,8 @@ enum Role {
 
   static Role fromJson(String value) => Role.values.firstWhere(
         (e) => e.value == value,
-    orElse: () => Role.buyer,
-  );
+        orElse: () => Role.buyer,
+      );
 
   String toJson() => value;
 }

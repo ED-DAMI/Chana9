@@ -72,13 +72,7 @@ class AuthRepositoryImpl implements AuthRepository {
         await tokenStorage.saveCredentials(phone: phone, password: password);
         return result;
       });
-
-  @override
-  Future<Either<Failure, Unit>> logout() =>
-      _execute(() async {
-        await tokenStorage.clearTokens();
-        return unit;
-      });
+  
 
   @override
   Future<Either<Failure, User>> getCurrentUser() =>
@@ -103,5 +97,24 @@ class AuthRepositoryImpl implements AuthRepository {
         );
         await tokenStorage.saveUser(result.user);
         return result;
+      });
+
+  @override
+  Future<Either<Failure, Unit>> logout() =>
+      _execute(() async {
+        final refreshToken = await tokenStorage.getRefreshToken();
+        if (refreshToken != null) {
+          await remoteDataSource.logout(refreshToken);
+        }
+        await tokenStorage.clearTokens();
+        return unit;
+      });
+
+  @override
+  Future<Either<Failure, Unit>> revokeAll() =>
+      _execute(() async {
+        await remoteDataSource.revokeAll();
+        await tokenStorage.clearTokens();
+        return unit;
       });
 }
