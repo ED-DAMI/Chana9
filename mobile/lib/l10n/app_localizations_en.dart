@@ -48,7 +48,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get alreadyAccount => 'Already have an account?';
 
   @override
-  String get savedCredentials => 'Identifiants enregistrés';
+  String get savedCredentials => 'Saved credentials';
 
   @override
   String get sessionExpired => 'Session expired';
@@ -168,10 +168,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deleteAnnonce => 'Delete listing';
 
   @override
-  String get confirmDelete => 'Confirmer la suppression';
+  String get confirmDelete => 'Confirm deletion';
 
   @override
-  String get irreversible => 'Cette action est irréversible.';
+  String get irreversible => 'This action is irreversible.';
 
   @override
   String get cancel => 'Cancel';
@@ -198,29 +198,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get removeFavorite => 'Remove favorite';
 
   @override
-  String get alreadyFavorited => 'Déjà ajouté aux favoris';
+  String get alreadyFavorited => 'Already added to favorites';
 
   @override
-  String get alreadyReported => 'Vous avez déjà signalé cette annonce';
+  String get alreadyReported => 'You have already reported this listing';
 
   @override
-  String get cannotReportOwn =>
-      'Vous ne pouvez pas signaler votre propre annonce';
+  String get cannotReportOwn => 'You cannot report your own listing';
 
   @override
-  String get fraudOrScam => 'Arnaque / Fraude';
+  String get fraudOrScam => 'Scam / Fraud';
 
   @override
-  String get wrongInformation => 'Informations incorrectes';
+  String get wrongInformation => 'Incorrect information';
 
   @override
-  String get unhealthyAnimal => 'Animal en mauvaise santé';
+  String get unhealthyAnimal => 'Unhealthy animal';
 
   @override
-  String get duplicate => 'Annonce en double';
+  String get duplicate => 'Duplicate listing';
 
   @override
-  String get inappropriateMedia => 'Photos inappropriées';
+  String get inappropriateMedia => 'Inappropriate photos';
 
   @override
   String get other => 'Other';
@@ -250,55 +249,55 @@ class AppLocalizationsEn extends AppLocalizations {
   String get beniAhsen => 'Béni Ahsen';
 
   @override
-  String get daMan => 'Da\'Man';
+  String get daMan => 'D\'man';
 
   @override
   String get draa => 'Drâa';
 
   @override
-  String get naineDeMontagne => 'Naine de montagne';
+  String get naineDeMontagne => 'Mountain Dwarf Goat';
 
   @override
-  String get chevreduRiff => 'Chèvre du Rif';
+  String get chevreduRiff => 'Rif Goat';
 
   @override
-  String get chevreDeLaayoune => 'Chèvre de Laâyoune';
+  String get chevreDeLaayoune => 'Laâyoune Goat';
 
   @override
   String get blondeDAquitaine => 'Blonde d\'Aquitaine';
 
   @override
-  String get frisonnePieNoire => 'Frisonne Pie Noire';
+  String get frisonnePieNoire => 'Friesian Black Pied';
 
   @override
   String get montbeliarde => 'Montbéliarde';
 
   @override
-  String get bruneAtlas => 'Brune Atlas';
+  String get bruneAtlas => 'Atlas Brown';
 
   @override
   String get ougda => 'Ougda';
 
   @override
-  String get dromadaireSahraouii => 'Dromadaire Sahraoui';
+  String get dromadaireSahraouii => 'Sahrawi Dromedary';
 
   @override
-  String get dromadaireGuelmim => 'Dromadaire Guelmim';
+  String get dromadaireGuelmim => 'Guelmim Dromedary';
 
   @override
-  String get barbe => 'Barbe';
+  String get barbe => 'Barb';
 
   @override
-  String get arabeBarbe => 'Arabe-Barbe';
+  String get arabeBarbe => 'Arab-Barb';
 
   @override
-  String get aneBeldi => 'Âne Beldi';
+  String get aneBeldi => 'Beldi Donkey';
 
   @override
-  String get mulet => 'Mulet';
+  String get mulet => 'Mule';
 
   @override
-  String get regionTangerTetouanAlHoceima => 'Tanger-Tétouan-Al Hoceïma';
+  String get regionTangerTetouanAlHoceima => 'Tanger-Tetouan-Al Hoceima';
 
   @override
   String get regionOriental => 'Oriental';
@@ -346,10 +345,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get myAlerts => 'My alerts';
 
   @override
-  String get editProfile => 'Modifier le profil';
+  String get editProfile => 'Edit profile';
 
   @override
-  String get saveChanges => 'Enregistrer';
+  String get saveChanges => 'Save changes';
 
   @override
   String get kycVerified => 'Verified';
@@ -358,22 +357,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notVerified => 'Not verified';
 
   @override
-  String get kycVerification => 'Vérification KYC';
+  String get kycVerification => 'KYC verification';
 
   @override
-  String get activeSessions => 'Sessions actives';
+  String get activeSessions => 'Active sessions';
 
   @override
-  String get revokeAll => 'Révoquer tout';
+  String get revokeAll => 'Revoke all';
 
   @override
-  String get role => 'Rôle';
+  String get role => 'Role';
 
   @override
-  String get seller => 'Vendeur';
+  String get seller => 'Seller';
 
   @override
-  String get buyer => 'Acheteur';
+  String get buyer => 'Buyer';
 
   @override
   String get admin => 'Admin';
@@ -424,7 +423,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get user => 'User';
 
   @override
-  String get verifiedCheck => 'Vérifié ✓';
+  String get verifiedCheck => 'Verified ✓';
 
   @override
   String get logoutConfirm => 'Are you sure you want to log out?';
@@ -466,10 +465,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get views => 'Views';
 
   @override
-  String get statusSold => 'VENDU';
+  String get statusSold => 'SOLD';
 
   @override
-  String get statusSuspended => 'SUSPENDU';
+  String get statusSuspended => 'SUSPENDED';
 
   @override
   String get available => 'Available';
@@ -511,7 +510,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get select => 'Select';
 
   @override
-  String get onssaTag => 'N° tag ONSSA (optionnel)';
+  String get onssaTag => 'ONSSA tag no. (optional)';
 
   @override
   String get agriAidEligible => 'Eligible for agricultural aid';
@@ -523,7 +522,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get required => 'Required';
 
   @override
-  String get deliveryPossible => 'Delivery possible';
+  String get deliveryPossible => 'Delivery available';
 
   @override
   String get deliveryFees => 'Delivery fees';
@@ -547,7 +546,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addAtLeastOnePhoto => 'Please add at least one photo';
 
   @override
-  String get actionSuccess => 'Action effectuée avec succès ✅';
+  String get actionSuccess => 'Action completed successfully ✅';
 
   @override
   String get reportSent => 'Report sent';
@@ -581,33 +580,33 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String minutesAgo(int count) {
-    return 'Il y a $count min';
+    return '$count min ago';
   }
 
   @override
   String hoursAgo(int count) {
-    return 'Il y a $count h';
+    return '$count h ago';
   }
 
   @override
   String daysAgo(int count) {
-    return 'Il y a $count j';
+    return '$count d ago';
   }
 
   @override
   String get language => 'Language';
 
   @override
-  String get french => 'Français';
+  String get french => 'French';
 
   @override
-  String get arabic => 'العربية';
+  String get arabic => 'Arabic';
 
   @override
   String get english => 'English';
 
   @override
-  String get tamazight => 'Tamazight (ⵜⴰⵎⴰⵣⵉⵖⵜ)';
+  String get tamazight => 'Tamazight';
 
   @override
   String get fixedPrice => 'Fixed price';
@@ -619,19 +618,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get perKg => 'Per kg';
 
   @override
-  String get milkTeeth => 'Dents de lait';
+  String get milkTeeth => 'Milk teeth';
 
   @override
-  String get twoTeeth => '2 dents';
+  String get twoTeeth => '2 teeth';
 
   @override
-  String get fourTeeth => '4 dents';
+  String get fourTeeth => '4 teeth';
 
   @override
-  String get sixTeeth => '6 dents';
+  String get sixTeeth => '6 teeth';
 
   @override
-  String get fullMouth => 'Bouche complète';
+  String get fullMouth => 'Full mouth';
 
   @override
   String get phoneRequired => 'Phone number is required';

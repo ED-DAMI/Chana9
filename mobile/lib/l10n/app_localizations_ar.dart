@@ -42,31 +42,31 @@ class AppLocalizationsAr extends AppLocalizations {
   String get registerButton => 'إنشاء حساب';
 
   @override
-  String get noAccount => 'Vous n\'avez pas de compte ?';
+  String get noAccount => 'ليس لديك حساب؟';
 
   @override
-  String get alreadyAccount => 'Vous avez déjà un compte ?';
+  String get alreadyAccount => 'هل لديك حساب بالفعل؟';
 
   @override
-  String get savedCredentials => 'Identifiants enregistrés';
+  String get savedCredentials => 'بيانات الدخول المحفوظة';
 
   @override
-  String get sessionExpired => 'Session expirée';
+  String get sessionExpired => 'انتهت الجلسة';
 
   @override
-  String get changePassword => 'Changer le mot de passe';
+  String get changePassword => 'تغيير كلمة المرور';
 
   @override
-  String get currentPassword => 'Mot de passe actuel';
+  String get currentPassword => 'كلمة المرور الحالية';
 
   @override
-  String get newPassword => 'Nouveau mot de passe';
+  String get newPassword => 'كلمة المرور الجديدة';
 
   @override
-  String get passwordMismatch => 'Les mots de passe ne correspondent pas';
+  String get passwordMismatch => 'كلمتا المرور غير متطابقتين';
 
   @override
-  String get passwordMinLength => 'Minimum 6 caractères';
+  String get passwordMinLength => '6 أحرف كحد أدنى';
 
   @override
   String get annonces => 'الإعلانات';
@@ -93,22 +93,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String get resetFilters => 'إعادة تعيين';
 
   @override
-  String get breed => 'Race';
+  String get breed => 'السلالة';
 
   @override
-  String get region => 'Région';
+  String get region => 'الجهة';
 
   @override
-  String get price => 'Prix';
+  String get price => 'السعر';
 
   @override
-  String get weight => 'Poids';
+  String get weight => 'الوزن';
 
   @override
-  String get gender => 'Genre';
+  String get gender => 'الجنس';
 
   @override
-  String get age => 'Âge';
+  String get age => 'العمر';
 
   @override
   String get male => 'ذكر';
@@ -120,19 +120,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String get all => 'الكل';
 
   @override
-  String get deliveryAvailable => 'Livraison disponible';
+  String get deliveryAvailable => 'التوصيل متاح';
 
   @override
-  String get priceNegotiable => 'Prix négociable';
+  String get priceNegotiable => 'السعر قابل للتفاوض';
 
   @override
-  String get eligibleForAid => 'Éligible aux aides';
+  String get eligibleForAid => 'مؤهل للدعم';
 
   @override
-  String get topLotOnly => 'Top Lot uniquement';
+  String get topLotOnly => 'العروض المميزة فقط';
 
   @override
-  String get noAnnoncesFound => 'Aucune annonce trouvée';
+  String get noAnnoncesFound => 'لم يتم العثور على أي إعلانات';
 
   @override
   String get retry => 'إعادة المحاولة';
@@ -141,197 +141,196 @@ class AppLocalizationsAr extends AppLocalizations {
   String get description => 'الوصف';
 
   @override
-  String get noDescription => 'Aucune description fournie.';
+  String get noDescription => 'لا يوجد وصف.';
 
   @override
   String get location => 'الموقع';
 
   @override
-  String get delivery => 'Livraison';
+  String get delivery => 'التوصيل';
 
   @override
-  String get boarding => 'Pension';
+  String get boarding => 'الرعاية والإيواء';
 
   @override
-  String get markAsSold => 'Marquer vendu';
+  String get markAsSold => 'تحديد كمباع';
 
   @override
-  String get suspend => 'Suspendre';
+  String get suspend => 'تعليق';
 
   @override
-  String get reactivate => 'Réactiver';
+  String get reactivate => 'إعادة التفعيل';
 
   @override
-  String get promote => 'Promouvoir';
+  String get promote => 'ترويج';
 
   @override
-  String get deleteAnnonce => 'Supprimer l\'annonce';
+  String get deleteAnnonce => 'حذف الإعلان';
 
   @override
-  String get confirmDelete => 'Confirmer la suppression';
+  String get confirmDelete => 'تأكيد الحذف';
 
   @override
-  String get irreversible => 'Cette action est irréversible.';
+  String get irreversible => 'هذا الإجراء لا يمكن التراجع عنه.';
 
   @override
-  String get cancel => 'Annuler';
+  String get cancel => 'إلغاء';
 
   @override
-  String get confirm => 'Confirmer';
+  String get confirm => 'تأكيد';
 
   @override
   String get report => 'تبليغ';
 
   @override
-  String get reportReason => 'Raison du signalement';
+  String get reportReason => 'سبب التبليغ';
 
   @override
-  String get reportComment => 'Commentaire (optionnel)';
+  String get reportComment => 'تعليق (اختياري)';
 
   @override
   String get sendReport => 'إرسال التبليغ';
 
   @override
-  String get addFavorite => 'Ajouter aux favoris';
+  String get addFavorite => 'أضف إلى المفضلة';
 
   @override
-  String get removeFavorite => 'Retirer des favoris';
+  String get removeFavorite => 'إزالة من المفضلة';
 
   @override
-  String get alreadyFavorited => 'Déjà ajouté aux favoris';
+  String get alreadyFavorited => 'مضاف إلى المفضلة مسبقاً';
 
   @override
-  String get alreadyReported => 'Vous avez déjà signalé cette annonce';
+  String get alreadyReported => 'لقد قمت بالتبليغ عن هذا الإعلان مسبقاً';
 
   @override
-  String get cannotReportOwn =>
-      'Vous ne pouvez pas signaler votre propre annonce';
+  String get cannotReportOwn => 'لا يمكنك التبليغ عن إعلانك الخاص';
 
   @override
-  String get fraudOrScam => 'Arnaque / Fraude';
+  String get fraudOrScam => 'نصب / احتيال';
 
   @override
-  String get wrongInformation => 'Informations incorrectes';
+  String get wrongInformation => 'معلومات غير صحيحة';
 
   @override
-  String get unhealthyAnimal => 'Animal en mauvaise santé';
+  String get unhealthyAnimal => 'حيوان في حالة صحية سيئة';
 
   @override
-  String get duplicate => 'Annonce en double';
+  String get duplicate => 'إعلان مكرر';
 
   @override
-  String get inappropriateMedia => 'Photos inappropriées';
+  String get inappropriateMedia => 'صور غير لائقة';
 
   @override
-  String get other => 'Autre';
+  String get other => 'أخرى';
 
   @override
-  String get sardi => 'Sardi';
+  String get sardi => 'الصردي';
 
   @override
-  String get timahdite => 'Timahdite';
+  String get timahdite => 'تمحضيت';
 
   @override
-  String get beniGuil => 'Béni Guil';
+  String get beniGuil => 'بني كيل';
 
   @override
-  String get dokkali => 'Dokkali';
+  String get dokkali => 'دكالي';
 
   @override
-  String get rehami => 'Rehami';
+  String get rehami => 'الرحماني';
 
   @override
-  String get boujaad => 'Boujaad';
+  String get boujaad => 'أبي الجعد';
 
   @override
-  String get oulmesZaer => 'Oulmès-Zaër';
+  String get oulmesZaer => 'ولماس زعير';
 
   @override
-  String get beniAhsen => 'Béni Ahsen';
+  String get beniAhsen => 'بني أحسن';
 
   @override
-  String get daMan => 'Da\'Man';
+  String get daMan => 'الدمان';
 
   @override
-  String get draa => 'Drâa';
+  String get draa => 'درعة';
 
   @override
-  String get naineDeMontagne => 'Naine de montagne';
+  String get naineDeMontagne => 'سلالة جبلية قزمة';
 
   @override
-  String get chevreduRiff => 'Chèvre du Rif';
+  String get chevreduRiff => 'ماعز الريف';
 
   @override
-  String get chevreDeLaayoune => 'Chèvre de Laâyoune';
+  String get chevreDeLaayoune => 'ماعز العيون';
 
   @override
-  String get blondeDAquitaine => 'Blonde d\'Aquitaine';
+  String get blondeDAquitaine => 'شقراء أكيتين';
 
   @override
-  String get frisonnePieNoire => 'Frisonne Pie Noire';
+  String get frisonnePieNoire => 'الفريزيان';
 
   @override
-  String get montbeliarde => 'Montbéliarde';
+  String get montbeliarde => 'المونتبليار';
 
   @override
-  String get bruneAtlas => 'Brune Atlas';
+  String get bruneAtlas => 'سمراء الأطلس';
 
   @override
-  String get ougda => 'Ougda';
+  String get ougda => 'أوجدا';
 
   @override
-  String get dromadaireSahraouii => 'Dromadaire Sahraoui';
+  String get dromadaireSahraouii => 'الجمل الصحراوي';
 
   @override
-  String get dromadaireGuelmim => 'Dromadaire Guelmim';
+  String get dromadaireGuelmim => 'جمل كلميم';
 
   @override
-  String get barbe => 'Barbe';
+  String get barbe => 'البربري';
 
   @override
-  String get arabeBarbe => 'Arabe-Barbe';
+  String get arabeBarbe => 'العربي البربري';
 
   @override
-  String get aneBeldi => 'Âne Beldi';
+  String get aneBeldi => 'حمار بلدي';
 
   @override
-  String get mulet => 'Mulet';
+  String get mulet => 'بغل';
 
   @override
-  String get regionTangerTetouanAlHoceima => 'Tanger-Tétouan-Al Hoceïma';
+  String get regionTangerTetouanAlHoceima => 'طنجة - تطوان - الحسيمة';
 
   @override
-  String get regionOriental => 'Oriental';
+  String get regionOriental => 'الشرق';
 
   @override
-  String get regionFesMeknes => 'Fès-Meknès';
+  String get regionFesMeknes => 'فاس - مكناس';
 
   @override
-  String get regionRabatSaleKenitra => 'Rabat-Salé-Kénitra';
+  String get regionRabatSaleKenitra => 'الرباط - سلا - القنيطرة';
 
   @override
-  String get regionBeniMellalKhenifra => 'Béni Mellal-Khénifra';
+  String get regionBeniMellalKhenifra => 'بني ملال - خنيفرة';
 
   @override
-  String get regionCasablancaSettat => 'Casablanca-Settat';
+  String get regionCasablancaSettat => 'الدار البيضاء - سطات';
 
   @override
-  String get regionMarrakechSafi => 'Marrakech-Safi';
+  String get regionMarrakechSafi => 'مراكش - آسفي';
 
   @override
-  String get regionDraaTafilalet => 'Drâa-Tafilalet';
+  String get regionDraaTafilalet => 'درعة - تافيلالت';
 
   @override
-  String get regionSoussMassa => 'Souss-Massa';
+  String get regionSoussMassa => 'سوس - ماسة';
 
   @override
-  String get regionGuelmimOuedNoun => 'Guelmim-Oued Noun';
+  String get regionGuelmimOuedNoun => 'كلميم - واد نون';
 
   @override
-  String get regionLaayouneSakiaElHamra => 'Laâyoune-Sakia El Hamra';
+  String get regionLaayouneSakiaElHamra => 'العيون - الساقية الحمراء';
 
   @override
-  String get regionDakhlaOuedEdDahab => 'Dakhla-Oued Ed-Dahab';
+  String get regionDakhlaOuedEdDahab => 'الداخلة - وادي الذهب';
 
   @override
   String get myProfile => 'ملفي';
@@ -346,46 +345,46 @@ class AppLocalizationsAr extends AppLocalizations {
   String get myAlerts => 'تنبيهاتي';
 
   @override
-  String get editProfile => 'Modifier le profil';
+  String get editProfile => 'تعديل الملف الشخصي';
 
   @override
-  String get saveChanges => 'Enregistrer';
+  String get saveChanges => 'حفظ التغييرات';
 
   @override
-  String get kycVerified => 'Vérifié';
+  String get kycVerified => 'موثق';
 
   @override
-  String get notVerified => 'Non vérifié';
+  String get notVerified => 'غير موثق';
 
   @override
-  String get kycVerification => 'Vérification KYC';
+  String get kycVerification => 'التحقق من الهوية (KYC)';
 
   @override
-  String get activeSessions => 'Sessions actives';
+  String get activeSessions => 'الجلسات النشطة';
 
   @override
-  String get revokeAll => 'Révoquer tout';
+  String get revokeAll => 'إلغاء الكل';
 
   @override
-  String get role => 'Rôle';
+  String get role => 'الدور';
 
   @override
-  String get seller => 'Vendeur';
+  String get seller => 'بائع';
 
   @override
-  String get buyer => 'Acheteur';
+  String get buyer => 'مشتري';
 
   @override
-  String get admin => 'Admin';
+  String get admin => 'مسؤول';
 
   @override
   String get loading => 'جار التحميل...';
 
   @override
-  String get error => 'Erreur';
+  String get error => 'خطأ';
 
   @override
-  String get success => 'Succès';
+  String get success => 'نجاح';
 
   @override
   String get save => 'حفظ';
@@ -403,260 +402,260 @@ class AppLocalizationsAr extends AppLocalizations {
   String get contact => 'اتصال';
 
   @override
-  String get mad => 'MAD';
+  String get mad => 'درهم';
 
   @override
-  String get months => 'mois';
+  String get months => 'أشهر';
 
   @override
-  String get km => 'km';
+  String get km => 'كم';
 
   @override
-  String get fullNameOptional => 'Nom complet (optionnel)';
+  String get fullNameOptional => 'الاسم الكامل (اختياري)';
 
   @override
-  String get regionOptional => 'Région (optionnel)';
+  String get regionOptional => 'الجهة (اختياري)';
 
   @override
-  String get connectToAccount => 'Connectez-vous à votre compte';
+  String get connectToAccount => 'تسجيل الدخول إلى حسابك';
 
   @override
-  String get user => 'Utilisateur';
+  String get user => 'مستخدم';
 
   @override
-  String get verifiedCheck => 'Vérifié ✓';
+  String get verifiedCheck => 'تم التحقق ✓';
 
   @override
-  String get logoutConfirm => 'Êtes-vous sûr de vouloir vous déconnecter ?';
+  String get logoutConfirm => 'هل أنت متأكد أنك تريد تسجيل الخروج؟';
 
   @override
-  String get reportAnnonce => 'Signaler l\'annonce';
+  String get reportAnnonce => 'الإبلاغ عن الإعلان';
 
   @override
-  String get reportThisAnnonce => 'Signaler cette annonce';
+  String get reportThisAnnonce => 'الإبلاغ عن هذا الإعلان';
 
   @override
-  String get viewMore => 'Voir plus...';
+  String get viewMore => 'عرض المزيد...';
 
   @override
-  String get viewLess => 'Voir moins';
+  String get viewLess => 'عرض أقل';
 
   @override
-  String get message => 'Message';
+  String get message => 'رسالة';
 
   @override
-  String get call => 'Appeler';
+  String get call => 'اتصال';
 
   @override
-  String get services => 'Services';
+  String get services => 'الخدمات';
 
   @override
-  String get features => 'Caractéristiques';
+  String get features => 'المميزات';
 
   @override
-  String get address => 'Adresse';
+  String get address => 'العنوان';
 
   @override
-  String get distance => 'Distance';
+  String get distance => 'المسافة';
 
   @override
-  String get headCount => 'Nombre de têtes';
+  String get headCount => 'عدد الرؤوس';
 
   @override
-  String get views => 'Vues';
+  String get views => 'المشاهدات';
 
   @override
-  String get statusSold => 'VENDU';
+  String get statusSold => 'مُباع';
 
   @override
-  String get statusSuspended => 'SUSPENDU';
+  String get statusSuspended => 'مُعلق';
 
   @override
-  String get available => 'Disponible';
+  String get available => 'متاح';
 
   @override
-  String get noServiceAvailable => 'Aucun service disponible';
+  String get noServiceAvailable => 'لا توجد خدمة متاحة';
 
   @override
-  String get newAnnonce => 'Nouvelle annonce';
+  String get newAnnonce => 'إعلان جديد';
 
   @override
-  String get photos => 'Photos';
+  String get photos => 'الصور';
 
   @override
-  String get animal => 'L\'animal';
+  String get animal => 'الحيوان';
 
   @override
-  String get priceDetails => 'Prix & Détails';
+  String get priceDetails => 'السعر والتفاصيل';
 
   @override
-  String get next => 'Suivant';
+  String get next => 'التالي';
 
   @override
-  String get back => 'Retour';
+  String get back => 'رجوع';
 
   @override
-  String get camera => 'Appareil photo';
+  String get camera => 'الكاميرا';
 
   @override
-  String get gallery => 'Galerie';
+  String get gallery => 'المعرض';
 
   @override
-  String get breedRequired => 'Race requise';
+  String get breedRequired => 'يرجى تحديد السلالة';
 
   @override
-  String get unspecified => 'Non précisé';
+  String get unspecified => 'غير محدد';
 
   @override
-  String get select => 'Sélectionner';
+  String get select => 'اختر';
 
   @override
-  String get onssaTag => 'N° tag ONSSA (optionnel)';
+  String get onssaTag => 'رقم حلقة أونسا (اختياري)';
 
   @override
-  String get agriAidEligible => 'Éligible aide agricole';
+  String get agriAidEligible => 'مؤهل للدعم الفلاحي';
 
   @override
-  String get title => 'Titre';
+  String get title => 'العنوان';
 
   @override
-  String get required => 'Requis';
+  String get required => 'مطلوب';
 
   @override
-  String get deliveryPossible => 'Livraison possible';
+  String get deliveryPossible => 'التوصيل ممكن';
 
   @override
-  String get deliveryFees => 'Frais de livraison';
+  String get deliveryFees => 'رسوم التوصيل';
 
   @override
-  String get city => 'Ville';
+  String get city => 'المدينة';
 
   @override
-  String get preciseAddress => 'Adresse précise';
+  String get preciseAddress => 'العنوان الدقيق';
 
   @override
-  String get locateMe => 'Me géolocaliser';
+  String get locateMe => 'تحديد موقعي';
 
   @override
-  String get locationOk => 'Position OK';
+  String get locationOk => 'الموقع جيد';
 
   @override
-  String get locationError => 'Erreur de localisation';
+  String get locationError => 'خطأ في تحديد الموقع';
 
   @override
-  String get addAtLeastOnePhoto => 'Veuillez ajouter au moins une photo';
+  String get addAtLeastOnePhoto => 'يرجى إضافة صورة واحدة على الأقل';
 
   @override
-  String get actionSuccess => 'Action effectuée avec succès ✅';
+  String get actionSuccess => 'تمت العملية بنجاح ✅';
 
   @override
-  String get reportSent => 'Signalement envoyé';
+  String get reportSent => 'تم إرسال التبليغ';
 
   @override
-  String get noFavorites => 'Aucun favori';
+  String get noFavorites => 'لا توجد مفضلة';
 
   @override
-  String get noMyAnnonces => 'Vous n\'avez pas encore d\'annonces';
+  String get noMyAnnonces => 'ليس لديك أي إعلانات بعد';
 
   @override
-  String get createAnnonce => 'Créer une annonce';
+  String get createAnnonce => 'إنشاء إعلان';
 
   @override
-  String get securePayment => 'Paiement sécurisé';
+  String get securePayment => 'دفع آمن';
 
   @override
-  String get escrowPage => 'Page de séquestre / paiement';
+  String get escrowPage => 'صفحة الدفع / الضمان';
 
   @override
-  String get messaging => 'Messagerie';
+  String get messaging => 'الرسائل';
 
   @override
-  String get conversationOngoing => 'Conversation en cours';
+  String get conversationOngoing => 'محادثة جارية';
 
   @override
-  String get sellerLabel => 'Vendeur';
+  String get sellerLabel => 'البائع';
 
   @override
-  String get justNow => 'À l\'instant';
+  String get justNow => 'الآن';
 
   @override
   String minutesAgo(int count) {
-    return 'Il y a $count min';
+    return 'منذ $count دقيقة';
   }
 
   @override
   String hoursAgo(int count) {
-    return 'Il y a $count h';
+    return 'منذ $count ساعة';
   }
 
   @override
   String daysAgo(int count) {
-    return 'Il y a $count j';
+    return 'منذ $count يوم';
   }
 
   @override
   String get language => 'اللغة';
 
   @override
-  String get french => 'Français';
+  String get french => 'الفرنسية';
 
   @override
   String get arabic => 'العربية';
 
   @override
-  String get english => 'English';
+  String get english => 'الإنكليزية';
 
   @override
-  String get tamazight => 'ⵜⴰⵎⴰⵣⵉⵖⵜ';
+  String get tamazight => 'الأمازيغية';
 
   @override
-  String get fixedPrice => 'Prix fixe';
+  String get fixedPrice => 'سعر ثابت';
 
   @override
-  String get perHead => 'Par tête';
+  String get perHead => 'للرأس';
 
   @override
-  String get perKg => 'Par kg';
+  String get perKg => 'للكيلوغرام';
 
   @override
-  String get milkTeeth => 'Dents de lait';
+  String get milkTeeth => 'أسنان لبنية';
 
   @override
-  String get twoTeeth => '2 dents';
+  String get twoTeeth => 'سنتان (ثني)';
 
   @override
-  String get fourTeeth => '4 dents';
+  String get fourTeeth => '4 أسنان (رباعي)';
 
   @override
-  String get sixTeeth => '6 dents';
+  String get sixTeeth => '6 أسنان (سداسي)';
 
   @override
-  String get fullMouth => 'Bouche complète';
+  String get fullMouth => 'فم كامل (جامع)';
 
   @override
-  String get phoneRequired => 'Le numéro de téléphone est requis';
+  String get phoneRequired => 'رقم الهاتف مطلوب';
 
   @override
-  String get invalidPhone => 'Numéro de téléphone invalide';
+  String get invalidPhone => 'رقم الهاتف غير صالح';
 
   @override
-  String get passwordRequired => 'Le mot de passe est requis';
+  String get passwordRequired => 'كلمة المرور مطلوبة';
 
   @override
-  String get deletionQuestion => 'Supprimer l\'annonce ?';
+  String get deletionQuestion => 'هل تريد حذف الإعلان؟';
 
   @override
-  String get promoteTopLot => 'Promouvoir (Top Lot)';
+  String get promoteTopLot => 'ترويج (إعلان مميز)';
 
   @override
-  String get topLot => 'TOP LOT';
+  String get topLot => 'إعلان مميز';
 
   @override
-  String get allFields => 'Tous';
+  String get allFields => 'الكل';
 
   @override
-  String get min => 'Min';
+  String get min => 'الأدنى';
 
   @override
-  String get max => 'Max';
+  String get max => 'الأقصى';
 }
