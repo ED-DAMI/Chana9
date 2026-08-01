@@ -2,6 +2,10 @@
 
 part of 'annonce_alert_request_model.dart';
 
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
 _AnnonceAlertRequestModel _$AnnonceAlertRequestModelFromJson(
   Map<String, dynamic> json,
 ) => _AnnonceAlertRequestModel(

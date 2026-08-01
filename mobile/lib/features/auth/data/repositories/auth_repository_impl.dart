@@ -7,6 +7,7 @@ import '../../domain/entities/user.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_remote_datasource.dart';
 import '../models/login_request_model.dart';
+import '../models/register_request_model.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
@@ -37,13 +38,38 @@ class AuthRepositoryImpl implements AuthRepository {
           LoginRequestModel(phone: phone, password: password),
         );
         final result = model.toEntity();
-
         await tokenStorage.saveTokens(
           accessToken: result.accessToken,
           refreshToken: result.refreshToken,
         );
         await tokenStorage.saveUser(result.user);
+        await tokenStorage.saveCredentials(phone: phone, password: password);
+        return result;
+      });
 
+  @override
+  Future<Either<Failure, AuthResult>> register({
+    required String phone,
+    required String password,
+    String? fullName,
+    String? region,
+  }) =>
+      _execute(() async {
+        final model = await remoteDataSource.register(
+          RegisterRequestModel(
+            phone: phone,
+            password: password,
+            fullName: fullName,
+            region: region,
+          ),
+        );
+        final result = model.toEntity();
+        await tokenStorage.saveTokens(
+          accessToken: result.accessToken,
+          refreshToken: result.refreshToken,
+        );
+        await tokenStorage.saveUser(result.user);
+        await tokenStorage.saveCredentials(phone: phone, password: password);
         return result;
       });
 

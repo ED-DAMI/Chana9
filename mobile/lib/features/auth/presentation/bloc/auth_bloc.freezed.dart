@@ -55,12 +55,13 @@ extension AuthEventPatterns on AuthEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _CheckStatus value)?  checkStatus,TResult Function( _Login value)?  login,TResult Function( _Logout value)?  logout,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _CheckStatus value)?  checkStatus,TResult Function( _Login value)?  login,TResult Function( _Register value)?  register,TResult Function( _Logout value)?  logout,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _CheckStatus() when checkStatus != null:
 return checkStatus(_that);case _Login() when login != null:
-return login(_that);case _Logout() when logout != null:
+return login(_that);case _Register() when register != null:
+return register(_that);case _Logout() when logout != null:
 return logout(_that);case _:
   return orElse();
 
@@ -79,12 +80,13 @@ return logout(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _CheckStatus value)  checkStatus,required TResult Function( _Login value)  login,required TResult Function( _Logout value)  logout,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _CheckStatus value)  checkStatus,required TResult Function( _Login value)  login,required TResult Function( _Register value)  register,required TResult Function( _Logout value)  logout,}){
 final _that = this;
 switch (_that) {
 case _CheckStatus():
 return checkStatus(_that);case _Login():
-return login(_that);case _Logout():
+return login(_that);case _Register():
+return register(_that);case _Logout():
 return logout(_that);case _:
   throw StateError('Unexpected subclass');
 
@@ -102,12 +104,13 @@ return logout(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _CheckStatus value)?  checkStatus,TResult? Function( _Login value)?  login,TResult? Function( _Logout value)?  logout,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _CheckStatus value)?  checkStatus,TResult? Function( _Login value)?  login,TResult? Function( _Register value)?  register,TResult? Function( _Logout value)?  logout,}){
 final _that = this;
 switch (_that) {
 case _CheckStatus() when checkStatus != null:
 return checkStatus(_that);case _Login() when login != null:
-return login(_that);case _Logout() when logout != null:
+return login(_that);case _Register() when register != null:
+return register(_that);case _Logout() when logout != null:
 return logout(_that);case _:
   return null;
 
@@ -125,11 +128,12 @@ return logout(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  checkStatus,TResult Function( String phone,  String password)?  login,TResult Function()?  logout,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  checkStatus,TResult Function( String phone,  String password)?  login,TResult Function( String phone,  String password,  String? fullName,  String? region)?  register,TResult Function()?  logout,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CheckStatus() when checkStatus != null:
 return checkStatus();case _Login() when login != null:
-return login(_that.phone,_that.password);case _Logout() when logout != null:
+return login(_that.phone,_that.password);case _Register() when register != null:
+return register(_that.phone,_that.password,_that.fullName,_that.region);case _Logout() when logout != null:
 return logout();case _:
   return orElse();
 
@@ -148,11 +152,12 @@ return logout();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  checkStatus,required TResult Function( String phone,  String password)  login,required TResult Function()  logout,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  checkStatus,required TResult Function( String phone,  String password)  login,required TResult Function( String phone,  String password,  String? fullName,  String? region)  register,required TResult Function()  logout,}) {final _that = this;
 switch (_that) {
 case _CheckStatus():
 return checkStatus();case _Login():
-return login(_that.phone,_that.password);case _Logout():
+return login(_that.phone,_that.password);case _Register():
+return register(_that.phone,_that.password,_that.fullName,_that.region);case _Logout():
 return logout();case _:
   throw StateError('Unexpected subclass');
 
@@ -170,11 +175,12 @@ return logout();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  checkStatus,TResult? Function( String phone,  String password)?  login,TResult? Function()?  logout,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  checkStatus,TResult? Function( String phone,  String password)?  login,TResult? Function( String phone,  String password,  String? fullName,  String? region)?  register,TResult? Function()?  logout,}) {final _that = this;
 switch (_that) {
 case _CheckStatus() when checkStatus != null:
 return checkStatus();case _Login() when login != null:
-return login(_that.phone,_that.password);case _Logout() when logout != null:
+return login(_that.phone,_that.password);case _Register() when register != null:
+return register(_that.phone,_that.password,_that.fullName,_that.region);case _Logout() when logout != null:
 return logout();case _:
   return null;
 
@@ -277,6 +283,78 @@ class __$LoginCopyWithImpl<$Res>
 phone: null == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
 as String,password: null == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
 as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class _Register implements AuthEvent {
+  const _Register({required this.phone, required this.password, this.fullName, this.region});
+  
+
+ final  String phone;
+ final  String password;
+ final  String? fullName;
+ final  String? region;
+
+/// Create a copy of AuthEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$RegisterCopyWith<_Register> get copyWith => __$RegisterCopyWithImpl<_Register>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Register&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.password, password) || other.password == password)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.region, region) || other.region == region));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,phone,password,fullName,region);
+
+@override
+String toString() {
+  return 'AuthEvent.register(phone: $phone, password: $password, fullName: $fullName, region: $region)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$RegisterCopyWith<$Res> implements $AuthEventCopyWith<$Res> {
+  factory _$RegisterCopyWith(_Register value, $Res Function(_Register) _then) = __$RegisterCopyWithImpl;
+@useResult
+$Res call({
+ String phone, String password, String? fullName, String? region
+});
+
+
+
+
+}
+/// @nodoc
+class __$RegisterCopyWithImpl<$Res>
+    implements _$RegisterCopyWith<$Res> {
+  __$RegisterCopyWithImpl(this._self, this._then);
+
+  final _Register _self;
+  final $Res Function(_Register) _then;
+
+/// Create a copy of AuthEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? phone = null,Object? password = null,Object? fullName = freezed,Object? region = freezed,}) {
+  return _then(_Register(
+phone: null == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
+as String,password: null == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
+as String,fullName: freezed == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
+as String?,region: freezed == region ? _self.region : region // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
