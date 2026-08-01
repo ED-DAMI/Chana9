@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ma_chana9_app/core/l10n/app_localizations.dart';
 
 class PhoneField extends StatelessWidget {
   final TextEditingController controller;
@@ -13,6 +14,8 @@ class PhoneField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+
     return TextFormField(
       controller: controller,
       keyboardType: TextInputType.phone,
@@ -20,7 +23,7 @@ class PhoneField extends StatelessWidget {
         FilteringTextInputFormatter.allow(RegExp(r'[0-9+]')),
       ],
       decoration: InputDecoration(
-        labelText: 'Téléphone',
+        labelText: l10n.t('phone_label'),
         hintText: '+212600000000',
         prefixIcon: const Icon(Icons.phone_outlined),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -28,11 +31,11 @@ class PhoneField extends StatelessWidget {
       validator: validator ??
           (value) {
             if (value == null || value.trim().isEmpty) {
-              return 'Le numéro de téléphone est requis';
+              return l10n.t('phone_required');
             }
             final regex = RegExp(r'^\+?[0-9]{9,15}$');
             if (!regex.hasMatch(value.trim())) {
-              return 'Numéro de téléphone invalide';
+              return l10n.t('phone_invalid');
             }
             return null;
           },

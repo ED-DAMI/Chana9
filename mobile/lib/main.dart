@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 
+import 'core/l10n/app_localizations.dart';
+import 'core/l10n/locale_scope.dart';
 import 'core/theme/app_theme.dart';
 import 'features/annonces/presentation/bloc/annonce_bloc.dart';
 import 'features/annonces/presentation/pages/annonce_detail_page.dart';
@@ -24,27 +27,54 @@ void main() async {
   runApp(const Chana9App());
 }
 
-class Chana9App extends StatelessWidget {
+class Chana9App extends StatefulWidget {
   const Chana9App({super.key});
 
   @override
+  State<Chana9App> createState() => _Chana9AppState();
+}
+
+class _Chana9AppState extends State<Chana9App> {
+  final ValueNotifier<Locale> _localeNotifier = ValueNotifier(const Locale('fr'));
+
+  @override
+  void dispose() {
+    _localeNotifier.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<AuthBloc>(create: (_) => GetIt.instance<AuthBloc>()),
-        BlocProvider<AnnonceBloc>(create: (_) => GetIt.instance<AnnonceBloc>()),
-      ],
-      child: BlocListener<AuthBloc, AuthState>(
-        listener: (context, state) {
-          state.whenOrNull(
-            unauthenticated: () => _router.go('/login'),
-          );
-        },
-        child: MaterialApp.router(
-          debugShowCheckedModeBanner: false,
-          title: 'Chana9',
-          theme: AppTheme.lightTheme,
-          routerConfig: _router,
+    return LocaleScope(
+      notifier: _localeNotifier,
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<AuthBloc>(create: (_) => GetIt.instance<AuthBloc>()),
+          BlocProvider<AnnonceBloc>(create: (_) => GetIt.instance<AnnonceBloc>()),
+        ],
+        child: BlocListener<AuthBloc, AuthState>(
+          listener: (context, state) {
+            state.whenOrNull(
+              unauthenticated: () => _router.go('/login'),
+            );
+          },
+          child: ValueListenableBuilder<Locale>(
+            valueListenable: _localeNotifier,
+            builder: (_, locale, __) => MaterialApp.router(
+              debugShowCheckedModeBanner: false,
+              title: 'Chana9',
+              theme: AppTheme.lightTheme,
+              locale: locale,
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: AppLocalizations.supportedLocales,
+              routerConfig: _router,
+            ),
+          ),
         ),
       ),
     );
@@ -81,6 +111,7 @@ class _ShellPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final location = GoRouterState.of(context).uri.toString();
     final currentIndex = _locationToIndex(location);
+    final l10n = context.l10n;
 
     return Scaffold(
       body: child,
@@ -100,10 +131,10 @@ class _ShellPage extends StatelessWidget {
           }
         },
         destinations: [
-          const NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home),
-            label: 'Annonces',
+          NavigationDestination(
+            icon: const Icon(Icons.home_outlined),
+            selectedIcon: const Icon(Icons.home),
+            label: l10n.t('nav_annonces'),
           ),
           NavigationDestination(
             icon: Container(
@@ -114,12 +145,12 @@ class _ShellPage extends StatelessWidget {
               ),
               child: const Icon(Icons.add, color: Colors.white, size: 22),
             ),
-            label: 'Publier',
+            label: l10n.t('nav_publish'),
           ),
-          const NavigationDestination(
-            icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person),
-            label: 'Profil',
+          NavigationDestination(
+            icon: const Icon(Icons.person_outline),
+            selectedIcon: const Icon(Icons.person),
+            label: l10n.t('nav_profile'),
           ),
         ],
       ),

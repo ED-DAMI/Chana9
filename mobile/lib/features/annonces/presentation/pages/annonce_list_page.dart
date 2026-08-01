@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ma_chana9_app/core/l10n/app_localizations.dart';
 import '../../data/models/annonce_search_request_model.dart';
 import '../bloc/annonce_bloc.dart';
 import '../bloc/annonce_detail_bloc.dart';
@@ -85,6 +86,7 @@ class _AnnonceListPageState extends State<AnnonceListPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = context.l10n;
 
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
@@ -103,12 +105,12 @@ class _AnnonceListPageState extends State<AnnonceListPage> {
           IconButton(
             icon: const Icon(Icons.tune),
             onPressed: _openFilterSheet,
-            tooltip: 'Filtres',
+            tooltip: l10n.t('filters'),
           ),
           IconButton(
             icon: const Icon(Icons.search),
             onPressed: _openFilterSheet,
-            tooltip: 'Rechercher',
+            tooltip: l10n.t('search'),
           ),
         ],
       ),
@@ -133,14 +135,14 @@ class _AnnonceListPageState extends State<AnnonceListPage> {
                       const Text('🐑', style: TextStyle(fontSize: 64)),
                       const SizedBox(height: 16),
                       Text(
-                        'Aucune annonce trouvée',
+                        l10n.t('no_ads_found'),
                         style: theme.textTheme.titleMedium
                             ?.copyWith(color: Colors.grey),
                       ),
                       const SizedBox(height: 12),
                       TextButton(
                         onPressed: () => _loadAnnonces(reset: true),
-                        child: const Text('Réessayer'),
+                        child: Text(l10n.t('retry')),
                       ),
                     ],
                   ),
@@ -189,7 +191,7 @@ class _AnnonceListPageState extends State<AnnonceListPage> {
                   const SizedBox(height: 16),
                   FilledButton(
                     onPressed: () => _loadAnnonces(reset: true),
-                    child: const Text('Réessayer'),
+                    child: Text(l10n.t('retry')),
                   ),
                 ],
               ),

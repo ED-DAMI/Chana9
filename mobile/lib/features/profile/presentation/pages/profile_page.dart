@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ma_chana9_app/core/l10n/app_localizations.dart';
+import 'package:ma_chana9_app/core/l10n/locale_scope.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/domain/entities/user.dart';
 
@@ -26,7 +28,7 @@ class ProfilePage extends StatelessWidget {
           appBar: AppBar(
             backgroundColor: Colors.white,
             elevation: 1,
-            title: const Text('Mon Profil'),
+            title: Text(context.l10n.t('profile_title')),
           ),
           body: ListView(
             children: [
@@ -49,6 +51,7 @@ class _ProfileHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = context.l10n;
 
     return Container(
       color: Colors.white,
@@ -72,7 +75,7 @@ class _ProfileHeader extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            user.fullName ?? 'Utilisateur',
+            user.fullName ?? l10n.t('user_fallback'),
             style: theme.textTheme.titleLarge
                 ?.copyWith(fontWeight: FontWeight.bold),
           ),
@@ -92,7 +95,7 @@ class _ProfileHeader extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               _StatusBadge(
-                label: user.kycVerified ? 'Vérifié ✓' : 'Non vérifié',
+                label: user.kycVerified ? l10n.t('verified') : l10n.t('not_verified'),
                 color: user.kycVerified ? Colors.green : Colors.orange,
               ),
             ],
@@ -137,29 +140,35 @@ class _ProfileMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Material(
       color: Colors.white,
       child: Column(
         children: [
           _MenuItem(
             icon: Icons.storefront_outlined,
-            label: 'Mes annonces',
+            label: l10n.t('my_ads'),
             onTap: () => context.push('/profile/my-annonces/${user.id}'),
           ),
           _MenuItem(
             icon: Icons.favorite_border,
-            label: 'Mes favoris',
+            label: l10n.t('my_favorites'),
             onTap: () => context.push('/profile/favorites'),
           ),
           _MenuItem(
             icon: Icons.notifications_outlined,
-            label: 'Mes alertes',
+            label: l10n.t('my_alerts'),
             onTap: () => context.push('/profile/alerts'),
+          ),
+          _MenuItem(
+            icon: Icons.language_outlined,
+            label: l10n.t('language'),
+            onTap: () => _showLanguagePicker(context),
           ),
           const Divider(height: 1),
           _MenuItem(
             icon: Icons.logout,
-            label: 'Déconnexion',
+            label: l10n.t('logout'),
             color: Colors.red,
             onTap: () => _confirmLogout(context),
           ),
@@ -169,25 +178,65 @@ class _ProfileMenu extends StatelessWidget {
   }
 
   void _confirmLogout(BuildContext context) {
+    final l10n = context.l10n;
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Déconnexion'),
-        content: const Text('Êtes-vous sûr de vouloir vous déconnecter ?'),
+        title: Text(l10n.t('logout')),
+        content: Text(l10n.t('logout_question')),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('Annuler'),
+            child: Text(l10n.t('cancel')),
           ),
           TextButton(
             onPressed: () {
               Navigator.of(dialogContext).pop();
               context.read<AuthBloc>().add(const AuthEvent.logout());
             },
-            child: const Text('Déconnexion',
-                style: TextStyle(color: Colors.red)),
+            child: Text(l10n.t('logout'), style: const TextStyle(color: Colors.red)),
           ),
         ],
+      ),
+    );
+  }
+
+  void _showLanguagePicker(BuildContext context) {
+    final localeNotifier = LocaleScope.of(context);
+    final l10n = context.l10n;
+
+    showModalBottomSheet(
+      context: context,
+      builder: (sheetContext) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Text('🇫🇷'),
+              title: Text(l10n.t('language_french')),
+              onTap: () {
+                localeNotifier.value = const Locale('fr');
+                Navigator.of(sheetContext).pop();
+              },
+            ),
+            ListTile(
+              leading: const Text('🇬🇧'),
+              title: Text(l10n.t('language_english')),
+              onTap: () {
+                localeNotifier.value = const Locale('en');
+                Navigator.of(sheetContext).pop();
+              },
+            ),
+            ListTile(
+              leading: const Text('🇲🇦'),
+              title: Text(l10n.t('language_arabic')),
+              onTap: () {
+                localeNotifier.value = const Locale('ar');
+                Navigator.of(sheetContext).pop();
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
