@@ -373,7 +373,7 @@ class _AnimalStep extends StatelessWidget {
         DropdownButtonFormField<AnimalBreed>(
           value: selectedBreed,
           decoration: InputDecoration(labelText: '${l10n.breed} *', border: const OutlineInputBorder()),
-          items: AnimalBreed.values.map((b) => DropdownMenuItem(value: b, child: Text(b.name))).toList(),
+          items: AnimalBreed.values.map((b) => DropdownMenuItem(value: b, child: Text(b.localizedLabel(context)))).toList(),
           onChanged: onBreedChanged,
           validator: (v) => v == null ? l10n.breedRequired : null,
         ),
@@ -399,7 +399,7 @@ class _AnimalStep extends StatelessWidget {
         DropdownButtonFormField<AnimalDentition>(
           value: dentition,
           decoration: InputDecoration(labelText: l10n.dentition, border: const OutlineInputBorder()),
-          items: AnimalDentition.values.map((d) => DropdownMenuItem(value: d, child: Text(d.name))).toList(),
+          items: AnimalDentition.values.map((d) => DropdownMenuItem(value: d, child: Text(d.localizedDisplayName(context)))).toList(),
           onChanged: onDentitionChanged,
         ),
         const SizedBox(height: 12),
