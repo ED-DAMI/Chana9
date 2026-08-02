@@ -87,7 +87,7 @@ class _AnnonceListPageState extends State<AnnonceListPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
@@ -104,7 +104,7 @@ class _AnnonceListPageState extends State<AnnonceListPage> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.tune),
+            icon: const Icon(Icons.filter_list),
             onPressed: _openFilterSheet,
             tooltip: l10n.filterAnnonces,
           ),

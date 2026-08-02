@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:ma_chana9_app/features/annonces/presentation/bloc/annonce_detail_bloc.dart';
-import 'package:ma_chana9_app/shared/enums/animal_dentition.dart';
+
 import 'package:ma_chana9_app/shared/enums/annonce_status.dart';
 import '../../../../injection_container.dart';
 import '../../../../l10n/app_localizations.dart';

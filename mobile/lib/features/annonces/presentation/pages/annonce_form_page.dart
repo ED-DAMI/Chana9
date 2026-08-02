@@ -116,14 +116,16 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
       }
 
       final position = await Geolocator.getCurrentPosition();
-      final placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
+      final placemarks =
+      await placemarkFromCoordinates(position.latitude, position.longitude);
 
       if (placemarks.isNotEmpty) {
         final place = placemarks.first;
         setState(() {
           _latitude = position.latitude;
           _longitude = position.longitude;
-          _addressController.text = "${place.street ?? ''}, ${place.subLocality ?? ''}".trim();
+          _addressController.text =
+              "${place.street ?? ''}, ${place.subLocality ?? ''}".trim();
 
           for (var region in kMoroccoRegionsAndCities.keys) {
             if (place.administrativeArea?.contains(region) ?? false) {
@@ -134,7 +136,9 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
         });
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Error'), backgroundColor: Colors.red));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Error'), backgroundColor: Colors.red),
+      );
     } finally {
       setState(() => _isLocating = false);
     }
@@ -152,14 +156,20 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
       'description': _descriptionController.text.trim(),
       'gender': _gender?.name,
       'ageMonths': int.tryParse(_ageController.text),
-      'addressLabel': _selectedCity != null ? '$_selectedCity, ${_addressController.text}' : _addressController.text,
+      'addressLabel': _selectedCity != null
+          ? '$_selectedCity, ${_addressController.text}'
+          : _addressController.text,
       'latitude': _latitude,
       'longitude': _longitude,
-      if (_weightController.text.isNotEmpty) 'weightKg': double.tryParse(_weightController.text),
-      if (_onssaController.text.isNotEmpty) 'onssaTagNumber': _onssaController.text.trim(),
-      if (_headCountController.text.isNotEmpty) 'headCount': int.tryParse(_headCountController.text),
+      if (_weightController.text.isNotEmpty)
+        'weightKg': double.tryParse(_weightController.text),
+      if (_onssaController.text.isNotEmpty)
+        'onssaTagNumber': _onssaController.text.trim(),
+      if (_headCountController.text.isNotEmpty)
+        'headCount': int.tryParse(_headCountController.text),
       if (_dentition != null) 'dentition': _dentition!.name,
-      if (_deliveryAvailable) 'deliveryPrice': double.tryParse(_deliveryPriceController.text),
+      if (_deliveryAvailable)
+        'deliveryPrice': double.tryParse(_deliveryPriceController.text),
     };
   }
 
@@ -168,7 +178,10 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
     if (!_formKey.currentState!.validate()) return;
 
     if (_isEditing) {
-      context.read<AnnonceBloc>().add(AnnonceEvent.updateAnnonce(id: widget.annonce!.id, body: _buildBody()));
+      context.read<AnnonceBloc>().add(AnnonceEvent.updateAnnonce(
+        id: widget.annonce!.id,
+        body: _buildBody(),
+      ));
     } else {
       context.read<AnnonceBloc>().add(AnnonceEvent.createAnnonceWithMedias(
         body: _buildBody(),
@@ -186,14 +199,22 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
         state.whenOrNull(
           annonceCreated: (_) => Navigator.pop(context),
           annonceUpdated: (_) => Navigator.pop(context),
-          failure: (msg) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg), backgroundColor: Colors.red)),
+          failure: (msg) => ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(msg), backgroundColor: Colors.red),
+          ),
         );
       },
       builder: (context, state) {
-        final isLoading = state.maybeWhen(loading: () => true, uploadingMedias: (_, __) => true, orElse: () => false);
+        final isLoading = state.maybeWhen(
+          loading: () => true,
+          uploadingMedias: (_, __) => true,
+          orElse: () => false,
+        );
 
         return Scaffold(
-          appBar: AppBar(title: Text(_isEditing ? l10n.edit_annonce : l10n.newAnnonce)),
+          appBar: AppBar(
+            title: Text(_isEditing ? l10n.edit_annonce : l10n.newAnnonce),
+          ),
           body: Form(
             key: _formKey,
             child: Stepper(
@@ -201,8 +222,11 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
               type: StepperType.vertical,
               onStepTapped: (step) => setState(() => _currentStep = step),
               onStepContinue: () {
-                if (_currentStep < 3) setState(() => _currentStep++);
-                else _submit();
+                if (_currentStep < 3) {
+                  setState(() => _currentStep++);
+                } else {
+                  _submit();
+                }
               },
               onStepCancel: () {
                 if (_currentStep > 0) {
@@ -218,10 +242,20 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
                     FilledButton(
                       onPressed: isLoading ? null : details.onStepContinue,
                       child: isLoading && _currentStep == 3
-                          ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                          ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      )
                           : Text(_currentStep == 3 ? l10n.publish : l10n.next),
                     ),
-                    TextButton(onPressed: details.onStepCancel, child: Text(l10n.back)),
+                    TextButton(
+                      onPressed: details.onStepCancel,
+                      child: Text(l10n.back),
+                    ),
                   ],
                 ),
               ),
@@ -260,7 +294,8 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
                     descriptionController: _descriptionController,
                     priceController: _priceController,
                     priceNegotiable: _priceNegotiable,
-                    onNegotiableChanged: (v) => setState(() => _priceNegotiable = v),
+                    onNegotiableChanged: (v) =>
+                        setState(() => _priceNegotiable = v),
                   ),
                 ),
                 Step(
@@ -272,9 +307,13 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
                     addressController: _addressController,
                     deliveryAvailable: _deliveryAvailable,
                     deliveryPriceController: _deliveryPriceController,
-                    onRegionChanged: (r) => setState(() { _selectedRegion = r; _selectedCity = null; }),
+                    onRegionChanged: (r) => setState(() {
+                      _selectedRegion = r;
+                      _selectedCity = null;
+                    }),
                     onCityChanged: (c) => setState(() => _selectedCity = c),
-                    onDeliveryChanged: (v) => setState(() => _deliveryAvailable = v),
+                    onDeliveryChanged: (v) =>
+                        setState(() => _deliveryAvailable = v),
                     onDetectLocation: _detectLocation,
                     isLocating: _isLocating,
                     hasLocation: _latitude != null,
@@ -291,12 +330,28 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
   void _showPhotoOptions(AppLocalizations l10n) async {
     final source = await showModalBottomSheet<ImageSource>(
       context: context,
-      builder: (context) => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ListTile(leading: const Icon(Icons.camera), title: Text(l10n.camera), onTap: () => Navigator.pop(context, ImageSource.camera)),
-          ListTile(leading: const Icon(Icons.photo_library), title: Text(l10n.gallery), onTap: () => Navigator.pop(context, ImageSource.gallery)),
-        ],
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.camera_alt),
+              minLeadingWidth: 24,
+              title: Text(l10n.camera),
+              contentPadding:
+              const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
+              onTap: () => Navigator.pop(context, ImageSource.camera),
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_library_outlined),
+              minLeadingWidth: 24,
+              title: Text(l10n.gallery),
+              contentPadding:
+              const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
+              onTap: () => Navigator.pop(context, ImageSource.gallery),
+            ),
+          ],
+        ),
       ),
     );
     if (source != null) {
@@ -315,21 +370,57 @@ class _PhotoStep extends StatelessWidget {
   final List<XFile> photos;
   final VoidCallback onAdd;
   final Function(int) onRemove;
-  const _PhotoStep({required this.photos, required this.onAdd, required this.onRemove});
+
+  const _PhotoStep({
+    required this.photos,
+    required this.onAdd,
+    required this.onRemove,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Wrap(
-      spacing: 8, runSpacing: 8,
+      spacing: 8,
+      runSpacing: 8,
       children: [
-        ...List.generate(photos.length, (i) => Stack(
-          children: [
-            Image.file(File(photos[i].path), width: 80, height: 80, fit: BoxFit.cover),
-            Positioned(right: 0, child: IconButton(icon: const Icon(Icons.close, color: Colors.red), onPressed: () => onRemove(i))),
-          ],
-        )),
+        ...List.generate(
+          photos.length,
+              (i) => Stack(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.file(
+                  File(photos[i].path),
+                  width: 80,
+                  height: 80,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Positioned(
+                right: 0,
+                top: 0,
+                child: GestureDetector(
+                  onTap: () => onRemove(i),
+                  child: Container(
+                    width: 24,
+                    height: 24,
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(Icons.close, color: Colors.white, size: 16),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
         if (photos.length < 5)
-          IconButton.filledTonal(onPressed: onAdd, icon: const Icon(Icons.add_a_photo), constraints: const BoxConstraints.tightFor(width: 80, height: 80)),
+          IconButton.filledTonal(
+            onPressed: onAdd,
+            icon: const Icon(Icons.add_a_photo_outlined),
+            constraints: const BoxConstraints.tightFor(width: 80, height: 80),
+          ),
       ],
     );
   }
@@ -372,8 +463,16 @@ class _AnimalStep extends StatelessWidget {
       children: [
         DropdownButtonFormField<AnimalBreed>(
           value: selectedBreed,
-          decoration: InputDecoration(labelText: '${l10n.breed} *', border: const OutlineInputBorder()),
-          items: AnimalBreed.values.map((b) => DropdownMenuItem(value: b, child: Text(b.localizedLabel(context)))).toList(),
+          decoration: InputDecoration(
+            labelText: '${l10n.breed} *',
+            border: const OutlineInputBorder(),
+          ),
+          items: AnimalBreed.values
+              .map((b) => DropdownMenuItem(
+            value: b,
+            child: Text(b.localizedLabel(context)),
+          ))
+              .toList(),
           onChanged: onBreedChanged,
           validator: (v) => v == null ? l10n.breedRequired : null,
         ),
@@ -390,23 +489,66 @@ class _AnimalStep extends StatelessWidget {
         const SizedBox(height: 12),
         Row(
           children: [
-            Expanded(child: TextField(controller: ageController, decoration: InputDecoration(labelText: l10n.age_months, border: const OutlineInputBorder()), keyboardType: TextInputType.number)),
+            Expanded(
+              child: TextField(
+                controller: ageController,
+                decoration: InputDecoration(
+                  labelText: l10n.age_months,
+                  border: const OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.number,
+              ),
+            ),
             const SizedBox(width: 12),
-            Expanded(child: TextField(controller: weightController, decoration: InputDecoration(labelText: l10n.weight_kg, border: const OutlineInputBorder()), keyboardType: TextInputType.number)),
+            Expanded(
+              child: TextField(
+                controller: weightController,
+                decoration: InputDecoration(
+                  labelText: l10n.weight_kg,
+                  border: const OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.number,
+              ),
+            ),
           ],
         ),
         const SizedBox(height: 12),
         DropdownButtonFormField<AnimalDentition>(
           value: dentition,
-          decoration: InputDecoration(labelText: l10n.dentition, border: const OutlineInputBorder()),
-          items: AnimalDentition.values.map((d) => DropdownMenuItem(value: d, child: Text(d.localizedDisplayName(context)))).toList(),
+          decoration: InputDecoration(
+            labelText: l10n.dentition,
+            border: const OutlineInputBorder(),
+          ),
+          items: AnimalDentition.values
+              .map((d) => DropdownMenuItem(
+            value: d,
+            child: Text(d.localizedDisplayName(context)),
+          ))
+              .toList(),
           onChanged: onDentitionChanged,
         ),
         const SizedBox(height: 12),
-        TextField(controller: headCountController, decoration: InputDecoration(labelText: l10n.headCount, border: const OutlineInputBorder()), keyboardType: TextInputType.number),
+        TextField(
+          controller: headCountController,
+          decoration: InputDecoration(
+            labelText: l10n.headCount,
+            border: const OutlineInputBorder(),
+          ),
+          keyboardType: TextInputType.number,
+        ),
         const SizedBox(height: 12),
-        TextField(controller: onssaController, decoration: InputDecoration(labelText: l10n.onssa, border: const OutlineInputBorder())),
-        SwitchListTile(title: Text(l10n.eligibleForAid), value: eligibleForAid, onChanged: onEligibleChanged),
+        TextField(
+          controller: onssaController,
+          decoration: InputDecoration(
+            labelText: l10n.onssa,
+            border: const OutlineInputBorder(),
+          ),
+        ),
+        SwitchListTile(
+          title: Text(l10n.eligibleForAid),
+          value: eligibleForAid,
+          onChanged: onEligibleChanged,
+        ),
       ],
     );
   }
@@ -433,11 +575,36 @@ class _AnnonceStep extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        TextFormField(controller: titleController, decoration: InputDecoration(labelText: '${l10n.title} *', border: const OutlineInputBorder()), validator: (v) => v!.isEmpty ? l10n.required : null),
+        TextFormField(
+          controller: titleController,
+          decoration: InputDecoration(
+            labelText: '${l10n.title} *',
+            border: const OutlineInputBorder(),
+          ),
+          validator: (v) => v!.isEmpty ? l10n.required : null,
+        ),
         const SizedBox(height: 12),
-        TextFormField(controller: priceController, decoration: InputDecoration(labelText: '${l10n.price} *', border: const OutlineInputBorder()), keyboardType: TextInputType.number),
-        SwitchListTile(title: Text(l10n.priceNegotiable), value: priceNegotiable, onChanged: onNegotiableChanged),
-        TextFormField(controller: descriptionController, decoration: InputDecoration(labelText: l10n.description, border: const OutlineInputBorder()), maxLines: 3),
+        TextFormField(
+          controller: priceController,
+          decoration: InputDecoration(
+            labelText: '${l10n.price} *',
+            border: const OutlineInputBorder(),
+          ),
+          keyboardType: TextInputType.number,
+        ),
+        SwitchListTile(
+          title: Text(l10n.priceNegotiable),
+          value: priceNegotiable,
+          onChanged: onNegotiableChanged,
+        ),
+        TextFormField(
+          controller: descriptionController,
+          decoration: InputDecoration(
+            labelText: l10n.description,
+            border: const OutlineInputBorder(),
+          ),
+          maxLines: 3,
+        ),
       ],
     );
   }
@@ -478,29 +645,62 @@ class _LocationStep extends StatelessWidget {
       children: [
         ElevatedButton.icon(
           onPressed: isLocating ? null : onDetectLocation,
-          icon: isLocating ? const SizedBox(width: 15, height: 15, child: CircularProgressIndicator()) : const Icon(Icons.gps_fixed),
+          icon: isLocating
+              ? const SizedBox(
+            width: 15,
+            height: 15,
+            child: CircularProgressIndicator(strokeWidth: 2),
+          )
+              : const Icon(Icons.gps_fixed),
           label: Text(hasLocation ? l10n.position_ok : l10n.geolocate_me),
         ),
         const SizedBox(height: 12),
         DropdownButtonFormField<String>(
           value: selectedRegion,
-          decoration: InputDecoration(labelText: '${l10n.region} *', border: const OutlineInputBorder()),
-          items: kMoroccoRegionsAndCities.keys.map((r) => DropdownMenuItem(value: r, child: Text(r))).toList(),
+          decoration: InputDecoration(
+            labelText: '${l10n.region} *',
+            border: const OutlineInputBorder(),
+          ),
+          items: kMoroccoRegionsAndCities.keys
+              .map((r) => DropdownMenuItem(value: r, child: Text(r)))
+              .toList(),
           onChanged: onRegionChanged,
         ),
         const SizedBox(height: 12),
         if (selectedRegion != null)
           DropdownButtonFormField<String>(
             value: selectedCity,
-            decoration: const InputDecoration(labelText: 'Ville', border: OutlineInputBorder()),
-            items: kMoroccoRegionsAndCities[selectedRegion]!.map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
+            decoration: const InputDecoration(
+              labelText: 'Ville',
+              border: OutlineInputBorder(),
+            ),
+            items: kMoroccoRegionsAndCities[selectedRegion]!
+                .map((c) => DropdownMenuItem(value: c, child: Text(c)))
+                .toList(),
             onChanged: onCityChanged,
           ),
         const SizedBox(height: 12),
-        TextField(controller: addressController, decoration: InputDecoration(labelText: l10n.preciseAddress, border: const OutlineInputBorder())),
-        SwitchListTile(title: Text(l10n.deliveryPossible), value: deliveryAvailable, onChanged: onDeliveryChanged),
+        TextField(
+          controller: addressController,
+          decoration: InputDecoration(
+            labelText: l10n.preciseAddress,
+            border: const OutlineInputBorder(),
+          ),
+        ),
+        SwitchListTile(
+          title: Text(l10n.deliveryPossible),
+          value: deliveryAvailable,
+          onChanged: onDeliveryChanged,
+        ),
         if (deliveryAvailable)
-          TextField(controller: deliveryPriceController, decoration: InputDecoration(labelText: l10n.deliveryFees, border: const OutlineInputBorder()), keyboardType: TextInputType.number),
+          TextField(
+            controller: deliveryPriceController,
+            decoration: InputDecoration(
+              labelText: l10n.deliveryFees,
+              border: const OutlineInputBorder(),
+            ),
+            keyboardType: TextInputType.number,
+          ),
       ],
     );
   }
