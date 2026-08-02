@@ -78,7 +78,7 @@ class AnnoncePostHeader extends StatelessWidget {
                         size: 12, color: Colors.grey),
                     const SizedBox(width: 2),
                     Text(
-                      annonce.region,
+                      getRegion(context,annonce.region),
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: Colors.grey.shade600,
                       ),
@@ -107,5 +107,24 @@ class AnnoncePostHeader extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String getRegion(BuildContext context, String region) {
+    final l10n = AppLocalizations.of(context)!;
+    return switch (region) {
+      'Tanger-Tétouan-Al Hoceïma' => l10n.regionTangerTetouanAlHoceima,
+      'Oriental'                   => l10n.regionOriental,
+      'Fès-Meknès'                 => l10n.regionFesMeknes,
+      'Rabat-Salé-Kénitra'         => l10n.regionRabatSaleKenitra,
+      'Béni Mellal-Khénifra'       => l10n.regionBeniMellalKhenifra,
+      'Casablanca-Settat'          => l10n.regionCasablancaSettat,
+      'Marrakech-Safi'             => l10n.regionMarrakechSafi,
+      'Drâa-Tafilalet'             => l10n.regionDraaTafilalet,
+      'Souss-Massa'                => l10n.regionSoussMassa,
+      'Guelmim-Oued Noun'          => l10n.regionGuelmimOuedNoun,
+      'Laâyoune-Sakia El Hamra'    => l10n.regionLaayouneSakiaElHamra,
+      'Dakhla-Oued Ed-Dahab'       => l10n.regionDakhlaOuedEdDahab,
+      _                            => region,
+    };
   }
 }

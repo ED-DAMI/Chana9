@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:ma_chana9_app/features/annonces/presentation/bloc/annonce_detail_bloc.dart';
+import 'package:ma_chana9_app/shared/enums/animal_dentition.dart';
 import 'package:ma_chana9_app/shared/enums/annonce_status.dart';
 import '../../../../injection_container.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -194,7 +195,7 @@ class _AnnonceDetailView extends StatelessWidget {
                     _InfoRow(
                         icon: Icons.info_outline,
                         label: l10n.dentition,
-                        value: annonce.dentition!.name),
+                        value: getDentition(context,annonce.dentition!.name)),
                   if (annonce.headCount != null)
                     _InfoRow(
                         icon: Icons.group_outlined,
@@ -364,6 +365,18 @@ class _AnnonceDetailView extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String getDentition(BuildContext context, String dentitionName) {
+    final l10n = AppLocalizations.of(context)!;
+    return switch (dentitionName) {
+      'MILK_TEETH' => l10n.milkTeeth,
+      'TWO_TEETH'  => l10n.twoTeeth,
+      'FOUR_TEETH' => l10n.fourTeeth,
+      'SIX_TEETH'  => l10n.sixTeeth,
+      'FULL_MOUTH' => l10n.fullMouth,
+      _            => dentitionName,
+    };
   }
 }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ma_chana9_app/shared/enums/animal_breed.dart';
 import 'package:ma_chana9_app/shared/enums/animal_gender.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../shared/localization/locale_labels.dart';
 import '../../data/models/annonce_search_request_model.dart';
 
 const _moroccanRegions = [
@@ -206,16 +207,16 @@ class _AnnonceFilterSheetState extends State<AnnonceFilterSheet> {
                     Wrap(
                       spacing: 8,
                       runSpacing: 4,
-                      children: _moroccanRegions.map((region) {
-                        final selected = _selectedRegion == region;
-                        return FilterChip(
-                          label: Text(region),
-                          selected: selected,
-                          onSelected: (_) => setState(() {
-                            _selectedRegion = selected ? null : region;
-                          }),
-                        );
-                      }).toList(),
+                        children: _moroccanRegions.map((region) {
+                          final selected = _selectedRegion == region;
+                          return FilterChip(
+                            label: Text(localizedRegion(context, region)),
+                            selected: selected,
+                            onSelected: (_) => setState(() {
+                              _selectedRegion = selected ? null : region;
+                            }),
+                          );
+                        }).toList(),
                     ),
                     const SizedBox(height: 20),
                     _SectionTitle(title: l10n.price),

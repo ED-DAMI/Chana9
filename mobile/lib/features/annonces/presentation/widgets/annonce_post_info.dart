@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:ma_chana9_app/shared/enums/animal_dentition.dart';
 
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/annonce.dart';
@@ -82,7 +85,7 @@ class AnnoncePostInfo extends StatelessWidget {
               if (annonce.dentition != null)
                 _InfoChip(
                   icon: Icons.info_outline,
-                  label: annonce.dentition!.name,
+                  label: getDentition(context,annonce.dentition!.name),
                 ),
               if (annonce.deliveryAvailable)
                 _InfoChip(
@@ -113,6 +116,19 @@ class AnnoncePostInfo extends StatelessWidget {
       ),
     );
   }
+  String getDentition(BuildContext context, String dentitionName) {
+    final l10n = AppLocalizations.of(context)!;
+    return switch (dentitionName) {
+      'MILK_TEETH' => l10n.milkTeeth,
+      'TWO_TEETH'  => l10n.twoTeeth,
+      'FOUR_TEETH' => l10n.fourTeeth,
+      'SIX_TEETH'  => l10n.sixTeeth,
+      'FULL_MOUTH' => l10n.fullMouth,
+      _            => dentitionName,
+    };
+  }
+
+
 }
 
 class _Badge extends StatelessWidget {
