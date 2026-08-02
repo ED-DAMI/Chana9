@@ -1,4 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:flutter/material.dart';
+import 'package:ma_chana9_app/l10n/app_localizations.dart';
 
 @JsonEnum(valueField: 'value')
 enum PriceType {
@@ -14,14 +16,17 @@ enum PriceType {
 
   static PriceType fromJson(String? value) {
     return PriceType.values.firstWhere(
-          (e) => e.value == value,
+      (e) => e.value == value,
       orElse: () => PriceType.fixed,
     );
   }
 
-  String get displayName => switch (this) {
-    PriceType.fixed => 'Prix fixe',
-    PriceType.perHead => 'Par tête',
-    PriceType.perKg => 'Par kg',
-  };
+  String localizedDisplayName(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return switch (this) {
+      PriceType.fixed => l10n.fixedPrice,
+      PriceType.perHead => l10n.perHead,
+      PriceType.perKg => l10n.perKg,
+    };
+  }
 }

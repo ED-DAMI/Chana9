@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ma_chana9_app/core/constants/app_locale.dart';
+import 'package:ma_chana9_app/shared/bloc/locale_bloc.dart';
+import 'package:ma_chana9_app/shared/bloc/locale_state.dart';
 
 import 'core/theme/app_theme.dart';
 import 'features/annonces/presentation/bloc/annonce_bloc.dart';
@@ -15,6 +19,7 @@ import 'features/auth/presentation/pages/splash_page.dart';
 import 'features/profile/presentation/pages/my_annonces_page.dart';
 import 'features/profile/presentation/pages/profile_page.dart';
 import 'injection_container.dart' as di;
+import 'l10n/app_localizations.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -33,6 +38,7 @@ class Chana9App extends StatelessWidget {
       providers: [
         BlocProvider<AuthBloc>(create: (_) => GetIt.instance<AuthBloc>()),
         BlocProvider<AnnonceBloc>(create: (_) => GetIt.instance<AnnonceBloc>()),
+        BlocProvider<LocaleBloc>(create: (_) => GetIt.instance<LocaleBloc>()),
       ],
       child: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
@@ -40,11 +46,34 @@ class Chana9App extends StatelessWidget {
             unauthenticated: () => _router.go('/login'),
           );
         },
-        child: MaterialApp.router(
-          debugShowCheckedModeBanner: false,
-          title: 'Chana9',
-          theme: AppTheme.lightTheme,
-          routerConfig: _router,
+        child: BlocBuilder<LocaleBloc, LocaleState>(
+          builder: (context, localeState) {
+            return MaterialApp.router(
+              debugShowCheckedModeBanner: false,
+              title: 'Chana9',
+              theme: AppTheme.lightTheme,
+              routerConfig: _router,
+              locale: localeState.locale,
+              supportedLocales: AppLocale.supported,
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              builder: (context, child) {
+                final locale = Localizations.localeOf(context);
+                final isRtl =
+                    locale.languageCode == AppLocale.ar.languageCode ||
+                        locale.languageCode == AppLocale.zgh.languageCode;
+                return Directionality(
+                  textDirection:
+                  isRtl ? TextDirection.rtl : TextDirection.ltr,
+                  child: child ?? const SizedBox.shrink(),
+                );
+              },
+            );
+          },
         ),
       ),
     );
@@ -81,6 +110,7 @@ class _ShellPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final location = GoRouterState.of(context).uri.toString();
     final currentIndex = _locationToIndex(location);
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       body: child,
@@ -100,10 +130,10 @@ class _ShellPage extends StatelessWidget {
           }
         },
         destinations: [
-          const NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home),
-            label: 'Annonces',
+          NavigationDestination(
+            icon: const Icon(Icons.home_outlined),
+            selectedIcon: const Icon(Icons.home),
+            label: l10n.annonces,
           ),
           NavigationDestination(
             icon: Container(
@@ -114,12 +144,12 @@ class _ShellPage extends StatelessWidget {
               ),
               child: const Icon(Icons.add, color: Colors.white, size: 22),
             ),
-            label: 'Publier',
+            label: l10n.publish,
           ),
-          const NavigationDestination(
-            icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person),
-            label: 'Profil',
+          NavigationDestination(
+            icon: const Icon(Icons.person_outline),
+            selectedIcon: const Icon(Icons.person),
+            label: l10n.profile,
           ),
         ],
       ),

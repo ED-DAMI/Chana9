@@ -151,7 +151,7 @@ class _AnnonceDetailView extends StatelessWidget {
                       if (annonce.priceType != null) ...[
                         const SizedBox(width: 8),
                         _Badge(
-                          label: annonce.priceType!.displayName,
+                          label: annonce.priceType!.name,
                           color: Colors.grey.shade600,
                         ),
                       ],
@@ -191,7 +191,7 @@ class _AnnonceDetailView extends StatelessWidget {
                     _InfoRow(
                         icon: Icons.info_outline,
                         label: 'Dentition',
-                        value: annonce.dentition!.displayName),
+                        value: annonce.dentition!.name),
                   if (annonce.headCount != null)
                     _InfoRow(
                         icon: Icons.group_outlined,

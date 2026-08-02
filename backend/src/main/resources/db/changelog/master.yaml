@@ -49,3 +49,6 @@ databaseChangeLog:
   - include:
       file: db/changelog/013-refresh-tokens.yaml
       relativeToChangelogFile: false
+  - include:
+      file: db/changelog/014-contact-unlocks.yaml
+      relativeToChangelogFile: false

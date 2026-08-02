@@ -2,148 +2,80 @@
 
 REPO="ED-DAMI/Chana9"
 
-echo "Creating US-01: Création et Publication d'une Annonce..."
+echo "Creating US-PAY-001: Paiement par Carte Bancaire..."
 gh issue create \
   --repo "$REPO" \
-  --title "feat(annonce): US-01 — Création et Publication d'une Annonce" \
-  --label "user-story,annonce" \
+  --title "feat(payment): US-PAY-001 — Paiement par Carte Bancaire (Déblocage Contact 20 DH)" \
+  --label "user-story,payment" \
   --body "## User Story
-En tant qu'éleveur (Kassab) connecté,
-Je veux pouvoir créer et publier une annonce de vente de bétail,
-Afin que les acheteurs puissent trouver et consulter mon annonce.
+En tant qu'acheteur / utilisateur sur Chana9,
+Je veux régler 20 DH par Carte Bancaire marocaine ou internationale directement depuis l'application,
+Afin de débloquer immédiatement le numéro de téléphone de l'éleveur.
 
 ---
 
 ## Critères d'Acceptation
 
-### CA 1 — Saisie des champs obligatoires
-- [ ] Le formulaire contient : Titre (ou génération automatique), Espèce / Race, Prix (Fixe / Négociable / Au Kilo), Localisation / Ville, Au moins une photo (Cover)
-- [ ] Le bouton \"Publier\" est désactivé tant que tous les champs obligatoires ne sont pas renseignés
-- [ ] Le bouton \"Publier\" devient actif une fois tous les champs obligatoires remplis
+### CA 1 — Choix du mode de paiement
+- [ ] Étant donné un utilisateur sur la modale d'achat de contact
+- [ ] Quand il choisit l'option « Carte Bancaire (Visa / Mastercard / CMI) »
+- [ ] Alors un bouton « Payer 20 DH par Carte » s'affiche
 
-### CA 2 — Validation des attributs métiers
-- [ ] Si \`weightKg\` est renseigné, il doit être strictement supérieur à 0 kg (\`@DecimalMin(inclusive = false)\`)
-- [ ] Si \`onssaTagNumber\` est renseigné, il doit respecter le format alphanumérique (\`@Pattern(regexp = \"^[A-Za-z0-9]{4,20}\$\")\`)
-- [ ] Si \`boardingAvailable = true\`, alors \`boardingDailyPrice\` est obligatoire (validator cross-field \`@ValidBoardingCoherence\`)
+### CA 2 — Redirection vers la passerelle sécurisée (WebView)
+- [ ] Étant donné que l'utilisateur clique sur « Payer 20 DH par Carte »
+- [ ] Quand la demande est envoyée au backend
+- [ ] Alors une WebView sécurisée (ou le SDK CMI/PayZone) s'ouvre
+- [ ] L'URL affichée est celle de la passerelle de paiement certifiée
+- [ ] Le montant affiché sur l'écran bancaire est strictement de 20,00 MAD
 
-### CA 3 — Statut après soumission
-- [ ] Une annonce soumise passe en statut \`PENDING_VALIDATION\`
-- [ ] L'annonce en \`PENDING_VALIDATION\` n'apparaît pas dans la recherche publique
-- [ ] \`AnnonceStatus\` contient la valeur \`PENDING_VALIDATION\` côté backend et Flutter
+### CA 3 — Validation de la transaction (3D Secure)
+- [ ] Étant donné que l'utilisateur saisit ses informations bancaires (Numéro de carte, Date d'expiration, CVV)
+- [ ] Quand il valide et franchit l'étape 3D Secure (code OTP SMS de sa banque)
+- [ ] Alors la passerelle notifie le backend via un Webhook/IPN sécurisé
+
+### CA 4 — Succès du paiement et déblocage
+- [ ] Étant donné que la banque confirme le succès du paiement
+- [ ] Quand la WebView se ferme automatiquement
+- [ ] Alors un message de confirmation s'affiche : _« Paiement réussi ! Contact débloqué. »_
+- [ ] Le numéro de téléphone de l'éleveur s'affiche sur la fiche de l'annonce
+- [ ] Le bouton d'action devient \`Appeler\` (sans mention de prix)
+
+### CA 5 — Gestion des échecs / Annulations
+- [ ] Étant donné un échec de paiement (solde insuffisant, abandon, erreur réseau)
+- [ ] Quand la transaction échoue ou est annulée
+- [ ] Alors la WebView se ferme
+- [ ] Un message clair s'affiche : _« Le paiement n'a pas pu être finalisé. Aucun montant n'a été débité. »_
+- [ ] L'annonce reste dans son état verrouillé (\`Appeler (20 DH)\`)
 
 ---
 
 ## Tâches techniques
 
 ### Backend
-- [ ] Ajouter \`PENDING_VALIDATION\` dans \`AnnonceStatus\`
-- [ ] Mettre à jour le \`CHECK constraint\` DB
-- [ ] \`AnnonceService.create()\` passe en \`PENDING_VALIDATION\` au lieu de \`ACTIVE\`
-- [ ] \`AnnonceSpecification\` exclut \`PENDING_VALIDATION\` des résultats publics
-- [ ] Ajouter \`@ValidBoardingCoherence\` validator cross-field
-- [ ] Corriger \`@DecimalMin\` sur \`weightKg\`
-- [ ] Ajouter \`@Pattern\` sur \`onssaTagNumber\`
+- [ ] Créer entité \`ContactUnlock\` (buyer, annonce, status, transactionId, amount, createdAt)
+- [ ] \`POST /annonces/{id}/contact/initiate\` — crée la session de paiement côté passerelle (CMI/PayZone) et retourne l'URL de redirection
+- [ ] \`POST /payments/webhook\` — endpoint IPN/Webhook sécurisé (vérification signature HMAC)
+- [ ] \`PaymentService.handleSuccess()\` — enregistre le paiement en base, met à jour \`ContactUnlock.status = COMPLETED\`
+- [ ] \`PaymentService.handleFailure()\` — enregistre l'échec, status \`FAILED\`, aucun débit
+- [ ] \`GET /annonces/{id}/contact\` — retourne le numéro de téléphone si \`ContactUnlock\` existe et est \`COMPLETED\`
+- [ ] Idempotence : éviter le double débit si le webhook est reçu plusieurs fois (unicité sur \`transactionId\`)
+- [ ] Liquibase migration pour les tables \`contact_unlocks\` et \`payment_transactions\`
 
 ### Flutter
-- [ ] Ajouter \`PENDING_VALIDATION\` dans l'enum \`AnnonceStatus\`
-- [ ] Désactiver le bouton Publier si champs obligatoires manquants
-- [ ] Afficher les erreurs de validation champ par champ"
+- [ ] Modale « Débloquer le contact » avec option carte bancaire
+- [ ] Bouton « Payer 20 DH par Carte » → appel API \`/initiate\` → ouverture WebView
+- [ ] \`PaymentWebViewPage\` — WebView sécurisée, écoute l'URL de retour (success/cancel/failure)
+- [ ] Polling ou deep link de retour pour confirmer l'état de la transaction
+- [ ] Affichage du numéro de téléphone après confirmation de succès
+- [ ] Transition du bouton vers \`Appeler\` (sans prix) après déblocage
+- [ ] Toast d'erreur clair en cas d'échec ou d'abandon
+- [ ] BLoC \`PaymentBloc\` avec états : \`PaymentInitial\`, \`PaymentLoading\`, \`PaymentSuccess\`, \`PaymentFailure\`
+
+### Sécurité & conformité
+- [ ] Jamais de données bancaires stockées en backend (délégation totale à la passerelle)
+- [ ] Webhook protégé par vérification de signature (header \`X-Signature\`)
+- [ ] HTTPS obligatoire sur toutes les URLs de redirection
+- [ ] Montant fixé côté backend (jamais côté client) : 20,00 MAD"
 
 echo ""
-echo "Creating US-02: Consultation et Recherche d'Annonces..."
-gh issue create \
-  --repo "$REPO" \
-  --title "feat(annonce): US-02 — Consultation et Recherche d'Annonces" \
-  --label "user-story,annonce" \
-  --body "## User Story
-En tant qu'acheteur,
-Je veux pouvoir consulter le détail d'une annonce et rechercher des annonces par critères,
-Afin de trouver le bétail qui correspond à mes besoins.
-
----
-
-## Critères d'Acceptation
-
-### CA 1 — Affichage des détails d'une annonce
-- [ ] La fiche affiche la photo de couverture et la galerie de médias
-- [ ] La fiche affiche le badge d'âge religieux / dentition (Jadaâ, Thni, Rbaâ, Sdess, Jameâ)
-- [ ] La fiche affiche le macaron d'authentification ONSSA si \`onssaTagNumber\` est présent
-- [ ] Le compteur \`viewsCount\` est incrémenté de +1 à chaque consultation
-- [ ] La galerie photos est consultable en plein écran avec zoom et swipe
-
-### CA 2 — Filtrage multi-critères
-- [ ] Les filtres disponibles : Race, Poids (min/max), Région/Ville, Prix (min/max), Genre, Dentition, Livraison, Pension
-- [ ] Le système retourne uniquement les annonces avec \`status = ACTIVE\`
-- [ ] Les annonces \`PENDING_VALIDATION\` / \`SUSPENDED\` / \`EXPIRED\` sont exclues des résultats
-- [ ] Les filtres actifs sont affichés sous forme de chips dans la liste
-
----
-
-## Tâches techniques
-
-### Backend
-- [ ] \`AnnonceService.findById()\` incrémente \`viewsCount\` via \`@Modifying @Query\`
-- [ ] Ajouter les labels dentition : \`MILK_TEETH → Snan el-Hlib\`, \`TWO_TEETH → Thni\`, \`FOUR_TEETH → Rbaâ\`, \`SIX_TEETH → Sdess\`, \`FULL_MOUTH → Jameâ\`
-- [ ] \`AnnonceSpecification\` filtre sur \`status = ACTIVE\` uniquement
-- [ ] Ajouter filtre par \`dentition\` dans \`AnnonceSearchRequest\` et \`AnnonceSpecification\`
-
-### Flutter
-- [ ] \`AnnonceDetailPage\` affiche badge dentition avec label arabe/darija
-- [ ] Badge ONSSA visible si \`onssaTagNumber != null\`
-- [ ] Galerie plein écran avec zoom et swipe (\`photo_view\` ou \`interactive_viewer\`)
-- [ ] Skeleton loader sur \`AnnonceListPage\`
-- [ ] Chips filtres actifs visibles dans la liste
-- [ ] Ajouter \`dentition\` dans \`AnnonceFilterSheet\` et \`AnnonceSearchRequestModel\`"
-
-echo ""
-echo "Creating US-03: Favoris et Signalement..."
-gh issue create \
-  --repo "$REPO" \
-  --title "feat(annonce): US-03 — Favoris et Signalement (Reports)" \
-  --label "user-story,annonce" \
-  --body "## User Story
-En tant qu'acheteur,
-Je veux pouvoir ajouter des annonces à mes favoris et signaler les annonces abusives,
-Afin de retrouver facilement les annonces qui m'intéressent et contribuer à la qualité de la marketplace.
-
----
-
-## Critères d'Acceptation
-
-### CA 1 — Ajout aux favoris (Unicité)
-- [ ] L'icône Cœur est visible sur la fiche annonce et dans la liste
-- [ ] Un clic ajoute l'annonce aux favoris de l'acheteur
-- [ ] Un second clic supprime l'annonce des favoris (toggle)
-- [ ] La contrainte \`uq_buyer_annonce_favorite\` empêche les doublons en base
-- [ ] Une page \"Mes Favoris\" liste toutes les annonces sauvegardées
-- [ ] Le compteur \`favoritesCount\` de l'annonce est mis à jour
-
-### CA 2 — Signalement d'une annonce abusive
-- [ ] Un bouton \"Signaler\" est accessible depuis la fiche annonce
-- [ ] L'utilisateur sélectionne un motif parmi \`ReportReason\` : \`FRAUD_OR_SCAM\`, \`WRONG_INFORMATION\`, \`UNHEALTHY_ANIMAL\`, \`DUPLICATE\`, \`INAPPROPRIATE_MEDIA\`, \`OTHER\`
-- [ ] Un commentaire optionnel peut être ajouté
-- [ ] Le signalement est créé avec le statut \`PENDING\`
-- [ ] Un utilisateur ne peut pas re-signaler la même annonce (\`uq_annonce_reporter\`)
-- [ ] Une alerte est envoyée au tableau de bord administrateur
-
----
-
-## Tâches techniques
-
-### Backend
-- [ ] Vérifier que \`POST /{id}/favorites\` retourne 409 si déjà en favori
-- [ ] \`AnnonceService.addFavorite()\` incrémente \`favoritesCount\`
-- [ ] \`AnnonceService.removeFavorite()\` décrémente \`favoritesCount\`
-- [ ] \`POST /{id}/reports\` — endpoint de signalement (renommer depuis \`/flag\`)
-- [ ] Notification admin après création d'un report (Spring Event ou Firebase)
-- [ ] Retourner \`AnnonceReportResponse\` DTO au lieu de l'entité
-
-### Flutter
-- [ ] Icône Cœur toggle sur \`AnnoncePostCard\` et \`AnnonceDetailPage\`
-- [ ] Page \"Mes Favoris\" avec liste paginée
-- [ ] Bottom sheet de signalement avec sélection \`ReportReason\` + commentaire
-- [ ] Message de confirmation après signalement
-- [ ] Bloquer le bouton signaler si déjà signalé (gestion erreur 409)"
-
-echo ""
-echo "✅ Les 3 User Stories ont été créées sur $REPO"
+echo "✅ US-PAY-001 créée sur $REPO"

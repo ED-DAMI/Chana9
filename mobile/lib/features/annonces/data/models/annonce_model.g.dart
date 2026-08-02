@@ -11,7 +11,7 @@ _AnnonceModel _$AnnonceModelFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
       title: json['title'] as String,
       description: json['description'] as String?,
-      breed: AnimalBreed.fromJson(json['breed']),
+      breed: AnimalBreed.fromJson(json['breed'] as String),
       gender: AnimalGender.fromJson(json['gender'] as String),
       ageMonths: (json['ageMonths'] as num?)?.toInt(),
       effectiveAgeMonths: (json['effectiveAgeMonths'] as num?)?.toInt(),

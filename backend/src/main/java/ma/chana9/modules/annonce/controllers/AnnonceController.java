@@ -21,14 +21,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
-
 @RestController
 @RequestMapping(ApiPaths.Annonces.BASE)
 @RequiredArgsConstructor
 public class AnnonceController {
-
     private final AnnonceService annonceService;
-
     @PostMapping
     @PreAuthorize("hasAnyRole('ELEVEUR', 'ADMIN', 'ACHETEUR')")
     @ResponseStatus(HttpStatus.CREATED)
@@ -37,7 +34,6 @@ public class AnnonceController {
             @AuthenticationPrincipal UUID userId) {
         return ApiResponse.success(null, annonceService.create(request, userId));
     }
-
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ELEVEUR', 'ADMIN', 'ACHETEUR')")
     public ApiResponse<AnnonceResponse> update(
@@ -166,7 +162,6 @@ public class AnnonceController {
                 annonceService.createAlert(userId, request)
         );
     }
-
     @DeleteMapping("/alerts/{alertId}")
     @PreAuthorize("hasAnyRole('ELEVEUR', 'ADMIN', 'ACHETEUR')")
     @ResponseStatus(HttpStatus.NO_CONTENT)

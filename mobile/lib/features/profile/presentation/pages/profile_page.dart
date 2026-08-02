@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ma_chana9_app/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ma_chana9_app/shared/localization/locale_labels.dart';
+import 'package:ma_chana9_app/shared/widgets/language_selector.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/domain/entities/user.dart';
 
@@ -9,6 +12,7 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
         final user = state.whenOrNull(
@@ -26,7 +30,8 @@ class ProfilePage extends StatelessWidget {
           appBar: AppBar(
             backgroundColor: Colors.white,
             elevation: 1,
-            title: const Text('Mon Profil'),
+            title: Text(l10n.myProfile),
+            actions: const [LanguageSelector()],
           ),
           body: ListView(
             children: [
@@ -49,7 +54,7 @@ class _ProfileHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
+    final l10n = AppLocalizations.of(context);
     return Container(
       color: Colors.white,
       padding: const EdgeInsets.all(24),
@@ -72,7 +77,7 @@ class _ProfileHeader extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            user.fullName ?? 'Utilisateur',
+            user.fullName ?? l10n.user,
             style: theme.textTheme.titleLarge
                 ?.copyWith(fontWeight: FontWeight.bold),
           ),
@@ -87,12 +92,12 @@ class _ProfileHeader extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _StatusBadge(
-                label: user.role.name.toUpperCase(),
+                label: user.role.localizedLabel(context),
                 color: theme.colorScheme.primary,
               ),
               const SizedBox(width: 8),
               _StatusBadge(
-                label: user.kycVerified ? 'Vérifié ✓' : 'Non vérifié',
+                label: user.kycVerified ? l10n.verifiedCheck : l10n.notVerified,
                 color: user.kycVerified ? Colors.green : Colors.orange,
               ),
             ],
@@ -137,29 +142,30 @@ class _ProfileMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Material(
       color: Colors.white,
       child: Column(
         children: [
           _MenuItem(
             icon: Icons.storefront_outlined,
-            label: 'Mes annonces',
+            label: l10n.myAnnonces,
             onTap: () => context.push('/profile/my-annonces/${user.id}'),
           ),
           _MenuItem(
             icon: Icons.favorite_border,
-            label: 'Mes favoris',
+            label: l10n.myFavorites,
             onTap: () => context.push('/profile/favorites'),
           ),
           _MenuItem(
             icon: Icons.notifications_outlined,
-            label: 'Mes alertes',
+            label: l10n.myAlerts,
             onTap: () => context.push('/profile/alerts'),
           ),
           const Divider(height: 1),
           _MenuItem(
             icon: Icons.logout,
-            label: 'Déconnexion',
+            label: l10n.logout,
             color: Colors.red,
             onTap: () => _confirmLogout(context),
           ),
@@ -169,22 +175,23 @@ class _ProfileMenu extends StatelessWidget {
   }
 
   void _confirmLogout(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Déconnexion'),
-        content: const Text('Êtes-vous sûr de vouloir vous déconnecter ?'),
+        title: Text(l10n.logout),
+        content: Text(l10n.logoutConfirm),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('Annuler'),
+            child: Text(l10n.cancel),
           ),
           TextButton(
             onPressed: () {
               Navigator.of(dialogContext).pop();
               context.read<AuthBloc>().add(const AuthEvent.logout());
             },
-            child: const Text('Déconnexion',
+            child: Text(l10n.logout,
                 style: TextStyle(color: Colors.red)),
           ),
         ],

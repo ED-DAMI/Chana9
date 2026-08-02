@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:ma_chana9_app/l10n/app_localizations.dart';
+
 enum ReportReason {
   fraudOrScam,
   wrongInformation,
@@ -23,20 +26,15 @@ enum ReportReason {
     }
   }
 
-  String get label {
-    switch (this) {
-      case ReportReason.fraudOrScam:
-        return 'Arnaque / Fraude';
-      case ReportReason.wrongInformation:
-        return 'Informations incorrectes';
-      case ReportReason.unhealthyAnimal:
-        return 'Animal en mauvaise santé';
-      case ReportReason.duplicate:
-        return 'Annonce en double';
-      case ReportReason.inappropriateMedia:
-        return 'Photos inappropriées';
-      case ReportReason.other:
-        return 'Autre';
-    }
+  String localizedLabel(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return switch (this) {
+      ReportReason.fraudOrScam => l10n.fraudOrScam,
+      ReportReason.wrongInformation => l10n.wrongInformation,
+      ReportReason.unhealthyAnimal => l10n.unhealthyAnimal,
+      ReportReason.duplicate => l10n.duplicate,
+      ReportReason.inappropriateMedia => l10n.inappropriateMedia,
+      ReportReason.other => l10n.other,
+    };
   }
 }

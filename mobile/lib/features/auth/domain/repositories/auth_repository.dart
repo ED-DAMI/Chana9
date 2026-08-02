@@ -8,12 +8,15 @@ abstract class AuthRepository {
     required String phone,
     required String password,
   });
-
+  Future<Either<Failure, AuthResult>> register({
+    required String phone,
+    required String password,
+    String? fullName,
+    String? region,
+  });
   Future<Either<Failure, Unit>> logout();
-
+  Future<Either<Failure, Unit>> revokeAll();
   Future<Either<Failure, User>> getCurrentUser();
-
   Future<Either<Failure, bool>> isAuthenticated();
-
   Future<Either<Failure, AuthResult>> refreshToken(String refreshToken);
 }

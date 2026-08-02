@@ -1,5 +1,4 @@
 package ma.chana9.shared.constants;
-
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -39,10 +38,25 @@ public class ErrorKeys {
         public static final String ALREADY_REPORTED = "error.report.already-reported";
         public static final String OWN_ANNONCE      = "error.report.own-annonce";
     }
-
     @UtilityClass
     public static class Storage {
         public static final String UPLOAD_FAILED = "error.storage.upload-failed";
         public static final String DELETE_FAILED = "error.storage.delete-failed";
+    }
+    @UtilityClass
+    public static class Payment {
+        public static final String ALREADY_UNLOCKED      = "error.payment.already-unlocked";
+        public static final String OWN_ANNONCE           = "error.payment.own-annonce";
+        public static final String BUYER_NOT_FOUND       = "error.payment.buyer-not-found";
+        public static final String TRANSACTION_NOT_FOUND = "error.payment.transaction-not-found";
+        public static final String INVALID_SIGNATURE     = "error.payment.invalid-signature";
+        public static final String NOT_UNLOCKED          = "error.payment.not-unlocked";
+    }
+    @UtilityClass
+    public static class User {
+        public static final String NOT_FOUND             = "error.user.not-found";
+        public static final String WRONG_PASSWORD        = "error.user.wrong-password";
+        public static final String KYC_ALREADY_VERIFIED  = "error.user.kyc-already-verified";
+        public static final String KYC_NOT_SUBMITTED     = "error.user.kyc-not-submitted";
     }
 }

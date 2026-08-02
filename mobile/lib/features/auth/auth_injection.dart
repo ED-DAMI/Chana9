@@ -9,30 +9,32 @@ import 'domain/usecases/check_auth_status.dart';
 import 'domain/usecases/get_current_user.dart';
 import 'domain/usecases/login.dart';
 import 'domain/usecases/logout.dart';
+import 'domain/usecases/register.dart';
 import 'presentation/bloc/auth_bloc.dart';
-
 
 void registerAuthDependencies(GetIt sl) {
   sl.registerLazySingleton<AuthRemoteDataSource>(
-    () => AuthRemoteDataSourceImpl(sl<DioClient>()),
+        () => AuthRemoteDataSourceImpl(sl<DioClient>()),
   );
 
   sl.registerLazySingleton<AuthRepository>(
-    () => AuthRepositoryImpl(
+        () => AuthRepositoryImpl(
       remoteDataSource: sl<AuthRemoteDataSource>(),
       tokenStorage: sl<TokenStorage>(),
     ),
   );
 
   sl.registerLazySingleton(() => Login(sl<AuthRepository>()));
+  sl.registerLazySingleton(() => Register(sl<AuthRepository>()));
   sl.registerLazySingleton(() => Logout(sl<AuthRepository>()));
   sl.registerLazySingleton(() => GetCurrentUser(sl<AuthRepository>()));
   sl.registerLazySingleton(() => CheckAuthStatus(sl<AuthRepository>()));
 
   sl.registerFactory(() => AuthBloc(
-        login: sl(),
-        logout: sl(),
-        getCurrentUser: sl(),
-        checkAuthStatus: sl(),
-      ));
+    login: sl(),
+    register: sl(),
+    logout: sl(),
+    getCurrentUser: sl(),
+    checkAuthStatus: sl(),
+  ));
 }

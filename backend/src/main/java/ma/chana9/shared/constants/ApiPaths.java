@@ -73,4 +73,11 @@ public class ApiPaths {
     public static class Storage {
         public static final String BASE = API_V1 + "/storage";
     }
+    @UtilityClass
+    public static class Payments {
+        public static final String BASE             = API_V1 + "/payments";
+        public static final String WEBHOOK          = BASE + "/webhook";
+        public static final String MOCK_SUCCESS     = BASE + "/mock/success";
+        public static final String MOCK_FAILURE     = BASE + "/mock/failure";
+    }
 }
