@@ -48,25 +48,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get alreadyAccount => 'هل لديك حساب بالفعل؟';
 
   @override
-  String get savedCredentials => 'بيانات الدخول المحفوظة';
-
-  @override
-  String get sessionExpired => 'انتهت الجلسة';
-
-  @override
   String get changePassword => 'تغيير كلمة المرور';
-
-  @override
-  String get currentPassword => 'كلمة المرور الحالية';
-
-  @override
-  String get newPassword => 'كلمة المرور الجديدة';
-
-  @override
-  String get passwordMismatch => 'كلمتا المرور غير متطابقتين';
-
-  @override
-  String get passwordMinLength => '6 أحرف كحد أدنى';
 
   @override
   String get annonces => 'الإعلانات';
@@ -198,15 +180,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get removeFavorite => 'إزالة من المفضلة';
 
   @override
-  String get alreadyFavorited => 'مضاف إلى المفضلة مسبقاً';
-
-  @override
-  String get alreadyReported => 'لقد قمت بالتبليغ عن هذا الإعلان مسبقاً';
-
-  @override
-  String get cannotReportOwn => 'لا يمكنك التبليغ عن إعلانك الخاص';
-
-  @override
   String get fraudOrScam => 'نصب / احتيال';
 
   @override
@@ -333,37 +306,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get regionDakhlaOuedEdDahab => 'الداخلة - وادي الذهب';
 
   @override
-  String get myProfile => 'ملفي';
-
-  @override
   String get myAnnonces => 'إعلاناتي';
 
   @override
   String get myFavorites => 'مفضلتي';
 
   @override
-  String get myAlerts => 'تنبيهاتي';
-
-  @override
-  String get editProfile => 'تعديل الملف الشخصي';
-
-  @override
   String get saveChanges => 'حفظ التغييرات';
-
-  @override
-  String get kycVerified => 'موثق';
-
-  @override
-  String get notVerified => 'غير موثق';
-
-  @override
-  String get kycVerification => 'التحقق من الهوية (KYC)';
-
-  @override
-  String get activeSessions => 'الجلسات النشطة';
-
-  @override
-  String get revokeAll => 'إلغاء الكل';
 
   @override
   String get role => 'الدور';
@@ -375,9 +324,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get buyer => 'مشتري';
 
   @override
-  String get admin => 'مسؤول';
-
-  @override
   String get loading => 'جار التحميل...';
 
   @override
@@ -385,15 +331,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get success => 'نجاح';
-
-  @override
-  String get save => 'حفظ';
-
-  @override
-  String get edit => 'تعديل';
-
-  @override
-  String get delete => 'حذف';
 
   @override
   String get share => 'مشاركة';
@@ -414,15 +351,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get fullNameOptional => 'الاسم الكامل (اختياري)';
 
   @override
-  String get regionOptional => 'الجهة (اختياري)';
-
-  @override
-  String get connectToAccount => 'تسجيل الدخول إلى حسابك';
-
-  @override
-  String get user => 'مستخدم';
-
-  @override
   String get verifiedCheck => 'تم التحقق ✓';
 
   @override
@@ -430,9 +358,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get reportAnnonce => 'الإبلاغ عن الإعلان';
-
-  @override
-  String get reportThisAnnonce => 'الإبلاغ عن هذا الإعلان';
 
   @override
   String get viewMore => 'عرض المزيد...';
@@ -555,22 +480,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get noFavorites => 'لا توجد مفضلة';
 
   @override
-  String get noMyAnnonces => 'ليس لديك أي إعلانات بعد';
-
-  @override
   String get createAnnonce => 'إنشاء إعلان';
-
-  @override
-  String get securePayment => 'دفع آمن';
-
-  @override
-  String get escrowPage => 'صفحة الدفع / الضمان';
-
-  @override
-  String get messaging => 'الرسائل';
-
-  @override
-  String get conversationOngoing => 'محادثة جارية';
 
   @override
   String get sellerLabel => 'البائع';
@@ -651,11 +561,95 @@ class AppLocalizationsAr extends AppLocalizations {
   String get topLot => 'إعلان مميز';
 
   @override
-  String get allFields => 'الكل';
-
-  @override
   String get min => 'الأدنى';
 
   @override
   String get max => 'الأقصى';
+
+  @override
+  String get suspended => 'مُعلق';
+
+  @override
+  String get sold => 'مُباع';
+
+  @override
+  String get edit_annonce => 'تعديل الإعلان';
+
+  @override
+  String get characteristics => 'الخصائص';
+
+  @override
+  String get weight_kg => 'الوزن (كغ)';
+
+  @override
+  String get dentition => 'الأسنان';
+
+  @override
+  String get onssa => 'أونسا';
+
+  @override
+  String get options => 'الخيارات';
+
+  @override
+  String get heads => 'رؤوس';
+
+  @override
+  String get kg => 'كغ';
+
+  @override
+  String get step_details => 'الثمن والتفاصيل';
+
+  @override
+  String get see_less => 'عرض أقل';
+
+  @override
+  String get optional_comment => 'تعليق (اختياري)';
+
+  @override
+  String get step_animal => 'الحيوان';
+
+  @override
+  String get see_more => 'عرض المزيد';
+
+  @override
+  String get step_photos => 'الصور';
+
+  @override
+  String get step_location => 'الموقع';
+
+  @override
+  String get not_specified => 'غير محدد';
+
+  @override
+  String get age_months => 'العمر (أشهر)';
+
+  @override
+  String get position_ok => 'الموقع جيد';
+
+  @override
+  String get geolocate_me => 'تحديد موقعي';
+
+  @override
+  String get connectToAccount => 'تسجيل الدخول إلى حسابك';
+
+  @override
+  String get passwordMismatch => 'كلمتا المرور غير متطابقتين';
+
+  @override
+  String get passwordMinLength => '6 أحرف كحد أدنى';
+
+  @override
+  String get regionOptional => 'الجهة (اختياري)';
+
+  @override
+  String get noMyAnnonces => 'ليس لديك أي إعلانات بعد';
+
+  @override
+  String get user => 'مستخدم';
+
+  @override
+  String get notVerified => 'غير موثق';
+
+  @override
+  String get myAlerts => 'تنبيهاتي';
 }

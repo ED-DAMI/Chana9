@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:ma_chana9_app/features/annonces/presentation/bloc/annonce_detail_bloc.dart';
 import 'package:ma_chana9_app/shared/enums/annonce_status.dart';
 import '../../../../injection_container.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/annonce.dart';
 import '../widgets/annonce_photo_carousel.dart';
 import 'annonce_form_page.dart';
@@ -14,6 +16,7 @@ class AnnonceDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return BlocProvider(
       create: (context) => sl<AnnonceDetailBloc>()
         ..add(AnnonceDetailEvent.load(annonceId)),
@@ -22,7 +25,7 @@ class AnnonceDetailPage extends StatelessWidget {
           state.whenOrNull(
             actionSuccess: (_) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Action effectuée avec succès ✅')),
+                SnackBar(content: Text(l10n.actionSuccess)),
               );
             },
             deleted: () => Navigator.of(context).pop(),
@@ -59,6 +62,7 @@ class _AnnonceDetailView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       body: CustomScrollView(
@@ -81,23 +85,22 @@ class _AnnonceDetailView extends StatelessWidget {
                     _handleMenuAction(context, value, annonce),
                 itemBuilder: (_) => [
                   if (annonce.status == AnnonceStatus.active)
-                    const PopupMenuItem(
-                        value: 'suspend', child: Text('Suspendre')),
+                    PopupMenuItem(
+                        value: 'suspend', child: Text(l10n.suspend)),
                   if (annonce.status == AnnonceStatus.suspended)
-                    const PopupMenuItem(
-                        value: 'reactivate', child: Text('Réactiver')),
+                    PopupMenuItem(
+                        value: 'reactivate', child: Text(l10n.reactivate)),
                   if (annonce.status == AnnonceStatus.active)
-                    const PopupMenuItem(
-                        value: 'sold', child: Text('Marquer vendu')),
-                  const PopupMenuItem(
-                      value: 'top_lot',
-                      child: Text('Promouvoir (Top Lot)')),
-                  const PopupMenuItem(
-                      value: 'edit', child: Text('Modifier')),
-                  const PopupMenuItem(
+                    PopupMenuItem(
+                        value: 'sold', child: Text(l10n.markAsSold)),
+                  PopupMenuItem(
+                      value: 'top_lot', child: Text(l10n.promote)),
+                  PopupMenuItem(
+                      value: 'edit', child: Text(l10n.edit_annonce)),
+                  PopupMenuItem(
                     value: 'delete',
-                    child: Text('Supprimer',
-                        style: TextStyle(color: Colors.red)),
+                    child: Text(l10n.deleteAnnonce,
+                        style: const TextStyle(color: Colors.red)),
                   ),
                 ],
               ),
@@ -119,7 +122,7 @@ class _AnnonceDetailView extends StatelessWidget {
                               ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                       ),
-                      if (annonce.isTopLot)
+                      if (annonce.isTopLot) ...[
                         Container(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 8, vertical: 4),
@@ -127,13 +130,14 @@ class _AnnonceDetailView extends StatelessWidget {
                             color: Colors.amber.shade700,
                             borderRadius: BorderRadius.circular(4),
                           ),
-                          child: const Text('TOP LOT',
-                              style: TextStyle(
+                          child: Text(l10n.topLot,
+                              style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 10)),
                         ),
-                      const SizedBox(width: 8),
+                        const SizedBox(width: 8),
+                      ],
                       _StatusBadge(status: annonce.status),
                     ],
                   ),
@@ -142,7 +146,7 @@ class _AnnonceDetailView extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        '${annonce.price.toStringAsFixed(0)} MAD',
+                        '${annonce.price.toStringAsFixed(0)} ${l10n.mad}',
                         style: theme.textTheme.headlineMedium?.copyWith(
                           color: theme.colorScheme.primary,
                           fontWeight: FontWeight.bold,
@@ -158,108 +162,107 @@ class _AnnonceDetailView extends StatelessWidget {
                     ],
                   ),
                   if (annonce.priceNegotiable)
-                    Text('Prix négociable',
+                    Text(l10n.priceNegotiable,
                         style: TextStyle(
                             color: Colors.grey.shade600, fontSize: 13)),
 
                   const Divider(height: 32),
 
-                  // Caractéristiques animal
-                  _SectionTitle(title: 'Caractéristiques'),
+                  _SectionTitle(title: l10n.features),
                   _InfoRow(
                       icon: Icons.pets,
-                      label: 'Race',
+                      label: l10n.breed,
                       value: annonce.breed.name),
                   if (annonce.gender != null)
                     _InfoRow(
                         icon: Icons.transgender,
-                        label: 'Genre',
+                        label: l10n.gender,
                         value: annonce.gender!.name == 'male'
-                            ? 'Mâle'
-                            : 'Femelle'),
+                            ? l10n.male
+                            : l10n.female),
                   if (annonce.ageMonths != null)
                     _InfoRow(
                         icon: Icons.calendar_today_outlined,
-                        label: 'Âge',
-                        value: '${annonce.ageMonths} mois'),
+                        label: l10n.age,
+                        value: '${annonce.ageMonths} ${l10n.months}'),
                   if (annonce.weightKg != null)
                     _InfoRow(
                         icon: Icons.monitor_weight_outlined,
-                        label: 'Poids',
-                        value: '${annonce.weightKg} kg'),
+                        label: l10n.weight,
+                        value: '${annonce.weightKg} ${l10n.kg}'),
                   if (annonce.dentition != null)
                     _InfoRow(
                         icon: Icons.info_outline,
-                        label: 'Dentition',
+                        label: l10n.dentition,
                         value: annonce.dentition!.name),
                   if (annonce.headCount != null)
                     _InfoRow(
                         icon: Icons.group_outlined,
-                        label: 'Nombre de têtes',
-                        value: '${annonce.headCount}'),
+                        label: l10n.headCount,
+                        value: '${annonce.headCount} ${l10n.heads}'),
                   if (annonce.onssaTagNumber != null)
                     _InfoRow(
                         icon: Icons.verified_outlined,
-                        label: 'N° ONSSA',
+                        label: l10n.onssa,
                         value: annonce.onssaTagNumber!),
                   if (annonce.viewsCount != null)
                     _InfoRow(
                         icon: Icons.visibility_outlined,
-                        label: 'Vues',
+                        label: l10n.views,
                         value: '${annonce.viewsCount}'),
                   if (annonce.favoritesCount != null)
                     _InfoRow(
                         icon: Icons.favorite_border,
-                        label: 'Favoris',
+                        label: l10n.favorites,
                         value: '${annonce.favoritesCount}'),
 
                   const Divider(height: 32),
 
-                  // Localisation
-                  _SectionTitle(title: 'Localisation'),
+                  _SectionTitle(title: l10n.location),
                   _InfoRow(
                       icon: Icons.location_on_outlined,
-                      label: 'Région',
+                      label: l10n.region,
                       value: annonce.region),
                   if (annonce.distanceKm != null)
                     _InfoRow(
                         icon: Icons.social_distance_outlined,
-                        label: 'Distance',
+                        label: l10n.distance,
                         value:
-                        '${annonce.distanceKm!.toStringAsFixed(1)} km'),
+                        '${annonce.distanceKm!.toStringAsFixed(1)} ${l10n.km}'),
                   if (annonce.addressLabel != null)
                     _InfoRow(
                         icon: Icons.place_outlined,
-                        label: 'Adresse',
+                        label: l10n.preciseAddress,
                         value: annonce.addressLabel!),
 
                   const Divider(height: 32),
 
-                  _SectionTitle(title: 'Services'),
+                  _SectionTitle(title: l10n.services),
                   if (annonce.deliveryAvailable)
                     _InfoRow(
                         icon: Icons.local_shipping_outlined,
-                        label: 'Livraison',
+                        label: l10n.delivery,
                         value:
-                        'Disponible${annonce.deliveryPrice != null ? ' — ${annonce.deliveryPrice!.toStringAsFixed(0)} MAD' : ''}'),
+                        '${l10n.available}${annonce.deliveryPrice != null ? ' — ${annonce.deliveryPrice!.toStringAsFixed(0)} ${l10n.mad}' : ''}'),
                   if (annonce.boardingAvailable == true)
                     _InfoRow(
                         icon: Icons.home_outlined,
-                        label: 'Pension',
+                        label: l10n.boarding,
                         value:
-                        'Disponible${annonce.boardingDailyPrice != null ? ' — ${annonce.boardingDailyPrice!.toStringAsFixed(0)} MAD/jour' : ''}'),
+                        '${l10n.available}${annonce.boardingDailyPrice != null ? ' — ${annonce.boardingDailyPrice!.toStringAsFixed(0)} ${l10n.mad}/${l10n.daysAgo(1)}' : ''}'),
                   if (!annonce.deliveryAvailable &&
                       annonce.boardingAvailable != true)
-                    Text('Aucun service disponible',
+                    Text(l10n.noServiceAvailable,
                         style: TextStyle(
                             color: Colors.grey.shade500, fontSize: 13)),
 
                   const Divider(height: 32),
 
-                  // Description
-                  _SectionTitle(title: 'Description'),
+                  _SectionTitle(title: l10n.description),
                   Text(
-                    annonce.description ?? 'Aucune description fournie.',
+                    annonce.description?.isNotEmpty == true
+                        ? annonce.description!
+                        : l10n.noDescription,
                     style:
                     theme.textTheme.bodyMedium?.copyWith(height: 1.5),
                   ),
@@ -271,11 +274,11 @@ class _AnnonceDetailView extends StatelessWidget {
           ),
         ],
       ),
-      bottomNavigationBar: _buildBottomContact(theme),
+      bottomNavigationBar: _buildBottomContact(theme, l10n),
     );
   }
 
-  Widget _buildBottomContact(ThemeData theme) {
+  Widget _buildBottomContact(ThemeData theme, AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -293,7 +296,7 @@ class _AnnonceDetailView extends StatelessWidget {
             child: OutlinedButton.icon(
               onPressed: () {},
               icon: const Icon(Icons.chat_bubble_outline),
-              label: const Text('Message'),
+              label: Text(l10n.message),
             ),
           ),
           const SizedBox(width: 12),
@@ -301,7 +304,7 @@ class _AnnonceDetailView extends StatelessWidget {
             child: FilledButton.icon(
               onPressed: () {},
               icon: const Icon(Icons.phone),
-              label: const Text('Appeler'),
+              label: Text(l10n.call),
             ),
           ),
         ],
@@ -340,22 +343,23 @@ class _AnnonceDetailView extends StatelessWidget {
 
   void _confirmDelete(
       BuildContext context, AnnonceDetailBloc bloc, String id) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Supprimer l\'annonce ?'),
-        content: const Text('Cette action est irréversible.'),
+        title: Text(l10n.confirmDelete),
+        content: Text(l10n.irreversible),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Annuler')),
+              child: Text(l10n.cancel)),
           TextButton(
             onPressed: () {
               Navigator.pop(context);
               bloc.add(AnnonceDetailEvent.delete(id));
             },
-            child: const Text('Supprimer',
-                style: TextStyle(color: Colors.red)),
+            child: Text(l10n.deleteAnnonce,
+                style: const TextStyle(color: Colors.red)),
           ),
         ],
       ),
@@ -388,6 +392,7 @@ class _StatusBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     Color color;
     String label;
 
@@ -396,11 +401,11 @@ class _StatusBadge extends StatelessWidget {
         return const SizedBox.shrink();
       case AnnonceStatus.sold:
         color = Colors.blue;
-        label = 'VENDU';
+        label = l10n.statusSold;
         break;
       case AnnonceStatus.suspended:
         color = Colors.orange;
-        label = 'SUSPENDU';
+        label = l10n.statusSuspended;
         break;
       default:
         color = Colors.grey;

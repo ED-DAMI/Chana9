@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/annonce.dart';
 
 class AnnoncePostHeader extends StatelessWidget {
@@ -26,25 +28,26 @@ class AnnoncePostHeader extends StatelessWidget {
     return colors[sellerId.length % colors.length];
   }
 
-  String _timeAgo(DateTime? date) {
+  String _timeAgo(BuildContext context, DateTime? date) {
     if (date == null) return '';
+    final l10n = AppLocalizations.of(context)!;
     final diff = DateTime.now().difference(date);
-    if (diff.inMinutes < 1) return 'À l\'instant';
-    if (diff.inMinutes < 60) return 'Il y a ${diff.inMinutes} min';
-    if (diff.inHours < 24) return 'Il y a ${diff.inHours} h';
-    if (diff.inDays < 7) return 'Il y a ${diff.inDays} j';
+    if (diff.inMinutes < 1) return l10n.justNow;
+    if (diff.inMinutes < 60) return l10n.minutesAgo(diff.inMinutes);
+    if (diff.inHours < 24) return l10n.hoursAgo(diff.inHours);
+    if (diff.inDays < 7) return l10n.daysAgo(diff.inDays);
     return '${date.day}/${date.month}/${date.year}';
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       child: Row(
         children: [
-          // Avatar
           CircleAvatar(
             radius: 22,
             backgroundColor: _avatarColor(annonce.sellerId),
@@ -58,14 +61,12 @@ class AnnoncePostHeader extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 10),
-
-          // Nom + localisation + date
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Vendeur · ${annonce.sellerId.substring(0, 8)}',
+                  '${l10n.seller} · ${annonce.sellerId.substring(0, 8)}',
                   style: theme.textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -87,7 +88,7 @@ class AnnoncePostHeader extends StatelessWidget {
                         style: TextStyle(color: Colors.grey)),
                     const SizedBox(width: 6),
                     Text(
-                      _timeAgo(annonce.createdAt),
+                      _timeAgo(context, annonce.createdAt),
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: Colors.grey.shade600,
                       ),
@@ -97,8 +98,6 @@ class AnnoncePostHeader extends StatelessWidget {
               ],
             ),
           ),
-
-          // Menu contextuel
           IconButton(
             icon: const Icon(Icons.more_horiz),
             onPressed: onMoreTap,

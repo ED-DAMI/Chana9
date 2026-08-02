@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ma_chana9_app/l10n/app_localizations.dart';
+
 import 'package:go_router/go_router.dart';
 import '../../../../injection_container.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../bloc/annonce_bloc.dart';
 import '../bloc/annonce_detail_bloc.dart';
 import '../widgets/annonce_post_card.dart';
@@ -63,7 +64,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.myFavorites)),

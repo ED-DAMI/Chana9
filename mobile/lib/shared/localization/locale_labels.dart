@@ -43,7 +43,7 @@ extension RoleLocalization on Role {
     return switch (this) {
       Role.seller => l10n.seller,
       Role.buyer => l10n.buyer,
-      Role.admin => l10n.admin,
+      Role.admin => l10n.min,
     };
   }
 }
@@ -56,7 +56,7 @@ extension AnnonceStatusLocalization on AnnonceStatus {
       AnnonceStatus.suspended => l10n.statusSuspended,
       AnnonceStatus.sold => l10n.statusSold,
       AnnonceStatus.expired => l10n.error,
-      AnnonceStatus.draft => l10n.edit,
+      AnnonceStatus.draft => l10n.edit_annonce,
     };
   }
 }

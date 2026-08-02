@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/annonce.dart';
 
 class AnnoncePostInfo extends StatelessWidget {
@@ -9,6 +11,7 @@ class AnnoncePostInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -22,11 +25,10 @@ class AnnoncePostInfo extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 6),
-
           Row(
             children: [
               Text(
-                '${annonce.price.toStringAsFixed(0)} MAD',
+                '${annonce.price.toStringAsFixed(0)} ${l10n.mad}',
                 style: theme.textTheme.titleLarge?.copyWith(
                   color: theme.colorScheme.primary,
                   fontWeight: FontWeight.bold,
@@ -42,14 +44,13 @@ class AnnoncePostInfo extends StatelessWidget {
               if (annonce.priceNegotiable) ...[
                 const SizedBox(width: 6),
                 _Badge(
-                  label: 'Négociable',
+                  label: l10n.priceNegotiable,
                   color: Colors.green.shade600,
                 ),
               ],
             ],
           ),
           const SizedBox(height: 8),
-
           Wrap(
             spacing: 6,
             runSpacing: 4,
@@ -61,22 +62,22 @@ class AnnoncePostInfo extends StatelessWidget {
               if (annonce.gender != null)
                 _InfoChip(
                   icon: Icons.transgender,
-                  label: annonce.gender!.name == 'male' ? 'Mâle' : 'Femelle',
+                  label: annonce.gender!.name == 'male' ? l10n.male : l10n.female,
                 ),
               if (annonce.ageMonths != null)
                 _InfoChip(
                   icon: Icons.cake_outlined,
-                  label: '${annonce.ageMonths} mois',
+                  label: '${annonce.ageMonths} ${l10n.months}',
                 ),
               if (annonce.weightKg != null)
                 _InfoChip(
                   icon: Icons.monitor_weight_outlined,
-                  label: '${annonce.weightKg} kg',
+                  label: '${annonce.weightKg} ${l10n.kg}',
                 ),
               if (annonce.headCount != null && annonce.headCount! > 1)
                 _InfoChip(
                   icon: Icons.group_outlined,
-                  label: '${annonce.headCount} têtes',
+                  label: '${annonce.headCount} ${l10n.heads}',
                 ),
               if (annonce.dentition != null)
                 _InfoChip(
@@ -86,25 +87,25 @@ class AnnoncePostInfo extends StatelessWidget {
               if (annonce.deliveryAvailable)
                 _InfoChip(
                   icon: Icons.local_shipping_outlined,
-                  label: 'Livraison',
+                  label: l10n.delivery,
                   color: Colors.blue.shade700,
                 ),
               if (annonce.boardingAvailable == true)
                 _InfoChip(
                   icon: Icons.home_outlined,
-                  label: 'Pension',
+                  label: l10n.boarding,
                   color: Colors.purple.shade700,
                 ),
               if (annonce.onssaTagNumber != null)
                 _InfoChip(
                   icon: Icons.verified_outlined,
-                  label: 'ONSSA',
+                  label: l10n.onssa,
                   color: Colors.green.shade700,
                 ),
               if (annonce.distanceKm != null)
                 _InfoChip(
                   icon: Icons.social_distance_outlined,
-                  label: '${annonce.distanceKm!.toStringAsFixed(1)} km',
+                  label: '${annonce.distanceKm!.toStringAsFixed(1)} ${l10n.km}',
                 ),
             ],
           ),

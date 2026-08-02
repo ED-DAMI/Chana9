@@ -24,8 +24,6 @@ class LanguageSelector extends StatelessWidget {
           itemBuilder: (_) => [
             _item(l10n, AppLocale.fr, current, '🇫🇷'),
             _item(l10n, AppLocale.ar, current, '🇲🇦'),
-            _item(l10n, AppLocale.en, current, '🌍'),
-            _item(l10n, AppLocale.zgh, current, 'ⵣ'),
           ],
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),

@@ -6,9 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_ar.dart';
-import 'app_localizations_en.dart';
 import 'app_localizations_fr.dart';
-import 'app_localizations_zgh.dart';
 
 // ignore_for_file: type=lint
 
@@ -97,9 +95,7 @@ abstract class AppLocalizations {
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('ar'),
-    Locale('en'),
     Locale('fr'),
-    Locale('zgh'),
   ];
 
   /// No description provided for @appName.
@@ -180,47 +176,11 @@ abstract class AppLocalizations {
   /// **'Vous avez déjà un compte ?'**
   String get alreadyAccount;
 
-  /// No description provided for @savedCredentials.
-  ///
-  /// In fr, this message translates to:
-  /// **'Identifiants enregistrés'**
-  String get savedCredentials;
-
-  /// No description provided for @sessionExpired.
-  ///
-  /// In fr, this message translates to:
-  /// **'Session expirée'**
-  String get sessionExpired;
-
   /// No description provided for @changePassword.
   ///
   /// In fr, this message translates to:
   /// **'Changer le mot de passe'**
   String get changePassword;
-
-  /// No description provided for @currentPassword.
-  ///
-  /// In fr, this message translates to:
-  /// **'Mot de passe actuel'**
-  String get currentPassword;
-
-  /// No description provided for @newPassword.
-  ///
-  /// In fr, this message translates to:
-  /// **'Nouveau mot de passe'**
-  String get newPassword;
-
-  /// No description provided for @passwordMismatch.
-  ///
-  /// In fr, this message translates to:
-  /// **'Les mots de passe ne correspondent pas'**
-  String get passwordMismatch;
-
-  /// No description provided for @passwordMinLength.
-  ///
-  /// In fr, this message translates to:
-  /// **'Minimum 6 caractères'**
-  String get passwordMinLength;
 
   /// No description provided for @annonces.
   ///
@@ -480,24 +440,6 @@ abstract class AppLocalizations {
   /// **'Retirer des favoris'**
   String get removeFavorite;
 
-  /// No description provided for @alreadyFavorited.
-  ///
-  /// In fr, this message translates to:
-  /// **'Déjà ajouté aux favoris'**
-  String get alreadyFavorited;
-
-  /// No description provided for @alreadyReported.
-  ///
-  /// In fr, this message translates to:
-  /// **'Vous avez déjà signalé cette annonce'**
-  String get alreadyReported;
-
-  /// No description provided for @cannotReportOwn.
-  ///
-  /// In fr, this message translates to:
-  /// **'Vous ne pouvez pas signaler votre propre annonce'**
-  String get cannotReportOwn;
-
   /// No description provided for @fraudOrScam.
   ///
   /// In fr, this message translates to:
@@ -750,12 +692,6 @@ abstract class AppLocalizations {
   /// **'Dakhla-Oued Ed-Dahab'**
   String get regionDakhlaOuedEdDahab;
 
-  /// No description provided for @myProfile.
-  ///
-  /// In fr, this message translates to:
-  /// **'Mon profil'**
-  String get myProfile;
-
   /// No description provided for @myAnnonces.
   ///
   /// In fr, this message translates to:
@@ -768,53 +704,11 @@ abstract class AppLocalizations {
   /// **'Mes favoris'**
   String get myFavorites;
 
-  /// No description provided for @myAlerts.
-  ///
-  /// In fr, this message translates to:
-  /// **'Mes alertes'**
-  String get myAlerts;
-
-  /// No description provided for @editProfile.
-  ///
-  /// In fr, this message translates to:
-  /// **'Modifier le profil'**
-  String get editProfile;
-
   /// No description provided for @saveChanges.
   ///
   /// In fr, this message translates to:
   /// **'Enregistrer'**
   String get saveChanges;
-
-  /// No description provided for @kycVerified.
-  ///
-  /// In fr, this message translates to:
-  /// **'Vérifié'**
-  String get kycVerified;
-
-  /// No description provided for @notVerified.
-  ///
-  /// In fr, this message translates to:
-  /// **'Non vérifié'**
-  String get notVerified;
-
-  /// No description provided for @kycVerification.
-  ///
-  /// In fr, this message translates to:
-  /// **'Vérification KYC'**
-  String get kycVerification;
-
-  /// No description provided for @activeSessions.
-  ///
-  /// In fr, this message translates to:
-  /// **'Sessions actives'**
-  String get activeSessions;
-
-  /// No description provided for @revokeAll.
-  ///
-  /// In fr, this message translates to:
-  /// **'Révoquer tout'**
-  String get revokeAll;
 
   /// No description provided for @role.
   ///
@@ -834,12 +728,6 @@ abstract class AppLocalizations {
   /// **'Acheteur'**
   String get buyer;
 
-  /// No description provided for @admin.
-  ///
-  /// In fr, this message translates to:
-  /// **'Admin'**
-  String get admin;
-
   /// No description provided for @loading.
   ///
   /// In fr, this message translates to:
@@ -857,24 +745,6 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Succès'**
   String get success;
-
-  /// No description provided for @save.
-  ///
-  /// In fr, this message translates to:
-  /// **'Enregistrer'**
-  String get save;
-
-  /// No description provided for @edit.
-  ///
-  /// In fr, this message translates to:
-  /// **'Modifier'**
-  String get edit;
-
-  /// No description provided for @delete.
-  ///
-  /// In fr, this message translates to:
-  /// **'Supprimer'**
-  String get delete;
 
   /// No description provided for @share.
   ///
@@ -912,24 +782,6 @@ abstract class AppLocalizations {
   /// **'Nom complet (optionnel)'**
   String get fullNameOptional;
 
-  /// No description provided for @regionOptional.
-  ///
-  /// In fr, this message translates to:
-  /// **'Région (optionnel)'**
-  String get regionOptional;
-
-  /// No description provided for @connectToAccount.
-  ///
-  /// In fr, this message translates to:
-  /// **'Connectez-vous à votre compte'**
-  String get connectToAccount;
-
-  /// No description provided for @user.
-  ///
-  /// In fr, this message translates to:
-  /// **'Utilisateur'**
-  String get user;
-
   /// No description provided for @verifiedCheck.
   ///
   /// In fr, this message translates to:
@@ -947,12 +799,6 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Signaler l\'annonce'**
   String get reportAnnonce;
-
-  /// No description provided for @reportThisAnnonce.
-  ///
-  /// In fr, this message translates to:
-  /// **'Signaler cette annonce'**
-  String get reportThisAnnonce;
 
   /// No description provided for @viewMore.
   ///
@@ -1194,41 +1040,11 @@ abstract class AppLocalizations {
   /// **'Aucun favori'**
   String get noFavorites;
 
-  /// No description provided for @noMyAnnonces.
-  ///
-  /// In fr, this message translates to:
-  /// **'Vous n\'avez pas encore d\'annonces'**
-  String get noMyAnnonces;
-
   /// No description provided for @createAnnonce.
   ///
   /// In fr, this message translates to:
   /// **'Créer une annonce'**
   String get createAnnonce;
-
-  /// No description provided for @securePayment.
-  ///
-  /// In fr, this message translates to:
-  /// **'Paiement sécurisé'**
-  String get securePayment;
-
-  /// No description provided for @escrowPage.
-  ///
-  /// In fr, this message translates to:
-  /// **'Page de séquestre / paiement'**
-  String get escrowPage;
-
-  /// No description provided for @messaging.
-  ///
-  /// In fr, this message translates to:
-  /// **'Messagerie'**
-  String get messaging;
-
-  /// No description provided for @conversationOngoing.
-  ///
-  /// In fr, this message translates to:
-  /// **'Conversation en cours'**
-  String get conversationOngoing;
 
   /// No description provided for @sellerLabel.
   ///
@@ -1287,7 +1103,7 @@ abstract class AppLocalizations {
   /// No description provided for @tamazight.
   ///
   /// In fr, this message translates to:
-  /// **'Tamazight (ⵜⴰⵎⴰⵣⵉⵖⵜ)'**
+  /// **'Tamazight'**
   String get tamazight;
 
   /// No description provided for @fixedPrice.
@@ -1374,12 +1190,6 @@ abstract class AppLocalizations {
   /// **'TOP LOT'**
   String get topLot;
 
-  /// No description provided for @allFields.
-  ///
-  /// In fr, this message translates to:
-  /// **'Tous'**
-  String get allFields;
-
   /// No description provided for @min.
   ///
   /// In fr, this message translates to:
@@ -1391,6 +1201,180 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Max'**
   String get max;
+
+  /// No description provided for @suspended.
+  ///
+  /// In fr, this message translates to:
+  /// **'Suspendu'**
+  String get suspended;
+
+  /// No description provided for @sold.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vendu'**
+  String get sold;
+
+  /// No description provided for @edit_annonce.
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier l\'annonce'**
+  String get edit_annonce;
+
+  /// No description provided for @characteristics.
+  ///
+  /// In fr, this message translates to:
+  /// **'Caractéristiques'**
+  String get characteristics;
+
+  /// No description provided for @weight_kg.
+  ///
+  /// In fr, this message translates to:
+  /// **'Poids (kg)'**
+  String get weight_kg;
+
+  /// No description provided for @dentition.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dentition'**
+  String get dentition;
+
+  /// No description provided for @onssa.
+  ///
+  /// In fr, this message translates to:
+  /// **'ONSSA'**
+  String get onssa;
+
+  /// No description provided for @options.
+  ///
+  /// In fr, this message translates to:
+  /// **'Options'**
+  String get options;
+
+  /// No description provided for @heads.
+  ///
+  /// In fr, this message translates to:
+  /// **'têtes'**
+  String get heads;
+
+  /// No description provided for @kg.
+  ///
+  /// In fr, this message translates to:
+  /// **'kg'**
+  String get kg;
+
+  /// No description provided for @step_details.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prix & Détails'**
+  String get step_details;
+
+  /// No description provided for @see_less.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir moins'**
+  String get see_less;
+
+  /// No description provided for @optional_comment.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commentaire (optionnel)'**
+  String get optional_comment;
+
+  /// No description provided for @step_animal.
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'animal'**
+  String get step_animal;
+
+  /// No description provided for @see_more.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir plus'**
+  String get see_more;
+
+  /// No description provided for @step_photos.
+  ///
+  /// In fr, this message translates to:
+  /// **'Photos'**
+  String get step_photos;
+
+  /// No description provided for @step_location.
+  ///
+  /// In fr, this message translates to:
+  /// **'Localisation'**
+  String get step_location;
+
+  /// No description provided for @not_specified.
+  ///
+  /// In fr, this message translates to:
+  /// **'Non spécifié'**
+  String get not_specified;
+
+  /// No description provided for @age_months.
+  ///
+  /// In fr, this message translates to:
+  /// **'Âge (mois)'**
+  String get age_months;
+
+  /// No description provided for @position_ok.
+  ///
+  /// In fr, this message translates to:
+  /// **'Position OK'**
+  String get position_ok;
+
+  /// No description provided for @geolocate_me.
+  ///
+  /// In fr, this message translates to:
+  /// **'Me géolocaliser'**
+  String get geolocate_me;
+
+  /// No description provided for @connectToAccount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Connectez-vous à votre compte'**
+  String get connectToAccount;
+
+  /// No description provided for @passwordMismatch.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les mots de passe ne correspondent pas'**
+  String get passwordMismatch;
+
+  /// No description provided for @passwordMinLength.
+  ///
+  /// In fr, this message translates to:
+  /// **'6 caractères minimum'**
+  String get passwordMinLength;
+
+  /// No description provided for @regionOptional.
+  ///
+  /// In fr, this message translates to:
+  /// **'Région (optionnelle)'**
+  String get regionOptional;
+
+  /// No description provided for @noMyAnnonces.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vous n\'avez pas encore d\'annonces'**
+  String get noMyAnnonces;
+
+  /// No description provided for @user.
+  ///
+  /// In fr, this message translates to:
+  /// **'Utilisateur'**
+  String get user;
+
+  /// No description provided for @notVerified.
+  ///
+  /// In fr, this message translates to:
+  /// **'Non vérifié'**
+  String get notVerified;
+
+  /// No description provided for @myAlerts.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mes alertes'**
+  String get myAlerts;
 }
 
 class _AppLocalizationsDelegate
@@ -1404,7 +1388,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['ar', 'en', 'fr', 'zgh'].contains(locale.languageCode);
+      <String>['ar', 'fr'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -1415,12 +1399,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   switch (locale.languageCode) {
     case 'ar':
       return AppLocalizationsAr();
-    case 'en':
-      return AppLocalizationsEn();
     case 'fr':
       return AppLocalizationsFr();
-    case 'zgh':
-      return AppLocalizationsZgh();
   }
 
   throw FlutterError(
