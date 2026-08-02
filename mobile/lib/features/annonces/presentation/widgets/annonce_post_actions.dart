@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/annonce.dart';
 
 class AnnoncePostActions extends StatefulWidget {
@@ -52,6 +53,7 @@ class _AnnoncePostActionsState extends State<AnnoncePostActions>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Column(
       children: [
@@ -60,7 +62,6 @@ class _AnnoncePostActionsState extends State<AnnoncePostActions>
           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
           child: Row(
             children: [
-              // Favori
               Expanded(
                 child: _ActionButton(
                   icon: ScaleTransition(
@@ -75,15 +76,13 @@ class _AnnoncePostActionsState extends State<AnnoncePostActions>
                       size: 20,
                     ),
                   ),
-                  label: 'Favori',
+                  label: l10n.favorites,
                   labelColor: widget.isFavorite
                       ? Colors.red
                       : Colors.grey.shade700,
                   onTap: _handleFavorite,
                 ),
               ),
-
-              // Contacter
               Expanded(
                 child: _ActionButton(
                   icon: Icon(
@@ -91,13 +90,11 @@ class _AnnoncePostActionsState extends State<AnnoncePostActions>
                     color: theme.colorScheme.primary,
                     size: 20,
                   ),
-                  label: 'Contacter',
+                  label: l10n.contact,
                   labelColor: theme.colorScheme.primary,
                   onTap: widget.onContact,
                 ),
               ),
-
-              // Partager
               Expanded(
                 child: _ActionButton(
                   icon: Icon(
@@ -105,7 +102,7 @@ class _AnnoncePostActionsState extends State<AnnoncePostActions>
                     color: Colors.grey.shade600,
                     size: 20,
                   ),
-                  label: 'Partager',
+                  label: l10n.share,
                   labelColor: Colors.grey.shade700,
                   onTap: widget.onShare,
                 ),

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ma_chana9_app/l10n/app_localizations.dart';
+
 import 'package:go_router/go_router.dart';
 import '../../../../injection_container.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../bloc/annonce_bloc.dart';
 import '../bloc/annonce_detail_bloc.dart';
 import '../widgets/annonce_post_card.dart';
@@ -63,7 +64,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.myFavorites)),
@@ -84,7 +85,11 @@ class _FavoritesPageState extends State<FavoritesPage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text('🤍', style: TextStyle(fontSize: 64)),
+                      Icon(
+                        Icons.bookmark_outline,
+                        size: 72,
+                        color: Colors.grey.shade300,
+                      ),
                       const SizedBox(height: 16),
                       Text(
                         l10n.noFavorites,
@@ -100,15 +105,13 @@ class _FavoritesPageState extends State<FavoritesPage> {
                 child: ListView.builder(
                   controller: _scrollController,
                   padding: const EdgeInsets.only(bottom: 80),
-                  itemCount:
-                  data.content.length + (_isFetchingMore ? 1 : 0),
+                  itemCount: data.content.length + (_isFetchingMore ? 1 : 0),
                   itemBuilder: (context, index) {
                     if (index == data.content.length) {
                       return const Padding(
                         padding: EdgeInsets.all(16),
                         child: Center(
-                          child:
-                          CircularProgressIndicator(strokeWidth: 2),
+                          child: CircularProgressIndicator(strokeWidth: 2),
                         ),
                       );
                     }
@@ -117,8 +120,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                       create: (_) => sl<AnnonceDetailBloc>(),
                       child: AnnoncePostCard(
                         annonce: annonce,
-                        onTap: () =>
-                            context.push('/annonces/${annonce.id}'),
+                        onTap: () => context.push('/annonces/${annonce.id}'),
                         onContact: () =>
                             context.push('/annonces/${annonce.id}'),
                       ),
@@ -131,8 +133,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.error_outline,
-                      size: 48, color: Colors.red),
+                  const Icon(Icons.error_outline, size: 48, color: Colors.red),
                   const SizedBox(height: 12),
                   Text(message, textAlign: TextAlign.center),
                   const SizedBox(height: 16),

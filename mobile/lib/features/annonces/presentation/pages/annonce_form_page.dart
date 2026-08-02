@@ -6,6 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ma_chana9_app/shared/enums/animal_gender.dart';
 import 'package:ma_chana9_app/shared/enums/animal_breed.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/enums/animal_dentition.dart';
 import '../../domain/entities/annonce.dart';
 import '../bloc/annonce_bloc.dart';
@@ -40,7 +41,6 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
   final List<XFile> _photos = [];
   final ImagePicker _picker = ImagePicker();
 
-  // Étape Animal
   AnimalBreed? _selectedBreed;
   AnimalGender? _gender;
   AnimalDentition? _dentition;
@@ -50,13 +50,11 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
   final _headCountController = TextEditingController();
   bool _eligibleForAid = false;
 
-  // Étape Prix & Détails
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _priceController = TextEditingController();
   bool _priceNegotiable = false;
 
-  // Étape Localisation
   String? _selectedRegion;
   String? _selectedCity;
   final _addressController = TextEditingController();
@@ -118,14 +116,16 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
       }
 
       final position = await Geolocator.getCurrentPosition();
-      final placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
+      final placemarks =
+      await placemarkFromCoordinates(position.latitude, position.longitude);
 
       if (placemarks.isNotEmpty) {
         final place = placemarks.first;
         setState(() {
           _latitude = position.latitude;
           _longitude = position.longitude;
-          _addressController.text = "${place.street ?? ''}, ${place.subLocality ?? ''}".trim();
+          _addressController.text =
+              "${place.street ?? ''}, ${place.subLocality ?? ''}".trim();
 
           for (var region in kMoroccoRegionsAndCities.keys) {
             if (place.administrativeArea?.contains(region) ?? false) {
@@ -136,14 +136,12 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
         });
       }
     } catch (e) {
-      _showLocationError('Erreur de localisation');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Error'), backgroundColor: Colors.red),
+      );
     } finally {
       setState(() => _isLocating = false);
     }
-  }
-
-  void _showLocationError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red));
   }
 
   Map<String, dynamic> _buildBody() {
@@ -158,26 +156,32 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
       'description': _descriptionController.text.trim(),
       'gender': _gender?.name,
       'ageMonths': int.tryParse(_ageController.text),
-      'addressLabel': _selectedCity != null ? '$_selectedCity, ${_addressController.text}' : _addressController.text,
+      'addressLabel': _selectedCity != null
+          ? '$_selectedCity, ${_addressController.text}'
+          : _addressController.text,
       'latitude': _latitude,
       'longitude': _longitude,
-      if (_weightController.text.isNotEmpty) 'weightKg': double.tryParse(_weightController.text),
-      if (_onssaController.text.isNotEmpty) 'onssaTagNumber': _onssaController.text.trim(),
-      if (_headCountController.text.isNotEmpty) 'headCount': int.tryParse(_headCountController.text),
+      if (_weightController.text.isNotEmpty)
+        'weightKg': double.tryParse(_weightController.text),
+      if (_onssaController.text.isNotEmpty)
+        'onssaTagNumber': _onssaController.text.trim(),
+      if (_headCountController.text.isNotEmpty)
+        'headCount': int.tryParse(_headCountController.text),
       if (_dentition != null) 'dentition': _dentition!.name,
-      if (_deliveryAvailable) 'deliveryPrice': double.tryParse(_deliveryPriceController.text),
+      if (_deliveryAvailable)
+        'deliveryPrice': double.tryParse(_deliveryPriceController.text),
     };
   }
 
   void _submit() {
-    if (_photos.isEmpty && !_isEditing) {
-      _showLocationError('Veuillez ajouter au moins une photo');
-      return;
-    }
+    if (_photos.isEmpty && !_isEditing) return;
     if (!_formKey.currentState!.validate()) return;
 
     if (_isEditing) {
-      context.read<AnnonceBloc>().add(AnnonceEvent.updateAnnonce(id: widget.annonce!.id, body: _buildBody()));
+      context.read<AnnonceBloc>().add(AnnonceEvent.updateAnnonce(
+        id: widget.annonce!.id,
+        body: _buildBody(),
+      ));
     } else {
       context.read<AnnonceBloc>().add(AnnonceEvent.createAnnonceWithMedias(
         body: _buildBody(),
@@ -188,19 +192,29 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return BlocConsumer<AnnonceBloc, AnnonceState>(
       listener: (context, state) {
         state.whenOrNull(
           annonceCreated: (_) => Navigator.pop(context),
           annonceUpdated: (_) => Navigator.pop(context),
-          failure: (msg) => _showLocationError(msg),
+          failure: (msg) => ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(msg), backgroundColor: Colors.red),
+          ),
         );
       },
       builder: (context, state) {
-        final isLoading = state.maybeWhen(loading: () => true, uploadingMedias: (_, __) => true, orElse: () => false);
+        final isLoading = state.maybeWhen(
+          loading: () => true,
+          uploadingMedias: (_, __) => true,
+          orElse: () => false,
+        );
 
         return Scaffold(
-          appBar: AppBar(title: Text(_isEditing ? 'Modifier' : 'Nouvelle annonce')),
+          appBar: AppBar(
+            title: Text(_isEditing ? l10n.edit_annonce : l10n.newAnnonce),
+          ),
           body: Form(
             key: _formKey,
             child: Stepper(
@@ -208,26 +222,56 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
               type: StepperType.vertical,
               onStepTapped: (step) => setState(() => _currentStep = step),
               onStepContinue: () {
-                if (_currentStep < 3) setState(() => _currentStep++);
-                else _submit();
+                if (_currentStep < 3) {
+                  setState(() => _currentStep++);
+                } else {
+                  _submit();
+                }
               },
               onStepCancel: () {
-                if (_currentStep > 0) setState(() => _currentStep--);
-                else Navigator.pop(context);
+                if (_currentStep > 0) {
+                  setState(() => _currentStep--);
+                } else {
+                  Navigator.pop(context);
+                }
               },
-              controlsBuilder: (context, details) => _buildControlButtons(details, isLoading),
+              controlsBuilder: (context, details) => Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Row(
+                  children: [
+                    FilledButton(
+                      onPressed: isLoading ? null : details.onStepContinue,
+                      child: isLoading && _currentStep == 3
+                          ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      )
+                          : Text(_currentStep == 3 ? l10n.publish : l10n.next),
+                    ),
+                    TextButton(
+                      onPressed: details.onStepCancel,
+                      child: Text(l10n.back),
+                    ),
+                  ],
+                ),
+              ),
               steps: [
                 Step(
-                  title: const Text('Photos'),
+                  title: Text(l10n.step_photos),
                   content: _PhotoStep(
                     photos: _photos,
-                    onAdd: () => _showPhotoOptions(),
+                    onAdd: () => _showPhotoOptions(l10n),
                     onRemove: (i) => setState(() => _photos.removeAt(i)),
                   ),
                 ),
                 Step(
-                  title: const Text('L\'Animal'),
+                  title: Text(l10n.step_animal),
                   content: _AnimalStep(
+                    l10n: l10n,
                     selectedBreed: _selectedBreed,
                     ageController: _ageController,
                     weightController: _weightController,
@@ -243,26 +287,33 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
                   ),
                 ),
                 Step(
-                  title: const Text('Prix & Détails'),
+                  title: Text(l10n.step_details),
                   content: _AnnonceStep(
+                    l10n: l10n,
                     titleController: _titleController,
                     descriptionController: _descriptionController,
                     priceController: _priceController,
                     priceNegotiable: _priceNegotiable,
-                    onNegotiableChanged: (v) => setState(() => _priceNegotiable = v),
+                    onNegotiableChanged: (v) =>
+                        setState(() => _priceNegotiable = v),
                   ),
                 ),
                 Step(
-                  title: const Text('Localisation'),
+                  title: Text(l10n.step_location),
                   content: _LocationStep(
+                    l10n: l10n,
                     selectedRegion: _selectedRegion,
                     selectedCity: _selectedCity,
                     addressController: _addressController,
                     deliveryAvailable: _deliveryAvailable,
                     deliveryPriceController: _deliveryPriceController,
-                    onRegionChanged: (r) => setState(() { _selectedRegion = r; _selectedCity = null; }),
+                    onRegionChanged: (r) => setState(() {
+                      _selectedRegion = r;
+                      _selectedCity = null;
+                    }),
                     onCityChanged: (c) => setState(() => _selectedCity = c),
-                    onDeliveryChanged: (v) => setState(() => _deliveryAvailable = v),
+                    onDeliveryChanged: (v) =>
+                        setState(() => _deliveryAvailable = v),
                     onDetectLocation: _detectLocation,
                     isLocating: _isLocating,
                     hasLocation: _latitude != null,
@@ -276,33 +327,31 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
     );
   }
 
-  Widget _buildControlButtons(ControlsDetails details, bool isLoading) {
-    final isLast = _currentStep == 3;
-    return Padding(
-      padding: const EdgeInsets.only(top: 16),
-      child: Row(
-        children: [
-          FilledButton(
-            onPressed: isLoading ? null : details.onStepContinue,
-            child: isLoading && isLast
-                ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                : Text(isLast ? 'Publier' : 'Suivant'),
-          ),
-          TextButton(onPressed: details.onStepCancel, child: const Text('Retour')),
-        ],
-      ),
-    );
-  }
-
-  void _showPhotoOptions() async {
+  void _showPhotoOptions(AppLocalizations l10n) async {
     final source = await showModalBottomSheet<ImageSource>(
       context: context,
-      builder: (context) => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ListTile(leading: const Icon(Icons.camera), title: const Text('Appareil photo'), onTap: () => Navigator.pop(context, ImageSource.camera)),
-          ListTile(leading: const Icon(Icons.photo_library), title: const Text('Galerie'), onTap: () => Navigator.pop(context, ImageSource.gallery)),
-        ],
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.camera_alt),
+              minLeadingWidth: 24,
+              title: Text(l10n.camera),
+              contentPadding:
+              const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
+              onTap: () => Navigator.pop(context, ImageSource.camera),
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_library_outlined),
+              minLeadingWidth: 24,
+              title: Text(l10n.gallery),
+              contentPadding:
+              const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
+              onTap: () => Navigator.pop(context, ImageSource.gallery),
+            ),
+          ],
+        ),
       ),
     );
     if (source != null) {
@@ -317,33 +366,68 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
   }
 }
 
-// --- Sous-widgets des étapes ---
-
 class _PhotoStep extends StatelessWidget {
   final List<XFile> photos;
   final VoidCallback onAdd;
   final Function(int) onRemove;
-  const _PhotoStep({required this.photos, required this.onAdd, required this.onRemove});
+
+  const _PhotoStep({
+    required this.photos,
+    required this.onAdd,
+    required this.onRemove,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Wrap(
-      spacing: 8, runSpacing: 8,
+      spacing: 8,
+      runSpacing: 8,
       children: [
-        ...List.generate(photos.length, (i) => Stack(
-          children: [
-            Image.file(File(photos[i].path), width: 80, height: 80, fit: BoxFit.cover),
-            Positioned(right: 0, child: IconButton(icon: const Icon(Icons.close, color: Colors.red), onPressed: () => onRemove(i))),
-          ],
-        )),
+        ...List.generate(
+          photos.length,
+              (i) => Stack(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.file(
+                  File(photos[i].path),
+                  width: 80,
+                  height: 80,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Positioned(
+                right: 0,
+                top: 0,
+                child: GestureDetector(
+                  onTap: () => onRemove(i),
+                  child: Container(
+                    width: 24,
+                    height: 24,
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(Icons.close, color: Colors.white, size: 16),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
         if (photos.length < 5)
-          IconButton.filledTonal(onPressed: onAdd, icon: const Icon(Icons.add_a_photo), constraints: const BoxConstraints.tightFor(width: 80, height: 80)),
+          IconButton.filledTonal(
+            onPressed: onAdd,
+            icon: const Icon(Icons.add_a_photo_outlined),
+            constraints: const BoxConstraints.tightFor(width: 80, height: 80),
+          ),
       ],
     );
   }
 }
 
 class _AnimalStep extends StatelessWidget {
+  final AppLocalizations l10n;
   final AnimalBreed? selectedBreed;
   final TextEditingController ageController;
   final TextEditingController weightController;
@@ -358,6 +442,7 @@ class _AnimalStep extends StatelessWidget {
   final ValueChanged<bool> onEligibleChanged;
 
   const _AnimalStep({
+    required this.l10n,
     required this.selectedBreed,
     required this.ageController,
     required this.weightController,
@@ -378,17 +463,25 @@ class _AnimalStep extends StatelessWidget {
       children: [
         DropdownButtonFormField<AnimalBreed>(
           value: selectedBreed,
-          decoration: const InputDecoration(labelText: 'Race *', border: OutlineInputBorder()),
-          items: AnimalBreed.values.map((b) => DropdownMenuItem(value: b, child: Text(b.name))).toList(),
+          decoration: InputDecoration(
+            labelText: '${l10n.breed} *',
+            border: const OutlineInputBorder(),
+          ),
+          items: AnimalBreed.values
+              .map((b) => DropdownMenuItem(
+            value: b,
+            child: Text(b.localizedLabel(context)),
+          ))
+              .toList(),
           onChanged: onBreedChanged,
-          validator: (v) => v == null ? 'Race requise' : null,
+          validator: (v) => v == null ? l10n.breedRequired : null,
         ),
         const SizedBox(height: 12),
         SegmentedButton<AnimalGender?>(
-          segments: const [
-            ButtonSegment(value: null, label: Text('Non précisé')),
-            ButtonSegment(value: AnimalGender.male, label: Text('Mâle')),
-            ButtonSegment(value: AnimalGender.female, label: Text('Femelle')),
+          segments: [
+            ButtonSegment(value: null, label: Text(l10n.not_specified)),
+            ButtonSegment(value: AnimalGender.male, label: Text(l10n.male)),
+            ButtonSegment(value: AnimalGender.female, label: Text(l10n.female)),
           ],
           selected: {gender},
           onSelectionChanged: (val) => onGenderChanged(val.first),
@@ -399,7 +492,10 @@ class _AnimalStep extends StatelessWidget {
             Expanded(
               child: TextField(
                 controller: ageController,
-                decoration: const InputDecoration(labelText: 'Âge (mois)', border: OutlineInputBorder()),
+                decoration: InputDecoration(
+                  labelText: l10n.age_months,
+                  border: const OutlineInputBorder(),
+                ),
                 keyboardType: TextInputType.number,
               ),
             ),
@@ -407,7 +503,10 @@ class _AnimalStep extends StatelessWidget {
             Expanded(
               child: TextField(
                 controller: weightController,
-                decoration: const InputDecoration(labelText: 'Poids (kg)', border: OutlineInputBorder()),
+                decoration: InputDecoration(
+                  labelText: l10n.weight_kg,
+                  border: const OutlineInputBorder(),
+                ),
                 keyboardType: TextInputType.number,
               ),
             ),
@@ -416,24 +515,37 @@ class _AnimalStep extends StatelessWidget {
         const SizedBox(height: 12),
         DropdownButtonFormField<AnimalDentition>(
           value: dentition,
-          decoration: const InputDecoration(labelText: 'Dentition', border: OutlineInputBorder()),
-          hint: const Text('Sélectionner'),
-          items: AnimalDentition.values.map((d) => DropdownMenuItem(value: d, child: Text(d.name))).toList(),
+          decoration: InputDecoration(
+            labelText: l10n.dentition,
+            border: const OutlineInputBorder(),
+          ),
+          items: AnimalDentition.values
+              .map((d) => DropdownMenuItem(
+            value: d,
+            child: Text(d.localizedDisplayName(context)),
+          ))
+              .toList(),
           onChanged: onDentitionChanged,
         ),
         const SizedBox(height: 12),
         TextField(
           controller: headCountController,
-          decoration: const InputDecoration(labelText: 'Nombre de têtes', border: OutlineInputBorder()),
+          decoration: InputDecoration(
+            labelText: l10n.headCount,
+            border: const OutlineInputBorder(),
+          ),
           keyboardType: TextInputType.number,
         ),
         const SizedBox(height: 12),
         TextField(
           controller: onssaController,
-          decoration: const InputDecoration(labelText: 'N° tag ONSSA (optionnel)', border: OutlineInputBorder()),
+          decoration: InputDecoration(
+            labelText: l10n.onssa,
+            border: const OutlineInputBorder(),
+          ),
         ),
         SwitchListTile(
-          title: const Text('Éligible aide agricole'),
+          title: Text(l10n.eligibleForAid),
           value: eligibleForAid,
           onChanged: onEligibleChanged,
         ),
@@ -443,6 +555,7 @@ class _AnimalStep extends StatelessWidget {
 }
 
 class _AnnonceStep extends StatelessWidget {
+  final AppLocalizations l10n;
   final TextEditingController titleController;
   final TextEditingController descriptionController;
   final TextEditingController priceController;
@@ -450,6 +563,7 @@ class _AnnonceStep extends StatelessWidget {
   final ValueChanged<bool> onNegotiableChanged;
 
   const _AnnonceStep({
+    required this.l10n,
     required this.titleController,
     required this.descriptionController,
     required this.priceController,
@@ -461,17 +575,43 @@ class _AnnonceStep extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        TextFormField(controller: titleController, decoration: const InputDecoration(labelText: 'Titre *', border: OutlineInputBorder()), validator: (v) => v!.isEmpty ? 'Requis' : null),
+        TextFormField(
+          controller: titleController,
+          decoration: InputDecoration(
+            labelText: '${l10n.title} *',
+            border: const OutlineInputBorder(),
+          ),
+          validator: (v) => v!.isEmpty ? l10n.required : null,
+        ),
         const SizedBox(height: 12),
-        TextFormField(controller: priceController, decoration: const InputDecoration(labelText: 'Prix (MAD) *', border: OutlineInputBorder()), keyboardType: TextInputType.number),
-        SwitchListTile(title: const Text('Prix négociable'), value: priceNegotiable, onChanged: onNegotiableChanged),
-        TextFormField(controller: descriptionController, decoration: const InputDecoration(labelText: 'Description', border: OutlineInputBorder()), maxLines: 3),
+        TextFormField(
+          controller: priceController,
+          decoration: InputDecoration(
+            labelText: '${l10n.price} *',
+            border: const OutlineInputBorder(),
+          ),
+          keyboardType: TextInputType.number,
+        ),
+        SwitchListTile(
+          title: Text(l10n.priceNegotiable),
+          value: priceNegotiable,
+          onChanged: onNegotiableChanged,
+        ),
+        TextFormField(
+          controller: descriptionController,
+          decoration: InputDecoration(
+            labelText: l10n.description,
+            border: const OutlineInputBorder(),
+          ),
+          maxLines: 3,
+        ),
       ],
     );
   }
 }
 
 class _LocationStep extends StatelessWidget {
+  final AppLocalizations l10n;
   final String? selectedRegion;
   final String? selectedCity;
   final TextEditingController addressController;
@@ -485,6 +625,7 @@ class _LocationStep extends StatelessWidget {
   final bool hasLocation;
 
   const _LocationStep({
+    required this.l10n,
     required this.selectedRegion,
     required this.selectedCity,
     required this.addressController,
@@ -504,29 +645,62 @@ class _LocationStep extends StatelessWidget {
       children: [
         ElevatedButton.icon(
           onPressed: isLocating ? null : onDetectLocation,
-          icon: isLocating ? const SizedBox(width: 15, height: 15, child: CircularProgressIndicator()) : const Icon(Icons.gps_fixed),
-          label: Text(hasLocation ? 'Position OK' : 'Me géolocaliser'),
+          icon: isLocating
+              ? const SizedBox(
+            width: 15,
+            height: 15,
+            child: CircularProgressIndicator(strokeWidth: 2),
+          )
+              : const Icon(Icons.gps_fixed),
+          label: Text(hasLocation ? l10n.position_ok : l10n.geolocate_me),
         ),
         const SizedBox(height: 12),
         DropdownButtonFormField<String>(
           value: selectedRegion,
-          decoration: const InputDecoration(labelText: 'Région *', border: OutlineInputBorder()),
-          items: kMoroccoRegionsAndCities.keys.map((r) => DropdownMenuItem(value: r, child: Text(r))).toList(),
+          decoration: InputDecoration(
+            labelText: '${l10n.region} *',
+            border: const OutlineInputBorder(),
+          ),
+          items: kMoroccoRegionsAndCities.keys
+              .map((r) => DropdownMenuItem(value: r, child: Text(r)))
+              .toList(),
           onChanged: onRegionChanged,
         ),
         const SizedBox(height: 12),
         if (selectedRegion != null)
           DropdownButtonFormField<String>(
             value: selectedCity,
-            decoration: const InputDecoration(labelText: 'Ville', border: OutlineInputBorder()),
-            items: kMoroccoRegionsAndCities[selectedRegion]!.map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
+            decoration: const InputDecoration(
+              labelText: 'Ville',
+              border: OutlineInputBorder(),
+            ),
+            items: kMoroccoRegionsAndCities[selectedRegion]!
+                .map((c) => DropdownMenuItem(value: c, child: Text(c)))
+                .toList(),
             onChanged: onCityChanged,
           ),
         const SizedBox(height: 12),
-        TextField(controller: addressController, decoration: const InputDecoration(labelText: 'Adresse précise', border: OutlineInputBorder())),
-        SwitchListTile(title: const Text('Livraison possible'), value: deliveryAvailable, onChanged: onDeliveryChanged),
+        TextField(
+          controller: addressController,
+          decoration: InputDecoration(
+            labelText: l10n.preciseAddress,
+            border: const OutlineInputBorder(),
+          ),
+        ),
+        SwitchListTile(
+          title: Text(l10n.deliveryPossible),
+          value: deliveryAvailable,
+          onChanged: onDeliveryChanged,
+        ),
         if (deliveryAvailable)
-          TextField(controller: deliveryPriceController, decoration: const InputDecoration(labelText: 'Frais de livraison', border: OutlineInputBorder()), keyboardType: TextInputType.number),
+          TextField(
+            controller: deliveryPriceController,
+            decoration: InputDecoration(
+              labelText: l10n.deliveryFees,
+              border: const OutlineInputBorder(),
+            ),
+            keyboardType: TextInputType.number,
+          ),
       ],
     );
   }

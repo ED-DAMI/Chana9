@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:ma_chana9_app/shared/enums/report_reason.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../bloc/annonce_detail_bloc.dart';
 
 class ReportSheet extends StatefulWidget {
@@ -37,12 +39,13 @@ class _ReportSheetState extends State<ReportSheet> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return BlocListener<AnnonceDetailBloc, AnnonceDetailState>(
       listener: (context, state) {
         state.maybeWhen(
           actionSuccess: (_) => ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Signalement envoyé')),
+            SnackBar(content: Text(l10n.reportSent)),
           ),
           failure: (message) => ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(message), backgroundColor: Colors.orange),
@@ -78,7 +81,7 @@ class _ReportSheetState extends State<ReportSheet> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   child: Text(
-                    'Signaler l\'annonce',
+                    l10n.report,
                     style: theme.textTheme.titleLarge
                         ?.copyWith(fontWeight: FontWeight.bold),
                   ),
@@ -104,7 +107,7 @@ class _ReportSheetState extends State<ReportSheet> {
                         controller: _commentController,
                         maxLines: 3,
                         decoration: InputDecoration(
-                          labelText: 'Commentaire (optionnel)',
+                          labelText: l10n.optional_comment,
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10)),
                           contentPadding: const EdgeInsets.all(12),
@@ -129,9 +132,9 @@ class _ReportSheetState extends State<ReportSheet> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12)),
                     ),
-                    child: const Text(
-                      'Envoyer le signalement',
-                      style: TextStyle(fontSize: 16),
+                    child: Text(
+                      l10n.sendReport,
+                      style: const TextStyle(fontSize: 16),
                     ),
                   ),
                 ),

@@ -48,25 +48,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get alreadyAccount => 'Vous avez déjà un compte ?';
 
   @override
-  String get savedCredentials => 'Identifiants enregistrés';
-
-  @override
-  String get sessionExpired => 'Session expirée';
-
-  @override
   String get changePassword => 'Changer le mot de passe';
-
-  @override
-  String get currentPassword => 'Mot de passe actuel';
-
-  @override
-  String get newPassword => 'Nouveau mot de passe';
-
-  @override
-  String get passwordMismatch => 'Les mots de passe ne correspondent pas';
-
-  @override
-  String get passwordMinLength => 'Minimum 6 caractères';
 
   @override
   String get annonces => 'Annonces';
@@ -198,16 +180,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get removeFavorite => 'Retirer des favoris';
 
   @override
-  String get alreadyFavorited => 'Déjà ajouté aux favoris';
-
-  @override
-  String get alreadyReported => 'Vous avez déjà signalé cette annonce';
-
-  @override
-  String get cannotReportOwn =>
-      'Vous ne pouvez pas signaler votre propre annonce';
-
-  @override
   String get fraudOrScam => 'Arnaque / Fraude';
 
   @override
@@ -334,37 +306,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get regionDakhlaOuedEdDahab => 'Dakhla-Oued Ed-Dahab';
 
   @override
-  String get myProfile => 'Mon profil';
-
-  @override
   String get myAnnonces => 'Mes annonces';
 
   @override
   String get myFavorites => 'Mes favoris';
 
   @override
-  String get myAlerts => 'Mes alertes';
-
-  @override
-  String get editProfile => 'Modifier le profil';
-
-  @override
   String get saveChanges => 'Enregistrer';
-
-  @override
-  String get kycVerified => 'Vérifié';
-
-  @override
-  String get notVerified => 'Non vérifié';
-
-  @override
-  String get kycVerification => 'Vérification KYC';
-
-  @override
-  String get activeSessions => 'Sessions actives';
-
-  @override
-  String get revokeAll => 'Révoquer tout';
 
   @override
   String get role => 'Rôle';
@@ -376,9 +324,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get buyer => 'Acheteur';
 
   @override
-  String get admin => 'Admin';
-
-  @override
   String get loading => 'Chargement...';
 
   @override
@@ -386,15 +331,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get success => 'Succès';
-
-  @override
-  String get save => 'Enregistrer';
-
-  @override
-  String get edit => 'Modifier';
-
-  @override
-  String get delete => 'Supprimer';
 
   @override
   String get share => 'Partager';
@@ -415,15 +351,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get fullNameOptional => 'Nom complet (optionnel)';
 
   @override
-  String get regionOptional => 'Région (optionnel)';
-
-  @override
-  String get connectToAccount => 'Connectez-vous à votre compte';
-
-  @override
-  String get user => 'Utilisateur';
-
-  @override
   String get verifiedCheck => 'Vérifié ✓';
 
   @override
@@ -431,9 +358,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get reportAnnonce => 'Signaler l\'annonce';
-
-  @override
-  String get reportThisAnnonce => 'Signaler cette annonce';
 
   @override
   String get viewMore => 'Voir plus...';
@@ -556,22 +480,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get noFavorites => 'Aucun favori';
 
   @override
-  String get noMyAnnonces => 'Vous n\'avez pas encore d\'annonces';
-
-  @override
   String get createAnnonce => 'Créer une annonce';
-
-  @override
-  String get securePayment => 'Paiement sécurisé';
-
-  @override
-  String get escrowPage => 'Page de séquestre / paiement';
-
-  @override
-  String get messaging => 'Messagerie';
-
-  @override
-  String get conversationOngoing => 'Conversation en cours';
 
   @override
   String get sellerLabel => 'Vendeur';
@@ -607,7 +516,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get english => 'English';
 
   @override
-  String get tamazight => 'Tamazight (ⵜⴰⵎⴰⵣⵉⵖⵜ)';
+  String get tamazight => 'Tamazight';
 
   @override
   String get fixedPrice => 'Prix fixe';
@@ -652,11 +561,95 @@ class AppLocalizationsFr extends AppLocalizations {
   String get topLot => 'TOP LOT';
 
   @override
-  String get allFields => 'Tous';
-
-  @override
   String get min => 'Min';
 
   @override
   String get max => 'Max';
+
+  @override
+  String get suspended => 'Suspendu';
+
+  @override
+  String get sold => 'Vendu';
+
+  @override
+  String get edit_annonce => 'Modifier l\'annonce';
+
+  @override
+  String get characteristics => 'Caractéristiques';
+
+  @override
+  String get weight_kg => 'Poids (kg)';
+
+  @override
+  String get dentition => 'Dentition';
+
+  @override
+  String get onssa => 'ONSSA';
+
+  @override
+  String get options => 'Options';
+
+  @override
+  String get heads => 'têtes';
+
+  @override
+  String get kg => 'kg';
+
+  @override
+  String get step_details => 'Prix & Détails';
+
+  @override
+  String get see_less => 'Voir moins';
+
+  @override
+  String get optional_comment => 'Commentaire (optionnel)';
+
+  @override
+  String get step_animal => 'L\'animal';
+
+  @override
+  String get see_more => 'Voir plus';
+
+  @override
+  String get step_photos => 'Photos';
+
+  @override
+  String get step_location => 'Localisation';
+
+  @override
+  String get not_specified => 'Non spécifié';
+
+  @override
+  String get age_months => 'Âge (mois)';
+
+  @override
+  String get position_ok => 'Position OK';
+
+  @override
+  String get geolocate_me => 'Me géolocaliser';
+
+  @override
+  String get connectToAccount => 'Connectez-vous à votre compte';
+
+  @override
+  String get passwordMismatch => 'Les mots de passe ne correspondent pas';
+
+  @override
+  String get passwordMinLength => '6 caractères minimum';
+
+  @override
+  String get regionOptional => 'Région (optionnelle)';
+
+  @override
+  String get noMyAnnonces => 'Vous n\'avez pas encore d\'annonces';
+
+  @override
+  String get user => 'Utilisateur';
+
+  @override
+  String get notVerified => 'Non vérifié';
+
+  @override
+  String get myAlerts => 'Mes alertes';
 }

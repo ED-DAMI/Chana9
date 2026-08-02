@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/annonce.dart';
 import '../bloc/annonce_detail_bloc.dart';
 import '../widgets/annonce_photo_carousel.dart';
@@ -44,6 +46,7 @@ class _AnnoncePostCardState extends State<AnnoncePostCard> {
   }
 
   void _showMoreMenu(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -65,7 +68,7 @@ class _AnnoncePostCardState extends State<AnnoncePostCard> {
             const SizedBox(height: 16),
             ListTile(
               leading: const Icon(Icons.flag_outlined),
-              title: const Text('Signaler cette annonce'),
+              title: Text(l10n.report),
               onTap: () {
                 Navigator.pop(context);
                 showModalBottomSheet(
@@ -81,7 +84,7 @@ class _AnnoncePostCardState extends State<AnnoncePostCard> {
             ),
             ListTile(
               leading: const Icon(Icons.share_outlined),
-              title: const Text('Partager'),
+              title: Text(l10n.share),
               onTap: () => Navigator.pop(context),
             ),
             const SizedBox(height: 8),
@@ -94,6 +97,7 @@ class _AnnoncePostCardState extends State<AnnoncePostCard> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final description = widget.annonce.description;
 
     return GestureDetector(
@@ -140,7 +144,7 @@ class _AnnoncePostCardState extends State<AnnoncePostCard> {
                         onTap: () =>
                             setState(() => _isExpanded = !_isExpanded),
                         child: Text(
-                          _isExpanded ? 'Voir moins' : 'Voir plus...',
+                          _isExpanded ? l10n.see_less : l10n.see_more,
                           style: TextStyle(
                             color: theme.colorScheme.primary,
                             fontWeight: FontWeight.w600,

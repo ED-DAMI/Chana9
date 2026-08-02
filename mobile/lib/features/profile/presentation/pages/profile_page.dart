@@ -30,7 +30,7 @@ class ProfilePage extends StatelessWidget {
           appBar: AppBar(
             backgroundColor: Colors.white,
             elevation: 1,
-            title: Text(l10n.myProfile),
+            title: Text(l10n.profile),
             actions: const [LanguageSelector()],
           ),
           body: ListView(

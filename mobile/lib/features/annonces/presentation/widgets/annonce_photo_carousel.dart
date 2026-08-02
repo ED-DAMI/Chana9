@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+
 import 'package:ma_chana9_app/core/constants/api_constants.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/annonce.dart';
 
 class AnnoncePhotoCarousel extends StatefulWidget {
@@ -30,6 +32,7 @@ class _AnnoncePhotoCarouselState extends State<AnnoncePhotoCarousel> {
   @override
   Widget build(BuildContext context) {
     final medias = widget.annonce.medias;
+    final l10n = AppLocalizations.of(context)!;
 
     if (medias.isEmpty) {
       return _Placeholder(annonce: widget.annonce, height: widget.height);
@@ -44,7 +47,6 @@ class _AnnoncePhotoCarouselState extends State<AnnoncePhotoCarousel> {
             itemCount: medias.length,
             onPageChanged: (index) => setState(() => _currentIndex = index),
             itemBuilder: (context, index) {
-              // Nettoyage de l'URL pour éviter les problèmes de slash
               final imageUrl = medias[index].url.startsWith('http')
                   ? medias[index].url
                   : "${ApiConstants.baseUrl_photos}/${medias[index].url}".replaceAll('(?<!:)/{2,}', '/');
@@ -70,7 +72,6 @@ class _AnnoncePhotoCarouselState extends State<AnnoncePhotoCarousel> {
               );
             },
           ),
-
           if (medias.length > 1)
             Positioned(
               top: 12,
@@ -91,7 +92,6 @@ class _AnnoncePhotoCarouselState extends State<AnnoncePhotoCarousel> {
                 ),
               ),
             ),
-
           if (medias.length > 1)
             Positioned(
               bottom: 12,
@@ -116,7 +116,6 @@ class _AnnoncePhotoCarouselState extends State<AnnoncePhotoCarousel> {
                 ),
               ),
             ),
-
           if (widget.annonce.isTopLot)
             Positioned(
               top: 12,
@@ -127,14 +126,14 @@ class _AnnoncePhotoCarouselState extends State<AnnoncePhotoCarousel> {
                   color: Colors.amber.shade700,
                   borderRadius: BorderRadius.circular(6),
                 ),
-                child: const Row(
+                child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.star, color: Colors.white, size: 13),
-                    SizedBox(width: 4),
+                    const Icon(Icons.star, color: Colors.white, size: 13),
+                    const SizedBox(width: 4),
                     Text(
-                      'TOP LOT',
-                      style: TextStyle(
+                      l10n.topLot,
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 11,
                         fontWeight: FontWeight.bold,
@@ -170,7 +169,6 @@ class _Placeholder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final breedName = annonce.breed.name;
-
     return Container(
       height: height,
       width: double.infinity,

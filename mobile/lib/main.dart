@@ -63,9 +63,7 @@ class Chana9App extends StatelessWidget {
               ],
               builder: (context, child) {
                 final locale = Localizations.localeOf(context);
-                final isRtl =
-                    locale.languageCode == AppLocale.ar.languageCode ||
-                        locale.languageCode == AppLocale.zgh.languageCode;
+                final isRtl = locale.languageCode == AppLocale.ar.languageCode;
                 return Directionality(
                   textDirection:
                   isRtl ? TextDirection.rtl : TextDirection.ltr,

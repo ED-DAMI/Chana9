@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ma_chana9_app/shared/enums/animal_breed.dart';
 import 'package:ma_chana9_app/shared/enums/animal_gender.dart';
+import '../../../../l10n/app_localizations.dart';
+import '../../../../shared/localization/locale_labels.dart';
 import '../../data/models/annonce_search_request_model.dart';
 
 const _moroccanRegions = [
@@ -104,33 +106,34 @@ class _AnnonceFilterSheetState extends State<AnnonceFilterSheet> {
     Navigator.of(context).pop();
   }
 
-  String _breedLabel(AnimalBreed breed) {
-    const labels = {
-      AnimalBreed.sardi: 'Sardi',
-      AnimalBreed.timahdite: 'Timahdite',
-      AnimalBreed.beniGuil: 'Béni Guil',
-      AnimalBreed.dokkali: 'Dokkali',
-      AnimalBreed.rehami: 'Rehami',
-      AnimalBreed.boujaad: 'Boujaad',
-      AnimalBreed.oulmesZaer: 'Oulmes-Zaer',
-      AnimalBreed.beniAhsen: 'Béni Ahsen',
-      AnimalBreed.daMan: 'Da\'Man',
-      AnimalBreed.draa: 'Draa',
-      AnimalBreed.naineDeMontagne: 'Naine de montagne',
-      AnimalBreed.chevreduRiff: 'Chèvre du Riff',
-      AnimalBreed.chevreDeLaayoune: 'Chèvre de Laâyoune',
-      AnimalBreed.blondeDAquitaine: 'Blonde d\'Aquitaine',
-      AnimalBreed.frisonnePieNoire: 'Frisonne Pie Noire',
-      AnimalBreed.montbeliarde: 'Montbéliarde',
-      AnimalBreed.bruneAtlas: 'Brune Atlas',
-      AnimalBreed.ougda: 'Ougda',
-      AnimalBreed.dromadaireSahraouii: 'Dromadaire Sahraoui',
-      AnimalBreed.dromadaireGuelmim: 'Dromadaire Guelmim',
-      AnimalBreed.barbe: 'Barbe',
-      AnimalBreed.arabeBarbe: 'Arabe-Barbe',
-      AnimalBreed.aneBeldi: 'Âne Beldi',
-      AnimalBreed.mulet: 'Mulet',
-      AnimalBreed.other: 'Autre',
+  String _breedLabel(BuildContext context, AnimalBreed breed) {
+    final l10n = AppLocalizations.of(context)!;
+    final labels = {
+      AnimalBreed.sardi: l10n.sardi,
+      AnimalBreed.timahdite: l10n.timahdite,
+      AnimalBreed.beniGuil: l10n.beniGuil,
+      AnimalBreed.dokkali: l10n.dokkali,
+      AnimalBreed.rehami: l10n.rehami,
+      AnimalBreed.boujaad: l10n.boujaad,
+      AnimalBreed.oulmesZaer: l10n.oulmesZaer,
+      AnimalBreed.beniAhsen: l10n.beniAhsen,
+      AnimalBreed.daMan: l10n.daMan,
+      AnimalBreed.draa: l10n.draa,
+      AnimalBreed.naineDeMontagne: l10n.naineDeMontagne,
+      AnimalBreed.chevreduRiff: l10n.chevreduRiff,
+      AnimalBreed.chevreDeLaayoune: l10n.chevreDeLaayoune,
+      AnimalBreed.blondeDAquitaine: l10n.blondeDAquitaine,
+      AnimalBreed.frisonnePieNoire: l10n.frisonnePieNoire,
+      AnimalBreed.montbeliarde: l10n.montbeliarde,
+      AnimalBreed.bruneAtlas: l10n.bruneAtlas,
+      AnimalBreed.ougda: l10n.ougda,
+      AnimalBreed.dromadaireSahraouii: l10n.dromadaireSahraouii,
+      AnimalBreed.dromadaireGuelmim: l10n.dromadaireGuelmim,
+      AnimalBreed.barbe: l10n.barbe,
+      AnimalBreed.arabeBarbe: l10n.arabeBarbe,
+      AnimalBreed.aneBeldi: l10n.aneBeldi,
+      AnimalBreed.mulet: l10n.mulet,
+      AnimalBreed.other: l10n.other,
     };
     return labels[breed] ?? breed.name;
   }
@@ -138,6 +141,7 @@ class _AnnonceFilterSheetState extends State<AnnonceFilterSheet> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return DraggableScrollableSheet(
       initialChildSize: 0.85,
@@ -168,12 +172,12 @@ class _AnnonceFilterSheetState extends State<AnnonceFilterSheet> {
                 child: Row(
                   children: [
                     Text(
-                      'Filtres',
+                      l10n.filterAnnonces,
                       style: theme.textTheme.titleLarge
                           ?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     const Spacer(),
-                    TextButton(onPressed: _reset, child: const Text('Réinitialiser')),
+                    TextButton(onPressed: _reset, child: Text(l10n.resetFilters)),
                   ],
                 ),
               ),
@@ -183,14 +187,14 @@ class _AnnonceFilterSheetState extends State<AnnonceFilterSheet> {
                   controller: scrollController,
                   padding: const EdgeInsets.all(16),
                   children: [
-                    _SectionTitle(title: 'Race'),
+                    _SectionTitle(title: l10n.breed),
                     Wrap(
                       spacing: 8,
                       runSpacing: 4,
                       children: AnimalBreed.values.map((breed) {
                         final selected = _selectedBreed == breed;
                         return FilterChip(
-                          label: Text(_breedLabel(breed)),
+                          label: Text(_breedLabel(context, breed)),
                           selected: selected,
                           onSelected: (_) => setState(() {
                             _selectedBreed = selected ? null : breed;
@@ -199,31 +203,29 @@ class _AnnonceFilterSheetState extends State<AnnonceFilterSheet> {
                       }).toList(),
                     ),
                     const SizedBox(height: 20),
-
-                    _SectionTitle(title: 'Région'),
+                    _SectionTitle(title: l10n.region),
                     Wrap(
                       spacing: 8,
                       runSpacing: 4,
-                      children: _moroccanRegions.map((region) {
-                        final selected = _selectedRegion == region;
-                        return FilterChip(
-                          label: Text(region),
-                          selected: selected,
-                          onSelected: (_) => setState(() {
-                            _selectedRegion = selected ? null : region;
-                          }),
-                        );
-                      }).toList(),
+                        children: _moroccanRegions.map((region) {
+                          final selected = _selectedRegion == region;
+                          return FilterChip(
+                            label: Text(localizedRegion(context, region)),
+                            selected: selected,
+                            onSelected: (_) => setState(() {
+                              _selectedRegion = selected ? null : region;
+                            }),
+                          );
+                        }).toList(),
                     ),
                     const SizedBox(height: 20),
-
-                    _SectionTitle(title: 'Prix (MAD)'),
+                    _SectionTitle(title: l10n.price),
                     Row(
                       children: [
                         Expanded(
                           child: _FilterTextField(
                             controller: _minPriceController,
-                            label: 'Min',
+                            label: l10n.min,
                             keyboardType: TextInputType.number,
                           ),
                         ),
@@ -231,21 +233,20 @@ class _AnnonceFilterSheetState extends State<AnnonceFilterSheet> {
                         Expanded(
                           child: _FilterTextField(
                             controller: _maxPriceController,
-                            label: 'Max',
+                            label: l10n.max,
                             keyboardType: TextInputType.number,
                           ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 20),
-
-                    _SectionTitle(title: 'Poids (kg)'),
+                    _SectionTitle(title: l10n.weight_kg),
                     Row(
                       children: [
                         Expanded(
                           child: _FilterTextField(
                             controller: _minWeightController,
-                            label: 'Min',
+                            label: l10n.min,
                             keyboardType: TextInputType.number,
                           ),
                         ),
@@ -253,27 +254,26 @@ class _AnnonceFilterSheetState extends State<AnnonceFilterSheet> {
                         Expanded(
                           child: _FilterTextField(
                             controller: _maxWeightController,
-                            label: 'Max',
+                            label: l10n.max,
                             keyboardType: TextInputType.number,
                           ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 20),
-
-                    _SectionTitle(title: 'Genre'),
+                    _SectionTitle(title: l10n.gender),
                     SegmentedButton<AnimalGender?>(
-                      segments: const [
-                        ButtonSegment(value: null, label: Text('Tous')),
+                      segments: [
+                        ButtonSegment(value: null, label: Text(l10n.all)),
                         ButtonSegment(
                           value: AnimalGender.male,
-                          label: Text('Mâle'),
-                          icon: Icon(Icons.male),
+                          label: Text(l10n.male),
+                          icon: const Icon(Icons.male),
                         ),
                         ButtonSegment(
                           value: AnimalGender.female,
-                          label: Text('Femelle'),
-                          icon: Icon(Icons.female),
+                          label: Text(l10n.female),
+                          icon: const Icon(Icons.female),
                         ),
                       ],
                       selected: {_gender},
@@ -281,31 +281,30 @@ class _AnnonceFilterSheetState extends State<AnnonceFilterSheet> {
                           setState(() => _gender = val.first),
                     ),
                     const SizedBox(height: 20),
-
-                    _SectionTitle(title: 'Options'),
+                    _SectionTitle(title: l10n.options),
                     _FilterSwitch(
-                      label: 'Livraison disponible',
+                      label: l10n.deliveryAvailable,
                       icon: Icons.local_shipping_outlined,
                       value: _deliveryAvailable ?? false,
                       onChanged: (v) =>
                           setState(() => _deliveryAvailable = v ? true : null),
                     ),
                     _FilterSwitch(
-                      label: 'Prix négociable',
+                      label: l10n.priceNegotiable,
                       icon: Icons.handshake_outlined,
                       value: _priceNegotiable ?? false,
                       onChanged: (v) =>
                           setState(() => _priceNegotiable = v ? true : null),
                     ),
                     _FilterSwitch(
-                      label: 'Éligible aux aides',
+                      label: l10n.eligibleForAid,
                       icon: Icons.verified_outlined,
                       value: _eligibleForAid ?? false,
                       onChanged: (v) =>
                           setState(() => _eligibleForAid = v ? true : null),
                     ),
                     _FilterSwitch(
-                      label: 'Top Lot uniquement',
+                      label: l10n.topLotOnly,
                       icon: Icons.star_outlined,
                       value: _topLotOnly ?? false,
                       onChanged: (v) =>
@@ -331,9 +330,9 @@ class _AnnonceFilterSheetState extends State<AnnonceFilterSheet> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Text(
-                    'Appliquer les filtres',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  child: Text(
+                    l10n.applyFilters,
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -347,9 +346,7 @@ class _AnnonceFilterSheetState extends State<AnnonceFilterSheet> {
 
 class _SectionTitle extends StatelessWidget {
   final String title;
-
   const _SectionTitle({required this.title});
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -370,14 +367,12 @@ class _FilterTextField extends StatelessWidget {
   final String label;
   final String? hint;
   final TextInputType? keyboardType;
-
   const _FilterTextField({
     required this.controller,
     required this.label,
     this.hint,
     this.keyboardType,
   });
-
   @override
   Widget build(BuildContext context) {
     return TextField(
@@ -399,14 +394,12 @@ class _FilterSwitch extends StatelessWidget {
   final IconData icon;
   final bool value;
   final ValueChanged<bool> onChanged;
-
   const _FilterSwitch({
     required this.label,
     required this.icon,
     required this.value,
     required this.onChanged,
   });
-
   @override
   Widget build(BuildContext context) {
     return SwitchListTile(

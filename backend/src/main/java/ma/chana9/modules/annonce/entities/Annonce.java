@@ -122,7 +122,7 @@ public class Annonce {
     @Column(name = "seller_id", nullable = false)
     private UUID sellerId;
 
-    @OneToMany(mappedBy = "annonce", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "annonce", fetch = FetchType.LAZY,cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<AnnonceMedia> medias = new ArrayList<>();
 

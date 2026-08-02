@@ -4,8 +4,8 @@ import 'package:ma_chana9_app/l10n/app_localizations.dart';
 import '../../data/models/annonce_search_request_model.dart';
 import '../bloc/annonce_bloc.dart';
 import '../bloc/annonce_detail_bloc.dart';
-import '../widgets/annonce_post_card.dart';
 import '../widgets/annonce_filter_sheet.dart';
+import '../widgets/annonce_post_card.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../injection_container.dart';
 import 'package:ma_chana9_app/shared/widgets/language_selector.dart';
@@ -87,7 +87,7 @@ class _AnnonceListPageState extends State<AnnonceListPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
@@ -104,7 +104,7 @@ class _AnnonceListPageState extends State<AnnonceListPage> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.tune),
+            icon: const Icon(Icons.filter_list),
             onPressed: _openFilterSheet,
             tooltip: l10n.filterAnnonces,
           ),
