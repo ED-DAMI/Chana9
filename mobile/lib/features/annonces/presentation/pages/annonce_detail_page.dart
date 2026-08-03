@@ -173,7 +173,7 @@ class _AnnonceDetailView extends StatelessWidget {
                   _InfoRow(
                       icon: Icons.pets,
                       label: l10n.breed,
-                      value: annonce.breed.name),
+                      value: annonce.breed.localizedLabel(context)),
                   if (annonce.gender != null)
                     _InfoRow(
                         icon: Icons.transgender,
@@ -195,7 +195,7 @@ class _AnnonceDetailView extends StatelessWidget {
                     _InfoRow(
                         icon: Icons.info_outline,
                         label: l10n.dentition,
-                        value: getDentition(context,annonce.dentition!.name)),
+                        value: annonce.breed.localizedLabel(context)),
                   if (annonce.headCount != null)
                     _InfoRow(
                         icon: Icons.group_outlined,
