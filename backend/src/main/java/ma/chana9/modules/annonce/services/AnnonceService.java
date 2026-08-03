@@ -84,9 +84,11 @@ public class AnnonceService {
 		annonceRepository.delete(findOwnedOrThrow(id, sellerId));
 	}
 
-	@Transactional(readOnly = true)
+	@Transactional
 	public AnnonceResponse findById(UUID id) {
-		return annonceMapper.toResponse(findOrThrow(id));
+		Annonce annonce = findOrThrow(id);
+		annonce.setViewsCount(annonce.getViewsCount()+1);
+		return annonceMapper.toResponse(annonce);
 	}
 
 	@Transactional(readOnly = true)
