@@ -6,25 +6,12 @@ import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ma_chana9_app/shared/enums/animal_gender.dart';
 import 'package:ma_chana9_app/shared/enums/animal_breed.dart';
+import '../../../../core/constants/morocco_regions.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/enums/animal_dentition.dart';
 import '../../domain/entities/annonce.dart';
 import '../bloc/annonce_bloc.dart';
 
-const Map<String, List<String>> kMoroccoRegionsAndCities = {
-  'Tanger-Tétouan-Al Hoceïma': ['Tanger', 'Tétouan', 'Al Hoceïma', 'Larache', 'Chefchaouen'],
-  'Oriental': ['Oujda', 'Nador', 'Berkane', 'Taourirt', 'Guercif'],
-  'Fès-Meknès': ['Fès', 'Meknès', 'Taza', 'Ifrane', 'Khénifra'],
-  'Rabat-Salé-Kénitra': ['Rabat', 'Salé', 'Kénitra', 'Témara', 'Skhirate'],
-  'Béni Mellal-Khénifra': ['Béni Mellal', 'Khénifra', 'Khouribga', 'Fquih Ben Salah'],
-  'Casablanca-Settat': ['Casablanca', 'Settat', 'Mohammedia', 'El Jadida', 'Berrechid'],
-  'Marrakech-Safi': ['Marrakech', 'Safi', 'Essaouira', 'El Kelaa des Sraghna'],
-  'Drâa-Tafilalet': ['Errachidia', 'Ouarzazate', 'Zagora', 'Tinghir', 'Midelt'],
-  'Souss-Massa': ['Agadir', 'Taroudannt', 'Tiznit', 'Inezgane-Aït Melloul'],
-  'Guelmim-Oued Noun': ['Guelmim', 'Sidi Ifni', 'Tan-Tan'],
-  'Laâyoune-Sakia El Hamra': ['Laâyoune', 'Boujdour', 'Es-Semara'],
-  'Dakhla-Oued Ed-Dahab': ['Dakhla', 'Aousserd'],
-};
 
 class AnnonceFormPage extends StatefulWidget {
   final Annonce? annonce;
