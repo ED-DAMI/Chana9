@@ -1,9 +1,11 @@
+// login_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ma_chana9_app/l10n/app_localizations.dart';
 import '../bloc/auth_bloc.dart';
 import '../widgets/phone_field.dart';
 import '../widgets/password_field.dart';
+import 'register_page.dart';
 
 class LoginPage extends StatefulWidget {
   final VoidCallback? onLoginSuccess;
@@ -29,11 +31,22 @@ class _LoginPageState extends State<LoginPage> {
   void _submit() {
     if (!_formKey.currentState!.validate()) return;
     context.read<AuthBloc>().add(
-          AuthEvent.login(
-            phone: _phoneController.text.trim(),
-            password: _passwordController.text,
-          ),
-        );
+      AuthEvent.login(
+        phone: _phoneController.text.trim(),
+        password: _passwordController.text,
+      ),
+    );
+  }
+
+  void _goToRegister() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => BlocProvider.value(
+          value: context.read<AuthBloc>(),
+          child: RegisterPage(onRegisterSuccess: widget.onLoginSuccess),
+        ),
+      ),
+    );
   }
 
   @override
@@ -100,17 +113,31 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         child: isLoading
                             ? const SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: Colors.white,
-                                ),
-                              )
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
                             : Text(
-                                l10n.loginButton,
-                                style: TextStyle(fontSize: 16),
-                              ),
+                          l10n.loginButton,
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            l10n.noAccount,
+                            style: theme.textTheme.bodyMedium,
+                          ),
+                          TextButton(
+                            onPressed: _goToRegister,
+                            child: Text(l10n.register),
+                          ),
+                        ],
                       ),
                     ],
                   ),
