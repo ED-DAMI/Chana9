@@ -101,10 +101,13 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
       }
+      if (permission == LocationPermission.deniedForever) {
+        throw Exception('permission_denied');
+      }
 
       final position = await Geolocator.getCurrentPosition();
-      final placemarks =
-      await placemarkFromCoordinates(position.latitude, position.longitude);
+      final placemarks = await placemarkFromCoordinates(
+          position.latitude, position.longitude);
 
       if (placemarks.isNotEmpty) {
         final place = placemarks.first;
@@ -112,22 +115,57 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
           _latitude = position.latitude;
           _longitude = position.longitude;
           _addressController.text =
-              "${place.street ?? ''}, ${place.subLocality ?? ''}".trim();
+              [place.street, place.subLocality]
+                  .where((e) => e != null && e.isNotEmpty)
+                  .join(', ');
+        });
+        final detectedCity = place.locality ?? place.subAdministrativeArea ?? '';
+        final detectedAdmin = place.administrativeArea ?? '';
 
-          for (var region in kMoroccoRegionsAndCities.keys) {
-            if (place.administrativeArea?.contains(region) ?? false) {
-              _selectedRegion = region;
+        String? matchedRegion;
+        String? matchedCity;
+        for (final entry in kMoroccoRegionsAndCities.entries) {
+          for (final city in entry.value) {
+            if (detectedCity.toLowerCase().contains(city.toLowerCase()) ||
+                city.toLowerCase().contains(detectedCity.toLowerCase())) {
+              matchedRegion = entry.key;
+              matchedCity = city;
               break;
             }
           }
-        });
+          if (matchedRegion != null) break;
+        }
+        if (matchedRegion == null) {
+          for (final region in kMoroccoRegionsAndCities.keys) {
+            final regionParts = region.split('-');
+            for (final part in regionParts) {
+              if (detectedAdmin.toLowerCase().contains(part.trim().toLowerCase())) {
+                matchedRegion = region;
+                break;
+              }
+            }
+            if (matchedRegion != null) break;
+          }
+        }
+
+        if (matchedRegion != null) {
+          setState(() {
+            _selectedRegion = matchedRegion;
+            _selectedCity = matchedCity;
+          });
+        }
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Error'), backgroundColor: Colors.red),
-      );
+      if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text(l10n.locationError),
+              backgroundColor: Colors.red),
+        );
+      }
     } finally {
-      setState(() => _isLocating = false);
+      if (mounted) setState(() => _isLocating = false);
     }
   }
 
