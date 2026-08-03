@@ -7,10 +7,10 @@ class ApiConstants {
   static const String annonces = '/annonces';
   static const String sequestres = '/sequestres';
   static const String messages = '/messages';
-  static const String register = '/api/v1/auth/register';
+  static const String register = '/auth/register';
   static const String forgotPassword = '/auth/forgot-password';
   static const String logout = '/auth/logout';
-  static const String refresh = '/api/v1/auth/refresh';
+  static const String refresh = '/auth/refresh';
   static const String revokeAll = '/api/v1/auth/revoke-all';
   static const String me = '/users/me';
   static const String changePassword = '/users/me/password';
