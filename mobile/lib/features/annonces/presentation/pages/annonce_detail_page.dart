@@ -195,7 +195,7 @@ class _AnnonceDetailView extends StatelessWidget {
                     _InfoRow(
                         icon: Icons.info_outline,
                         label: l10n.dentition,
-                        value: annonce.breed.localizedLabel(context)),
+                        value: annonce.dentition!.localizedDisplayName(context)),
                   if (annonce.headCount != null)
                     _InfoRow(
                         icon: Icons.group_outlined,
