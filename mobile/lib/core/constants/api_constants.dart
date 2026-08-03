@@ -8,13 +8,13 @@ class ApiConstants {
   static const String sequestres = '/sequestres';
   static const String messages = '/messages';
   static const String register = '/api/v1/auth/register';
-  static const String forgotPassword = '/api/v1/auth/forgot-password';
-  static const String logout = '/api/v1/auth/logout';
+  static const String forgotPassword = '/auth/forgot-password';
+  static const String logout = '/auth/logout';
   static const String refresh = '/api/v1/auth/refresh';
   static const String revokeAll = '/api/v1/auth/revoke-all';
-  static const String me = '/api/v1/users/me';
-  static const String changePassword = '/api/v1/users/me/password';
-  static const String avatar = '/api/v1/users/me/avatar';
-  static const String kyc = '/api/v1/users/me/kyc';
-  static const String sessions = '/api/v1/users/me/sessions';
+  static const String me = '/users/me';
+  static const String changePassword = '/users/me/password';
+  static const String avatar = '/users/me/avatar';
+  static const String kyc = '/users/me/kyc';
+  static const String sessions = '/users/me/sessions';
 }
