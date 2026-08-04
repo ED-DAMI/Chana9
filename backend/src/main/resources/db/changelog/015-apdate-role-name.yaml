@@ -1,0 +1,41 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-update-users-roles-and-check-constraint
+      author: chana9
+      changes:
+        - sql:
+            sql: |
+              
+              ALTER TABLE users
+              DROP CONSTRAINT IF EXISTS chk_users_role;
+
+              UPDATE users
+              SET role = 'SELLER'
+              WHERE role = 'ELEVEUR';
+
+              UPDATE users
+              SET role = 'BUYER'
+              WHERE role = 'ACHETEUR';
+
+              
+              ALTER TABLE users
+              ADD CONSTRAINT chk_users_role
+              CHECK (role IN ('SELLER', 'BUYER', 'ADMIN'));
+
+      rollback:
+        - sql:
+            sql: |
+              ALTER TABLE users
+              DROP CONSTRAINT IF EXISTS chk_users_role;
+
+              UPDATE users
+              SET role = 'ELEVEUR'
+              WHERE role = 'SELLER';
+
+              UPDATE users
+              SET role = 'ACHETEUR'
+              WHERE role = 'BUYER';
+
+              ALTER TABLE users
+              ADD CONSTRAINT chk_users_role
+              CHECK (role IN ('ELEVEUR', 'ACHETEUR', 'ADMIN'));
