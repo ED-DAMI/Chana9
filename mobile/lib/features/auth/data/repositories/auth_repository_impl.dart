@@ -6,6 +6,7 @@ import '../../domain/entities/auth_result.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_remote_datasource.dart';
+import '../models/change_password_request_model.dart';
 import '../models/login_request_model.dart';
 import '../models/register_request_model.dart';
 
@@ -115,6 +116,20 @@ class AuthRepositoryImpl implements AuthRepository {
       _execute(() async {
         await remoteDataSource.revokeAll();
         await tokenStorage.clearTokens();
+        return unit;
+      });
+  @override
+  Future<Either<Failure, Unit>> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) =>
+      _execute(() async {
+        await remoteDataSource.changePassword(
+          ChangePasswordRequestModel(
+            currentPassword: currentPassword,
+            newPassword: newPassword,
+          ),
+        );
         return unit;
       });
 }

@@ -639,7 +639,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get passwordMinLength => '6 caractères minimum';
 
   @override
-  String get regionOptional => 'Région (optionnelle)';
+  String get regionOptional => 'Région (optionnel)';
 
   @override
   String get noMyAnnonces => 'Vous n\'avez pas encore d\'annonces';
@@ -652,4 +652,28 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get myAlerts => 'Mes alertes';
+
+  @override
+  String get rememberMe => 'Se souvenir de moi';
+
+  @override
+  String get passwordUpdateSuccess => 'Mot de passe mis à jour avec succès.';
+
+  @override
+  String get passwordWeak => 'Faible';
+
+  @override
+  String get passwordFair => 'Moyen';
+
+  @override
+  String get passwordGood => 'Bon';
+
+  @override
+  String get passwordStrong => 'Fort';
+
+  @override
+  String get passwordNeedsUppercase => 'Doit contenir une majuscule';
+
+  @override
+  String get passwordNeedsNumber => 'Doit contenir un chiffre';
 }

@@ -1349,7 +1349,7 @@ abstract class AppLocalizations {
   /// No description provided for @regionOptional.
   ///
   /// In fr, this message translates to:
-  /// **'Région (optionnelle)'**
+  /// **'Région (optionnel)'**
   String get regionOptional;
 
   /// No description provided for @noMyAnnonces.
@@ -1375,6 +1375,54 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Mes alertes'**
   String get myAlerts;
+
+  /// No description provided for @rememberMe.
+  ///
+  /// In fr, this message translates to:
+  /// **'Se souvenir de moi'**
+  String get rememberMe;
+
+  /// No description provided for @passwordUpdateSuccess.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mot de passe mis à jour avec succès.'**
+  String get passwordUpdateSuccess;
+
+  /// No description provided for @passwordWeak.
+  ///
+  /// In fr, this message translates to:
+  /// **'Faible'**
+  String get passwordWeak;
+
+  /// No description provided for @passwordFair.
+  ///
+  /// In fr, this message translates to:
+  /// **'Moyen'**
+  String get passwordFair;
+
+  /// No description provided for @passwordGood.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bon'**
+  String get passwordGood;
+
+  /// No description provided for @passwordStrong.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fort'**
+  String get passwordStrong;
+
+  /// No description provided for @passwordNeedsUppercase.
+  ///
+  /// In fr, this message translates to:
+  /// **'Doit contenir une majuscule'**
+  String get passwordNeedsUppercase;
+
+  /// No description provided for @passwordNeedsNumber.
+  ///
+  /// In fr, this message translates to:
+  /// **'Doit contenir un chiffre'**
+  String get passwordNeedsNumber;
 }
 
 class _AppLocalizationsDelegate

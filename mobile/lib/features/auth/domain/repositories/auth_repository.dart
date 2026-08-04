@@ -14,6 +14,10 @@ abstract class AuthRepository {
     String? fullName,
     String? region,
   });
+  Future<Either<Failure, Unit>> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  });
   Future<Either<Failure, Unit>> logout();
   Future<Either<Failure, Unit>> revokeAll();
   Future<Either<Failure, User>> getCurrentUser();

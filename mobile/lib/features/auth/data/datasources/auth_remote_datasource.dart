@@ -1,5 +1,6 @@
 import 'package:ma_chana9_app/core/constants/api_constants.dart';
 import 'package:ma_chana9_app/core/network/dio_client.dart';
+import '../models/change_password_request_model.dart';
 import '../models/auth_response_model.dart';
 import '../models/login_request_model.dart';
 import '../models/logout_request_model.dart';
@@ -11,6 +12,7 @@ abstract class AuthRemoteDataSource {
   Future<AuthResponseModel> refreshToken(String refreshToken);
   Future<void> logout(String refreshToken);
   Future<void> revokeAll();
+  Future<void> changePassword(ChangePasswordRequestModel request);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -56,5 +58,13 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<void> revokeAll() async {
     await dioClient.post(ApiConstants.revokeAll);
+  }
+
+  @override
+  Future<void> changePassword(ChangePasswordRequestModel request) async {
+    await dioClient.put(
+      ApiConstants.changePassword,
+      data: request.toJson(),
+    );
   }
 }

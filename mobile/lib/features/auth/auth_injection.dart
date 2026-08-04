@@ -36,5 +36,7 @@ void registerAuthDependencies(GetIt sl) {
     logout: sl(),
     getCurrentUser: sl(),
     checkAuthStatus: sl(),
+    changePassword: sl(),
+    tokenStorage: sl(),
   ));
 }

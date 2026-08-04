@@ -1,11 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ma_chana9_app/core/network/token_storage.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/usecases/check_auth_status.dart';
 import '../../domain/usecases/get_current_user.dart';
 import '../../domain/usecases/login.dart';
 import '../../domain/usecases/logout.dart';
 import '../../domain/usecases/register.dart';
+import '../../domain/usecases/change_password.dart';
 
 part 'auth_bloc.freezed.dart';
 part 'auth_event.dart';
@@ -17,6 +19,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final Logout logout;
   final GetCurrentUser getCurrentUser;
   final CheckAuthStatus checkAuthStatus;
+  final ChangePassword changePassword;
+  final TokenStorage tokenStorage;
 
   AuthBloc({
     required this.login,
@@ -24,10 +28,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required this.logout,
     required this.getCurrentUser,
     required this.checkAuthStatus,
+    required this.changePassword,
+    required this.tokenStorage,
   }) : super(const AuthState.initial()) {
     on<_CheckStatus>(_onCheckStatus);
     on<_Login>(_onLogin);
     on<_Register>(_onRegister);
+    on<_ChangePassword>(_onChangePassword);
     on<_Logout>(_onLogout);
   }
 
@@ -56,9 +63,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final result = await login(
       LoginParams(phone: event.phone, password: event.password),
     );
-    result.fold(
-          (f) => emit(AuthState.failure(f.message)),
-          (authResult) => emit(AuthState.authenticated(authResult.user)),
+    await result.fold(
+          (f) async => emit(AuthState.failure(f.message)),
+          (authResult) async {
+        if (event.rememberMe) {
+          await tokenStorage.saveCredentials(
+            phone: event.phone,
+            password: event.password,
+          );
+        }
+        emit(AuthState.authenticated(authResult.user));
+      },
     );
   }
 
@@ -73,6 +88,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     result.fold(
           (f) => emit(AuthState.failure(f.message)),
           (authResult) => emit(AuthState.authenticated(authResult.user)),
+    );
+  }
+
+  Future<void> _onChangePassword(
+      _ChangePassword event, Emitter<AuthState> emit) async {
+    emit(const AuthState.loading());
+    final result = await changePassword(ChangePasswordParams(
+      currentPassword: event.currentPassword,
+      newPassword: event.newPassword,
+    ));
+    result.fold(
+          (f) => emit(AuthState.failure(f.message)),
+          (_) => emit(const AuthState.passwordSuccess()),
     );
   }
 
