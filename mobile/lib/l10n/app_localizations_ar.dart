@@ -676,4 +676,13 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get passwordNeedsNumber => 'يجب أن تحتوي على رقم';
+
+  @override
+  String get newPassword => 'كلمة السر الجديدة';
+
+  @override
+  String get savedCredentials => 'تسجّلت بياناتك';
+
+  @override
+  String get currentPassword => 'Mot de passe actuel';
 }

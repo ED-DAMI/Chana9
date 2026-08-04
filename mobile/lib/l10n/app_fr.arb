@@ -238,5 +238,8 @@
 "passwordNeedsNumber": "Doit contenir un chiffre",
 "connectToAccount": "Connectez-vous à votre compte",
 "fullNameOptional": "Nom complet (optionnel)",
-"regionOptional": "Région (optionnel)"
+"regionOptional": "Région (optionnel)",
+"newPassword": "Nouveau mot de passe",
+"savedCredentials": "Identifiants enregistrés",
+"currentPassword": "Mot de passe actuel"
 }

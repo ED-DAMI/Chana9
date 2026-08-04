@@ -676,4 +676,13 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get passwordNeedsNumber => 'Doit contenir un chiffre';
+
+  @override
+  String get newPassword => 'Nouveau mot de passe';
+
+  @override
+  String get savedCredentials => 'Identifiants enregistrés';
+
+  @override
+  String get currentPassword => 'Mot de passe actuel';
 }

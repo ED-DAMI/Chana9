@@ -1423,6 +1423,24 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Doit contenir un chiffre'**
   String get passwordNeedsNumber;
+
+  /// No description provided for @newPassword.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveau mot de passe'**
+  String get newPassword;
+
+  /// No description provided for @savedCredentials.
+  ///
+  /// In fr, this message translates to:
+  /// **'Identifiants enregistrés'**
+  String get savedCredentials;
+
+  /// No description provided for @currentPassword.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mot de passe actuel'**
+  String get currentPassword;
 }
 
 class _AppLocalizationsDelegate

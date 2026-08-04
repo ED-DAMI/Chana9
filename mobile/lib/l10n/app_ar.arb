@@ -223,5 +223,8 @@
     "passwordNeedsNumber": "يجب أن تحتوي على رقم",
     "connectToAccount": "سجل دخولك إلى حسابك",
     "fullNameOptional": "الاسم الكامل (اختياري)",
-    "regionOptional": "الجهة (اختياري)"
+    "regionOptional": "الجهة (اختياري)",
+    "newPassword": "كلمة السر الجديدة",
+    "savedCredentials": "تسجّلت بياناتك",
+    "currentPassword": "Mot de passe actuel"
    }
