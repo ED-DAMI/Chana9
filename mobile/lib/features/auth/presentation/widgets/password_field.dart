@@ -10,7 +10,7 @@ class PasswordField extends StatefulWidget {
     super.key,
     required this.controller,
     this.label,
-    this.validator, required List<String> autofillHints,
+    this.validator, Iterable<String>? autofillHints,
   });
 
   @override
