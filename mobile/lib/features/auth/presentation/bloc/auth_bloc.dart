@@ -71,6 +71,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             phone: event.phone,
             password: event.password,
           );
+        } else {
+          await tokenStorage.clearCredentials();
         }
         emit(AuthState.authenticated(authResult.user));
       },
