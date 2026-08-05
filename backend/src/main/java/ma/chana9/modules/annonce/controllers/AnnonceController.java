@@ -27,7 +27,7 @@ import java.util.UUID;
 public class AnnonceController {
     private final AnnonceService annonceService;
     @PostMapping
-    @PreAuthorize("hasAnyRole('ELEVEUR', 'ADMIN', 'ACHETEUR')")
+    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN', 'BUYER')")
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<AnnonceResponse> create(
             @Valid @RequestBody AnnonceRequest request,
@@ -35,7 +35,7 @@ public class AnnonceController {
         return ApiResponse.success(null, annonceService.create(request, userId));
     }
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ELEVEUR', 'ADMIN', 'ACHETEUR')")
+    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN', 'BUYER')")
     public ApiResponse<AnnonceResponse> update(
             @PathVariable UUID id,
             @Valid @RequestBody AnnonceRequest request,
@@ -44,7 +44,7 @@ public class AnnonceController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ELEVEUR', 'ADMIN', 'ACHETEUR')")
+    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN', 'BUYER')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(
             @PathVariable UUID id,
@@ -58,7 +58,7 @@ public class AnnonceController {
     }
 
     @GetMapping("/search")
-    @PreAuthorize("hasAnyRole('ELEVEUR', 'ADMIN', 'ACHETEUR')")
+    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN', 'BUYER')")
     public ApiResponse<Page<AnnonceResponse>> search(
             @Valid AnnonceSearchRequest request,
             Pageable pageable) {
@@ -66,7 +66,7 @@ public class AnnonceController {
     }
 
     @GetMapping("/seller/{sellerId}")
-    @PreAuthorize("hasAnyRole('ELEVEUR', 'ADMIN', 'ACHETEUR')")
+    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN', 'BUYER')")
     public ApiResponse<Page<AnnonceResponse>> findBySeller(
             @PathVariable UUID sellerId,
             Pageable pageable) {
@@ -98,7 +98,7 @@ public class AnnonceController {
     }
 
     @PostMapping("/{id}/top-lot/{durationDays}")
-    @PreAuthorize("hasAnyRole('ELEVEUR', 'ADMIN', 'ACHETEUR')")
+    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN', 'BUYER')")
     public ApiResponse<AnnonceResponse> activateTopLot(
             @PathVariable UUID id,
             @PathVariable int durationDays,
@@ -110,7 +110,7 @@ public class AnnonceController {
     }
 
     @PostMapping("/{id}/favorites")
-    @PreAuthorize("hasAnyRole('ELEVEUR', 'ADMIN', 'ACHETEUR')")
+    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN', 'BUYER')")
     @ResponseStatus(HttpStatus.CREATED)
     public void addFavorite(
             @PathVariable UUID id,
@@ -119,7 +119,7 @@ public class AnnonceController {
     }
 
     @DeleteMapping("/{id}/favorites")
-    @PreAuthorize("hasAnyRole('ELEVEUR', 'ADMIN', 'ACHETEUR')")
+    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN', 'BUYER')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeFavorite(
             @PathVariable UUID id,
@@ -128,7 +128,7 @@ public class AnnonceController {
     }
 
     @GetMapping("/favorites")
-    @PreAuthorize("hasAnyRole('ELEVEUR', 'ADMIN', 'ACHETEUR')")
+    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN', 'BUYER')")
     public ApiResponse<Page<AnnonceResponse>> findFavorites(
             @AuthenticationPrincipal UUID userId,
             Pageable pageable) {
@@ -139,7 +139,7 @@ public class AnnonceController {
     }
 
     @PostMapping("/{id}/reports")
-    @PreAuthorize("hasAnyRole('ELEVEUR', 'ADMIN', 'ACHETEUR')")
+    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN', 'BUYER')")
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<AnnonceReportResponse> report(
             @PathVariable UUID id,
@@ -152,7 +152,7 @@ public class AnnonceController {
     }
 
     @PostMapping("/alerts")
-    @PreAuthorize("hasAnyRole('ELEVEUR', 'ADMIN', 'ACHETEUR')")
+    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN', 'BUYER')")
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<AnnonceAlert> createAlert(
             @Valid @RequestBody AnnonceAlertRequest request,
@@ -163,7 +163,7 @@ public class AnnonceController {
         );
     }
     @DeleteMapping("/alerts/{alertId}")
-    @PreAuthorize("hasAnyRole('ELEVEUR', 'ADMIN', 'ACHETEUR')")
+    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN', 'BUYER')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteAlert(
             @PathVariable UUID alertId,
@@ -172,7 +172,7 @@ public class AnnonceController {
     }
 
     @GetMapping("/alerts")
-    @PreAuthorize("hasAnyRole('ELEVEUR', 'ADMIN', 'ACHETEUR')")
+    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN', 'BUYER')")
     public ApiResponse<List<AnnonceAlert>> findAlerts(
             @AuthenticationPrincipal UUID userId) {
         return ApiResponse.success(

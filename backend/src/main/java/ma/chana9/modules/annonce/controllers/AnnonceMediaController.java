@@ -24,9 +24,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping(ApiPaths.Annonces.BASE)
 public class AnnonceMediaController {
-
     private final AnnonceMediaService annonceMediaService;
-
     @PostMapping(value = "/{annonceId}/medias", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("isAuthenticated()")
     public ApiResponse<AnnonceMedia> upload(

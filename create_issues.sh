@@ -2,80 +2,65 @@
 
 REPO="ED-DAMI/Chana9"
 
-echo "Creating US-PAY-001: Paiement par Carte Bancaire..."
+echo "Creating US-AUTH-002: Modification du mot de passe & Autofill..."
 gh issue create \
   --repo "$REPO" \
-  --title "feat(payment): US-PAY-001 — Paiement par Carte Bancaire (Déblocage Contact 20 DH)" \
-  --label "user-story,payment" \
+  --title "feat(auth): US-AUTH-002 — Modification du mot de passe et Saisie Automatique (Autofill)" \
+  --label "user-story,authentication,security" \
   --body "## User Story
-En tant qu'acheteur / utilisateur sur Chana9,
-Je veux régler 20 DH par Carte Bancaire marocaine ou internationale directement depuis l'application,
-Afin de débloquer immédiatement le numéro de téléphone de l'éleveur.
+En tant qu'utilisateur inscrit sur Chana9,
+Je veux pouvoir modifier mon mot de passe depuis mon profil et enregistrer mes identifiants pour un préremplissage automatique lors de la connexion,
+Afin de renforcer la sécurité de mon compte et de me connecter plus rapidement.
 
 ---
 
 ## Critères d'Acceptation
 
-### CA 1 — Choix du mode de paiement
-- [ ] Étant donné un utilisateur sur la modale d'achat de contact
-- [ ] Quand il choisit l'option « Carte Bancaire (Visa / Mastercard / CMI) »
-- [ ] Alors un bouton « Payer 20 DH par Carte » s'affiche
+### CA 1 — Accès à la modification du mot de passe
+- [ ] Étant donné un utilisateur connecté sur la page « Mon Profil »
+- [ ] Quand il clique sur l'option « Changer le mot de passe » (avec icône 🔒)
+- [ ] Alors il est redirigé vers l'écran de modification du mot de passe
 
-### CA 2 — Redirection vers la passerelle sécurisée (WebView)
-- [ ] Étant donné que l'utilisateur clique sur « Payer 20 DH par Carte »
-- [ ] Quand la demande est envoyée au backend
-- [ ] Alors une WebView sécurisée (ou le SDK CMI/PayZone) s'ouvre
-- [ ] L'URL affichée est celle de la passerelle de paiement certifiée
-- [ ] Le montant affiché sur l'écran bancaire est strictement de 20,00 MAD
+### CA 2 — Formulaire et validation de la modification
+- [ ] Étant donné l'écran de modification de mot de passe
+- [ ] Quand l'utilisateur saisit son mot de passe actuel, le nouveau mot de passe et la confirmation
+- [ ] Alors le système vérifie en temps réel la force du mot de passe (8 caractères min., 1 majuscule, 1 chiffre)
+- [ ] Si le mot de passe actuel est correct et la confirmation identique, le bouton « Enregistrer » s'active
+- [ ] Une fois validé, un message de succès s'affiche : _« Mot de passe mis à jour avec succès. »_
 
-### CA 3 — Validation de la transaction (3D Secure)
-- [ ] Étant donné que l'utilisateur saisit ses informations bancaires (Numéro de carte, Date d'expiration, CVV)
-- [ ] Quand il valide et franchit l'étape 3D Secure (code OTP SMS de sa banque)
-- [ ] Alors la passerelle notifie le backend via un Webhook/IPN sécurisé
+### CA 3 — Préremplissage automatique (Autofill System)
+- [ ] Étant donné un utilisateur sur la page de connexion (\`LoginScreen\`)
+- [ ] Quand il clique sur le champ « Numéro de téléphone » ou « Mot de passe »
+- [ ] Alors le clavier du système (iOS Keychain / Android Autofill) propose automatiquement les identifiants préenregistrés
+- [ ] La sélection préremplit simultanément le numéro et le mot de passe
 
-### CA 4 — Succès du paiement et déblocage
-- [ ] Étant donné que la banque confirme le succès du paiement
-- [ ] Quand la WebView se ferme automatiquement
-- [ ] Alors un message de confirmation s'affiche : _« Paiement réussi ! Contact débloqué. »_
-- [ ] Le numéro de téléphone de l'éleveur s'affiche sur la fiche de l'annonce
-- [ ] Le bouton d'action devient \`Appeler\` (sans mention de prix)
-
-### CA 5 — Gestion des échecs / Annulations
-- [ ] Étant donné un échec de paiement (solde insuffisant, abandon, erreur réseau)
-- [ ] Quand la transaction échoue ou est annulée
-- [ ] Alors la WebView se ferme
-- [ ] Un message clair s'affiche : _« Le paiement n'a pas pu être finalisé. Aucun montant n'a été débité. »_
-- [ ] L'annonce reste dans son état verrouillé (\`Appeler (20 DH)\`)
+### CA 4 — Option « Se souvenir de moi » et reconnexion rapide
+- [ ] Étant donné l'écran de connexion
+- [ ] Quand l'utilisateur coche la case « Se souvenir de moi » lors d'une connexion réussie
+- [ ] Alors ses identifiants (ou jeton de rafraîchissement) sont stockés de manière chiffrée sur l'appareil
+- [ ] Lors de la réouverture de l'application, l'utilisateur est soit directement connecté, soit ses champs sont préremplis
 
 ---
 
 ## Tâches techniques
 
 ### Backend
-- [ ] Créer entité \`ContactUnlock\` (buyer, annonce, status, transactionId, amount, createdAt)
-- [ ] \`POST /annonces/{id}/contact/initiate\` — crée la session de paiement côté passerelle (CMI/PayZone) et retourne l'URL de redirection
-- [ ] \`POST /payments/webhook\` — endpoint IPN/Webhook sécurisé (vérification signature HMAC)
-- [ ] \`PaymentService.handleSuccess()\` — enregistre le paiement en base, met à jour \`ContactUnlock.status = COMPLETED\`
-- [ ] \`PaymentService.handleFailure()\` — enregistre l'échec, status \`FAILED\`, aucun débit
-- [ ] \`GET /annonces/{id}/contact\` — retourne le numéro de téléphone si \`ContactUnlock\` existe et est \`COMPLETED\`
-- [ ] Idempotence : éviter le double débit si le webhook est reçu plusieurs fois (unicité sur \`transactionId\`)
-- [ ] Liquibase migration pour les tables \`contact_unlocks\` et \`payment_transactions\`
+- [ ] \`PUT /api/v1/users/change-password\` — endpoint sécurisé demandant \`oldPassword\`, \`newPassword\` et \`confirmPassword\`
+- [ ] Validation du mot de passe actuel via \`PasswordEncoder\` (BCrypt)
+- [ ] Invalidation / révocation des tokens JWT existants après changement de mot de passe pour forcer la re-sécurisation des sessions
+- [ ] Gestion des erreurs : \`400 Bad Request\` (Mots de passe non identiques / Critères non respectés), \`401 Unauthorized\` (Ancien mot de passe incorrect)
 
 ### Flutter
-- [ ] Modale « Débloquer le contact » avec option carte bancaire
-- [ ] Bouton « Payer 20 DH par Carte » → appel API \`/initiate\` → ouverture WebView
-- [ ] \`PaymentWebViewPage\` — WebView sécurisée, écoute l'URL de retour (success/cancel/failure)
-- [ ] Polling ou deep link de retour pour confirmer l'état de la transaction
-- [ ] Affichage du numéro de téléphone après confirmation de succès
-- [ ] Transition du bouton vers \`Appeler\` (sans prix) après déblocage
-- [ ] Toast d'erreur clair en cas d'échec ou d'abandon
-- [ ] BLoC \`PaymentBloc\` avec états : \`PaymentInitial\`, \`PaymentLoading\`, \`PaymentSuccess\`, \`PaymentFailure\`
+- [ ] Écran \`ChangePasswordPage\` avec masquage/affichage du texte via icône d'œil (\`VisibilityToggle\`)
+- [ ] Intégration de \`AutofillGroup\` et \`AutofillHints\` (\`AutofillHints.telephoneNumber\` / \`AutofillHints.password\`) sur le formulaire de login
+- [ ] Stockage sécurisé des identifiants/tokens via \`flutter_secure_storage\` (utilisant KeyStore sur Android et Keychain sur iOS)
+- [ ] Intégration de la case à cocher « Se souvenir de moi »
+- [ ] BLoC \`AuthBloc\` / \`PasswordBloc\` gérant les états : \`PasswordUpdating\`, \`PasswordSuccess\`, \`PasswordFailure\`
 
 ### Sécurité & conformité
-- [ ] Jamais de données bancaires stockées en backend (délégation totale à la passerelle)
-- [ ] Webhook protégé par vérification de signature (header \`X-Signature\`)
-- [ ] HTTPS obligatoire sur toutes les URLs de redirection
-- [ ] Montant fixé côté backend (jamais côté client) : 20,00 MAD"
+- [ ] Aucun stockage du mot de passe en texte clair (chiffrement RSA/AES sur l'appareil si stocké)
+- [ ] Protection contre les attaques par force brute (rate limiting sur l'endpoint de changement de mot de passe)
+- [ ] Transmission HTTPS stricte de toutes les requêtes d'authentification"
 
 echo ""
-echo "✅ US-PAY-001 créée sur $REPO"
+echo "✅ US-AUTH-002 créée sur $REPO"

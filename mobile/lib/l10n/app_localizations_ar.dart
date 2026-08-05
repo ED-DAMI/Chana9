@@ -630,7 +630,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get geolocate_me => 'تحديد موقعي';
 
   @override
-  String get connectToAccount => 'تسجيل الدخول إلى حسابك';
+  String get connectToAccount => 'سجل دخولك إلى حسابك';
 
   @override
   String get passwordMismatch => 'كلمتا المرور غير متطابقتين';
@@ -652,4 +652,37 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get myAlerts => 'تنبيهاتي';
+
+  @override
+  String get rememberMe => 'تذكرني';
+
+  @override
+  String get passwordUpdateSuccess => 'تم تحديث كلمة المرور بنجاح.';
+
+  @override
+  String get passwordWeak => 'ضعيفة';
+
+  @override
+  String get passwordFair => 'متوسطة';
+
+  @override
+  String get passwordGood => 'جيدة';
+
+  @override
+  String get passwordStrong => 'قوية';
+
+  @override
+  String get passwordNeedsUppercase => 'يجب أن تحتوي على حرف كبير';
+
+  @override
+  String get passwordNeedsNumber => 'يجب أن تحتوي على رقم';
+
+  @override
+  String get newPassword => 'كلمة السر الجديدة';
+
+  @override
+  String get savedCredentials => 'تسجّلت بياناتك';
+
+  @override
+  String get currentPassword => 'Mot de passe actuel';
 }

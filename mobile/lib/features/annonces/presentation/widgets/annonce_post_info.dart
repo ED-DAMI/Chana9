@@ -60,7 +60,7 @@ class AnnoncePostInfo extends StatelessWidget {
             children: [
               _InfoChip(
                 icon: Icons.pets_outlined,
-                label: annonce.breed.name,
+                label: annonce.breed.localizedLabel(context),
               ),
               if (annonce.gender != null)
                 _InfoChip(
@@ -85,7 +85,7 @@ class AnnoncePostInfo extends StatelessWidget {
               if (annonce.dentition != null)
                 _InfoChip(
                   icon: Icons.info_outline,
-                  label: getDentition(context,annonce.dentition!.name),
+                  label: annonce.dentition!.localizedDisplayName(context)
                 ),
               if (annonce.deliveryAvailable)
                 _InfoChip(
@@ -115,17 +115,6 @@ class AnnoncePostInfo extends StatelessWidget {
         ],
       ),
     );
-  }
-  String getDentition(BuildContext context, String dentitionName) {
-    final l10n = AppLocalizations.of(context)!;
-    return switch (dentitionName) {
-      'MILK_TEETH' => l10n.milkTeeth,
-      'TWO_TEETH'  => l10n.twoTeeth,
-      'FOUR_TEETH' => l10n.fourTeeth,
-      'SIX_TEETH'  => l10n.sixTeeth,
-      'FULL_MOUTH' => l10n.fullMouth,
-      _            => dentitionName,
-    };
   }
 
 

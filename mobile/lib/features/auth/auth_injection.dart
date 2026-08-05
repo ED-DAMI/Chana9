@@ -1,7 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:ma_chana9_app/core/network/dio_client.dart';
 import 'package:ma_chana9_app/core/network/token_storage.dart';
-
+import 'domain/usecases/change_password.dart';
 import 'data/datasources/auth_remote_datasource.dart';
 import 'data/repositories/auth_repository_impl.dart';
 import 'domain/repositories/auth_repository.dart';
@@ -29,12 +29,14 @@ void registerAuthDependencies(GetIt sl) {
   sl.registerLazySingleton(() => Logout(sl<AuthRepository>()));
   sl.registerLazySingleton(() => GetCurrentUser(sl<AuthRepository>()));
   sl.registerLazySingleton(() => CheckAuthStatus(sl<AuthRepository>()));
-
+  sl.registerLazySingleton(() => ChangePassword(sl<AuthRepository>()));
   sl.registerFactory(() => AuthBloc(
     login: sl(),
     register: sl(),
     logout: sl(),
     getCurrentUser: sl(),
     checkAuthStatus: sl(),
+    changePassword: sl(),
+    tokenStorage: sl(),
   ));
 }

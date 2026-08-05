@@ -5,11 +5,13 @@ import 'package:ma_chana9_app/l10n/app_localizations.dart';
 class PhoneField extends StatelessWidget {
   final TextEditingController controller;
   final String? Function(String?)? validator;
+  final Iterable<String>? autofillHints;
 
   const PhoneField({
     super.key,
     required this.controller,
     this.validator,
+    this.autofillHints,
   });
 
   @override
@@ -18,6 +20,7 @@ class PhoneField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       keyboardType: TextInputType.phone,
+      autofillHints: autofillHints,
       inputFormatters: [
         FilteringTextInputFormatter.allow(RegExp(r'[0-9+]')),
       ],
@@ -28,7 +31,7 @@ class PhoneField extends StatelessWidget {
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       ),
       validator: validator ??
-          (value) {
+              (value) {
             if (value == null || value.trim().isEmpty) {
               return l10n.phoneRequired;
             }

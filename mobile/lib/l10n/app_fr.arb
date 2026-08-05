@@ -227,5 +227,19 @@
 "noMyAnnonces": "Vous n'avez pas encore d'annonces",
 "user": "Utilisateur",
 "notVerified": "Non vérifié",
-"myAlerts": "Mes alertes"
+"myAlerts": "Mes alertes",
+"rememberMe": "Se souvenir de moi",
+"passwordUpdateSuccess": "Mot de passe mis à jour avec succès.",
+"passwordWeak": "Faible",
+"passwordFair": "Moyen",
+"passwordGood": "Bon",
+"passwordStrong": "Fort",
+"passwordNeedsUppercase": "Doit contenir une majuscule",
+"passwordNeedsNumber": "Doit contenir un chiffre",
+"connectToAccount": "Connectez-vous à votre compte",
+"fullNameOptional": "Nom complet (optionnel)",
+"regionOptional": "Région (optionnel)",
+"newPassword": "Nouveau mot de passe",
+"savedCredentials": "Identifiants enregistrés",
+"currentPassword": "Mot de passe actuel"
 }

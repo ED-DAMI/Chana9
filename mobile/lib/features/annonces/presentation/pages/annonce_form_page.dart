@@ -6,25 +6,12 @@ import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ma_chana9_app/shared/enums/animal_gender.dart';
 import 'package:ma_chana9_app/shared/enums/animal_breed.dart';
+import '../../../../core/constants/morocco_regions.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/enums/animal_dentition.dart';
 import '../../domain/entities/annonce.dart';
 import '../bloc/annonce_bloc.dart';
 
-const Map<String, List<String>> kMoroccoRegionsAndCities = {
-  'Tanger-Tétouan-Al Hoceïma': ['Tanger', 'Tétouan', 'Al Hoceïma', 'Larache', 'Chefchaouen'],
-  'Oriental': ['Oujda', 'Nador', 'Berkane', 'Taourirt', 'Guercif'],
-  'Fès-Meknès': ['Fès', 'Meknès', 'Taza', 'Ifrane', 'Khénifra'],
-  'Rabat-Salé-Kénitra': ['Rabat', 'Salé', 'Kénitra', 'Témara', 'Skhirate'],
-  'Béni Mellal-Khénifra': ['Béni Mellal', 'Khénifra', 'Khouribga', 'Fquih Ben Salah'],
-  'Casablanca-Settat': ['Casablanca', 'Settat', 'Mohammedia', 'El Jadida', 'Berrechid'],
-  'Marrakech-Safi': ['Marrakech', 'Safi', 'Essaouira', 'El Kelaa des Sraghna'],
-  'Drâa-Tafilalet': ['Errachidia', 'Ouarzazate', 'Zagora', 'Tinghir', 'Midelt'],
-  'Souss-Massa': ['Agadir', 'Taroudannt', 'Tiznit', 'Inezgane-Aït Melloul'],
-  'Guelmim-Oued Noun': ['Guelmim', 'Sidi Ifni', 'Tan-Tan'],
-  'Laâyoune-Sakia El Hamra': ['Laâyoune', 'Boujdour', 'Es-Semara'],
-  'Dakhla-Oued Ed-Dahab': ['Dakhla', 'Aousserd'],
-};
 
 class AnnonceFormPage extends StatefulWidget {
   final Annonce? annonce;
@@ -114,10 +101,13 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
       }
+      if (permission == LocationPermission.deniedForever) {
+        throw Exception('permission_denied');
+      }
 
       final position = await Geolocator.getCurrentPosition();
-      final placemarks =
-      await placemarkFromCoordinates(position.latitude, position.longitude);
+      final placemarks = await placemarkFromCoordinates(
+          position.latitude, position.longitude);
 
       if (placemarks.isNotEmpty) {
         final place = placemarks.first;
@@ -125,22 +115,57 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
           _latitude = position.latitude;
           _longitude = position.longitude;
           _addressController.text =
-              "${place.street ?? ''}, ${place.subLocality ?? ''}".trim();
+              [place.street, place.subLocality]
+                  .where((e) => e != null && e.isNotEmpty)
+                  .join(', ');
+        });
+        final detectedCity = place.locality ?? place.subAdministrativeArea ?? '';
+        final detectedAdmin = place.administrativeArea ?? '';
 
-          for (var region in kMoroccoRegionsAndCities.keys) {
-            if (place.administrativeArea?.contains(region) ?? false) {
-              _selectedRegion = region;
+        String? matchedRegion;
+        String? matchedCity;
+        for (final entry in kMoroccoRegionsAndCities.entries) {
+          for (final city in entry.value) {
+            if (detectedCity.toLowerCase().contains(city.toLowerCase()) ||
+                city.toLowerCase().contains(detectedCity.toLowerCase())) {
+              matchedRegion = entry.key;
+              matchedCity = city;
               break;
             }
           }
-        });
+          if (matchedRegion != null) break;
+        }
+        if (matchedRegion == null) {
+          for (final region in kMoroccoRegionsAndCities.keys) {
+            final regionParts = region.split('-');
+            for (final part in regionParts) {
+              if (detectedAdmin.toLowerCase().contains(part.trim().toLowerCase())) {
+                matchedRegion = region;
+                break;
+              }
+            }
+            if (matchedRegion != null) break;
+          }
+        }
+
+        if (matchedRegion != null) {
+          setState(() {
+            _selectedRegion = matchedRegion;
+            _selectedCity = matchedCity;
+          });
+        }
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Error'), backgroundColor: Colors.red),
-      );
+      if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text(l10n.locationError),
+              backgroundColor: Colors.red),
+        );
+      }
     } finally {
-      setState(() => _isLocating = false);
+      if (mounted) setState(() => _isLocating = false);
     }
   }
 

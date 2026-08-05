@@ -93,7 +93,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     const SizedBox(height: 16),
                     PhoneField(controller: _phoneController),
                     const SizedBox(height: 16),
-                    PasswordField(controller: _passwordController),
+                    PasswordField(controller: _passwordController,),
                     const SizedBox(height: 16),
                     TextFormField(
                       controller: _confirmPasswordController,

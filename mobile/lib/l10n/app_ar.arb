@@ -212,5 +212,19 @@
     "noMyAnnonces": "ليس لديك أي إعلانات بعد",
     "user": "مستخدم",
     "notVerified": "غير موثق",
-    "myAlerts": "تنبيهاتي"
+    "myAlerts": "تنبيهاتي",
+    "rememberMe": "تذكرني",
+    "passwordUpdateSuccess": "تم تحديث كلمة المرور بنجاح.",
+    "passwordWeak": "ضعيفة",
+    "passwordFair": "متوسطة",
+    "passwordGood": "جيدة",
+    "passwordStrong": "قوية",
+    "passwordNeedsUppercase": "يجب أن تحتوي على حرف كبير",
+    "passwordNeedsNumber": "يجب أن تحتوي على رقم",
+    "connectToAccount": "سجل دخولك إلى حسابك",
+    "fullNameOptional": "الاسم الكامل (اختياري)",
+    "regionOptional": "الجهة (اختياري)",
+    "newPassword": "كلمة السر الجديدة",
+    "savedCredentials": "تسجّلت بياناتك",
+    "currentPassword": "Mot de passe actuel"
    }

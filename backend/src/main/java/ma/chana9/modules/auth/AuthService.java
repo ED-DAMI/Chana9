@@ -46,7 +46,18 @@ public class AuthService {
 		userRepository.save(user);
 
 		auditService.logSuccess(AuditAction.REGISTER, user.getId());
-		return AuthResponse.message(messageResolver.resolve(MessageKeys.Auth.REGISTER_SUCCESS));
+
+		var accessToken = tokenService.generateAccessToken(user);
+		var refreshToken = tokenService.generateRefreshToken(user, httpRequest);
+
+		return new AuthResponse(
+				accessToken,
+				refreshToken,
+				tokenService.accessTokenExpiresIn(),
+				tokenService.refreshTokenExpiresIn(),
+				userMapper.toDto(user),
+				null
+		);
 	}
 
 	public AuthResponse login(PasswordLoginRequest request, HttpServletRequest httpRequest) {
