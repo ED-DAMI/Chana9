@@ -1,47 +1,197 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ma_chana9_app/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ma_chana9_app/shared/localization/locale_labels.dart';
-import 'package:ma_chana9_app/shared/widgets/language_selector.dart';
-import '../../../auth/presentation/bloc/auth_bloc.dart';
+import 'package:ma_chana9_app/core/network/token_storage.dart';
+import 'package:ma_chana9_app/injection_container.dart';
+import 'package:ma_chana9_app/shared/enums/role.dart';
 import '../../../auth/domain/entities/user.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../domain/entities/revenue_period.dart';
+import '../bloc/stats_dashboard_bloc.dart';
+import '../widgets/annonce_stats_card.dart';
+import '../widgets/period_selector.dart';
+import '../widgets/revenue_chart.dart';
+import '../widgets/revenue_summary_card.dart';
+import '../widgets/seller_kpi_card.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
     return BlocBuilder<AuthBloc, AuthState>(
-      builder: (context, state) {
-        final user = state.whenOrNull(
+      builder: (context, authState) {
+        final user = authState.whenOrNull(
           authenticated: (user) => user,
         );
 
         if (user == null) {
           return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
+              body: Center(child: CircularProgressIndicator()));
+        }
+
+        // Dashboard stats uniquement pour les vendeurs
+        if (user.role == Role.seller) {
+          return BlocProvider(
+            create: (_) => sl<StatsDashboardBloc>()
+              ..add(StatsDashboardEvent.loadDashboard(
+                  sellerId: user.id)),
+            child: _SellerProfileView(user: user),
           );
         }
 
+        return _BuyerProfileView(user: user);
+      },
+    );
+  }
+}
+
+class _SellerProfileView extends StatelessWidget {
+  final User user;
+
+  const _SellerProfileView({required this.user});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<StatsDashboardBloc, StatsDashboardState>(
+      builder: (context, state) {
         return Scaffold(
-          backgroundColor: Colors.grey.shade100,
-          appBar: AppBar(
-            backgroundColor: Colors.white,
-            elevation: 1,
-            title: Text(l10n.profile),
-            actions: const [LanguageSelector()],
-          ),
-          body: ListView(
-            children: [
-              _ProfileHeader(user: user),
-              const SizedBox(height: 12),
-              _ProfileMenu(user: user),
-            ],
+          backgroundColor: Colors.grey.shade50,
+          body: RefreshIndicator(
+            onRefresh: () async {
+              context.read<StatsDashboardBloc>().add(
+                StatsDashboardEvent.refreshDashboard(
+                    sellerId: user.id),
+              );
+            },
+            child: CustomScrollView(
+              slivers: [
+                // AppBar
+                SliverAppBar(
+                  expandedHeight: 180,
+                  pinned: true,
+                  flexibleSpace: FlexibleSpaceBar(
+                    background: _ProfileHeader(user: user),
+                  ),
+                ),
+
+                // Contenu
+                SliverToBoxAdapter(
+                  child: state.when(
+                    initial: () => const SizedBox.shrink(),
+                    loading: () => const _DashboardSkeleton(),
+                    loaded: (globalStats, revenue, timeline,
+                        annonceStats, selectedPeriod) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 16),
+
+                          // KPIs
+                          _SectionTitle(title: 'Mes performances'),
+                          SellerKpiCard(stats: globalStats),
+
+                          const SizedBox(height: 8),
+
+                          // Sélecteur période
+                          _SectionTitle(title: 'Chiffre d\'affaires'),
+                          PeriodSelector(
+                            sellerId: user.id,
+                            selected: selectedPeriod,
+                          ),
+
+                          // Résumé CA
+                          RevenueSummaryCard(revenue: revenue),
+
+                          // Graphique
+                          RevenueChart(
+                            points: timeline,
+                            period: selectedPeriod,
+                          ),
+
+                          const SizedBox(height: 8),
+
+                          // Stats par annonce
+                          _SectionTitle(title: 'Mes annonces'),
+                          if (annonceStats.isEmpty)
+                            Padding(
+                              padding: const EdgeInsets.all(24),
+                              child: Center(
+                                child: Text(
+                                  'Aucune annonce pour le moment',
+                                  style: TextStyle(
+                                      color: Colors.grey.shade500),
+                                ),
+                              ),
+                            )
+                          else
+                            ...annonceStats.map(
+                                    (s) => AnnonceStatsCard(stats: s)),
+
+                          const SizedBox(height: 16),
+
+                          // Menu profil
+                          _ProfileMenu(user: user),
+                          const SizedBox(height: 32),
+                        ],
+                      );
+                    },
+                    error: (failure) => Padding(
+                      padding: const EdgeInsets.all(32),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.error_outline,
+                              size: 48, color: Colors.red),
+                          const SizedBox(height: 12),
+                          Text(failure.message,
+                              textAlign: TextAlign.center),
+                          const SizedBox(height: 16),
+                          FilledButton(
+                            onPressed: () =>
+                                context.read<StatsDashboardBloc>().add(
+                                  StatsDashboardEvent.loadDashboard(
+                                      sellerId: user.id),
+                                ),
+                            child: const Text('Réessayer'),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },
+    );
+  }
+}
+
+class _BuyerProfileView extends StatelessWidget {
+  final User user;
+
+  const _BuyerProfileView({required this.user});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.grey.shade50,
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 180,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              background: _ProfileHeader(user: user),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: _ProfileMenu(user: user),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -54,53 +204,56 @@ class _ProfileHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context);
+
     return Container(
-      color: Colors.white,
-      padding: const EdgeInsets.all(24),
-      child: Column(
+      color: theme.colorScheme.primary,
+      padding: const EdgeInsets.fromLTRB(24, 80, 24, 24),
+      child: Row(
         children: [
           CircleAvatar(
-            radius: 40,
-            backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
+            radius: 36,
+            backgroundColor: Colors.white.withOpacity(0.2),
             child: Text(
               (user.fullName?.isNotEmpty == true
                   ? user.fullName![0]
                   : user.phone[0])
                   .toUpperCase(),
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: theme.colorScheme.primary,
-              ),
+              style: const TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
             ),
           ),
-          const SizedBox(height: 12),
-          Text(
-            user.fullName ?? l10n.user,
-            style: theme.textTheme.titleLarge
-                ?.copyWith(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            user.phone,
-            style: theme.textTheme.bodyMedium
-                ?.copyWith(color: Colors.grey.shade600),
-          ),
-          const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _StatusBadge(
-                label: user.role.localizedLabel(context),
-                color: theme.colorScheme.primary,
-              ),
-              const SizedBox(width: 8),
-              _StatusBadge(
-                label: user.kycVerified ? l10n.verifiedCheck : l10n.notVerified,
-                color: user.kycVerified ? Colors.green : Colors.orange,
-              ),
-            ],
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  user.fullName ?? 'Utilisateur',
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18),
+                ),
+                Text(user.phone,
+                    style: TextStyle(
+                        color: Colors.white.withOpacity(0.8),
+                        fontSize: 13)),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    _WhiteBadge(
+                        label: user.role.name.toUpperCase()),
+                    if (user.kycVerified) ...[
+                      const SizedBox(width: 6),
+                      const _WhiteBadge(label: 'Vérifié ✓'),
+                    ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -108,29 +261,25 @@ class _ProfileHeader extends StatelessWidget {
   }
 }
 
-class _StatusBadge extends StatelessWidget {
+class _WhiteBadge extends StatelessWidget {
   final String label;
-  final Color color;
 
-  const _StatusBadge({required this.label, required this.color});
+  const _WhiteBadge({required this.label});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: Colors.white.withOpacity(0.2),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: Colors.white.withOpacity(0.4)),
       ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: color,
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
+      child: Text(label,
+          style: const TextStyle(
+              color: Colors.white,
+              fontSize: 11,
+              fontWeight: FontWeight.w600)),
     );
   }
 }
@@ -142,30 +291,31 @@ class _ProfileMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    return Material(
+    return Container(
       color: Colors.white,
+      margin: const EdgeInsets.only(top: 16),
       child: Column(
         children: [
           _MenuItem(
             icon: Icons.storefront_outlined,
-            label: l10n.myAnnonces,
-            onTap: () => context.push('/profile/my-annonces/${user.id}'),
+            label: 'Mes annonces',
+            onTap: () =>
+                context.push('/profile/my-annonces/${user.id}'),
           ),
           _MenuItem(
             icon: Icons.favorite_border,
-            label: l10n.myFavorites,
+            label: 'Mes favoris',
             onTap: () => context.push('/profile/favorites'),
           ),
           _MenuItem(
             icon: Icons.notifications_outlined,
-            label: l10n.myAlerts,
+            label: 'Mes alertes',
             onTap: () => context.push('/profile/alerts'),
           ),
           const Divider(height: 1),
           _MenuItem(
             icon: Icons.logout,
-            label: l10n.logout,
+            label: 'Déconnexion',
             color: Colors.red,
             onTap: () => _confirmLogout(context),
           ),
@@ -175,23 +325,24 @@ class _ProfileMenu extends StatelessWidget {
   }
 
   void _confirmLogout(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
     showDialog(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(l10n.logout),
-        content: Text(l10n.logoutConfirm),
+      builder: (_) => AlertDialog(
+        title: const Text('Déconnexion'),
+        content:
+        const Text('Êtes-vous sûr de vouloir vous déconnecter ?'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(),
-            child: Text(l10n.cancel),
-          ),
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Annuler')),
           TextButton(
             onPressed: () {
-              Navigator.of(dialogContext).pop();
-              context.read<AuthBloc>().add(const AuthEvent.logout());
+              Navigator.of(context).pop();
+              context
+                  .read<AuthBloc>()
+                  .add(const AuthEvent.logout());
             },
-            child: Text(l10n.logout,
+            child: const Text('Déconnexion',
                 style: TextStyle(color: Colors.red)),
           ),
         ],
@@ -218,8 +369,56 @@ class _MenuItem extends StatelessWidget {
     return ListTile(
       leading: Icon(icon, color: color),
       title: Text(label, style: TextStyle(color: color)),
-      trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+      trailing:
+      const Icon(Icons.chevron_right, color: Colors.grey),
       onTap: onTap,
+    );
+  }
+}
+
+class _SectionTitle extends StatelessWidget {
+  final String title;
+
+  const _SectionTitle({required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+      child: Text(
+        title,
+        style: Theme.of(context)
+            .textTheme
+            .titleMedium
+            ?.copyWith(fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+}
+
+class _DashboardSkeleton extends StatelessWidget {
+  const _DashboardSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const SizedBox(height: 16),
+        const SellerKpiCardSkeleton(),
+        const SizedBox(height: 16),
+        ...List.generate(
+          3,
+              (_) => Container(
+            margin: const EdgeInsets.symmetric(
+                horizontal: 16, vertical: 6),
+            height: 80,
+            decoration: BoxDecoration(
+              color: Colors.grey.shade200,
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
