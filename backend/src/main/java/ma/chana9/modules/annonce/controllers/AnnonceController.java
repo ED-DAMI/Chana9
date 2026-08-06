@@ -180,4 +180,7 @@ public class AnnonceController {
                 annonceService.findAlertsByBuyer(userId)
         );
     }
+    @PostMapping("/{id}/view")
+    public void incrementView(@PathVariable UUID id) {
+            }
 }
