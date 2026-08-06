@@ -29,9 +29,13 @@
 - Persistance de session (JWT + cache utilisateur)
 - Feed d'annonces style Facebook avec carousel photos
 - Création / édition d'annonces en 4 étapes avec upload photos
-- Filtres de recherche avancés
-- Système de favoris
+- Filtres de recherche avancés avec localisation automatique GPS
+- Système de favoris avec compteur temps réel
 - Signalement d'annonces
+- Profil utilisateur avec KYC, avatar, sessions actives
+- Changement de mot de passe
+- Déblocage de contact payant (20 DH)
+- Internationalisation 4 langues : Français · Anglais · Arabe · Tamazight
 - Navigation fluide avec GoRouter
 
 ---
@@ -50,7 +54,9 @@
 | Stockage sécurisé | flutter_secure_storage | ^10.3.1 |
 | Images réseau | cached_network_image | ^3.3.0 |
 | Sélection photos | image_picker | ^1.0.0 |
+| Géolocalisation | geolocator + geocoding | — |
 | Notifications push | firebase_messaging | ^16.4.1 |
+| Internationalisation | flutter_localizations + intl | — |
 | Backend | Spring Boot (Java) — API REST JSON | — |
 
 ---
@@ -105,44 +111,67 @@ Left(Failure.network('Pas de connexion'))   // timeout, no internet
 ```
 lib/
 ├── main.dart
-├── injection_container.dart              ← câblage GetIt global
+├── injection_container.dart
 │
 ├── core/
 │   ├── constants/
-│   │   └── api_constants.dart
+│   │   ├── api_constants.dart
+│   │   └── morocco_regions.dart           ← régions et villes marocaines centralisées
 │   ├── error/
-│   │   └── failure.dart                  ← Either<Failure,T> · mapping HTTP
+│   │   └── failure.dart
 │   ├── network/
-│   │   ├── dio_client.dart               ← wrapper get/post/put/patch/delete
-│   │   ├── dio_client_factory.dart       ← base URL · Bearer · LogInterceptor
-│   │   ├── token_storage.dart            ← JWT + cache User (secure storage)
+│   │   ├── dio_client.dart
+│   │   ├── dio_client_factory.dart
+│   │   ├── token_storage.dart
 │   │   └── interceptors/
 │   │       └── auth_interceptor.dart
 │   ├── theme/
 │   │   └── app_theme.dart
 │   ├── usecases/
-│   │   └── usecase.dart                  ← abstract UseCase<Type, Params>
+│   │   └── usecase.dart
 │   └── utils/
 │       └── storage_service.dart
 │
+├── l10n/
+│   ├── app_en.arb                         ← Anglais
+│   ├── app_fr.arb                         ← Français
+│   ├── app_ar.arb                         ← Arabe
+│   ├── app_zgh.arb                        ← Tamazight (Tifinagh)
+│   ├── app_localizations.dart
+│   ├── app_localizations_en.dart
+│   ├── app_localizations_fr.dart
+│   ├── app_localizations_ar.dart
+│   └── app_localizations_zgh.dart
+│
 ├── shared/
+│   ├── bloc/
+│   │   ├── locale_bloc.dart               ← gestion langue active
+│   │   ├── locale_event.dart
+│   │   └── locale_state.dart
 │   ├── enums/
-│   │   ├── annonce_status.dart           ← DRAFT·ACTIVE·SUSPENDED·SOLD·EXPIRED
-│   │   ├── animal_gender.dart            ← MALE·FEMALE
-│   │   └── role.dart                     ← BUYER·SELLER·ADMIN
+│   │   ├── annonce_status.dart            ← ACTIVE·RESERVED·SOLD·EXPIRED·SUSPENDED
+│   │   ├── animal_breed.dart              ← 25 races avec label + value backend
+│   │   ├── animal_dentition.dart          ← MILK_TEETH·TWO_TEETH·...·FULL_MOUTH
+│   │   ├── animal_gender.dart             ← MALE·FEMALE
+│   │   ├── price_type.dart                ← FIXED·NEGOTIABLE·PER_KG
+│   │   ├── report_reason.dart             ← FRAUD_OR_SCAM·...·OTHER
+│   │   └── role.dart                      ← BUYER·SELLER·ADMIN
+│   ├── localization/
+│   │   └── locale_labels.dart             ← helpers localizedRegion · extensions
 │   ├── model/paginated/
-│   │   └── paginated_response.dart       ← Page<T> Spring Boot
+│   │   └── paginated_response.dart
 │   └── widgets/
 │       ├── custom_button.dart
 │       ├── error_widget.dart
+│       ├── language_selector.dart
 │       └── loading_widget.dart
 │
 └── features/
-    ├── auth/                             ← ✅ implémenté
-    ├── annonces/                         ← ✅ implémenté
-    ├── messaging/                        ← 🔲 placeholder
-    ├── profile/                          ← 🔲 placeholder
-    └── sequestre/                        ← 🔲 placeholder
+    ├── auth/                              ← ✅ implémenté
+    ├── annonces/                          ← ✅ implémenté
+    ├── profile/                           ← ✅ implémenté
+    ├── messaging/                         ← 🔲 placeholder
+    └── sequestre/                         ← 🔲 placeholder
 ```
 
 ---
@@ -155,7 +184,7 @@ lib/
 lib/features/auth/
 ├── auth_injection.dart
 ├── data/
-│   ├── datasources/    auth_remote_datasource.dart   POST /api/v1/auth/login
+│   ├── datasources/    auth_remote_datasource.dart
 │   ├── models/         LoginRequestModel · AuthResponseModel · UserModel
 │   └── repositories/   auth_repository_impl.dart
 ├── domain/
@@ -164,7 +193,7 @@ lib/features/auth/
 │   └── usecases/       Login · Logout · GetCurrentUser · CheckAuthStatus
 └── presentation/
     ├── bloc/           AuthBloc (checkStatus · login · logout)
-    ├── pages/          SplashPage · LoginPage
+    ├── pages/          SplashPage · LoginPage · RegisterPage
     └── widgets/        PhoneField · PasswordField
 ```
 
@@ -174,12 +203,6 @@ Démarrage → SplashPage → hasToken() ?
                 ├── oui → getCachedUser() → /annonces
                 └── non → /login → POST /api/v1/auth/login
                               → saveTokens() + saveUser() → /annonces
-```
-
-**Header automatique sur chaque requête :**
-```
-Authorization: Bearer <access_token>
-X-User-Id: <userId>              ← requis par le backend Spring Boot
 ```
 
 ---
@@ -193,18 +216,20 @@ lib/features/annonces/
 │   ├── datasources/    annonce_remote_datasource.dart
 │   ├── models/         AnnonceModel · AnnonceMediaModel
 │   │                   AnnonceRequestModel · AnnonceSearchRequestModel
-│   │                   AnnonceAlertRequestModel
+│   │                   AnnonceAlertRequestModel · AnnonceReportRequestModel
 │   └── repositories/   annonce_repository_impl.dart
 ├── domain/
 │   ├── entities/       Annonce · AnnonceMedia
 │   ├── repositories/   annonce_repository.dart
-│   └── usecases/       17 use cases
+│   └── usecases/       20 use cases
 └── presentation/
-    ├── bloc/           AnnonceBloc · AnnonceEvent · AnnonceState
-    ├── pages/          AnnonceListPage · AnnonceDetailPage · AnnonceFormPage
+    ├── bloc/           AnnonceBloc · AnnonceDetailBloc
+    ├── pages/          AnnonceListPage · AnnonceDetailPage
+    │                   AnnonceFormPage · FavoritesPage
     └── widgets/        AnnoncePostCard · AnnoncePhotoCarousel
                         AnnoncePostHeader · AnnoncePostInfo
                         AnnoncePostActions · AnnonceFilterSheet
+                        ReportSheet
 ```
 
 **Endpoints couverts :**
@@ -221,7 +246,7 @@ lib/features/annonces/
 | PATCH | `/api/v1/annonces/{id}/reactivate` | ReactivateAnnonce |
 | PATCH | `/api/v1/annonces/{id}/sold` | MarkAsSold |
 | POST | `/api/v1/annonces/{id}/top-lot/{days}` | ActivateTopLot |
-| POST | `/api/v1/annonces/{id}/flag` | FlagAnnonce |
+| POST | `/api/v1/annonces/{id}/reports` | ReportAnnonce |
 | POST | `/api/v1/annonces/{id}/favorites` | AddFavorite |
 | DELETE | `/api/v1/annonces/{id}/favorites` | RemoveFavorite |
 | GET | `/api/v1/annonces/favorites` | GetFavorites |
@@ -229,42 +254,114 @@ lib/features/annonces/
 | DELETE | `/api/v1/annonces/alerts/{id}` | DeleteAlert |
 | GET | `/api/v1/annonces/alerts` | GetAlertsByBuyer |
 | POST | `/api/v1/annonces/{id}/medias` | UploadMedia (multipart) |
+| POST | `/api/v1/annonces/{id}/contact/initiate` | InitiateContactUnlock |
+| GET | `/api/v1/annonces/{id}/contact` | GetContactUnlock |
 
 **UI Annonces :**
 ```
 AnnonceListPage
   └── ListView vertical
         └── AnnoncePostCard (style Facebook)
-              ├── AnnoncePostHeader    avatar vendeur · date relative · région
+              ├── AnnoncePostHeader    avatar vendeur · date relative · région localisée
               ├── AnnoncePhotoCarousel PageView + dots animés + compteur 1/N
-              ├── AnnoncePostInfo      prix · badges · chips (race/poids/âge)
+              ├── AnnoncePostInfo      prix · badges · chips (race/poids/âge/dentition)
               ├── Description          2 lignes + "Voir plus" animé
-              └── AnnoncePostActions   ❤️ Favori · 💬 Contacter · ↗️ Partager
+              └── AnnoncePostActions   ❤️ Favori · 💬 Contacter · ↗️ Partager · 🚩 Signaler
+
+AnnonceDetailPage
+  ├── SliverAppBar     carousel photos + menu actions (suspend/sold/edit/delete)
+  ├── Caractéristiques race · genre · âge · poids · dentition · têtes · ONSSA
+  ├── Localisation     région · ville · distance · adresse
+  ├── Services         livraison · pension (boarding)
+  ├── Description      texte complet
+  └── BottomBar        💬 Message · 📞 Appeler (déblocage 20 DH)
 
 AnnonceFormPage (Stepper 4 étapes)
-  ├── Étape 1 : Photos    grille 3×N · galerie/caméra · badge "Principale"
-  ├── Étape 2 : Animal    race · genre · poids · âge · aide agricole
-  ├── Étape 3 : Annonce   titre · prix · négociable · description
-  └── Étape 4 : Lieu      région · adresse · livraison (rayon + prix)
+  ├── Étape 1 : Photos    grille · galerie/caméra · max 5 photos
+  ├── Étape 2 : Animal    race · genre · poids · âge · dentition · ONSSA · têtes
+  ├── Étape 3 : Annonce   titre · prix · type prix · négociable · description
+  └── Étape 4 : Lieu      GPS auto · région · ville · adresse · livraison
 
 AnnonceFilterSheet (DraggableScrollableSheet)
-  ├── Race & Région       champs texte
-  ├── Prix (MAD)          min / max
-  ├── Poids (kg)          min / max
-  ├── Genre               SegmentedButton
-  └── Options             SwitchListTile (livraison · négociable · aides · top lot)
+  ├── Race              FilterChip localisé (25 races)
+  ├── Région            FilterChip localisé (12 régions)
+  ├── Prix (MAD)        min / max
+  ├── Poids (kg)        min / max
+  ├── Genre             SegmentedButton
+  └── Options           livraison · négociable · aides · top lot
 ```
+
+---
+
+### 👤 Profil
+
+```
+lib/features/profile/
+├── data/
+│   ├── datasources/    user_remote_datasource.dart
+│   ├── models/         UserModel · UserStatsModel · UpdateProfileRequestModel
+│   └── repositories/   user_repository_impl.dart
+├── domain/
+│   ├── entities/       User · UserStats
+│   ├── repositories/   user_repository.dart
+│   └── usecases/       GetProfile · UpdateProfile · UploadAvatar
+│                       GetUserStats · ChangePassword
+└── presentation/
+    └── pages/          ProfilePage · MyAnnoncesPage
+```
+
+**Endpoints couverts :**
+
+| Méthode | Endpoint | Description |
+|---|---|---|
+| GET | `/api/v1/users/me` | Profil courant |
+| PUT | `/api/v1/users/me` | Modifier profil |
+| GET | `/api/v1/users/{id}` | Profil public |
+| GET | `/api/v1/users/{id}/stats` | Stats vendeur |
+| POST | `/api/v1/users/me/avatar` | Upload avatar |
+| DELETE | `/api/v1/users/me/avatar` | Supprimer avatar |
+| PUT | `/api/v1/users/me/password` | Changer mot de passe |
+| GET | `/api/v1/users/me/sessions` | Sessions actives |
+| DELETE | `/api/v1/users/me/sessions` | Révoquer toutes les sessions |
+| POST | `/api/v1/users/me/kyc` | Soumettre KYC |
+| GET | `/api/v1/users/me/kyc` | Statut KYC |
 
 ---
 
 ## Navigation
 
 ```dart
-/splash     → SplashPage        vérifie token au démarrage
-/login      → LoginPage
-/annonces   → AnnonceListPage
-/annonces/new        → AnnonceFormPage (création)
-/annonces/:id        → AnnonceDetailPage
+/splash                      → SplashPage
+/login                       → LoginPage
+/annonces                    → AnnonceListPage
+/annonces/new                → AnnonceFormPage (création)
+/annonces/:id                → AnnonceDetailPage
+/profile                     → ProfilePage
+/profile/my-annonces/:id     → MyAnnoncesPage
+/profile/favorites           → FavoritesPage
+```
+
+---
+
+## Internationalisation
+
+L'application supporte 4 langues configurables depuis le profil :
+
+| Langue | Code | Script |
+|---|---|---|
+| Français | `fr` | Latin |
+| Anglais | `en` | Latin |
+| Arabe | `ar` | RTL |
+| Tamazight | `zgh` | Tifinagh |
+
+La langue est persistée dans `flutter_secure_storage` et restaurée au démarrage via `LocaleBloc`.
+
+Les races (`AnimalBreed`), dentitions (`AnimalDentition`) et régions marocaines sont entièrement localisées.
+
+```dart
+// Sérialisation backend — les enums utilisent @JsonEnum(valueField: 'value')
+AnimalBreed.beniGuil.value  // → 'BENI_GUIL' (envoyé au backend)
+AnimalBreed.beniGuil.label  // → 'Béni Guil' (affiché dans l'UI)
 ```
 
 ---
@@ -273,7 +370,7 @@ AnnonceFilterSheet (DraggableScrollableSheet)
 
 ```bash
 # 1. Cloner
-git clone https://github.com/chana9/ma_chana9_app.git
+git clone https://github.com/ED-DAMI/Chana9.git
 cd ma_chana9_app
 
 # 2. Dépendances
@@ -305,12 +402,14 @@ ios/Runner/GoogleService-Info.plist
 
 ### Enums Spring Boot → Flutter
 
-| Java | Flutter | Sérialisation |
+| Java | Flutter | Backend value |
 |---|---|---|
-| `ACTIVE` | `AnnonceStatus.active` | `@JsonValue('ACTIVE')` |
-| `MALE` | `AnimalGender.male` | `@JsonValue('MALE')` |
-| `SELLER` | `Role.seller` | `@JsonValue('SELLER')` |
-| `IMAGE` | `MediaFormat.image` | `@JsonValue('IMAGE')` |
+| `ACTIVE` | `AnnonceStatus.active` | `'ACTIVE'` |
+| `MALE` | `AnimalGender.male` | `'MALE'` |
+| `SARDI` | `AnimalBreed.sardi` | `'SARDI'` |
+| `MILK_TEETH` | `AnimalDentition.milkTeeth` | `'MILK_TEETH'` |
+| `FIXED` | `PriceType.fixed` | `'FIXED'` |
+| `SELLER` | `Role.seller` | `'SELLER'` |
 
 ### Types Java → Dart
 
@@ -356,12 +455,23 @@ abstract class MaClasse with _$MaClasse { ... }
 class MaClasse with _$MaClasse { ... }
 ```
 
+### Enums avec valeur backend
+
+```dart
+// ✅ correct — utiliser .value pour envoyer au backend
+'breed': _selectedBreed?.value,   // → 'BENI_GUIL'
+
+// ❌ incorrect — .name retourne le nom Dart camelCase
+'breed': _selectedBreed?.name,    // → 'beniGuil'
+```
+
 ### Injection par feature
 
 ```dart
 // Chaque feature a son fichier *_injection.dart
 registerAuthDependencies(sl);
 registerAnnoncesDependencies(sl);
+registerProfileDependencies(sl);
 
 // Ordre obligatoire dans injection_container.dart :
 // 1. FlutterSecureStorage
@@ -385,8 +495,10 @@ result.fold(
 ```
 feat(annonces): implement Facebook-style feed with photo carousel
 fix(auth): persist user to secure storage on login
-fix(annonces): make createdAt nullable to handle null backend response
-feat(form): add multi-step form with photo picker and animal details
+fix(annonces): resolve infinite JSON serialization loop on AnnonceMedia
+feat(l10n): add 4-language support (fr/en/ar/zgh) with Tifinagh script
+fix(form): improve automatic region and city detection from GPS coordinates
+refactor(regions): centralize moroccan regions and cities into shared constants
 ```
 
 ---
@@ -395,26 +507,25 @@ feat(form): add multi-step form with photo picker and animal details
 
 ### 🔴 Priorité haute
 
-- [ ] Amélioration liste : barre recherche + chips filtres actifs + tri + skeleton loader
-- [ ] Filtres avec RangeSlider (prix / poids / âge)
+- [ ] Skeleton loader sur AnnonceListPage
 - [ ] Galerie photos plein écran (zoom + swipe)
-- [ ] Mes annonces — tableau de bord vendeur
 - [ ] Gestion erreurs réseau UI (page offline + retry)
 - [ ] Notifications push Firebase
+- [ ] Page déblocage contact (WebView paiement 20 DH)
 
 ### 🟡 Priorité moyenne
 
-- [ ] Profil utilisateur (édition + KYC)
 - [ ] Messagerie in-app
 - [ ] Alertes acheteur (UI)
 - [ ] Séquestre — paiement sécurisé
-- [ ] Géolocalisation + annonces autour de moi
+- [ ] Géolocalisation — annonces autour de moi
+- [ ] KYC — page soumission documents
 
 ### 🟢 Priorité basse
 
 - [ ] Onboarding (3 écrans + choix rôle)
 - [ ] Mode sombre
-- [ ] Support arabe RTL
 - [ ] Cache offline
 - [ ] Partage d'annonce (deep link)
 - [ ] Évaluations vendeur
+- [ ] Support RTL complet (arabe)
