@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:ma_chana9_app/shared/enums/annonce_status.dart';
 
+import '../../domain/entities/annonce_stats.dart';
+
 
 class AnnonceStatsCard extends StatelessWidget {
   final AnnonceStats stats;

@@ -99,11 +99,8 @@ class _SellerProfileView extends StatelessWidget {
                             sellerId: user.id,
                             selected: selectedPeriod,
                           ),
-
-                          // Résumé CA
                           RevenueSummaryCard(revenue: revenue),
 
-                          // Graphique
                           RevenueChart(
                             points: timeline,
                             period: selectedPeriod,
