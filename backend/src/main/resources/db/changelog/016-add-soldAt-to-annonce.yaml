@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      id: 016-001-add-sold-at-to-annonces
+      author: chana9-dev
+      changes:
+        - sql:
+            sql: |
+              ALTER TABLE annonces
+              ADD COLUMN IF NOT EXISTS sold_at TIMESTAMP NULL;
+      rollback:
+        - sql:
+            sql: |
+              ALTER TABLE annonces
+              DROP COLUMN IF EXISTS sold_at;
+
+  - changeSet:
+      id: 016-002-index-annonces-seller-status
+      author: chana9-dev
+      changes:
+        - sql:
+            sql: |
+              CREATE INDEX IF NOT EXISTS idx_annonces_seller_status
+              ON annonces (seller_id, status);
+      rollback:
+        - sql:
+            sql: |
+              DROP INDEX IF EXISTS idx_annonces_seller_status;
+
+  - changeSet:
+      id: 016-003-index-annonces-sold-at
+      author: chana9-dev
+      changes:
+        - sql:
+            sql: |
+              CREATE INDEX IF NOT EXISTS idx_annonces_sold_at
+              ON annonces (sold_at);
+      rollback:
+        - sql:
+            sql: |
+              DROP INDEX IF EXISTS idx_annonces_sold_at;
