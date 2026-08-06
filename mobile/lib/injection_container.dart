@@ -10,10 +10,12 @@ import 'core/network/dio_client_factory.dart';
 import 'core/network/token_storage.dart';
 import 'features/auth/auth_injection.dart';
 import 'features/annonces/annonces_injection.dart';
+import 'features/profile/profile_injection.dart';
 
 final sl = GetIt.instance;
 
 Future<void> init() async {
+  registerProfileDependencies(sl);
   sl.registerLazySingleton<FlutterSecureStorage>(
         () => const FlutterSecureStorage(),
   );
