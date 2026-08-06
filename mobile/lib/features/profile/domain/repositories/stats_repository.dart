@@ -1,10 +1,11 @@
 import 'package:dartz/dartz.dart';
 import 'package:ma_chana9_app/core/error/failure.dart';
-import '../../data/entities/annonce_stats.dart';
-import '../../data/entities/revenue_period.dart';
-import '../../data/entities/revenue_point.dart';
-import '../../data/entities/seller_global_stats.dart';
-import '../../data/entities/seller_revenue.dart';
+
+import '../entities/annonce_stats.dart';
+import '../entities/revenue_period.dart';
+import '../entities/revenue_point.dart';
+import '../entities/seller_global_stats.dart';
+import '../entities/seller_revenue.dart';
 
 abstract class StatsRepository {
   Future<Either<Failure, SellerGlobalStats>> getSellerGlobalStats(

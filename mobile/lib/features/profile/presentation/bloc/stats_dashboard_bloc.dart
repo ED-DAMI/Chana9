@@ -40,13 +40,11 @@ class StatsDashboardBloc
     await _loadAll(event.sellerId, RevenuePeriod.month, emit);
   }
 
-  // Recharge uniquement revenue + timeline pour la nouvelle période
   Future<void> _onChangePeriod(
       _ChangePeriod event, Emitter<StatsDashboardState> emit) async {
     final current = state;
     if (current is! _Loaded) return;
 
-    // On émet un loaded avec les anciennes données pendant le rechargement
     emit(StatsDashboardState.loaded(
       globalStats: current.globalStats,
       revenue: current.revenue,
