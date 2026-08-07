@@ -53,8 +53,6 @@ class ProfilePage extends StatelessWidget {
   }
 }
 
-// ── Seller Profile ────────────────────────────────────────────────────────────
-
 class _SellerProfileView extends StatelessWidget {
   final User user;
 
@@ -124,8 +122,6 @@ class _SellerProfileView extends StatelessWidget {
     );
   }
 }
-
-// ── Buyer Profile ─────────────────────────────────────────────────────────────
 
 class _BuyerProfileView extends StatelessWidget {
   final User user;
