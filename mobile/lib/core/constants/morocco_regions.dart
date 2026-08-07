@@ -1,5 +1,3 @@
-// lib/shared/constants/morocco_regions.dart
-
 const Map<String, List<String>> kMoroccoRegionsAndCities = {
   'Tanger-Tétouan-Al Hoceïma': [
     'Tanger-Assilah',

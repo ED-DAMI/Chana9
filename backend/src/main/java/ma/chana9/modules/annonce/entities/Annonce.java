@@ -135,6 +135,9 @@ public class Annonce {
 
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+    
+    @Column(name = "sold_at")
+    private LocalDateTime soldAt;
 
     public boolean isTopLot() {
         return topLotExpiresAt != null && topLotExpiresAt.isAfter(LocalDateTime.now());

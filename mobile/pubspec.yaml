@@ -29,6 +29,10 @@ dependencies:
   equatable: ^2.0.5
   geolocator: ^13.0.0
   geocoding: ^3.0.0
+  fl_chart: ^0.68.0
+
+
+
 
 dev_dependencies:
   flutter_test:
