@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ma_chana9_app/shared/enums/annonce_status.dart';
 
-part '../../data/entities/annonce_stats.freezed.dart';
+part 'annonce_stats.freezed.dart';
 
 @freezed
 abstract class AnnonceStats with _$AnnonceStats {

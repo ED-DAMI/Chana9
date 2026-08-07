@@ -30,7 +30,7 @@ public class AnnonceStatsService {
     public SellerGlobalStatsDTO getGlobalStats(UUID sellerId) {
         long totalViews     = annonceRepository.sumViewsBySeller(sellerId);
         long totalFavorites = annonceRepository.sumFavoritesBySeller(sellerId);
-        long totalContacts  = contactUnlockRepository.countBySellerIdAndStatus(
+        long totalContacts  = contactUnlockRepository.countByBuyer_IdAndStatus(
                 sellerId, ContactUnlockStatus.COMPLETED
         );
         int totalAnnonces  = annonceRepository.countTotalBySeller(sellerId);

@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ma_chana9_app/core/error/failure.dart';
@@ -10,7 +11,6 @@ import '../../domain/usecases/get_annonce_stats_by_seller.dart';
 import '../../domain/usecases/get_revenue_timeline.dart';
 import '../../domain/usecases/get_seller_global_stats.dart';
 import '../../domain/usecases/get_seller_revenue.dart';
-
 
 part 'stats_dashboard_bloc.freezed.dart';
 part 'stats_dashboard_event.dart';
@@ -34,7 +34,6 @@ class StatsDashboardBloc
     on<_RefreshDashboard>(_onRefreshDashboard);
   }
 
-  // Charge les 4 sources en parallèle
   Future<void> _onLoadDashboard(
       _LoadDashboard event, Emitter<StatsDashboardState> emit) async {
     emit(const StatsDashboardState.loading());
@@ -46,6 +45,7 @@ class StatsDashboardBloc
     final current = state;
     if (current is! _Loaded) return;
 
+
     emit(StatsDashboardState.loaded(
       globalStats: current.globalStats,
       revenue: current.revenue,
@@ -54,27 +54,47 @@ class StatsDashboardBloc
       selectedPeriod: event.period,
     ));
 
-    final results = await Future.wait([
-      getSellerRevenue(GetSellerRevenueParams(
-          sellerId: event.sellerId, period: event.period)),
-      getRevenueTimeline(GetRevenueTimelineParams(
-          sellerId: event.sellerId, period: event.period)),
-    ]);
+    final revenueResult = await getSellerRevenue(
+      GetSellerRevenueParams(
+        sellerId: event.sellerId,
+        period: event.period,
+      ),
+    );
 
-    final revenueResult = results[0];
-    final timelineResult = results[1];
+    final timelineResult = await getRevenueTimeline(
+      GetRevenueTimelineParams(
+        sellerId: event.sellerId,
+        period: event.period,
+      ),
+    );
 
-    if (revenueResult.isLeft() || timelineResult.isLeft()) {
-      final failure = revenueResult.fold((f) => f, (_) => null) ??
-          timelineResult.fold((f) => f, (_) => null)!;
-      emit(StatsDashboardState.error(failure: failure));
+
+    final revenueFailure = revenueResult.fold((f) => f, (_) => null);
+    if (revenueFailure != null) {
+      emit(StatsDashboardState.error(failure: revenueFailure));
       return;
     }
 
+    final timelineFailure = timelineResult.fold((f) => f, (_) => null);
+    if (timelineFailure != null) {
+      emit(StatsDashboardState.error(failure: timelineFailure));
+      return;
+    }
+
+    final newRevenue = revenueResult.fold(
+          (_) => current.revenue,
+          (revenue) => revenue,
+    );
+
+    final newTimeline = timelineResult.fold(
+          (_) => current.timeline,
+          (timeline) => timeline,
+    );
+
     emit(StatsDashboardState.loaded(
       globalStats: current.globalStats,
-      revenue: revenueResult.getOrElse(() => current.revenue),
-      timeline: timelineResult.fold((_) => current.timeline, (t) => t as List<RevenuePoint>),
+      revenue: newRevenue,
+      timeline: newTimeline,
       annonceStats: current.annonceStats,
       selectedPeriod: event.period,
     ));
@@ -89,39 +109,61 @@ class StatsDashboardBloc
     await _loadAll(event.sellerId, period, emit);
   }
 
-  // Charge les 4 sources en parallèle
-  Future<void> _loadAll(String sellerId, RevenuePeriod period,
-      Emitter<StatsDashboardState> emit) async {
-    final results = await Future.wait([
-      getSellerGlobalStats(
-          GetSellerGlobalStatsParams(sellerId: sellerId)),
-      getSellerRevenue(
-          GetSellerRevenueParams(sellerId: sellerId, period: period)),
-      getRevenueTimeline(
-          GetRevenueTimelineParams(sellerId: sellerId, period: period)),
-      getAnnonceStatsBySeller(
-          GetAnnonceStatsBySellerParams(sellerId: sellerId)),
-    ]);
+  Future<void> _loadAll(
+      String sellerId,
+      RevenuePeriod period,
+      Emitter<StatsDashboardState> emit,
+      ) async {
+    final Either<Failure, SellerGlobalStats> statsResult =
+    await getSellerGlobalStats(
+        GetSellerGlobalStatsParams(sellerId: sellerId));
 
-    final statsResult = results[0];
-    final revenueResult = results[1];
-    final timelineResult = results[2];
-    final annonceStatsResult = results[3];
+    final Either<Failure, SellerRevenue> revenueResult =
+    await getSellerRevenue(
+        GetSellerRevenueParams(sellerId: sellerId, period: period));
 
-    // Si l'une des requêtes échoue, on émet une erreur
-    for (final result in results) {
-      final failure = result.fold((f) => f, (_) => null);
-      if (failure != null) {
-        emit(StatsDashboardState.error(failure: failure as Failure));
-        return;
-      }
+    final Either<Failure, List<RevenuePoint>> timelineResult =
+    await getRevenueTimeline(
+        GetRevenueTimelineParams(sellerId: sellerId, period: period));
+
+    final Either<Failure, List<AnnonceStats>> annonceResult =
+    await getAnnonceStatsBySeller(
+        GetAnnonceStatsBySellerParams(sellerId: sellerId));
+
+    final statsFailure = statsResult.fold((f) => f, (_) => null);
+    if (statsFailure != null) {
+      emit(StatsDashboardState.error(failure: statsFailure));
+      return;
     }
 
+    final revenueFailure = revenueResult.fold((f) => f, (_) => null);
+    if (revenueFailure != null) {
+      emit(StatsDashboardState.error(failure: revenueFailure));
+      return;
+    }
+
+    final timelineFailure = timelineResult.fold((f) => f, (_) => null);
+    if (timelineFailure != null) {
+      emit(StatsDashboardState.error(failure: timelineFailure));
+      return;
+    }
+
+    final annonceFailure = annonceResult.fold((f) => f, (_) => null);
+    if (annonceFailure != null) {
+      emit(StatsDashboardState.error(failure: annonceFailure));
+      return;
+    }
+
+    final globalStats = statsResult.fold((_) => null, (v) => v)!;
+    final revenue = revenueResult.fold((_) => null, (v) => v)!;
+    final timeline = timelineResult.fold((_) => <RevenuePoint>[], (v) => v);
+    final annonceStats = annonceResult.fold((_) => <AnnonceStats>[], (v) => v);
+
     emit(StatsDashboardState.loaded(
-      globalStats: statsResult.getOrElse(() => throw Exception()),
-      revenue: revenueResult.getOrElse(() => throw Exception()),
-      timeline: timelineResult.fold((_) => [], (t) => t as List<RevenuePoint>),
-      annonceStats: annonceStatsResult.fold((_) => [], (t) => t as List<AnnonceStats>),
+      globalStats: globalStats,
+      revenue: revenue,
+      timeline: timeline,
+      annonceStats: annonceStats,
       selectedPeriod: period,
     ));
   }

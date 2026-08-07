@@ -12,6 +12,7 @@ import '../widgets/annonce_stats_card.dart';
 import '../widgets/period_selector.dart';
 import '../widgets/revenue_chart.dart';
 
+import '../widgets/revenue_summary_card.dart';
 import '../widgets/seller_kpi_card.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -66,7 +67,6 @@ class _SellerProfileView extends StatelessWidget {
             },
             child: CustomScrollView(
               slivers: [
-                // AppBar
                 SliverAppBar(
                   expandedHeight: 180,
                   pinned: true,
@@ -75,7 +75,6 @@ class _SellerProfileView extends StatelessWidget {
                   ),
                 ),
 
-                // Contenu
                 SliverToBoxAdapter(
                   child: state.when(
                     initial: () => const SizedBox.shrink(),
@@ -93,7 +92,6 @@ class _SellerProfileView extends StatelessWidget {
 
                           const SizedBox(height: 8),
 
-                          // Sélecteur période
                           _SectionTitle(title: 'Chiffre d\'affaires'),
                           PeriodSelector(
                             sellerId: user.id,
@@ -107,8 +105,6 @@ class _SellerProfileView extends StatelessWidget {
                           ),
 
                           const SizedBox(height: 8),
-
-                          // Stats par annonce
                           _SectionTitle(title: 'Mes annonces'),
                           if (annonceStats.isEmpty)
                             Padding(
@@ -127,7 +123,7 @@ class _SellerProfileView extends StatelessWidget {
 
                           const SizedBox(height: 16),
 
-                          // Menu profil
+
                           _ProfileMenu(user: user),
                           const SizedBox(height: 32),
                         ],

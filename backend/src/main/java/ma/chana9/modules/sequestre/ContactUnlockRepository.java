@@ -14,5 +14,5 @@ public interface ContactUnlockRepository extends JpaRepository<ContactUnlock, UU
 
     Optional<ContactUnlock> findByTransactionId(String transactionId);
 
-    long countBySellerIdAndStatus(UUID sellerId, ContactUnlockStatus contactUnlockStatus);
+    long countByBuyer_IdAndStatus(UUID sellerId, ContactUnlockStatus contactUnlockStatus);
 }
