@@ -88,6 +88,43 @@ class AnnonceDetailBloc extends Bloc<AnnonceDetailEvent, AnnonceDetailState> {
       },
     );
   }
+  Future<void> _onReport(
+      _Report event, Emitter<AnnonceDetailState> emit) async {
+    final result = await reportAnnonce(ReportAnnonceParams(
+      id: event.id,
+      reason: event.reason,
+      comment: event.comment,
+    ));
+    if (result.isLeft()) {
+      result.fold((f) {
+        if (f.statusCode == 409) {
+          emit(const AnnonceDetailState.failureWithCode('alreadyReported')); // ✅
+        } else if (f.statusCode == 403) {
+          emit(const AnnonceDetailState.failureWithCode('cannotReportOwnAnnonce')); // ✅
+        } else {
+          emit(AnnonceDetailState.failure(f.message));
+        }
+      }, (_) {});
+      return;
+    }
+    await _reloadAndSuccess(event.id, emit);
+  }
+
+  Future<void> _onAddFavorite(
+      _AddFavorite event, Emitter<AnnonceDetailState> emit) async {
+    final result = await addFavorite(AddFavoriteParams(id: event.id));
+    if (result.isLeft()) {
+      result.fold((f) {
+        if (f.statusCode == 409) {
+          emit(const AnnonceDetailState.failureWithCode('alreadyInFavorites')); // ✅
+        } else {
+          emit(AnnonceDetailState.failure(f.message));
+        }
+      }, (_) {});
+      return;
+    }
+    await _reloadAndSuccess(event.id, emit);
+  }
 
   Future<void> _onMarkAsSold(_MarkAsSold event, Emitter<AnnonceDetailState> emit) async {
     final result = await markAsSold(MarkAsSoldParams(id: event.id));

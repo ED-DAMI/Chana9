@@ -226,5 +226,8 @@
     "regionOptional": "الجهة (اختياري)",
     "newPassword": "كلمة السر الجديدة",
     "savedCredentials": "تسجّلت بياناتك",
-    "currentPassword": "Mot de passe actuel"
+    "currentPassword": "Mot de passe actuel",
+    "alreadyReported": "لقد أبلغت عن هذا الإعلان من قبل",
+    "cannotReportOwnAnnonce": "لا يمكنك الإبلاغ عن إعلانك الخاص",
+    "alreadyInFavorites": "تمت الإضافة إلى المفضلة مسبقاً"
    }

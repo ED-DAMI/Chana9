@@ -8,4 +8,5 @@ abstract class AnnonceDetailState with _$AnnonceDetailState {
   const factory AnnonceDetailState.actionSuccess(Annonce annonce) = _ActionSuccess;
   const factory AnnonceDetailState.deleted() = _Deleted;
   const factory AnnonceDetailState.failure(String message) = _Failure;
+  const factory AnnonceDetailState.failureWithCode(String code) = _FailureWithCode;
 }
