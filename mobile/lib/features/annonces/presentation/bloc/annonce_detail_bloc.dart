@@ -52,42 +52,73 @@ class AnnonceDetailBloc extends Bloc<AnnonceDetailEvent, AnnonceDetailState> {
     on<_Update>(_onUpdate);
   }
 
-  Future<void> _onLoad(_Load event, Emitter<AnnonceDetailState> emit) async {
+  Future<void> _reloadAndSuccess(
+      String id, Emitter<AnnonceDetailState> emit) async {
+    final r = await getAnnonceById(GetAnnonceByIdParams(id: id));
+    r.fold(
+          (f) => emit(AnnonceDetailState.failure(f.message)),
+          (a) => emit(AnnonceDetailState.actionSuccess(a)),
+    );
+  }
+
+  Future<void> _onLoad(
+      _Load event, Emitter<AnnonceDetailState> emit) async {
     emit(const AnnonceDetailState.loading());
-    final result = await getAnnonceById(GetAnnonceByIdParams(id: event.id));
+    final result =
+    await getAnnonceById(GetAnnonceByIdParams(id: event.id));
     result.fold(
           (f) => emit(AnnonceDetailState.failure(f.message)),
           (a) => emit(AnnonceDetailState.loaded(a)),
     );
   }
 
-  Future<void> _onSuspend(_Suspend event, Emitter<AnnonceDetailState> emit) async {
-    final result = await suspendAnnonce(SuspendAnnonceParams(id: event.id));
-    result.fold(
-          (f) => emit(AnnonceDetailState.failure(f.message)),
-          (_) async {
-        final r = await getAnnonceById(GetAnnonceByIdParams(id: event.id));
-        r.fold(
-              (f) => emit(AnnonceDetailState.failure(f.message)),
-              (a) => emit(AnnonceDetailState.actionSuccess(a)),
-        );
-      },
-    );
+  Future<void> _onSuspend(
+      _Suspend event, Emitter<AnnonceDetailState> emit) async {
+    final result =
+    await suspendAnnonce(SuspendAnnonceParams(id: event.id));
+    if (result.isLeft()) {
+      result.fold(
+              (f) => emit(AnnonceDetailState.failure(f.message)), (_) {});
+      return;
+    }
+    await _reloadAndSuccess(event.id, emit);
   }
 
-  Future<void> _onReactivate(_Reactivate event, Emitter<AnnonceDetailState> emit) async {
-    final result = await reactivateAnnonce(ReactivateAnnonceParams(id: event.id));
-    result.fold(
-          (f) => emit(AnnonceDetailState.failure(f.message)),
-          (_) async {
-        final r = await getAnnonceById(GetAnnonceByIdParams(id: event.id));
-        r.fold(
-              (f) => emit(AnnonceDetailState.failure(f.message)),
-              (a) => emit(AnnonceDetailState.actionSuccess(a)),
-        );
-      },
-    );
+  Future<void> _onReactivate(
+      _Reactivate event, Emitter<AnnonceDetailState> emit) async {
+    final result =
+    await reactivateAnnonce(ReactivateAnnonceParams(id: event.id));
+    if (result.isLeft()) {
+      result.fold(
+              (f) => emit(AnnonceDetailState.failure(f.message)), (_) {});
+      return;
+    }
+    await _reloadAndSuccess(event.id, emit);
   }
+
+  Future<void> _onMarkAsSold(
+      _MarkAsSold event, Emitter<AnnonceDetailState> emit) async {
+    final result = await markAsSold(MarkAsSoldParams(id: event.id));
+    if (result.isLeft()) {
+      result.fold(
+              (f) => emit(AnnonceDetailState.failure(f.message)), (_) {});
+      return;
+    }
+    await _reloadAndSuccess(event.id, emit);
+  }
+
+  Future<void> _onActivateTopLot(
+      _ActivateTopLot event, Emitter<AnnonceDetailState> emit) async {
+    final result = await activateTopLot(
+        ActivateTopLotParams(id: event.id, durationDays: event.durationDays));
+    if (result.isLeft()) {
+      result.fold(
+              (f) => emit(AnnonceDetailState.failure(f.message)), (_) {});
+      return;
+    }
+    await _reloadAndSuccess(event.id, emit);
+  }
+
   Future<void> _onReport(
       _Report event, Emitter<AnnonceDetailState> emit) async {
     final result = await reportAnnonce(ReportAnnonceParams(
@@ -98,9 +129,9 @@ class AnnonceDetailBloc extends Bloc<AnnonceDetailEvent, AnnonceDetailState> {
     if (result.isLeft()) {
       result.fold((f) {
         if (f.statusCode == 409) {
-          emit(const AnnonceDetailState.failureWithCode('alreadyReported')); // ✅
+          emit(const AnnonceDetailState.failureWithCode('alreadyReported'));
         } else if (f.statusCode == 403) {
-          emit(const AnnonceDetailState.failureWithCode('cannotReportOwnAnnonce')); // ✅
+          emit(const AnnonceDetailState.failureWithCode('cannotReportOwnAnnonce'));
         } else {
           emit(AnnonceDetailState.failure(f.message));
         }
@@ -116,7 +147,7 @@ class AnnonceDetailBloc extends Bloc<AnnonceDetailEvent, AnnonceDetailState> {
     if (result.isLeft()) {
       result.fold((f) {
         if (f.statusCode == 409) {
-          emit(const AnnonceDetailState.failureWithCode('alreadyInFavorites')); // ✅
+          emit(const AnnonceDetailState.failureWithCode('alreadyInFavorites'));
         } else {
           emit(AnnonceDetailState.failure(f.message));
         }
@@ -126,108 +157,34 @@ class AnnonceDetailBloc extends Bloc<AnnonceDetailEvent, AnnonceDetailState> {
     await _reloadAndSuccess(event.id, emit);
   }
 
-  Future<void> _onMarkAsSold(_MarkAsSold event, Emitter<AnnonceDetailState> emit) async {
-    final result = await markAsSold(MarkAsSoldParams(id: event.id));
-    result.fold(
-          (f) => emit(AnnonceDetailState.failure(f.message)),
-          (_) async {
-        final r = await getAnnonceById(GetAnnonceByIdParams(id: event.id));
-        r.fold(
-              (f) => emit(AnnonceDetailState.failure(f.message)),
-              (a) => emit(AnnonceDetailState.actionSuccess(a)),
-        );
-      },
-    );
+  Future<void> _onRemoveFavorite(
+      _RemoveFavorite event, Emitter<AnnonceDetailState> emit) async {
+    final result =
+    await removeFavorite(RemoveFavoriteParams(id: event.id));
+    if (result.isLeft()) {
+      result.fold(
+              (f) => emit(AnnonceDetailState.failure(f.message)), (_) {});
+      return;
+    }
+    await _reloadAndSuccess(event.id, emit);
   }
 
-  Future<void> _onActivateTopLot(_ActivateTopLot event, Emitter<AnnonceDetailState> emit) async {
-    final result = await activateTopLot(
-        ActivateTopLotParams(id: event.id, durationDays: event.durationDays));
-    result.fold(
-          (f) => emit(AnnonceDetailState.failure(f.message)),
-          (_) async {
-        final r = await getAnnonceById(GetAnnonceByIdParams(id: event.id));
-        r.fold(
-              (f) => emit(AnnonceDetailState.failure(f.message)),
-              (a) => emit(AnnonceDetailState.actionSuccess(a)),
-        );
-      },
-    );
-  }
-
-  Future<void> _onReport(_Report event, Emitter<AnnonceDetailState> emit) async {
-    final result = await reportAnnonce(ReportAnnonceParams(
-      id: event.id,
-      reason: event.reason,
-      comment: event.comment,
-    ));
-    result.fold(
-          (f) {
-        if (f.statusCode == 409) {
-          emit(const AnnonceDetailState.failure('Vous avez déjà signalé cette annonce'));
-        } else if (f.statusCode == 403) {
-          emit(const AnnonceDetailState.failure('Vous ne pouvez pas signaler votre propre annonce'));
-        } else {
-          emit(AnnonceDetailState.failure(f.message));
-        }
-      },
-          (_) async {
-        final r = await getAnnonceById(GetAnnonceByIdParams(id: event.id));
-        r.fold(
-              (f) => emit(AnnonceDetailState.failure(f.message)),
-              (a) => emit(AnnonceDetailState.actionSuccess(a)),
-        );
-      },
-    );
-  }
-
-  Future<void> _onAddFavorite(_AddFavorite event, Emitter<AnnonceDetailState> emit) async {
-    final result = await addFavorite(AddFavoriteParams(id: event.id));
-    result.fold(
-          (f) {
-        if (f.statusCode == 409) {
-          emit(const AnnonceDetailState.failure('Déjà ajouté aux favoris'));
-        } else {
-          emit(AnnonceDetailState.failure(f.message));
-        }
-      },
-          (_) async {
-        final r = await getAnnonceById(GetAnnonceByIdParams(id: event.id));
-        r.fold(
-              (f) => emit(AnnonceDetailState.failure(f.message)),
-              (a) => emit(AnnonceDetailState.actionSuccess(a)),
-        );
-      },
-    );
-  }
-
-  Future<void> _onRemoveFavorite(_RemoveFavorite event, Emitter<AnnonceDetailState> emit) async {
-    final result = await removeFavorite(RemoveFavoriteParams(id: event.id));
-    result.fold(
-          (f) => emit(AnnonceDetailState.failure(f.message)),
-          (_) async {
-        final r = await getAnnonceById(GetAnnonceByIdParams(id: event.id));
-        r.fold(
-              (f) => emit(AnnonceDetailState.failure(f.message)),
-              (a) => emit(AnnonceDetailState.actionSuccess(a)),
-        );
-      },
-    );
-  }
-
-
-  Future<void> _onDelete(_Delete event, Emitter<AnnonceDetailState> emit) async {
+  Future<void> _onDelete(
+      _Delete event, Emitter<AnnonceDetailState> emit) async {
     emit(const AnnonceDetailState.loading());
-    final result = await deleteAnnonce(DeleteAnnonceParams(id: event.id));
+    final result =
+    await deleteAnnonce(DeleteAnnonceParams(id: event.id));
     result.fold(
-    (f) => emit(AnnonceDetailState.failure(f.message)),
+          (f) => emit(AnnonceDetailState.failure(f.message)),
           (_) => emit(const AnnonceDetailState.deleted()),
     );
   }
 
-  Future<void> _onUpdate(_Update event, Emitter<AnnonceDetailState> emit) async {
+  Future<void> _onUpdate(
+      _Update event, Emitter<AnnonceDetailState> emit) async {
     emit(const AnnonceDetailState.loading());
-    final result = await updateAnnonce(UpdateAnnonceParams(id: event.id, body: event.body));
+    final result = await updateAnnonce(
+        UpdateAnnonceParams(id: event.id, body: event.body));
     result.fold(
           (f) => emit(AnnonceDetailState.failure(f.message)),
           (a) => emit(AnnonceDetailState.loaded(a)),

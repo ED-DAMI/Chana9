@@ -974,7 +974,7 @@ extension AnnonceDetailStatePatterns on AnnonceDetailState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial value)?  initial,TResult Function( _Loading value)?  loading,TResult Function( _Loaded value)?  loaded,TResult Function( _ActionSuccess value)?  actionSuccess,TResult Function( _Deleted value)?  deleted,TResult Function( _Failure value)?  failure,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial value)?  initial,TResult Function( _Loading value)?  loading,TResult Function( _Loaded value)?  loaded,TResult Function( _ActionSuccess value)?  actionSuccess,TResult Function( _Deleted value)?  deleted,TResult Function( _Failure value)?  failure,TResult Function( _FailureWithCode value)?  failureWithCode,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
@@ -983,7 +983,8 @@ return loading(_that);case _Loaded() when loaded != null:
 return loaded(_that);case _ActionSuccess() when actionSuccess != null:
 return actionSuccess(_that);case _Deleted() when deleted != null:
 return deleted(_that);case _Failure() when failure != null:
-return failure(_that);case _:
+return failure(_that);case _FailureWithCode() when failureWithCode != null:
+return failureWithCode(_that);case _:
   return orElse();
 
 }
@@ -1001,7 +1002,7 @@ return failure(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial value)  initial,required TResult Function( _Loading value)  loading,required TResult Function( _Loaded value)  loaded,required TResult Function( _ActionSuccess value)  actionSuccess,required TResult Function( _Deleted value)  deleted,required TResult Function( _Failure value)  failure,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial value)  initial,required TResult Function( _Loading value)  loading,required TResult Function( _Loaded value)  loaded,required TResult Function( _ActionSuccess value)  actionSuccess,required TResult Function( _Deleted value)  deleted,required TResult Function( _Failure value)  failure,required TResult Function( _FailureWithCode value)  failureWithCode,}){
 final _that = this;
 switch (_that) {
 case _Initial():
@@ -1010,7 +1011,8 @@ return loading(_that);case _Loaded():
 return loaded(_that);case _ActionSuccess():
 return actionSuccess(_that);case _Deleted():
 return deleted(_that);case _Failure():
-return failure(_that);case _:
+return failure(_that);case _FailureWithCode():
+return failureWithCode(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1027,7 +1029,7 @@ return failure(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial value)?  initial,TResult? Function( _Loading value)?  loading,TResult? Function( _Loaded value)?  loaded,TResult? Function( _ActionSuccess value)?  actionSuccess,TResult? Function( _Deleted value)?  deleted,TResult? Function( _Failure value)?  failure,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial value)?  initial,TResult? Function( _Loading value)?  loading,TResult? Function( _Loaded value)?  loaded,TResult? Function( _ActionSuccess value)?  actionSuccess,TResult? Function( _Deleted value)?  deleted,TResult? Function( _Failure value)?  failure,TResult? Function( _FailureWithCode value)?  failureWithCode,}){
 final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
@@ -1036,7 +1038,8 @@ return loading(_that);case _Loaded() when loaded != null:
 return loaded(_that);case _ActionSuccess() when actionSuccess != null:
 return actionSuccess(_that);case _Deleted() when deleted != null:
 return deleted(_that);case _Failure() when failure != null:
-return failure(_that);case _:
+return failure(_that);case _FailureWithCode() when failureWithCode != null:
+return failureWithCode(_that);case _:
   return null;
 
 }
@@ -1053,7 +1056,7 @@ return failure(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( Annonce annonce)?  loaded,TResult Function( Annonce annonce)?  actionSuccess,TResult Function()?  deleted,TResult Function( String message)?  failure,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( Annonce annonce)?  loaded,TResult Function( Annonce annonce)?  actionSuccess,TResult Function()?  deleted,TResult Function( String message)?  failure,TResult Function( String code)?  failureWithCode,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
@@ -1061,7 +1064,8 @@ return loading();case _Loaded() when loaded != null:
 return loaded(_that.annonce);case _ActionSuccess() when actionSuccess != null:
 return actionSuccess(_that.annonce);case _Deleted() when deleted != null:
 return deleted();case _Failure() when failure != null:
-return failure(_that.message);case _:
+return failure(_that.message);case _FailureWithCode() when failureWithCode != null:
+return failureWithCode(_that.code);case _:
   return orElse();
 
 }
@@ -1079,7 +1083,7 @@ return failure(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( Annonce annonce)  loaded,required TResult Function( Annonce annonce)  actionSuccess,required TResult Function()  deleted,required TResult Function( String message)  failure,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( Annonce annonce)  loaded,required TResult Function( Annonce annonce)  actionSuccess,required TResult Function()  deleted,required TResult Function( String message)  failure,required TResult Function( String code)  failureWithCode,}) {final _that = this;
 switch (_that) {
 case _Initial():
 return initial();case _Loading():
@@ -1087,7 +1091,8 @@ return loading();case _Loaded():
 return loaded(_that.annonce);case _ActionSuccess():
 return actionSuccess(_that.annonce);case _Deleted():
 return deleted();case _Failure():
-return failure(_that.message);case _:
+return failure(_that.message);case _FailureWithCode():
+return failureWithCode(_that.code);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1104,7 +1109,7 @@ return failure(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( Annonce annonce)?  loaded,TResult? Function( Annonce annonce)?  actionSuccess,TResult? Function()?  deleted,TResult? Function( String message)?  failure,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( Annonce annonce)?  loaded,TResult? Function( Annonce annonce)?  actionSuccess,TResult? Function()?  deleted,TResult? Function( String message)?  failure,TResult? Function( String code)?  failureWithCode,}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
@@ -1112,7 +1117,8 @@ return loading();case _Loaded() when loaded != null:
 return loaded(_that.annonce);case _ActionSuccess() when actionSuccess != null:
 return actionSuccess(_that.annonce);case _Deleted() when deleted != null:
 return deleted();case _Failure() when failure != null:
-return failure(_that.message);case _:
+return failure(_that.message);case _FailureWithCode() when failureWithCode != null:
+return failureWithCode(_that.code);case _:
   return null;
 
 }
@@ -1425,6 +1431,72 @@ class __$FailureCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') $Res call({Object? message = null,}) {
   return _then(_Failure(
 null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class _FailureWithCode implements AnnonceDetailState {
+  const _FailureWithCode(this.code);
+  
+
+ final  String code;
+
+/// Create a copy of AnnonceDetailState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$FailureWithCodeCopyWith<_FailureWithCode> get copyWith => __$FailureWithCodeCopyWithImpl<_FailureWithCode>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FailureWithCode&&(identical(other.code, code) || other.code == code));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,code);
+
+@override
+String toString() {
+  return 'AnnonceDetailState.failureWithCode(code: $code)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$FailureWithCodeCopyWith<$Res> implements $AnnonceDetailStateCopyWith<$Res> {
+  factory _$FailureWithCodeCopyWith(_FailureWithCode value, $Res Function(_FailureWithCode) _then) = __$FailureWithCodeCopyWithImpl;
+@useResult
+$Res call({
+ String code
+});
+
+
+
+
+}
+/// @nodoc
+class __$FailureWithCodeCopyWithImpl<$Res>
+    implements _$FailureWithCodeCopyWith<$Res> {
+  __$FailureWithCodeCopyWithImpl(this._self, this._then);
+
+  final _FailureWithCode _self;
+  final $Res Function(_FailureWithCode) _then;
+
+/// Create a copy of AnnonceDetailState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? code = null,}) {
+  return _then(_FailureWithCode(
+null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
