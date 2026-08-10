@@ -169,7 +169,7 @@ public class UserService {
 
 	public void changePassword(UUID userId, PasswordUpdateDTO dto) {
 		User user = findUserById(userId);
-		if (!passwordEncoder.matches(dto.oldPassword(), user.getPasswordHash())) {
+		if (!passwordEncoder.matches(dto.currentPassword(), user.getPasswordHash())) {
 			throw new ApiException(HttpStatus.BAD_REQUEST, ErrorKeys.User.WRONG_PASSWORD);
 		}
 		user.setPasswordHash(passwordEncoder.encode(dto.newPassword()));
