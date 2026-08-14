@@ -25,7 +25,7 @@ public interface UserMapper {
     @Mapping(target = "phone",           source = "request.phone")
     @Mapping(target = "fullName",        source = "request", qualifiedByName = "resolveFullName")
     @Mapping(target = "passwordHash",    source = "passwordHash")
-    @Mapping(target = "role",            expression = "java(Role.BUYER)")
+    @Mapping(target = "role",            expression = "java(Role.USER)")
     @Mapping(target = "kycVerified",     constant = "false")
     @Mapping(target = "kycSubmittedAt",  ignore = true)
     @Mapping(target = "profilePhotoUrl", ignore = true)
