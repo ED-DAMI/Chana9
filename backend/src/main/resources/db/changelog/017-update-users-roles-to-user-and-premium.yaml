@@ -1,0 +1,31 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-update-users-roles-to-user-and-premium
+      author: chana9
+      changes:
+        - sql:
+            sql: |
+              ALTER TABLE users
+              DROP CONSTRAINT IF EXISTS chk_users_role;
+
+              UPDATE users
+              SET role = 'USER'
+              WHERE role IN ('SELLER', 'BUYER');
+
+              ALTER TABLE users
+              ADD CONSTRAINT chk_users_role
+              CHECK (role IN ('USER', 'USER_PREMIUM', 'ADMIN'));
+
+      rollback:
+        - sql:
+            sql: |
+              ALTER TABLE users
+              DROP CONSTRAINT IF EXISTS chk_users_role;
+
+              UPDATE users
+              SET role = 'SELLER'
+              WHERE role IN ('USER', 'USER_PREMIUM');
+
+              ALTER TABLE users
+              ADD CONSTRAINT chk_users_role
+              CHECK (role IN ('SELLER', 'BUYER', 'ADMIN'));
