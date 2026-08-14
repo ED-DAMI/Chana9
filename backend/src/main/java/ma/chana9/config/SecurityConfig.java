@@ -1,7 +1,6 @@
 package ma.chana9.config;
 
 import lombok.RequiredArgsConstructor;
-import ma.chana9.modules.auth.LogFilter;
 import ma.chana9.modules.user.CustomUserDetailsService;
 import ma.chana9.shared.constants.ApiPaths;
 import ma.chana9.shared.enums.Role;
@@ -33,7 +32,7 @@ public class SecurityConfig {
     private final CustomUserDetailsService customUserDetailsService;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, LogFilter logFilter) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
@@ -57,7 +56,6 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(logFilter,UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
