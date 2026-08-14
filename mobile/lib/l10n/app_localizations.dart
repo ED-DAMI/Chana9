@@ -1459,6 +1459,24 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Déjà ajouté aux favoris'**
   String get alreadyInFavorites;
+
+  /// No description provided for @roleUser.
+  ///
+  /// In fr, this message translates to:
+  /// **'Utilisateur'**
+  String get roleUser;
+
+  /// No description provided for @roleUserPremium.
+  ///
+  /// In fr, this message translates to:
+  /// **'Utilisateur Premium'**
+  String get roleUserPremium;
+
+  /// No description provided for @roleAdmin.
+  ///
+  /// In fr, this message translates to:
+  /// **'Administrateur'**
+  String get roleAdmin;
 }
 
 class _AppLocalizationsDelegate

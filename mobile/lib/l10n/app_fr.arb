@@ -244,5 +244,8 @@
 "currentPassword": "Mot de passe actuel",
 "alreadyReported": "Vous avez déjà signalé cette annonce",
 "cannotReportOwnAnnonce": "Vous ne pouvez pas signaler votre propre annonce",
-"alreadyInFavorites": "Déjà ajouté aux favoris"
+"alreadyInFavorites": "Déjà ajouté aux favoris",
+"roleUser": "Utilisateur",
+"roleUserPremium": "Utilisateur Premium",
+"roleAdmin": "Administrateur"
 }

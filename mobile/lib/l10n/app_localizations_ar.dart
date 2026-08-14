@@ -694,4 +694,13 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get alreadyInFavorites => 'تمت الإضافة إلى المفضلة مسبقاً';
+
+  @override
+  String get roleUser => 'مستخدم';
+
+  @override
+  String get roleUserPremium => 'مستخدم مميز';
+
+  @override
+  String get roleAdmin => 'مسؤول';
 }

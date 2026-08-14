@@ -695,4 +695,13 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get alreadyInFavorites => 'Déjà ajouté aux favoris';
+
+  @override
+  String get roleUser => 'Utilisateur';
+
+  @override
+  String get roleUserPremium => 'Utilisateur Premium';
+
+  @override
+  String get roleAdmin => 'Administrateur';
 }

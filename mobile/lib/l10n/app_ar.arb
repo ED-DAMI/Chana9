@@ -229,5 +229,8 @@
     "currentPassword": "Mot de passe actuel",
     "alreadyReported": "لقد أبلغت عن هذا الإعلان من قبل",
     "cannotReportOwnAnnonce": "لا يمكنك الإبلاغ عن إعلانك الخاص",
-    "alreadyInFavorites": "تمت الإضافة إلى المفضلة مسبقاً"
+    "alreadyInFavorites": "تمت الإضافة إلى المفضلة مسبقاً",
+    "roleUser": "مستخدم",
+    "roleUserPremium": "مستخدم مميز",
+    "roleAdmin": "مسؤول"
    }

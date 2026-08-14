@@ -29,7 +29,7 @@ class ProfilePage extends StatelessWidget {
         if (user == null) {
           return const Scaffold(body: Center(child: CircularProgressIndicator()));
         }
-        if (user.role == Role.seller) {
+        if (user.role == Role.user) {
           return BlocProvider(
             create: (_) => sl<StatsDashboardBloc>()
               ..add(StatsDashboardEvent.loadDashboard(sellerId: user.id)),
