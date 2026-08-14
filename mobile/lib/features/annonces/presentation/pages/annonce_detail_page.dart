@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ma_chana9_app/features/annonces/presentation/bloc/annonce_detail_bloc.dart';
+import 'package:ma_chana9_app/features/annonces/presentation/pages/report_sheet.dart';
 import 'package:ma_chana9_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:ma_chana9_app/shared/enums/annonce_status.dart';
 import '../../../../injection_container.dart';
@@ -303,7 +304,6 @@ class _AnnonceDetailView extends StatelessWidget {
           ),
         ],
       ),
-      // ✅ Boutons contact visibles uniquement si pas propriétaire
       bottomNavigationBar:
       isOwner ? null : _buildBottomContact(theme, l10n, context),
     );
@@ -371,10 +371,15 @@ class _AnnonceDetailView extends StatelessWidget {
             id: annonce.id, durationDays: 7));
         break;
       case 'report':
-        bloc.add(AnnonceDetailEvent.report(
-          id: annonce.id,
-          reason: 'inappropriate',
-        ));
+        showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          builder: (_) => BlocProvider.value(
+            value: bloc,
+            child: ReportSheet(annonceId: annonce.id),
+          ),
+        );
         break;
     }
   }
