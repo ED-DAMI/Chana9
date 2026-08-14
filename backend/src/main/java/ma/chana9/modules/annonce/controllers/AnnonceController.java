@@ -21,21 +21,25 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+
 @RestController
 @RequestMapping(ApiPaths.Annonces.BASE)
 @RequiredArgsConstructor
 public class AnnonceController {
+
     private final AnnonceService annonceService;
+
     @PostMapping
-    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN', 'BUYER')")
+    @PreAuthorize("hasAnyRole('USER', 'USER_PREMIUM', 'ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<AnnonceResponse> create(
             @Valid @RequestBody AnnonceRequest request,
             @AuthenticationPrincipal UUID userId) {
         return ApiResponse.success(null, annonceService.create(request, userId));
     }
+
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN', 'BUYER')")
+    @PreAuthorize("hasAnyRole('USER', 'USER_PREMIUM', 'ADMIN')")
     public ApiResponse<AnnonceResponse> update(
             @PathVariable UUID id,
             @Valid @RequestBody AnnonceRequest request,
@@ -44,7 +48,7 @@ public class AnnonceController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN', 'BUYER')")
+    @PreAuthorize("hasAnyRole('USER', 'USER_PREMIUM', 'ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(
             @PathVariable UUID id,
@@ -58,7 +62,6 @@ public class AnnonceController {
     }
 
     @GetMapping("/search")
-    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN', 'BUYER')")
     public ApiResponse<Page<AnnonceResponse>> search(
             @Valid AnnonceSearchRequest request,
             Pageable pageable) {
@@ -66,7 +69,6 @@ public class AnnonceController {
     }
 
     @GetMapping("/seller/{sellerId}")
-    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN', 'BUYER')")
     public ApiResponse<Page<AnnonceResponse>> findBySeller(
             @PathVariable UUID sellerId,
             Pageable pageable) {
@@ -74,7 +76,7 @@ public class AnnonceController {
     }
 
     @PatchMapping("/{id}/suspend")
-    @PreAuthorize("hasAnyRole('ELEVEUR', 'ADMIN', 'ACHETEUR')")
+    @PreAuthorize("hasAnyRole('USER', 'USER_PREMIUM', 'ADMIN')")
     public ApiResponse<AnnonceResponse> suspend(
             @PathVariable UUID id,
             @AuthenticationPrincipal UUID userId) {
@@ -82,7 +84,7 @@ public class AnnonceController {
     }
 
     @PatchMapping("/{id}/reactivate")
-    @PreAuthorize("hasAnyRole('ELEVEUR', 'ADMIN', 'ACHETEUR')")
+    @PreAuthorize("hasAnyRole('USER', 'USER_PREMIUM', 'ADMIN')")
     public ApiResponse<AnnonceResponse> reactivate(
             @PathVariable UUID id,
             @AuthenticationPrincipal UUID userId) {
@@ -98,19 +100,16 @@ public class AnnonceController {
     }
 
     @PostMapping("/{id}/top-lot/{durationDays}")
-    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN', 'BUYER')")
+    @PreAuthorize("hasAnyRole('USER_PREMIUM', 'ADMIN')")
     public ApiResponse<AnnonceResponse> activateTopLot(
             @PathVariable UUID id,
             @PathVariable int durationDays,
             @AuthenticationPrincipal UUID userId) {
-        return ApiResponse.success(
-                null,
-                annonceService.activateTopLot(id, userId, durationDays)
-        );
+        return ApiResponse.success(null, annonceService.activateTopLot(id, userId, durationDays));
     }
 
     @PostMapping("/{id}/favorites")
-    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN', 'BUYER')")
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.CREATED)
     public void addFavorite(
             @PathVariable UUID id,
@@ -119,7 +118,7 @@ public class AnnonceController {
     }
 
     @DeleteMapping("/{id}/favorites")
-    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN', 'BUYER')")
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeFavorite(
             @PathVariable UUID id,
@@ -128,42 +127,34 @@ public class AnnonceController {
     }
 
     @GetMapping("/favorites")
-    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN', 'BUYER')")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<Page<AnnonceResponse>> findFavorites(
             @AuthenticationPrincipal UUID userId,
             Pageable pageable) {
-        return ApiResponse.success(
-                null,
-                annonceService.findFavorites(userId, pageable)
-        );
+        return ApiResponse.success(null, annonceService.findFavorites(userId, pageable));
     }
 
     @PostMapping("/{id}/reports")
-    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN', 'BUYER')")
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<AnnonceReportResponse> report(
             @PathVariable UUID id,
             @Valid @RequestBody AnnonceReportRequest request,
             @AuthenticationPrincipal UUID userId) {
-        return ApiResponse.success(
-                null,
-                annonceService.report(id, userId, request)
-        );
+        return ApiResponse.success(null, annonceService.report(id, userId, request));
     }
 
     @PostMapping("/alerts")
-    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN', 'BUYER')")
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<AnnonceAlert> createAlert(
             @Valid @RequestBody AnnonceAlertRequest request,
             @AuthenticationPrincipal UUID userId) {
-        return ApiResponse.success(
-                null,
-                annonceService.createAlert(userId, request)
-        );
+        return ApiResponse.success(null, annonceService.createAlert(userId, request));
     }
+
     @DeleteMapping("/alerts/{alertId}")
-    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN', 'BUYER')")
+    @PreAuthorize("isAuthenticated()")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteAlert(
             @PathVariable UUID alertId,
@@ -172,12 +163,9 @@ public class AnnonceController {
     }
 
     @GetMapping("/alerts")
-    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN', 'BUYER')")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<List<AnnonceAlert>> findAlerts(
             @AuthenticationPrincipal UUID userId) {
-        return ApiResponse.success(
-                null,
-                annonceService.findAlertsByBuyer(userId)
-        );
+        return ApiResponse.success(null, annonceService.findAlertsByBuyer(userId));
     }
 }

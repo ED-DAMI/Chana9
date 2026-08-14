@@ -2,10 +2,10 @@ import 'package:json_annotation/json_annotation.dart';
 
 @JsonEnum(valueField: 'value')
 enum Role {
-  @JsonValue('BUYER')
-  buyer('BUYER'),
-  @JsonValue('SELLER')
-  seller('SELLER'),
+  @JsonValue('USER')
+  user('USER'),
+  @JsonValue('USER_PREMIUM')
+  userPremium('USER_PREMIUM'),
   @JsonValue('ADMIN')
   admin('ADMIN');
 
@@ -14,8 +14,8 @@ enum Role {
 
   static Role fromJson(String value) => Role.values.firstWhere(
         (e) => e.value == value,
-        orElse: () => Role.buyer,
-      );
+    orElse: () => Role.user,
+  );
 
   String toJson() => value;
 }

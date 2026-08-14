@@ -1441,6 +1441,42 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Mot de passe actuel'**
   String get currentPassword;
+
+  /// No description provided for @alreadyReported.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vous avez déjà signalé cette annonce'**
+  String get alreadyReported;
+
+  /// No description provided for @cannotReportOwnAnnonce.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vous ne pouvez pas signaler votre propre annonce'**
+  String get cannotReportOwnAnnonce;
+
+  /// No description provided for @alreadyInFavorites.
+  ///
+  /// In fr, this message translates to:
+  /// **'Déjà ajouté aux favoris'**
+  String get alreadyInFavorites;
+
+  /// No description provided for @roleUser.
+  ///
+  /// In fr, this message translates to:
+  /// **'Utilisateur'**
+  String get roleUser;
+
+  /// No description provided for @roleUserPremium.
+  ///
+  /// In fr, this message translates to:
+  /// **'Utilisateur Premium'**
+  String get roleUserPremium;
+
+  /// No description provided for @roleAdmin.
+  ///
+  /// In fr, this message translates to:
+  /// **'Administrateur'**
+  String get roleAdmin;
 }
 
 class _AppLocalizationsDelegate

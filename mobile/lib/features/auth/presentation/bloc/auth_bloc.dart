@@ -100,9 +100,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       currentPassword: event.currentPassword,
       newPassword: event.newPassword,
     ));
-    result.fold(
-          (f) => emit(AuthState.failure(f.message)),
-          (_) => emit(const AuthState.passwordSuccess()),
+    await result.fold(
+          (f) async => emit(AuthState.failure(f.message)),
+          (_) async {
+        emit(const AuthState.passwordSuccess());
+        final userResult = await getCurrentUser(const NoParams());
+        userResult.fold(
+              (f) => emit(const AuthState.unauthenticated()),
+              (user) => emit(AuthState.authenticated(user)),
+        );
+      },
     );
   }
 

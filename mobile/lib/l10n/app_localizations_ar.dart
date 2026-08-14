@@ -685,4 +685,22 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get currentPassword => 'Mot de passe actuel';
+
+  @override
+  String get alreadyReported => 'لقد أبلغت عن هذا الإعلان من قبل';
+
+  @override
+  String get cannotReportOwnAnnonce => 'لا يمكنك الإبلاغ عن إعلانك الخاص';
+
+  @override
+  String get alreadyInFavorites => 'تمت الإضافة إلى المفضلة مسبقاً';
+
+  @override
+  String get roleUser => 'مستخدم';
+
+  @override
+  String get roleUserPremium => 'مستخدم مميز';
+
+  @override
+  String get roleAdmin => 'مسؤول';
 }

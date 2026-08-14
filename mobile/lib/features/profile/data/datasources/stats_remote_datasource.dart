@@ -18,7 +18,7 @@ class StatsRemoteDataSourceImpl implements StatsRemoteDataSource {
 
   StatsRemoteDataSourceImpl({required this.dioClient});
 
-  static const String _base = '/api/v1/users';
+  static const String _base = '/annonces/stats';
 
   Map<String, dynamic> _data(dynamic response) =>
       response['data'] as Map<String, dynamic>;
@@ -29,7 +29,7 @@ class StatsRemoteDataSourceImpl implements StatsRemoteDataSource {
   @override
   Future<SellerGlobalStatsModel> getSellerGlobalStats(
       String sellerId) async {
-    final response = await dioClient.get('$_base/$sellerId/stats');
+    final response = await dioClient.get('$_base/me');
     return SellerGlobalStatsModel.fromJson(_data(response.data));
   }
 
@@ -37,7 +37,7 @@ class StatsRemoteDataSourceImpl implements StatsRemoteDataSource {
   Future<SellerRevenueModel> getSellerRevenue(
       String sellerId, String period) async {
     final response = await dioClient.get(
-      '$_base/$sellerId/revenue',
+      '$_base/me/revenue',
       queryParameters: {'period': period},
     );
     return SellerRevenueModel.fromJson(_data(response.data));
@@ -47,7 +47,7 @@ class StatsRemoteDataSourceImpl implements StatsRemoteDataSource {
   Future<List<RevenuePointModel>> getRevenueTimeline(
       String sellerId, String period) async {
     final response = await dioClient.get(
-      '$_base/$sellerId/revenue/timeline',
+      '$_base/me/revenue/chart',
       queryParameters: {'period': period},
     );
     return _dataList(response.data)
@@ -58,8 +58,7 @@ class StatsRemoteDataSourceImpl implements StatsRemoteDataSource {
   @override
   Future<List<AnnonceStatsModel>> getAnnonceStatsBySeller(
       String sellerId) async {
-    final response =
-    await dioClient.get('$_base/$sellerId/annonces/stats');
+    final response = await dioClient.get('$_base/me/annonces');
     return _dataList(response.data)
         .map((e) => AnnonceStatsModel.fromJson(e as Map<String, dynamic>))
         .toList();

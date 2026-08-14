@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:ma_chana9_app/features/annonces/presentation/bloc/annonce_detail_bloc.dart';
-
+import 'package:ma_chana9_app/features/annonces/presentation/pages/report_sheet.dart';
+import 'package:ma_chana9_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:ma_chana9_app/shared/enums/annonce_status.dart';
 import '../../../../injection_container.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -31,6 +31,17 @@ class AnnonceDetailPage extends StatelessWidget {
             },
             deleted: () => Navigator.of(context).pop(),
             failure: (message) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(message), backgroundColor: Colors.red),
+              );
+            },
+            failureWithCode: (code) {
+              final message = switch (code) {
+                'alreadyReported' => l10n.alreadyReported,
+                'cannotReportOwnAnnonce' => l10n.cannotReportOwnAnnonce,
+                'alreadyInFavorites' => l10n.alreadyInFavorites,
+                _ => l10n.error,
+              };
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(message), backgroundColor: Colors.red),
               );
@@ -65,6 +76,12 @@ class _AnnonceDetailView extends StatelessWidget {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
 
+    // ✅ Récupérer l'utilisateur connecté depuis AuthBloc
+    final currentUser = context.read<AuthBloc>().state.whenOrNull(
+      authenticated: (user) => user,
+    );
+    final isOwner = currentUser != null && currentUser.id == annonce.sellerId;
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -75,36 +92,48 @@ class _AnnonceDetailView extends StatelessWidget {
               background: AnnoncePhotoCarousel(annonce: annonce, height: 350),
             ),
             actions: [
-              IconButton(
-                icon: const Icon(Icons.favorite_border),
-                onPressed: () => context
-                    .read<AnnonceDetailBloc>()
-                    .add(AnnonceDetailEvent.addFavorite(annonce.id)),
-              ),
-              PopupMenuButton<String>(
-                onSelected: (value) =>
-                    _handleMenuAction(context, value, annonce),
-                itemBuilder: (_) => [
-                  if (annonce.status == AnnonceStatus.active)
+              if (!isOwner)
+                IconButton(
+                  icon: const Icon(Icons.favorite_border),
+                  onPressed: () => context
+                      .read<AnnonceDetailBloc>()
+                      .add(AnnonceDetailEvent.addFavorite(annonce.id)),
+                ),
+              if (isOwner)
+                PopupMenuButton<String>(
+                  onSelected: (value) =>
+                      _handleMenuAction(context, value, annonce),
+                  itemBuilder: (_) => [
+                    if (annonce.status == AnnonceStatus.active)
+                      PopupMenuItem(
+                          value: 'suspend', child: Text(l10n.suspend)),
+                    if (annonce.status == AnnonceStatus.suspended)
+                      PopupMenuItem(
+                          value: 'reactivate', child: Text(l10n.reactivate)),
+                    if (annonce.status == AnnonceStatus.active)
+                      PopupMenuItem(
+                          value: 'sold', child: Text(l10n.markAsSold)),
                     PopupMenuItem(
-                        value: 'suspend', child: Text(l10n.suspend)),
-                  if (annonce.status == AnnonceStatus.suspended)
+                        value: 'top_lot', child: Text(l10n.promote)),
                     PopupMenuItem(
-                        value: 'reactivate', child: Text(l10n.reactivate)),
-                  if (annonce.status == AnnonceStatus.active)
+                        value: 'edit', child: Text(l10n.edit_annonce)),
                     PopupMenuItem(
-                        value: 'sold', child: Text(l10n.markAsSold)),
-                  PopupMenuItem(
-                      value: 'top_lot', child: Text(l10n.promote)),
-                  PopupMenuItem(
-                      value: 'edit', child: Text(l10n.edit_annonce)),
-                  PopupMenuItem(
-                    value: 'delete',
-                    child: Text(l10n.deleteAnnonce,
-                        style: const TextStyle(color: Colors.red)),
-                  ),
-                ],
-              ),
+                      value: 'delete',
+                      child: Text(l10n.deleteAnnonce,
+                          style: const TextStyle(color: Colors.red)),
+                    ),
+                  ],
+                ),
+              // ✅ Signaler visible pour tout le monde sauf le propriétaire
+              if (!isOwner)
+                PopupMenuButton<String>(
+                  onSelected: (value) =>
+                      _handleMenuAction(context, value, annonce),
+                  itemBuilder: (_) => [
+                    PopupMenuItem(
+                        value: 'report', child: Text(l10n.report)),
+                  ],
+                ),
             ],
           ),
           SliverToBoxAdapter(
@@ -275,11 +304,13 @@ class _AnnonceDetailView extends StatelessWidget {
           ),
         ],
       ),
-      bottomNavigationBar: _buildBottomContact(theme, l10n),
+      bottomNavigationBar:
+      isOwner ? null : _buildBottomContact(theme, l10n, context),
     );
   }
 
-  Widget _buildBottomContact(ThemeData theme, AppLocalizations l10n) {
+  Widget _buildBottomContact(
+      ThemeData theme, AppLocalizations l10n, BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -339,6 +370,17 @@ class _AnnonceDetailView extends StatelessWidget {
         bloc.add(AnnonceDetailEvent.activateTopLot(
             id: annonce.id, durationDays: 7));
         break;
+      case 'report':
+        showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          builder: (_) => BlocProvider.value(
+            value: bloc,
+            child: ReportSheet(annonceId: annonce.id),
+          ),
+        );
+        break;
     }
   }
 
@@ -365,18 +407,6 @@ class _AnnonceDetailView extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  String getDentition(BuildContext context, String dentitionName) {
-    final l10n = AppLocalizations.of(context)!;
-    return switch (dentitionName) {
-      'MILK_TEETH' => l10n.milkTeeth,
-      'TWO_TEETH'  => l10n.twoTeeth,
-      'FOUR_TEETH' => l10n.fourTeeth,
-      'SIX_TEETH'  => l10n.sixTeeth,
-      'FULL_MOUTH' => l10n.fullMouth,
-      _            => dentitionName,
-    };
   }
 }
 
@@ -427,8 +457,8 @@ class _StatusBadge extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration:
-      BoxDecoration(color: color, borderRadius: BorderRadius.circular(4)),
+      decoration: BoxDecoration(
+          color: color, borderRadius: BorderRadius.circular(4)),
       child: Text(label,
           style: const TextStyle(
               color: Colors.white,

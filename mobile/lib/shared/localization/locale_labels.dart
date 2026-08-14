@@ -41,9 +41,9 @@ extension RoleLocalization on Role {
   String localizedLabel(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     return switch (this) {
-      Role.seller => l10n.seller,
-      Role.buyer => l10n.buyer,
-      Role.admin => l10n.min,
+      Role.user => l10n.roleUser,
+      Role.userPremium => l10n.roleUserPremium,
+      Role.admin => l10n.roleAdmin,
     };
   }
 }
