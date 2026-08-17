@@ -4,8 +4,7 @@ import java.util.UUID;
 
 public record SellerSummaryDTO(
         UUID id,
-        String firstName,
-        String lastName,
+        String fullName,
         String avatarUrl,
         String region
 ) {}

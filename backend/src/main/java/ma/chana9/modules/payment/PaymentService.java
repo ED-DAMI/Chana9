@@ -44,7 +44,7 @@ public class PaymentService {
         Annonce annonce = annonceRepository.findById(annonceId)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, ErrorKeys.Annonce.NOT_FOUND));
 
-        if (annonce.getSellerId().equals(buyerId)) {
+        if (annonce.getSeller().getId().equals(buyerId)) {
             throw new ApiException(HttpStatus.FORBIDDEN, ErrorKeys.Payment.OWN_ANNONCE);
         }
 

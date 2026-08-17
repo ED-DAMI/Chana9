@@ -5,6 +5,7 @@ import ma.chana9.modules.annonce.dto.AnnonceResponse;
 import ma.chana9.modules.annonce.dto.SellerSummaryDTO;
 import ma.chana9.modules.annonce.entities.Annonce;
 import ma.chana9.modules.annonce.entities.AnnonceMedia;
+import ma.chana9.modules.user.User;
 import org.locationtech.jts.geom.Point;
 import org.mapstruct.*;
 
@@ -13,15 +14,26 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface AnnonceMapper {
 
-    @Mapping(target = "latitude",    expression = "java(getY(annonce.getLocation()))")
-    @Mapping(target = "longitude",   expression = "java(getX(annonce.getLocation()))")
-    @Mapping(target = "distanceKm",  ignore = true)
-    @Mapping(target = "isTopLot",    expression = "java(annonce.isTopLot())")
-    @Mapping(target = "seller",      source = "seller")
+    @Mapping(target = "latitude",   expression = "java(getY(annonce.getLocation()))")
+    @Mapping(target = "longitude",  expression = "java(getX(annonce.getLocation()))")
+    @Mapping(target = "distanceKm", ignore = true)
+    @Mapping(target = "isTopLot",   expression = "java(annonce.isTopLot())")
+    @Mapping(target = "seller",     source = "seller")
+    AnnonceResponse toResponse(Annonce annonce);
+
+    @Mapping(target = "id",         source = "annonce.id")
+    @Mapping(target = "region",     source = "annonce.region")
+    @Mapping(target = "latitude",   expression = "java(getY(annonce.getLocation()))")
+    @Mapping(target = "longitude",  expression = "java(getX(annonce.getLocation()))")
+    @Mapping(target = "distanceKm", ignore = true)
+    @Mapping(target = "isTopLot",   expression = "java(annonce.isTopLot())")
+    @Mapping(target = "seller",     source = "seller")
     AnnonceResponse toResponse(Annonce annonce, SellerSummaryDTO seller);
 
-    default AnnonceResponse toResponse(Annonce annonce, SellerSummaryDTO seller, Double distanceKm) {
-        AnnonceResponse base = toResponse(annonce, seller);
+    SellerSummaryDTO toSellerSummaryDTO(User user);
+
+    default AnnonceResponse toResponse(Annonce annonce, Double distanceKm) {
+        AnnonceResponse base = toResponse(annonce);
         return new AnnonceResponse(
                 base.id(),
                 base.title(),
