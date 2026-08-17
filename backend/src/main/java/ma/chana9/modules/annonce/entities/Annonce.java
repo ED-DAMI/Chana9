@@ -3,6 +3,7 @@ package ma.chana9.modules.annonce.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import ma.chana9.modules.user.User;
 import ma.chana9.shared.enums.*;
 import org.locationtech.jts.geom.Point;
 
@@ -119,8 +120,9 @@ public class Annonce {
     @Column(name = "expires_at", nullable = false)
     private LocalDateTime expiresAt;
 
-    @Column(name = "seller_id", nullable = false)
-    private UUID sellerId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seller_id", nullable = false)
+    private User seller;
 
     @OneToMany(mappedBy = "annonce", fetch = FetchType.LAZY,cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default

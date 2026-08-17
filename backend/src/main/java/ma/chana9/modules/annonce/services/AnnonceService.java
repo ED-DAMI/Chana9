@@ -208,8 +208,6 @@ public class AnnonceService {
 		return toReportResponse(saved);
 	}
 
-	// ── Alertes ───────────────────────────────────────────────────────────────
-
 	@Transactional
 	public AnnonceAlert createAlert(UUID buyerId, AnnonceAlertRequest request) {
 		return annonceAlertRepository.save(AnnonceAlert.builder()
@@ -233,7 +231,6 @@ public class AnnonceService {
 		return annonceAlertRepository.findByBuyerId(buyerId);
 	}
 
-	// ── Helpers ───────────────────────────────────────────────────────────────
 
 	private void notifyMatchingAlerts(Annonce annonce) {
 		long matchCount = annonceAlertRepository.countMatchingAlerts(annonce);

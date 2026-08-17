@@ -2,6 +2,7 @@ package ma.chana9.modules.annonce.services;
 
 import ma.chana9.modules.annonce.dto.AnnonceMediaResponse;
 import ma.chana9.modules.annonce.dto.AnnonceResponse;
+import ma.chana9.modules.annonce.dto.SellerSummaryDTO;
 import ma.chana9.modules.annonce.entities.Annonce;
 import ma.chana9.modules.annonce.entities.AnnonceMedia;
 import org.locationtech.jts.geom.Point;
@@ -12,15 +13,15 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface AnnonceMapper {
 
-    @Mapping(target = "latitude",       expression = "java(getY(annonce.getLocation()))")
-    @Mapping(target = "longitude",      expression = "java(getX(annonce.getLocation()))")
-    @Mapping(target = "distanceKm",     ignore = true)
-    @Mapping(target = "isTopLot",       expression = "java(annonce.isTopLot())")
-    @Mapping(target = "sellerId",       source = "sellerId")
-    AnnonceResponse toResponse(Annonce annonce);
+    @Mapping(target = "latitude",    expression = "java(getY(annonce.getLocation()))")
+    @Mapping(target = "longitude",   expression = "java(getX(annonce.getLocation()))")
+    @Mapping(target = "distanceKm",  ignore = true)
+    @Mapping(target = "isTopLot",    expression = "java(annonce.isTopLot())")
+    @Mapping(target = "seller",      source = "seller")
+    AnnonceResponse toResponse(Annonce annonce, SellerSummaryDTO seller);
 
-    default AnnonceResponse toResponse(Annonce annonce, Double distanceKm) {
-        AnnonceResponse base = toResponse(annonce);
+    default AnnonceResponse toResponse(Annonce annonce, SellerSummaryDTO seller, Double distanceKm) {
+        AnnonceResponse base = toResponse(annonce, seller);
         return new AnnonceResponse(
                 base.id(),
                 base.title(),
@@ -50,7 +51,7 @@ public interface AnnonceMapper {
                 base.viewsCount(),
                 base.favoritesCount(),
                 base.expiresAt(),
-                base.sellerId(),
+                base.seller(),
                 base.medias(),
                 base.createdAt(),
                 base.updatedAt()
