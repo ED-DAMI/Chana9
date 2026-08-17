@@ -33,7 +33,7 @@ public class AnnonceMediaService {
         Annonce annonce = annonceRepository.findById(annonceId)
                 .orElseThrow(() -> new ApiException(ErrorKeys.Annonce.NOT_FOUND));
 
-        if (!annonce.getSellerId().equals(sellerId)) {
+        if (!annonce.getSeller().getId().equals(sellerId)) {
             throw new ApiException(ErrorKeys.Annonce.FORBIDDEN);
         }
 
@@ -59,7 +59,7 @@ public class AnnonceMediaService {
         AnnonceMedia media = annonceMediaRepository.findById(mediaId)
                 .orElseThrow(() -> new ApiException(ErrorKeys.Annonce.MEDIA_NOT_FOUND));
 
-        if (!media.getAnnonce().getSellerId().equals(sellerId)) {
+        if (!media.getAnnonce().getSeller().getId().equals(sellerId)) {
             throw new ApiException(ErrorKeys.Annonce.FORBIDDEN);
         }
 
