@@ -13,11 +13,17 @@ import org.springframework.data.repository.query.Param;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface AnnonceRepository extends JpaRepository<Annonce, UUID>, JpaSpecificationExecutor<Annonce> {
 
-    Page<Annonce> findBySellerId(UUID sellerId, Pageable pageable);
+    @Query("SELECT a FROM Annonce a LEFT JOIN FETCH a.seller WHERE a.id = :id")
+    Optional<Annonce> findByIdWithSeller(@Param("id") UUID id);
+
+    @Query(value = "SELECT a FROM Annonce a LEFT JOIN FETCH a.seller WHERE a.seller.id = :sellerId",
+            countQuery = "SELECT COUNT(a) FROM Annonce a WHERE a.seller.id = :sellerId")
+    Page<Annonce> findBySellerId(@Param("sellerId") UUID sellerId, Pageable pageable);
 
     @Query("SELECT a FROM Annonce a WHERE a.status = :status AND a.expiresAt < :now")
     List<Annonce> findExpired(@Param("status") AnnonceStatus status, @Param("now") LocalDateTime now);
@@ -66,37 +72,35 @@ public interface AnnonceRepository extends JpaRepository<Annonce, UUID>, JpaSpec
             Pageable pageable
     );
 
-    long countBySellerIdAndStatus(UUID sellerId, AnnonceStatus status);
+    long countBySeller_IdAndStatus(UUID sellerId, AnnonceStatus status);
 
-    long countBySellerId(UUID sellerId);
-
-
+    long countBySeller_Id(UUID sellerId);
 
     @Query("""
             SELECT COALESCE(SUM(a.viewsCount), 0)
             FROM Annonce a
-            WHERE a.sellerId = :sellerId
+            WHERE a.seller.id = :sellerId
             """)
     long sumViewsBySeller(@Param("sellerId") UUID sellerId);
 
     @Query("""
             SELECT COALESCE(SUM(a.favoritesCount), 0)
             FROM Annonce a
-            WHERE a.sellerId = :sellerId
+            WHERE a.seller.id = :sellerId
             """)
     long sumFavoritesBySeller(@Param("sellerId") UUID sellerId);
 
     @Query("""
             SELECT COUNT(a)
             FROM Annonce a
-            WHERE a.sellerId = :sellerId
+            WHERE a.seller.id = :sellerId
             """)
     int countTotalBySeller(@Param("sellerId") UUID sellerId);
 
     @Query("""
             SELECT COUNT(a)
             FROM Annonce a
-            WHERE a.sellerId = :sellerId
+            WHERE a.seller.id = :sellerId
               AND a.status = :status
             """)
     int countBySellerAndStatus(
@@ -107,7 +111,7 @@ public interface AnnonceRepository extends JpaRepository<Annonce, UUID>, JpaSpec
     @Query("""
             SELECT COALESCE(SUM(a.price), 0)
             FROM Annonce a
-            WHERE a.sellerId = :sellerId
+            WHERE a.seller.id = :sellerId
               AND a.status = 'SOLD'
               AND a.soldAt BETWEEN :start AND :end
             """)
@@ -120,7 +124,7 @@ public interface AnnonceRepository extends JpaRepository<Annonce, UUID>, JpaSpec
     @Query("""
             SELECT COUNT(a)
             FROM Annonce a
-            WHERE a.sellerId = :sellerId
+            WHERE a.seller.id = :sellerId
               AND a.status = 'SOLD'
               AND a.soldAt BETWEEN :start AND :end
             """)
@@ -133,7 +137,7 @@ public interface AnnonceRepository extends JpaRepository<Annonce, UUID>, JpaSpec
     @Query("""
             SELECT AVG(a.price)
             FROM Annonce a
-            WHERE a.sellerId = :sellerId
+            WHERE a.seller.id = :sellerId
               AND a.status = 'SOLD'
               AND a.soldAt BETWEEN :start AND :end
             """)
@@ -143,15 +147,11 @@ public interface AnnonceRepository extends JpaRepository<Annonce, UUID>, JpaSpec
             @Param("end") LocalDateTime end
     );
 
-    // =========================================================================
-    // COURBE REVENUS (points journaliers)
-    // =========================================================================
-
     @Query(value = """
             SELECT
-                DATE(a.sold_at)        AS date,
+                DATE(a.sold_at)           AS date,
                 COALESCE(SUM(a.price), 0) AS revenue,
-                COUNT(a.id)            AS sold_count
+                COUNT(a.id)               AS sold_count
             FROM annonces a
             WHERE a.seller_id = :sellerId
               AND a.status = 'SOLD'
@@ -168,7 +168,8 @@ public interface AnnonceRepository extends JpaRepository<Annonce, UUID>, JpaSpec
     @Query("""
             SELECT a
             FROM Annonce a
-            WHERE a.sellerId = :sellerId
+            LEFT JOIN FETCH a.seller
+            WHERE a.seller.id = :sellerId
             ORDER BY a.viewsCount DESC
             """)
     List<Annonce> findAllBySellerIdOrderByViewsCountDesc(@Param("sellerId") UUID sellerId);
@@ -187,7 +188,7 @@ public interface AnnonceRepository extends JpaRepository<Annonce, UUID>, JpaSpec
             SET a.status = 'SOLD',
                 a.soldAt = :soldAt
             WHERE a.id = :annonceId
-              AND a.sellerId = :sellerId
+              AND a.seller.id = :sellerId
             """)
     int markAsSold(
             @Param("annonceId") UUID annonceId,
