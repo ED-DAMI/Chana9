@@ -23,7 +23,7 @@ public class AnnonceStatsController {
     private final AnnonceStatsService annonceStatsService;
 
     @GetMapping("/me")
-    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<SellerGlobalStatsDTO> getMyStats(
             @AuthenticationPrincipal UUID userId) {
         return ApiResponse.success(null, annonceStatsService.getGlobalStats(userId));
@@ -37,7 +37,7 @@ public class AnnonceStatsController {
     }
 
     @GetMapping("/me/revenue")
-    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<SellerRevenueDTO> getMyRevenue(
             @AuthenticationPrincipal UUID userId,
             @RequestParam(defaultValue = "month") String period) {
@@ -45,7 +45,7 @@ public class AnnonceStatsController {
     }
 
     @GetMapping("/me/revenue/chart")
-    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<List<RevenuePointDTO>> getMyRevenueChart(
             @AuthenticationPrincipal UUID userId,
             @RequestParam(defaultValue = "month") String period) {
@@ -53,7 +53,7 @@ public class AnnonceStatsController {
     }
     
     @GetMapping("/me/annonces")
-    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     public ApiResponse<List<AnnonceStatsDTO>> getMyAnnonceStats(
             @AuthenticationPrincipal UUID userId) {
         return ApiResponse.success(null, annonceStatsService.getAnnonceStats(userId));
