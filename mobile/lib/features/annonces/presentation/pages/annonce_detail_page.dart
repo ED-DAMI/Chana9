@@ -76,11 +76,10 @@ class _AnnonceDetailView extends StatelessWidget {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
 
-    // ✅ Récupérer l'utilisateur connecté depuis AuthBloc
     final currentUser = context.read<AuthBloc>().state.whenOrNull(
       authenticated: (user) => user,
     );
-    final isOwner = currentUser != null && currentUser.id == annonce.sellerId;
+    final isOwner = currentUser != null && currentUser.id == annonce.seller.id;
 
     return Scaffold(
       body: CustomScrollView(
