@@ -1,7 +1,6 @@
 plugins {
     id("com.android.application")
     id("kotlin-android")
-    // C'est ce plugin qui dit à Flutter que le projet est "supporté"
     id("dev.flutter.flutter-gradle-plugin")
 }
 
@@ -20,6 +19,13 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+    }
+}
+
+// ✅ Nouvelle syntaxe pour corriger les warnings Kotlin
+kotlin {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
     }
 }
 
