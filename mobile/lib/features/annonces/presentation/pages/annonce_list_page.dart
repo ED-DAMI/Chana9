@@ -9,6 +9,7 @@ import '../widgets/annonce_post_card.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../injection_container.dart';
 import 'package:ma_chana9_app/shared/widgets/language_selector.dart';
+import 'package:ma_chana9_app/shared/widgets/native_ad_widget.dart';
 
 class AnnonceListPage extends StatefulWidget {
   const AnnonceListPage({super.key});
@@ -23,6 +24,8 @@ class _AnnonceListPageState extends State<AnnonceListPage> {
   int _currentPage = 0;
   bool _isFetchingMore = false;
   static const int _pageSize = 15;
+  static const int _adInterval = 6;
+  static const String _adUnitId = 'ca-app-pub-3940256099942544/2247696110';
 
   @override
   void initState() {
@@ -151,6 +154,10 @@ class _AnnonceListPageState extends State<AnnonceListPage> {
                 );
               }
 
+              final int totalDataItems = data.content.length;
+              final int adsCount = (totalDataItems / _adInterval).floor();
+              final int totalItemCount = totalDataItems + adsCount + (_isFetchingMore ? 1 : 0);
+
               return RefreshIndicator(
                 onRefresh: () async {
                   setState(() => _isFetchingMore = false);
@@ -159,9 +166,9 @@ class _AnnonceListPageState extends State<AnnonceListPage> {
                 child: ListView.builder(
                   controller: _scrollController,
                   padding: const EdgeInsets.only(bottom: 80),
-                  itemCount: data.content.length + (_isFetchingMore ? 1 : 0),
+                  itemCount: totalItemCount,
                   itemBuilder: (context, index) {
-                    if (index == data.content.length) {
+                    if (_isFetchingMore && index == totalItemCount - 1) {
                       return const Padding(
                         padding: EdgeInsets.all(16),
                         child: Center(
@@ -169,7 +176,20 @@ class _AnnonceListPageState extends State<AnnonceListPage> {
                         ),
                       );
                     }
-                    final annonce = data.content[index];
+
+                    if (index > 0 && (index + 1) % (_adInterval + 1) == 0) {
+                      return const NativeAdWidget(adUnitId: _adUnitId);
+                    }
+
+                    final int adOffset = (index / (_adInterval + 1)).floor();
+                    final int annonceIndex = index - adOffset;
+
+                    if (annonceIndex >= totalDataItems) {
+                      return const SizedBox.shrink();
+                    }
+
+                    final annonce = data.content[annonceIndex];
+
                     return BlocProvider(
                       create: (_) => sl<AnnonceDetailBloc>(),
                       child: AnnoncePostCard(
