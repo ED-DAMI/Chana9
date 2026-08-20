@@ -48,3 +48,9 @@ logging:
     ma.chana9: DEBUG
     org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver: DEBUG
     org.springframework.web: DEBUG
+whatsApp:
+  phone-number-id: ${WHATSAPP_PHONE_NUMBER_ID}
+  access-token: ${WHATSAPP_ACCESS_TOKEN}
+  api-version: v19.0
+  template-name: chana9_otp
+  template-language: fr
