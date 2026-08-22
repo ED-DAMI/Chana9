@@ -248,6 +248,23 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
             child: Stepper(
               currentStep: _currentStep,
               type: StepperType.vertical,
+              stepIconBuilder: (int stepIndex, StepState stepState) {
+                final color = _currentStep >= stepIndex
+                    ? theme.colorScheme.primary
+                    : Colors.grey;
+
+                final IconData? iconData = switch (stepIndex) {
+                  0 => Icons.photo_camera_rounded,
+                  1 => Icons.pets_rounded,
+                  2 => Icons.sell_rounded,
+                  3 => Icons.location_on_rounded,
+                  _ => null,
+                };
+
+                return iconData != null
+                    ? Icon(iconData, color: color, size: 18)
+                    : null;
+              },
               onStepTapped: (step) => setState(() => _currentStep = step),
               onStepContinue: () {
                 if (_currentStep < 3) {
@@ -278,8 +295,7 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
                           color: Colors.white,
                         ),
                       )
-                          : Text(
-                          _currentStep == 3 ? l10n.publish : l10n.next),
+                          : Text(_currentStep == 3 ? l10n.publish : l10n.next),
                     ),
                     TextButton(
                       onPressed: details.onStepCancel,
@@ -291,12 +307,6 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
               steps: [
                 Step(
                   title: Text(l10n.step_photos),
-                  icon: Icon(
-                    Icons.photo_camera_rounded,
-                    color: _currentStep >= 0
-                        ? theme.colorScheme.primary
-                        : Colors.grey,
-                  ),
                   content: _PhotoStep(
                     l10n: l10n,
                     photos: _photos,
@@ -306,12 +316,6 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
                 ),
                 Step(
                   title: Text(l10n.step_animal),
-                  icon: Icon(
-                    Icons.pets_rounded,
-                    color: _currentStep >= 1
-                        ? theme.colorScheme.primary
-                        : Colors.grey,
-                  ),
                   content: _AnimalStep(
                     l10n: l10n,
                     selectedBreed: _selectedBreed,
@@ -325,36 +329,22 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
                     onBreedChanged: (b) => setState(() => _selectedBreed = b),
                     onGenderChanged: (g) => setState(() => _gender = g),
                     onDentitionChanged: (d) => setState(() => _dentition = d),
-                    onEligibleChanged: (v) =>
-                        setState(() => _eligibleForAid = v),
+                    onEligibleChanged: (v) => setState(() => _eligibleForAid = v),
                   ),
                 ),
                 Step(
                   title: Text(l10n.step_details),
-                  icon: Icon(
-                    Icons.sell_rounded,
-                    color: _currentStep >= 2
-                        ? theme.colorScheme.primary
-                        : Colors.grey,
-                  ),
                   content: _AnnonceStep(
                     l10n: l10n,
                     titleController: _titleController,
                     descriptionController: _descriptionController,
                     priceController: _priceController,
                     priceNegotiable: _priceNegotiable,
-                    onNegotiableChanged: (v) =>
-                        setState(() => _priceNegotiable = v),
+                    onNegotiableChanged: (v) => setState(() => _priceNegotiable = v),
                   ),
                 ),
                 Step(
                   title: Text(l10n.step_location),
-                  icon: Icon(
-                    Icons.location_on_rounded,
-                    color: _currentStep >= 3
-                        ? theme.colorScheme.primary
-                        : Colors.grey,
-                  ),
                   content: _LocationStep(
                     l10n: l10n,
                     selectedRegion: _selectedRegion,
@@ -367,8 +357,7 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
                       _selectedCity = null;
                     }),
                     onCityChanged: (c) => setState(() => _selectedCity = c),
-                    onDeliveryChanged: (v) =>
-                        setState(() => _deliveryAvailable = v),
+                    onDeliveryChanged: (v) => setState(() => _deliveryAvailable = v),
                     onDetectLocation: _detectLocation,
                     isLocating: _isLocating,
                     hasLocation: _latitude != null,
