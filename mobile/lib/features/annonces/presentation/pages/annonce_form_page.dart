@@ -12,7 +12,6 @@ import '../../../../shared/enums/animal_dentition.dart';
 import '../../domain/entities/annonce.dart';
 import '../bloc/annonce_bloc.dart';
 
-
 class AnnonceFormPage extends StatefulWidget {
   final Annonce? annonce;
   const AnnonceFormPage({super.key, this.annonce});
@@ -119,7 +118,8 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
                   .where((e) => e != null && e.isNotEmpty)
                   .join(', ');
         });
-        final detectedCity = place.locality ?? place.subAdministrativeArea ?? '';
+        final detectedCity =
+            place.locality ?? place.subAdministrativeArea ?? '';
         final detectedAdmin = place.administrativeArea ?? '';
 
         String? matchedRegion;
@@ -139,7 +139,9 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
           for (final region in kMoroccoRegionsAndCities.keys) {
             final regionParts = region.split('-');
             for (final part in regionParts) {
-              if (detectedAdmin.toLowerCase().contains(part.trim().toLowerCase())) {
+              if (detectedAdmin
+                  .toLowerCase()
+                  .contains(part.trim().toLowerCase())) {
                 matchedRegion = region;
                 break;
               }
@@ -218,6 +220,7 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
 
     return BlocConsumer<AnnonceBloc, AnnonceState>(
       listener: (context, state) {
@@ -275,7 +278,8 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
                           color: Colors.white,
                         ),
                       )
-                          : Text(_currentStep == 3 ? l10n.publish : l10n.next),
+                          : Text(
+                          _currentStep == 3 ? l10n.publish : l10n.next),
                     ),
                     TextButton(
                       onPressed: details.onStepCancel,
@@ -287,7 +291,14 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
               steps: [
                 Step(
                   title: Text(l10n.step_photos),
+                  icon: Icon(
+                    Icons.photo_camera_rounded,
+                    color: _currentStep >= 0
+                        ? theme.colorScheme.primary
+                        : Colors.grey,
+                  ),
                   content: _PhotoStep(
+                    l10n: l10n,
                     photos: _photos,
                     onAdd: () => _showPhotoOptions(l10n),
                     onRemove: (i) => setState(() => _photos.removeAt(i)),
@@ -295,6 +306,12 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
                 ),
                 Step(
                   title: Text(l10n.step_animal),
+                  icon: Icon(
+                    Icons.pets_rounded,
+                    color: _currentStep >= 1
+                        ? theme.colorScheme.primary
+                        : Colors.grey,
+                  ),
                   content: _AnimalStep(
                     l10n: l10n,
                     selectedBreed: _selectedBreed,
@@ -308,11 +325,18 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
                     onBreedChanged: (b) => setState(() => _selectedBreed = b),
                     onGenderChanged: (g) => setState(() => _gender = g),
                     onDentitionChanged: (d) => setState(() => _dentition = d),
-                    onEligibleChanged: (v) => setState(() => _eligibleForAid = v),
+                    onEligibleChanged: (v) =>
+                        setState(() => _eligibleForAid = v),
                   ),
                 ),
                 Step(
                   title: Text(l10n.step_details),
+                  icon: Icon(
+                    Icons.sell_rounded,
+                    color: _currentStep >= 2
+                        ? theme.colorScheme.primary
+                        : Colors.grey,
+                  ),
                   content: _AnnonceStep(
                     l10n: l10n,
                     titleController: _titleController,
@@ -325,6 +349,12 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
                 ),
                 Step(
                   title: Text(l10n.step_location),
+                  icon: Icon(
+                    Icons.location_on_rounded,
+                    color: _currentStep >= 3
+                        ? theme.colorScheme.primary
+                        : Colors.grey,
+                  ),
                   content: _LocationStep(
                     l10n: l10n,
                     selectedRegion: _selectedRegion,
@@ -392,11 +422,13 @@ class _AnnonceFormPageState extends State<AnnonceFormPage> {
 }
 
 class _PhotoStep extends StatelessWidget {
+  final AppLocalizations l10n;
   final List<XFile> photos;
   final VoidCallback onAdd;
   final Function(int) onRemove;
 
   const _PhotoStep({
+    required this.l10n,
     required this.photos,
     required this.onAdd,
     required this.onRemove,
@@ -404,48 +436,94 @@ class _PhotoStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
+    final theme = Theme.of(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ...List.generate(
-          photos.length,
-              (i) => Stack(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.file(
-                  File(photos[i].path),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            ...List.generate(
+              photos.length,
+                  (i) => Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.file(
+                      File(photos[i].path),
+                      width: 80,
+                      height: 80,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Positioned(
+                    right: 0,
+                    top: 0,
+                    child: GestureDetector(
+                      onTap: () => onRemove(i),
+                      child: Container(
+                        width: 24,
+                        height: 24,
+                        decoration: const BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Icons.close,
+                            color: Colors.white, size: 16),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (photos.length < 5)
+              GestureDetector(
+                onTap: onAdd,
+                child: Container(
                   width: 80,
                   height: 80,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Positioned(
-                right: 0,
-                top: 0,
-                child: GestureDetector(
-                  onTap: () => onRemove(i),
-                  child: Container(
-                    width: 24,
-                    height: 24,
-                    decoration: const BoxDecoration(
-                      color: Colors.red,
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(Icons.close, color: Colors.white, size: 16),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        color: theme.colorScheme.primary.withOpacity(0.5),
+                        width: 1.5),
+                    borderRadius: BorderRadius.circular(8),
+                    color: theme.colorScheme.primary.withOpacity(0.05),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.add_a_photo_rounded,
+                        color: theme.colorScheme.primary,
+                        size: 28,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '${photos.length}/5',
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-            ],
-          ),
+          ],
         ),
-        if (photos.length < 5)
-          IconButton.filledTonal(
-            onPressed: onAdd,
-            icon: const Icon(Icons.add_a_photo_outlined),
-            constraints: const BoxConstraints.tightFor(width: 80, height: 80),
+        if (photos.isEmpty) ...[
+          const SizedBox(height: 8),
+          Text(
+            l10n.addAtLeastOnePhoto,
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey.shade500,
+              fontStyle: FontStyle.italic,
+            ),
           ),
+        ],
       ],
     );
   }
@@ -484,6 +562,8 @@ class _AnimalStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primary = Theme.of(context).colorScheme.primary;
+
     return Column(
       children: [
         DropdownButtonFormField<AnimalBreed>(
@@ -491,6 +571,7 @@ class _AnimalStep extends StatelessWidget {
           decoration: InputDecoration(
             labelText: '${l10n.breed} *',
             border: const OutlineInputBorder(),
+            prefixIcon: Icon(Icons.category_outlined, color: primary),
           ),
           items: AnimalBreed.values
               .map((b) => DropdownMenuItem(
@@ -504,9 +585,20 @@ class _AnimalStep extends StatelessWidget {
         const SizedBox(height: 12),
         SegmentedButton<AnimalGender?>(
           segments: [
-            ButtonSegment(value: null, label: Text(l10n.not_specified)),
-            ButtonSegment(value: AnimalGender.male, label: Text(l10n.male)),
-            ButtonSegment(value: AnimalGender.female, label: Text(l10n.female)),
+            ButtonSegment(
+              value: null,
+              label: Text(l10n.not_specified),
+            ),
+            ButtonSegment(
+              value: AnimalGender.male,
+              label: Text(l10n.male),
+              icon: const Icon(Icons.male),
+            ),
+            ButtonSegment(
+              value: AnimalGender.female,
+              label: Text(l10n.female),
+              icon: const Icon(Icons.female),
+            ),
           ],
           selected: {gender},
           onSelectionChanged: (val) => onGenderChanged(val.first),
@@ -520,6 +612,8 @@ class _AnimalStep extends StatelessWidget {
                 decoration: InputDecoration(
                   labelText: l10n.age_months,
                   border: const OutlineInputBorder(),
+                  prefixIcon:
+                  Icon(Icons.calendar_today_outlined, color: primary),
                 ),
                 keyboardType: TextInputType.number,
               ),
@@ -531,6 +625,7 @@ class _AnimalStep extends StatelessWidget {
                 decoration: InputDecoration(
                   labelText: l10n.weight_kg,
                   border: const OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.scale_outlined, color: primary),
                 ),
                 keyboardType: TextInputType.number,
               ),
@@ -543,6 +638,8 @@ class _AnimalStep extends StatelessWidget {
           decoration: InputDecoration(
             labelText: l10n.dentition,
             border: const OutlineInputBorder(),
+            prefixIcon:
+            Icon(Icons.format_list_bulleted_rounded, color: primary),
           ),
           items: AnimalDentition.values
               .map((d) => DropdownMenuItem(
@@ -558,6 +655,7 @@ class _AnimalStep extends StatelessWidget {
           decoration: InputDecoration(
             labelText: l10n.headCount,
             border: const OutlineInputBorder(),
+            prefixIcon: Icon(Icons.groups_outlined, color: primary),
           ),
           keyboardType: TextInputType.number,
         ),
@@ -565,14 +663,24 @@ class _AnimalStep extends StatelessWidget {
         TextField(
           controller: onssaController,
           decoration: InputDecoration(
-            labelText: l10n.onssa,
+            labelText: l10n.onssaTag,
             border: const OutlineInputBorder(),
+            prefixIcon: Icon(Icons.verified_outlined, color: primary),
           ),
         ),
+        const SizedBox(height: 4),
         SwitchListTile(
-          title: Text(l10n.eligibleForAid),
+          title: Row(
+            children: [
+              Icon(Icons.volunteer_activism_outlined,
+                  color: primary, size: 20),
+              const SizedBox(width: 8),
+              Text(l10n.eligibleForAid),
+            ],
+          ),
           value: eligibleForAid,
           onChanged: onEligibleChanged,
+          contentPadding: EdgeInsets.zero,
         ),
       ],
     );
@@ -598,6 +706,8 @@ class _AnnonceStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primary = Theme.of(context).colorScheme.primary;
+
     return Column(
       children: [
         TextFormField(
@@ -605,6 +715,7 @@ class _AnnonceStep extends StatelessWidget {
           decoration: InputDecoration(
             labelText: '${l10n.title} *',
             border: const OutlineInputBorder(),
+            prefixIcon: Icon(Icons.title_rounded, color: primary),
           ),
           validator: (v) => v!.isEmpty ? l10n.required : null,
         ),
@@ -614,19 +725,30 @@ class _AnnonceStep extends StatelessWidget {
           decoration: InputDecoration(
             labelText: '${l10n.price} *',
             border: const OutlineInputBorder(),
+            prefixIcon: Icon(Icons.payments_outlined, color: primary),
+            suffixText: l10n.mad,
           ),
           keyboardType: TextInputType.number,
         ),
         SwitchListTile(
-          title: Text(l10n.priceNegotiable),
+          title: Row(
+            children: [
+              Icon(Icons.handshake_outlined, color: primary, size: 20),
+              const SizedBox(width: 8),
+              Text(l10n.priceNegotiable),
+            ],
+          ),
           value: priceNegotiable,
           onChanged: onNegotiableChanged,
+          contentPadding: EdgeInsets.zero,
         ),
         TextFormField(
           controller: descriptionController,
           decoration: InputDecoration(
             labelText: l10n.description,
             border: const OutlineInputBorder(),
+            prefixIcon: Icon(Icons.description_outlined, color: primary),
+            alignLabelWithHint: true,
           ),
           maxLines: 3,
         ),
@@ -666,18 +788,33 @@ class _LocationStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primary = Theme.of(context).colorScheme.primary;
+
     return Column(
       children: [
-        ElevatedButton.icon(
-          onPressed: isLocating ? null : onDetectLocation,
-          icon: isLocating
-              ? const SizedBox(
-            width: 15,
-            height: 15,
-            child: CircularProgressIndicator(strokeWidth: 2),
-          )
-              : const Icon(Icons.gps_fixed),
-          label: Text(hasLocation ? l10n.position_ok : l10n.geolocate_me),
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton.icon(
+            onPressed: isLocating ? null : onDetectLocation,
+            icon: isLocating
+                ? const SizedBox(
+              width: 15,
+              height: 15,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            )
+                : Icon(
+              hasLocation ? Icons.my_location : Icons.gps_fixed,
+              color: hasLocation ? Colors.green : null,
+            ),
+            label: Text(hasLocation ? l10n.position_ok : l10n.geolocate_me),
+            style: ElevatedButton.styleFrom(
+              foregroundColor: hasLocation ? Colors.green : primary,
+              side: BorderSide(
+                  color: hasLocation
+                      ? Colors.green
+                      : primary.withOpacity(0.5)),
+            ),
+          ),
         ),
         const SizedBox(height: 12),
         DropdownButtonFormField<String>(
@@ -685,6 +822,7 @@ class _LocationStep extends StatelessWidget {
           decoration: InputDecoration(
             labelText: '${l10n.region} *',
             border: const OutlineInputBorder(),
+            prefixIcon: Icon(Icons.map_outlined, color: primary),
           ),
           items: kMoroccoRegionsAndCities.keys
               .map((r) => DropdownMenuItem(value: r, child: Text(r)))
@@ -692,40 +830,55 @@ class _LocationStep extends StatelessWidget {
           onChanged: onRegionChanged,
         ),
         const SizedBox(height: 12),
-        if (selectedRegion != null)
+        if (selectedRegion != null) ...[
           DropdownButtonFormField<String>(
             value: selectedCity,
-            decoration: const InputDecoration(
-              labelText: 'Ville',
-              border: OutlineInputBorder(),
+            decoration: InputDecoration(
+              labelText: l10n.city,
+              border: const OutlineInputBorder(),
+              prefixIcon: Icon(Icons.location_city_outlined, color: primary),
             ),
             items: kMoroccoRegionsAndCities[selectedRegion]!
                 .map((c) => DropdownMenuItem(value: c, child: Text(c)))
                 .toList(),
             onChanged: onCityChanged,
           ),
-        const SizedBox(height: 12),
+          const SizedBox(height: 12),
+        ],
         TextField(
           controller: addressController,
           decoration: InputDecoration(
             labelText: l10n.preciseAddress,
             border: const OutlineInputBorder(),
+            prefixIcon: Icon(Icons.pin_drop_outlined, color: primary),
           ),
         ),
         SwitchListTile(
-          title: Text(l10n.deliveryPossible),
+          title: Row(
+            children: [
+              Icon(Icons.local_shipping_outlined, color: primary, size: 20),
+              const SizedBox(width: 8),
+              Text(l10n.deliveryPossible),
+            ],
+          ),
           value: deliveryAvailable,
           onChanged: onDeliveryChanged,
+          contentPadding: EdgeInsets.zero,
         ),
-        if (deliveryAvailable)
+        if (deliveryAvailable) ...[
+          const SizedBox(height: 8),
           TextField(
             controller: deliveryPriceController,
             decoration: InputDecoration(
               labelText: l10n.deliveryFees,
               border: const OutlineInputBorder(),
+              prefixIcon:
+              Icon(Icons.local_shipping_outlined, color: primary),
+              suffixText: l10n.mad,
             ),
             keyboardType: TextInputType.number,
           ),
+        ],
       ],
     );
   }

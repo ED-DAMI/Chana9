@@ -35,6 +35,7 @@ public class AnnonceController {
     public ApiResponse<AnnonceResponse> create(
             @Valid @RequestBody AnnonceRequest request,
             @AuthenticationPrincipal UUID userId) {
+
         return ApiResponse.success(null, annonceService.create(request, userId));
     }
 

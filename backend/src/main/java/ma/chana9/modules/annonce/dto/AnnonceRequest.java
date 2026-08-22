@@ -1,6 +1,7 @@
 package ma.chana9.modules.annonce.dto;
 
 import jakarta.validation.constraints.*;
+import lombok.ToString;
 import ma.chana9.shared.enums.*;
 
 import java.math.BigDecimal;
