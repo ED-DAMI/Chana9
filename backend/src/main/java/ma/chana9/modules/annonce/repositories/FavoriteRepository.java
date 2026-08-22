@@ -12,8 +12,6 @@ public interface FavoriteRepository extends JpaRepository<Favorite, UUID> {
 
     Page<Favorite> findByBuyerId(UUID buyerId, Pageable pageable);
 
-    Optional<Favorite> findByBuyerIdAndAnnonceId(UUID buyerId, UUID annonceId);
-
     boolean existsByBuyerIdAndAnnonceId(UUID buyerId, UUID annonceId);
 
     void deleteByBuyerIdAndAnnonceId(UUID buyerId, UUID annonceId);

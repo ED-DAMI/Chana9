@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.UUID;
 
 public record AnnonceResponse(
-
         UUID id,
         String title,
         String description,
@@ -37,7 +36,7 @@ public record AnnonceResponse(
         Long viewsCount,
         Long favoritesCount,
         LocalDateTime expiresAt,
-        UUID sellerId,
+        SellerSummaryDTO seller,
         List<AnnonceMediaResponse> medias,
         LocalDateTime createdAt,
         LocalDateTime updatedAt

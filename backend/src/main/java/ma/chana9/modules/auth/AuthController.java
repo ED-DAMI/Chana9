@@ -9,7 +9,6 @@ import ma.chana9.modules.auth.dto.AuthResponse;
 import ma.chana9.modules.auth.dto.LoginRequest;
 import ma.chana9.modules.auth.dto.LogoutRequest;
 import ma.chana9.modules.auth.dto.PasswordLoginRequest;
-import ma.chana9.modules.auth.dto.PasswordResetRequest;
 import ma.chana9.modules.auth.dto.RefreshRequest;
 import ma.chana9.modules.auth.dto.RegisterRequest;
 import ma.chana9.shared.constants.ApiPaths;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
-import '../../../../l10n/app_localizations.dart';
+import 'package:ma_chana9_app/l10n/app_localizations.dart';
+import 'package:ma_chana9_app/shared/localization/locale_labels.dart';
 import '../../domain/entities/annonce.dart';
 
 class AnnoncePostHeader extends StatelessWidget {
@@ -43,6 +43,8 @@ class AnnoncePostHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
+    final sellerId = annonce.seller.id;
+    final sellerName = annonce.seller.fullName;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -50,9 +52,9 @@ class AnnoncePostHeader extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 22,
-            backgroundColor: _avatarColor(annonce.sellerId),
+            backgroundColor: _avatarColor(sellerId),
             child: Text(
-              _initials(annonce.sellerId),
+              _initials(sellerId),
               style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -66,7 +68,7 @@ class AnnoncePostHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${l10n.seller} · ${annonce.sellerId.substring(0, 8)}',
+                  '${l10n.sellerLabel} · ${sellerName ?? sellerId.substring(0, 8)}',
                   style: theme.textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -74,18 +76,16 @@ class AnnoncePostHeader extends StatelessWidget {
                 const SizedBox(height: 2),
                 Row(
                   children: [
-                    const Icon(Icons.location_on,
-                        size: 12, color: Colors.grey),
+                    const Icon(Icons.location_on, size: 12, color: Colors.grey),
                     const SizedBox(width: 2),
                     Text(
-                      getRegion(context,annonce.region),
+                      localizedRegion(context, annonce.region),
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: Colors.grey.shade600,
                       ),
                     ),
                     const SizedBox(width: 6),
-                    const Text('·',
-                        style: TextStyle(color: Colors.grey)),
+                    const Text('·', style: TextStyle(color: Colors.grey)),
                     const SizedBox(width: 6),
                     Text(
                       _timeAgo(context, annonce.createdAt),
@@ -107,24 +107,5 @@ class AnnoncePostHeader extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  String getRegion(BuildContext context, String region) {
-    final l10n = AppLocalizations.of(context)!;
-    return switch (region) {
-      'Tanger-Tétouan-Al Hoceïma' => l10n.regionTangerTetouanAlHoceima,
-      'Oriental'                   => l10n.regionOriental,
-      'Fès-Meknès'                 => l10n.regionFesMeknes,
-      'Rabat-Salé-Kénitra'         => l10n.regionRabatSaleKenitra,
-      'Béni Mellal-Khénifra'       => l10n.regionBeniMellalKhenifra,
-      'Casablanca-Settat'          => l10n.regionCasablancaSettat,
-      'Marrakech-Safi'             => l10n.regionMarrakechSafi,
-      'Drâa-Tafilalet'             => l10n.regionDraaTafilalet,
-      'Souss-Massa'                => l10n.regionSoussMassa,
-      'Guelmim-Oued Noun'          => l10n.regionGuelmimOuedNoun,
-      'Laâyoune-Sakia El Hamra'    => l10n.regionLaayouneSakiaElHamra,
-      'Dakhla-Oued Ed-Dahab'       => l10n.regionDakhlaOuedEdDahab,
-      _                            => region,
-    };
   }
 }

@@ -5,10 +5,33 @@ import 'package:ma_chana9_app/shared/enums/animal_dentition.dart';
 import 'package:ma_chana9_app/shared/enums/animal_gender.dart';
 import 'package:ma_chana9_app/shared/enums/price_type.dart';
 import '../../domain/entities/annonce.dart';
+import '../../domain/entities/seller_summary.dart';
 import 'annonce_media_model.dart';
 
 part 'annonce_model.freezed.dart';
 part 'annonce_model.g.dart';
+
+@freezed
+abstract class SellerSummaryModel with _$SellerSummaryModel {
+  const SellerSummaryModel._();
+
+  const factory SellerSummaryModel({
+    required String id,
+    String? fullName,
+    String? avatarUrl,
+    String? region,
+  }) = _SellerSummaryModel;
+
+  factory SellerSummaryModel.fromJson(Map<String, dynamic> json) =>
+      _$SellerSummaryModelFromJson(json);
+
+  SellerSummary toEntity() => SellerSummary(
+    id: id,
+    fullName: fullName,
+    avatarUrl: avatarUrl,
+    region: region,
+  );
+}
 
 @freezed
 abstract class AnnonceModel with _$AnnonceModel {
@@ -44,7 +67,7 @@ abstract class AnnonceModel with _$AnnonceModel {
     int? viewsCount,
     int? favoritesCount,
     DateTime? expiresAt,
-    required String sellerId,
+    required SellerSummaryModel seller,
     @Default([]) List<AnnonceMediaModel> medias,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -83,7 +106,7 @@ abstract class AnnonceModel with _$AnnonceModel {
     viewsCount: viewsCount,
     favoritesCount: favoritesCount,
     expiresAt: expiresAt,
-    sellerId: sellerId,
+    seller: seller.toEntity(),
     medias: medias.map((m) => m.toEntity()).toList(),
     createdAt: createdAt,
     updatedAt: updatedAt,

@@ -58,3 +58,9 @@ databaseChangeLog:
   - include:
       file: db/changelog/016-add-soldAt-to-annonce.yaml
       relativeToChangelogFile: false
+  - include:
+      file: db/changelog/017-update-users-roles-to-user-and-premium.yaml
+      relativeToChangelogFile: false
+  - include:
+      file: db/changelog/018-add-fk-annonces-seller.yaml
+      relativeToChangelogFile: false

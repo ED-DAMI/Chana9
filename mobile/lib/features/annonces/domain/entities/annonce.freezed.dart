@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Annonce {
 
- String get id; String get title; String? get description; AnimalBreed get breed; AnimalGender? get gender; int? get ageMonths; int? get effectiveAgeMonths; double? get weightKg; AnimalDentition? get dentition; String? get onssaTagNumber; double get price; PriceType? get priceType; bool get priceNegotiable; int? get headCount; String get region; String? get addressLabel; double? get latitude; double? get longitude; double? get distanceKm; bool get deliveryAvailable; double? get deliveryPrice; bool? get boardingAvailable; double? get boardingDailyPrice; AnnonceStatus get status; bool get isTopLot; DateTime? get topLotExpiresAt; int? get viewsCount; int? get favoritesCount; DateTime? get expiresAt; String get sellerId; List<AnnonceMedia> get medias; DateTime? get createdAt; DateTime? get updatedAt;
+ String get id; String get title; String? get description; AnimalBreed get breed; AnimalGender? get gender; int? get ageMonths; int? get effectiveAgeMonths; double? get weightKg; AnimalDentition? get dentition; String? get onssaTagNumber; double get price; PriceType? get priceType; bool get priceNegotiable; int? get headCount; String get region; String? get addressLabel; double? get latitude; double? get longitude; double? get distanceKm; bool get deliveryAvailable; double? get deliveryPrice; bool? get boardingAvailable; double? get boardingDailyPrice; AnnonceStatus get status; bool get isTopLot; DateTime? get topLotExpiresAt; int? get viewsCount; int? get favoritesCount; DateTime? get expiresAt; SellerSummary get seller; List<AnnonceMedia> get medias; DateTime? get createdAt; DateTime? get updatedAt;
 /// Create a copy of Annonce
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $AnnonceCopyWith<Annonce> get copyWith => _$AnnonceCopyWithImpl<Annonce>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Annonce&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.breed, breed) || other.breed == breed)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.ageMonths, ageMonths) || other.ageMonths == ageMonths)&&(identical(other.effectiveAgeMonths, effectiveAgeMonths) || other.effectiveAgeMonths == effectiveAgeMonths)&&(identical(other.weightKg, weightKg) || other.weightKg == weightKg)&&(identical(other.dentition, dentition) || other.dentition == dentition)&&(identical(other.onssaTagNumber, onssaTagNumber) || other.onssaTagNumber == onssaTagNumber)&&(identical(other.price, price) || other.price == price)&&(identical(other.priceType, priceType) || other.priceType == priceType)&&(identical(other.priceNegotiable, priceNegotiable) || other.priceNegotiable == priceNegotiable)&&(identical(other.headCount, headCount) || other.headCount == headCount)&&(identical(other.region, region) || other.region == region)&&(identical(other.addressLabel, addressLabel) || other.addressLabel == addressLabel)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.distanceKm, distanceKm) || other.distanceKm == distanceKm)&&(identical(other.deliveryAvailable, deliveryAvailable) || other.deliveryAvailable == deliveryAvailable)&&(identical(other.deliveryPrice, deliveryPrice) || other.deliveryPrice == deliveryPrice)&&(identical(other.boardingAvailable, boardingAvailable) || other.boardingAvailable == boardingAvailable)&&(identical(other.boardingDailyPrice, boardingDailyPrice) || other.boardingDailyPrice == boardingDailyPrice)&&(identical(other.status, status) || other.status == status)&&(identical(other.isTopLot, isTopLot) || other.isTopLot == isTopLot)&&(identical(other.topLotExpiresAt, topLotExpiresAt) || other.topLotExpiresAt == topLotExpiresAt)&&(identical(other.viewsCount, viewsCount) || other.viewsCount == viewsCount)&&(identical(other.favoritesCount, favoritesCount) || other.favoritesCount == favoritesCount)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.sellerId, sellerId) || other.sellerId == sellerId)&&const DeepCollectionEquality().equals(other.medias, medias)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Annonce&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.breed, breed) || other.breed == breed)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.ageMonths, ageMonths) || other.ageMonths == ageMonths)&&(identical(other.effectiveAgeMonths, effectiveAgeMonths) || other.effectiveAgeMonths == effectiveAgeMonths)&&(identical(other.weightKg, weightKg) || other.weightKg == weightKg)&&(identical(other.dentition, dentition) || other.dentition == dentition)&&(identical(other.onssaTagNumber, onssaTagNumber) || other.onssaTagNumber == onssaTagNumber)&&(identical(other.price, price) || other.price == price)&&(identical(other.priceType, priceType) || other.priceType == priceType)&&(identical(other.priceNegotiable, priceNegotiable) || other.priceNegotiable == priceNegotiable)&&(identical(other.headCount, headCount) || other.headCount == headCount)&&(identical(other.region, region) || other.region == region)&&(identical(other.addressLabel, addressLabel) || other.addressLabel == addressLabel)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.distanceKm, distanceKm) || other.distanceKm == distanceKm)&&(identical(other.deliveryAvailable, deliveryAvailable) || other.deliveryAvailable == deliveryAvailable)&&(identical(other.deliveryPrice, deliveryPrice) || other.deliveryPrice == deliveryPrice)&&(identical(other.boardingAvailable, boardingAvailable) || other.boardingAvailable == boardingAvailable)&&(identical(other.boardingDailyPrice, boardingDailyPrice) || other.boardingDailyPrice == boardingDailyPrice)&&(identical(other.status, status) || other.status == status)&&(identical(other.isTopLot, isTopLot) || other.isTopLot == isTopLot)&&(identical(other.topLotExpiresAt, topLotExpiresAt) || other.topLotExpiresAt == topLotExpiresAt)&&(identical(other.viewsCount, viewsCount) || other.viewsCount == viewsCount)&&(identical(other.favoritesCount, favoritesCount) || other.favoritesCount == favoritesCount)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.seller, seller) || other.seller == seller)&&const DeepCollectionEquality().equals(other.medias, medias)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 
 @override
-int get hashCode => Object.hashAll([runtimeType,id,title,description,breed,gender,ageMonths,effectiveAgeMonths,weightKg,dentition,onssaTagNumber,price,priceType,priceNegotiable,headCount,region,addressLabel,latitude,longitude,distanceKm,deliveryAvailable,deliveryPrice,boardingAvailable,boardingDailyPrice,status,isTopLot,topLotExpiresAt,viewsCount,favoritesCount,expiresAt,sellerId,const DeepCollectionEquality().hash(medias),createdAt,updatedAt]);
+int get hashCode => Object.hashAll([runtimeType,id,title,description,breed,gender,ageMonths,effectiveAgeMonths,weightKg,dentition,onssaTagNumber,price,priceType,priceNegotiable,headCount,region,addressLabel,latitude,longitude,distanceKm,deliveryAvailable,deliveryPrice,boardingAvailable,boardingDailyPrice,status,isTopLot,topLotExpiresAt,viewsCount,favoritesCount,expiresAt,seller,const DeepCollectionEquality().hash(medias),createdAt,updatedAt]);
 
 @override
 String toString() {
-  return 'Annonce(id: $id, title: $title, description: $description, breed: $breed, gender: $gender, ageMonths: $ageMonths, effectiveAgeMonths: $effectiveAgeMonths, weightKg: $weightKg, dentition: $dentition, onssaTagNumber: $onssaTagNumber, price: $price, priceType: $priceType, priceNegotiable: $priceNegotiable, headCount: $headCount, region: $region, addressLabel: $addressLabel, latitude: $latitude, longitude: $longitude, distanceKm: $distanceKm, deliveryAvailable: $deliveryAvailable, deliveryPrice: $deliveryPrice, boardingAvailable: $boardingAvailable, boardingDailyPrice: $boardingDailyPrice, status: $status, isTopLot: $isTopLot, topLotExpiresAt: $topLotExpiresAt, viewsCount: $viewsCount, favoritesCount: $favoritesCount, expiresAt: $expiresAt, sellerId: $sellerId, medias: $medias, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'Annonce(id: $id, title: $title, description: $description, breed: $breed, gender: $gender, ageMonths: $ageMonths, effectiveAgeMonths: $effectiveAgeMonths, weightKg: $weightKg, dentition: $dentition, onssaTagNumber: $onssaTagNumber, price: $price, priceType: $priceType, priceNegotiable: $priceNegotiable, headCount: $headCount, region: $region, addressLabel: $addressLabel, latitude: $latitude, longitude: $longitude, distanceKm: $distanceKm, deliveryAvailable: $deliveryAvailable, deliveryPrice: $deliveryPrice, boardingAvailable: $boardingAvailable, boardingDailyPrice: $boardingDailyPrice, status: $status, isTopLot: $isTopLot, topLotExpiresAt: $topLotExpiresAt, viewsCount: $viewsCount, favoritesCount: $favoritesCount, expiresAt: $expiresAt, seller: $seller, medias: $medias, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -45,11 +45,11 @@ abstract mixin class $AnnonceCopyWith<$Res>  {
   factory $AnnonceCopyWith(Annonce value, $Res Function(Annonce) _then) = _$AnnonceCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, String? description, AnimalBreed breed, AnimalGender? gender, int? ageMonths, int? effectiveAgeMonths, double? weightKg, AnimalDentition? dentition, String? onssaTagNumber, double price, PriceType? priceType, bool priceNegotiable, int? headCount, String region, String? addressLabel, double? latitude, double? longitude, double? distanceKm, bool deliveryAvailable, double? deliveryPrice, bool? boardingAvailable, double? boardingDailyPrice, AnnonceStatus status, bool isTopLot, DateTime? topLotExpiresAt, int? viewsCount, int? favoritesCount, DateTime? expiresAt, String sellerId, List<AnnonceMedia> medias, DateTime? createdAt, DateTime? updatedAt
+ String id, String title, String? description, AnimalBreed breed, AnimalGender? gender, int? ageMonths, int? effectiveAgeMonths, double? weightKg, AnimalDentition? dentition, String? onssaTagNumber, double price, PriceType? priceType, bool priceNegotiable, int? headCount, String region, String? addressLabel, double? latitude, double? longitude, double? distanceKm, bool deliveryAvailable, double? deliveryPrice, bool? boardingAvailable, double? boardingDailyPrice, AnnonceStatus status, bool isTopLot, DateTime? topLotExpiresAt, int? viewsCount, int? favoritesCount, DateTime? expiresAt, SellerSummary seller, List<AnnonceMedia> medias, DateTime? createdAt, DateTime? updatedAt
 });
 
 
-
+$SellerSummaryCopyWith<$Res> get seller;
 
 }
 /// @nodoc
@@ -62,7 +62,7 @@ class _$AnnonceCopyWithImpl<$Res>
 
 /// Create a copy of Annonce
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? description = freezed,Object? breed = null,Object? gender = freezed,Object? ageMonths = freezed,Object? effectiveAgeMonths = freezed,Object? weightKg = freezed,Object? dentition = freezed,Object? onssaTagNumber = freezed,Object? price = null,Object? priceType = freezed,Object? priceNegotiable = null,Object? headCount = freezed,Object? region = null,Object? addressLabel = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? distanceKm = freezed,Object? deliveryAvailable = null,Object? deliveryPrice = freezed,Object? boardingAvailable = freezed,Object? boardingDailyPrice = freezed,Object? status = null,Object? isTopLot = null,Object? topLotExpiresAt = freezed,Object? viewsCount = freezed,Object? favoritesCount = freezed,Object? expiresAt = freezed,Object? sellerId = null,Object? medias = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? description = freezed,Object? breed = null,Object? gender = freezed,Object? ageMonths = freezed,Object? effectiveAgeMonths = freezed,Object? weightKg = freezed,Object? dentition = freezed,Object? onssaTagNumber = freezed,Object? price = null,Object? priceType = freezed,Object? priceNegotiable = null,Object? headCount = freezed,Object? region = null,Object? addressLabel = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? distanceKm = freezed,Object? deliveryAvailable = null,Object? deliveryPrice = freezed,Object? boardingAvailable = freezed,Object? boardingDailyPrice = freezed,Object? status = null,Object? isTopLot = null,Object? topLotExpiresAt = freezed,Object? viewsCount = freezed,Object? favoritesCount = freezed,Object? expiresAt = freezed,Object? seller = null,Object? medias = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -93,14 +93,23 @@ as bool,topLotExpiresAt: freezed == topLotExpiresAt ? _self.topLotExpiresAt : to
 as DateTime?,viewsCount: freezed == viewsCount ? _self.viewsCount : viewsCount // ignore: cast_nullable_to_non_nullable
 as int?,favoritesCount: freezed == favoritesCount ? _self.favoritesCount : favoritesCount // ignore: cast_nullable_to_non_nullable
 as int?,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,sellerId: null == sellerId ? _self.sellerId : sellerId // ignore: cast_nullable_to_non_nullable
-as String,medias: null == medias ? _self.medias : medias // ignore: cast_nullable_to_non_nullable
+as DateTime?,seller: null == seller ? _self.seller : seller // ignore: cast_nullable_to_non_nullable
+as SellerSummary,medias: null == medias ? _self.medias : medias // ignore: cast_nullable_to_non_nullable
 as List<AnnonceMedia>,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
 }
-
+/// Create a copy of Annonce
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$SellerSummaryCopyWith<$Res> get seller {
+  
+  return $SellerSummaryCopyWith<$Res>(_self.seller, (value) {
+    return _then(_self.copyWith(seller: value));
+  });
+}
 }
 
 
@@ -182,10 +191,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String? description,  AnimalBreed breed,  AnimalGender? gender,  int? ageMonths,  int? effectiveAgeMonths,  double? weightKg,  AnimalDentition? dentition,  String? onssaTagNumber,  double price,  PriceType? priceType,  bool priceNegotiable,  int? headCount,  String region,  String? addressLabel,  double? latitude,  double? longitude,  double? distanceKm,  bool deliveryAvailable,  double? deliveryPrice,  bool? boardingAvailable,  double? boardingDailyPrice,  AnnonceStatus status,  bool isTopLot,  DateTime? topLotExpiresAt,  int? viewsCount,  int? favoritesCount,  DateTime? expiresAt,  String sellerId,  List<AnnonceMedia> medias,  DateTime? createdAt,  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String? description,  AnimalBreed breed,  AnimalGender? gender,  int? ageMonths,  int? effectiveAgeMonths,  double? weightKg,  AnimalDentition? dentition,  String? onssaTagNumber,  double price,  PriceType? priceType,  bool priceNegotiable,  int? headCount,  String region,  String? addressLabel,  double? latitude,  double? longitude,  double? distanceKm,  bool deliveryAvailable,  double? deliveryPrice,  bool? boardingAvailable,  double? boardingDailyPrice,  AnnonceStatus status,  bool isTopLot,  DateTime? topLotExpiresAt,  int? viewsCount,  int? favoritesCount,  DateTime? expiresAt,  SellerSummary seller,  List<AnnonceMedia> medias,  DateTime? createdAt,  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Annonce() when $default != null:
-return $default(_that.id,_that.title,_that.description,_that.breed,_that.gender,_that.ageMonths,_that.effectiveAgeMonths,_that.weightKg,_that.dentition,_that.onssaTagNumber,_that.price,_that.priceType,_that.priceNegotiable,_that.headCount,_that.region,_that.addressLabel,_that.latitude,_that.longitude,_that.distanceKm,_that.deliveryAvailable,_that.deliveryPrice,_that.boardingAvailable,_that.boardingDailyPrice,_that.status,_that.isTopLot,_that.topLotExpiresAt,_that.viewsCount,_that.favoritesCount,_that.expiresAt,_that.sellerId,_that.medias,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.title,_that.description,_that.breed,_that.gender,_that.ageMonths,_that.effectiveAgeMonths,_that.weightKg,_that.dentition,_that.onssaTagNumber,_that.price,_that.priceType,_that.priceNegotiable,_that.headCount,_that.region,_that.addressLabel,_that.latitude,_that.longitude,_that.distanceKm,_that.deliveryAvailable,_that.deliveryPrice,_that.boardingAvailable,_that.boardingDailyPrice,_that.status,_that.isTopLot,_that.topLotExpiresAt,_that.viewsCount,_that.favoritesCount,_that.expiresAt,_that.seller,_that.medias,_that.createdAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -203,10 +212,10 @@ return $default(_that.id,_that.title,_that.description,_that.breed,_that.gender,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String? description,  AnimalBreed breed,  AnimalGender? gender,  int? ageMonths,  int? effectiveAgeMonths,  double? weightKg,  AnimalDentition? dentition,  String? onssaTagNumber,  double price,  PriceType? priceType,  bool priceNegotiable,  int? headCount,  String region,  String? addressLabel,  double? latitude,  double? longitude,  double? distanceKm,  bool deliveryAvailable,  double? deliveryPrice,  bool? boardingAvailable,  double? boardingDailyPrice,  AnnonceStatus status,  bool isTopLot,  DateTime? topLotExpiresAt,  int? viewsCount,  int? favoritesCount,  DateTime? expiresAt,  String sellerId,  List<AnnonceMedia> medias,  DateTime? createdAt,  DateTime? updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String? description,  AnimalBreed breed,  AnimalGender? gender,  int? ageMonths,  int? effectiveAgeMonths,  double? weightKg,  AnimalDentition? dentition,  String? onssaTagNumber,  double price,  PriceType? priceType,  bool priceNegotiable,  int? headCount,  String region,  String? addressLabel,  double? latitude,  double? longitude,  double? distanceKm,  bool deliveryAvailable,  double? deliveryPrice,  bool? boardingAvailable,  double? boardingDailyPrice,  AnnonceStatus status,  bool isTopLot,  DateTime? topLotExpiresAt,  int? viewsCount,  int? favoritesCount,  DateTime? expiresAt,  SellerSummary seller,  List<AnnonceMedia> medias,  DateTime? createdAt,  DateTime? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _Annonce():
-return $default(_that.id,_that.title,_that.description,_that.breed,_that.gender,_that.ageMonths,_that.effectiveAgeMonths,_that.weightKg,_that.dentition,_that.onssaTagNumber,_that.price,_that.priceType,_that.priceNegotiable,_that.headCount,_that.region,_that.addressLabel,_that.latitude,_that.longitude,_that.distanceKm,_that.deliveryAvailable,_that.deliveryPrice,_that.boardingAvailable,_that.boardingDailyPrice,_that.status,_that.isTopLot,_that.topLotExpiresAt,_that.viewsCount,_that.favoritesCount,_that.expiresAt,_that.sellerId,_that.medias,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.title,_that.description,_that.breed,_that.gender,_that.ageMonths,_that.effectiveAgeMonths,_that.weightKg,_that.dentition,_that.onssaTagNumber,_that.price,_that.priceType,_that.priceNegotiable,_that.headCount,_that.region,_that.addressLabel,_that.latitude,_that.longitude,_that.distanceKm,_that.deliveryAvailable,_that.deliveryPrice,_that.boardingAvailable,_that.boardingDailyPrice,_that.status,_that.isTopLot,_that.topLotExpiresAt,_that.viewsCount,_that.favoritesCount,_that.expiresAt,_that.seller,_that.medias,_that.createdAt,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -223,10 +232,10 @@ return $default(_that.id,_that.title,_that.description,_that.breed,_that.gender,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String? description,  AnimalBreed breed,  AnimalGender? gender,  int? ageMonths,  int? effectiveAgeMonths,  double? weightKg,  AnimalDentition? dentition,  String? onssaTagNumber,  double price,  PriceType? priceType,  bool priceNegotiable,  int? headCount,  String region,  String? addressLabel,  double? latitude,  double? longitude,  double? distanceKm,  bool deliveryAvailable,  double? deliveryPrice,  bool? boardingAvailable,  double? boardingDailyPrice,  AnnonceStatus status,  bool isTopLot,  DateTime? topLotExpiresAt,  int? viewsCount,  int? favoritesCount,  DateTime? expiresAt,  String sellerId,  List<AnnonceMedia> medias,  DateTime? createdAt,  DateTime? updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String? description,  AnimalBreed breed,  AnimalGender? gender,  int? ageMonths,  int? effectiveAgeMonths,  double? weightKg,  AnimalDentition? dentition,  String? onssaTagNumber,  double price,  PriceType? priceType,  bool priceNegotiable,  int? headCount,  String region,  String? addressLabel,  double? latitude,  double? longitude,  double? distanceKm,  bool deliveryAvailable,  double? deliveryPrice,  bool? boardingAvailable,  double? boardingDailyPrice,  AnnonceStatus status,  bool isTopLot,  DateTime? topLotExpiresAt,  int? viewsCount,  int? favoritesCount,  DateTime? expiresAt,  SellerSummary seller,  List<AnnonceMedia> medias,  DateTime? createdAt,  DateTime? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Annonce() when $default != null:
-return $default(_that.id,_that.title,_that.description,_that.breed,_that.gender,_that.ageMonths,_that.effectiveAgeMonths,_that.weightKg,_that.dentition,_that.onssaTagNumber,_that.price,_that.priceType,_that.priceNegotiable,_that.headCount,_that.region,_that.addressLabel,_that.latitude,_that.longitude,_that.distanceKm,_that.deliveryAvailable,_that.deliveryPrice,_that.boardingAvailable,_that.boardingDailyPrice,_that.status,_that.isTopLot,_that.topLotExpiresAt,_that.viewsCount,_that.favoritesCount,_that.expiresAt,_that.sellerId,_that.medias,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.title,_that.description,_that.breed,_that.gender,_that.ageMonths,_that.effectiveAgeMonths,_that.weightKg,_that.dentition,_that.onssaTagNumber,_that.price,_that.priceType,_that.priceNegotiable,_that.headCount,_that.region,_that.addressLabel,_that.latitude,_that.longitude,_that.distanceKm,_that.deliveryAvailable,_that.deliveryPrice,_that.boardingAvailable,_that.boardingDailyPrice,_that.status,_that.isTopLot,_that.topLotExpiresAt,_that.viewsCount,_that.favoritesCount,_that.expiresAt,_that.seller,_that.medias,_that.createdAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -238,7 +247,7 @@ return $default(_that.id,_that.title,_that.description,_that.breed,_that.gender,
 
 
 class _Annonce implements Annonce {
-  const _Annonce({required this.id, required this.title, this.description, required this.breed, this.gender, this.ageMonths, this.effectiveAgeMonths, this.weightKg, this.dentition, this.onssaTagNumber, required this.price, this.priceType, required this.priceNegotiable, this.headCount, required this.region, this.addressLabel, this.latitude, this.longitude, this.distanceKm, required this.deliveryAvailable, this.deliveryPrice, this.boardingAvailable, this.boardingDailyPrice, required this.status, required this.isTopLot, this.topLotExpiresAt, this.viewsCount, this.favoritesCount, this.expiresAt, required this.sellerId, required final  List<AnnonceMedia> medias, this.createdAt, this.updatedAt}): _medias = medias;
+  const _Annonce({required this.id, required this.title, this.description, required this.breed, this.gender, this.ageMonths, this.effectiveAgeMonths, this.weightKg, this.dentition, this.onssaTagNumber, required this.price, this.priceType, required this.priceNegotiable, this.headCount, required this.region, this.addressLabel, this.latitude, this.longitude, this.distanceKm, required this.deliveryAvailable, this.deliveryPrice, this.boardingAvailable, this.boardingDailyPrice, required this.status, required this.isTopLot, this.topLotExpiresAt, this.viewsCount, this.favoritesCount, this.expiresAt, required this.seller, required final  List<AnnonceMedia> medias, this.createdAt, this.updatedAt}): _medias = medias;
   
 
 @override final  String id;
@@ -270,7 +279,7 @@ class _Annonce implements Annonce {
 @override final  int? viewsCount;
 @override final  int? favoritesCount;
 @override final  DateTime? expiresAt;
-@override final  String sellerId;
+@override final  SellerSummary seller;
  final  List<AnnonceMedia> _medias;
 @override List<AnnonceMedia> get medias {
   if (_medias is EqualUnmodifiableListView) return _medias;
@@ -291,16 +300,16 @@ _$AnnonceCopyWith<_Annonce> get copyWith => __$AnnonceCopyWithImpl<_Annonce>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Annonce&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.breed, breed) || other.breed == breed)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.ageMonths, ageMonths) || other.ageMonths == ageMonths)&&(identical(other.effectiveAgeMonths, effectiveAgeMonths) || other.effectiveAgeMonths == effectiveAgeMonths)&&(identical(other.weightKg, weightKg) || other.weightKg == weightKg)&&(identical(other.dentition, dentition) || other.dentition == dentition)&&(identical(other.onssaTagNumber, onssaTagNumber) || other.onssaTagNumber == onssaTagNumber)&&(identical(other.price, price) || other.price == price)&&(identical(other.priceType, priceType) || other.priceType == priceType)&&(identical(other.priceNegotiable, priceNegotiable) || other.priceNegotiable == priceNegotiable)&&(identical(other.headCount, headCount) || other.headCount == headCount)&&(identical(other.region, region) || other.region == region)&&(identical(other.addressLabel, addressLabel) || other.addressLabel == addressLabel)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.distanceKm, distanceKm) || other.distanceKm == distanceKm)&&(identical(other.deliveryAvailable, deliveryAvailable) || other.deliveryAvailable == deliveryAvailable)&&(identical(other.deliveryPrice, deliveryPrice) || other.deliveryPrice == deliveryPrice)&&(identical(other.boardingAvailable, boardingAvailable) || other.boardingAvailable == boardingAvailable)&&(identical(other.boardingDailyPrice, boardingDailyPrice) || other.boardingDailyPrice == boardingDailyPrice)&&(identical(other.status, status) || other.status == status)&&(identical(other.isTopLot, isTopLot) || other.isTopLot == isTopLot)&&(identical(other.topLotExpiresAt, topLotExpiresAt) || other.topLotExpiresAt == topLotExpiresAt)&&(identical(other.viewsCount, viewsCount) || other.viewsCount == viewsCount)&&(identical(other.favoritesCount, favoritesCount) || other.favoritesCount == favoritesCount)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.sellerId, sellerId) || other.sellerId == sellerId)&&const DeepCollectionEquality().equals(other._medias, _medias)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Annonce&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.breed, breed) || other.breed == breed)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.ageMonths, ageMonths) || other.ageMonths == ageMonths)&&(identical(other.effectiveAgeMonths, effectiveAgeMonths) || other.effectiveAgeMonths == effectiveAgeMonths)&&(identical(other.weightKg, weightKg) || other.weightKg == weightKg)&&(identical(other.dentition, dentition) || other.dentition == dentition)&&(identical(other.onssaTagNumber, onssaTagNumber) || other.onssaTagNumber == onssaTagNumber)&&(identical(other.price, price) || other.price == price)&&(identical(other.priceType, priceType) || other.priceType == priceType)&&(identical(other.priceNegotiable, priceNegotiable) || other.priceNegotiable == priceNegotiable)&&(identical(other.headCount, headCount) || other.headCount == headCount)&&(identical(other.region, region) || other.region == region)&&(identical(other.addressLabel, addressLabel) || other.addressLabel == addressLabel)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.distanceKm, distanceKm) || other.distanceKm == distanceKm)&&(identical(other.deliveryAvailable, deliveryAvailable) || other.deliveryAvailable == deliveryAvailable)&&(identical(other.deliveryPrice, deliveryPrice) || other.deliveryPrice == deliveryPrice)&&(identical(other.boardingAvailable, boardingAvailable) || other.boardingAvailable == boardingAvailable)&&(identical(other.boardingDailyPrice, boardingDailyPrice) || other.boardingDailyPrice == boardingDailyPrice)&&(identical(other.status, status) || other.status == status)&&(identical(other.isTopLot, isTopLot) || other.isTopLot == isTopLot)&&(identical(other.topLotExpiresAt, topLotExpiresAt) || other.topLotExpiresAt == topLotExpiresAt)&&(identical(other.viewsCount, viewsCount) || other.viewsCount == viewsCount)&&(identical(other.favoritesCount, favoritesCount) || other.favoritesCount == favoritesCount)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.seller, seller) || other.seller == seller)&&const DeepCollectionEquality().equals(other._medias, _medias)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 
 @override
-int get hashCode => Object.hashAll([runtimeType,id,title,description,breed,gender,ageMonths,effectiveAgeMonths,weightKg,dentition,onssaTagNumber,price,priceType,priceNegotiable,headCount,region,addressLabel,latitude,longitude,distanceKm,deliveryAvailable,deliveryPrice,boardingAvailable,boardingDailyPrice,status,isTopLot,topLotExpiresAt,viewsCount,favoritesCount,expiresAt,sellerId,const DeepCollectionEquality().hash(_medias),createdAt,updatedAt]);
+int get hashCode => Object.hashAll([runtimeType,id,title,description,breed,gender,ageMonths,effectiveAgeMonths,weightKg,dentition,onssaTagNumber,price,priceType,priceNegotiable,headCount,region,addressLabel,latitude,longitude,distanceKm,deliveryAvailable,deliveryPrice,boardingAvailable,boardingDailyPrice,status,isTopLot,topLotExpiresAt,viewsCount,favoritesCount,expiresAt,seller,const DeepCollectionEquality().hash(_medias),createdAt,updatedAt]);
 
 @override
 String toString() {
-  return 'Annonce(id: $id, title: $title, description: $description, breed: $breed, gender: $gender, ageMonths: $ageMonths, effectiveAgeMonths: $effectiveAgeMonths, weightKg: $weightKg, dentition: $dentition, onssaTagNumber: $onssaTagNumber, price: $price, priceType: $priceType, priceNegotiable: $priceNegotiable, headCount: $headCount, region: $region, addressLabel: $addressLabel, latitude: $latitude, longitude: $longitude, distanceKm: $distanceKm, deliveryAvailable: $deliveryAvailable, deliveryPrice: $deliveryPrice, boardingAvailable: $boardingAvailable, boardingDailyPrice: $boardingDailyPrice, status: $status, isTopLot: $isTopLot, topLotExpiresAt: $topLotExpiresAt, viewsCount: $viewsCount, favoritesCount: $favoritesCount, expiresAt: $expiresAt, sellerId: $sellerId, medias: $medias, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'Annonce(id: $id, title: $title, description: $description, breed: $breed, gender: $gender, ageMonths: $ageMonths, effectiveAgeMonths: $effectiveAgeMonths, weightKg: $weightKg, dentition: $dentition, onssaTagNumber: $onssaTagNumber, price: $price, priceType: $priceType, priceNegotiable: $priceNegotiable, headCount: $headCount, region: $region, addressLabel: $addressLabel, latitude: $latitude, longitude: $longitude, distanceKm: $distanceKm, deliveryAvailable: $deliveryAvailable, deliveryPrice: $deliveryPrice, boardingAvailable: $boardingAvailable, boardingDailyPrice: $boardingDailyPrice, status: $status, isTopLot: $isTopLot, topLotExpiresAt: $topLotExpiresAt, viewsCount: $viewsCount, favoritesCount: $favoritesCount, expiresAt: $expiresAt, seller: $seller, medias: $medias, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -311,11 +320,11 @@ abstract mixin class _$AnnonceCopyWith<$Res> implements $AnnonceCopyWith<$Res> {
   factory _$AnnonceCopyWith(_Annonce value, $Res Function(_Annonce) _then) = __$AnnonceCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, String? description, AnimalBreed breed, AnimalGender? gender, int? ageMonths, int? effectiveAgeMonths, double? weightKg, AnimalDentition? dentition, String? onssaTagNumber, double price, PriceType? priceType, bool priceNegotiable, int? headCount, String region, String? addressLabel, double? latitude, double? longitude, double? distanceKm, bool deliveryAvailable, double? deliveryPrice, bool? boardingAvailable, double? boardingDailyPrice, AnnonceStatus status, bool isTopLot, DateTime? topLotExpiresAt, int? viewsCount, int? favoritesCount, DateTime? expiresAt, String sellerId, List<AnnonceMedia> medias, DateTime? createdAt, DateTime? updatedAt
+ String id, String title, String? description, AnimalBreed breed, AnimalGender? gender, int? ageMonths, int? effectiveAgeMonths, double? weightKg, AnimalDentition? dentition, String? onssaTagNumber, double price, PriceType? priceType, bool priceNegotiable, int? headCount, String region, String? addressLabel, double? latitude, double? longitude, double? distanceKm, bool deliveryAvailable, double? deliveryPrice, bool? boardingAvailable, double? boardingDailyPrice, AnnonceStatus status, bool isTopLot, DateTime? topLotExpiresAt, int? viewsCount, int? favoritesCount, DateTime? expiresAt, SellerSummary seller, List<AnnonceMedia> medias, DateTime? createdAt, DateTime? updatedAt
 });
 
 
-
+@override $SellerSummaryCopyWith<$Res> get seller;
 
 }
 /// @nodoc
@@ -328,7 +337,7 @@ class __$AnnonceCopyWithImpl<$Res>
 
 /// Create a copy of Annonce
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? description = freezed,Object? breed = null,Object? gender = freezed,Object? ageMonths = freezed,Object? effectiveAgeMonths = freezed,Object? weightKg = freezed,Object? dentition = freezed,Object? onssaTagNumber = freezed,Object? price = null,Object? priceType = freezed,Object? priceNegotiable = null,Object? headCount = freezed,Object? region = null,Object? addressLabel = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? distanceKm = freezed,Object? deliveryAvailable = null,Object? deliveryPrice = freezed,Object? boardingAvailable = freezed,Object? boardingDailyPrice = freezed,Object? status = null,Object? isTopLot = null,Object? topLotExpiresAt = freezed,Object? viewsCount = freezed,Object? favoritesCount = freezed,Object? expiresAt = freezed,Object? sellerId = null,Object? medias = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? description = freezed,Object? breed = null,Object? gender = freezed,Object? ageMonths = freezed,Object? effectiveAgeMonths = freezed,Object? weightKg = freezed,Object? dentition = freezed,Object? onssaTagNumber = freezed,Object? price = null,Object? priceType = freezed,Object? priceNegotiable = null,Object? headCount = freezed,Object? region = null,Object? addressLabel = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? distanceKm = freezed,Object? deliveryAvailable = null,Object? deliveryPrice = freezed,Object? boardingAvailable = freezed,Object? boardingDailyPrice = freezed,Object? status = null,Object? isTopLot = null,Object? topLotExpiresAt = freezed,Object? viewsCount = freezed,Object? favoritesCount = freezed,Object? expiresAt = freezed,Object? seller = null,Object? medias = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_Annonce(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -359,15 +368,24 @@ as bool,topLotExpiresAt: freezed == topLotExpiresAt ? _self.topLotExpiresAt : to
 as DateTime?,viewsCount: freezed == viewsCount ? _self.viewsCount : viewsCount // ignore: cast_nullable_to_non_nullable
 as int?,favoritesCount: freezed == favoritesCount ? _self.favoritesCount : favoritesCount // ignore: cast_nullable_to_non_nullable
 as int?,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,sellerId: null == sellerId ? _self.sellerId : sellerId // ignore: cast_nullable_to_non_nullable
-as String,medias: null == medias ? _self._medias : medias // ignore: cast_nullable_to_non_nullable
+as DateTime?,seller: null == seller ? _self.seller : seller // ignore: cast_nullable_to_non_nullable
+as SellerSummary,medias: null == medias ? _self._medias : medias // ignore: cast_nullable_to_non_nullable
 as List<AnnonceMedia>,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
 }
 
-
+/// Create a copy of Annonce
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$SellerSummaryCopyWith<$Res> get seller {
+  
+  return $SellerSummaryCopyWith<$Res>(_self.seller, (value) {
+    return _then(_self.copyWith(seller: value));
+  });
+}
 }
 
 // dart format on

@@ -5,6 +5,7 @@ import 'package:ma_chana9_app/shared/enums/animal_dentition.dart';
 import 'package:ma_chana9_app/shared/enums/animal_gender.dart';
 import 'package:ma_chana9_app/shared/enums/price_type.dart';
 import 'annonce_media.dart';
+import 'seller_summary.dart';
 
 part 'annonce.freezed.dart';
 
@@ -40,7 +41,7 @@ abstract class Annonce with _$Annonce {
     int? viewsCount,
     int? favoritesCount,
     DateTime? expiresAt,
-    required String sellerId,
+    required SellerSummary seller,
     required List<AnnonceMedia> medias,
     DateTime? createdAt,
     DateTime? updatedAt,

@@ -161,9 +161,9 @@ public class UserService {
 	@Transactional(readOnly = true)
 	public UserStatsDTO getUserStats(UUID targetUserId) {
 		User user = findUserById(targetUserId);
-		long totalAnnonces  = annonceRepository.countBySellerId(user.getId());
-		long activeAnnonces = annonceRepository.countBySellerIdAndStatus(user.getId(), AnnonceStatus.ACTIVE);
-		long totalSales     = annonceRepository.countBySellerIdAndStatus(user.getId(), AnnonceStatus.SOLD);
+		long totalAnnonces  = annonceRepository.countBySeller_Id(user.getId());
+		long activeAnnonces = annonceRepository.countBySeller_IdAndStatus(user.getId(), AnnonceStatus.ACTIVE);
+		long totalSales     = annonceRepository.countBySeller_IdAndStatus(user.getId(), AnnonceStatus.SOLD);
 		return new UserStatsDTO(totalAnnonces, activeAnnonces, totalSales, 0.0, 0L);
 	}
 

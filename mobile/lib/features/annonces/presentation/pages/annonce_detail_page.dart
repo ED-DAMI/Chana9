@@ -4,6 +4,7 @@ import 'package:ma_chana9_app/features/annonces/presentation/bloc/annonce_detail
 import 'package:ma_chana9_app/features/annonces/presentation/pages/report_sheet.dart';
 import 'package:ma_chana9_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:ma_chana9_app/shared/enums/annonce_status.dart';
+import 'package:ma_chana9_app/shared/widgets/native_ad_widget.dart';
 import '../../../../injection_container.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/annonce.dart';
@@ -68,6 +69,7 @@ class AnnonceDetailPage extends StatelessWidget {
 
 class _AnnonceDetailView extends StatelessWidget {
   final Annonce annonce;
+  static const String _adUnitId = 'ca-app-pub-3940256099942544/2247696110';
 
   const _AnnonceDetailView({required this.annonce});
 
@@ -76,11 +78,10 @@ class _AnnonceDetailView extends StatelessWidget {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
 
-    // ✅ Récupérer l'utilisateur connecté depuis AuthBloc
     final currentUser = context.read<AuthBloc>().state.whenOrNull(
       authenticated: (user) => user,
     );
-    final isOwner = currentUser != null && currentUser.id == annonce.sellerId;
+    final isOwner = currentUser != null && currentUser.id == annonce.seller.id;
 
     return Scaffold(
       body: CustomScrollView(
@@ -124,7 +125,6 @@ class _AnnonceDetailView extends StatelessWidget {
                     ),
                   ],
                 ),
-              // ✅ Signaler visible pour tout le monde sauf le propriétaire
               if (!isOwner)
                 PopupMenuButton<String>(
                   onSelected: (value) =>
@@ -172,7 +172,6 @@ class _AnnonceDetailView extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 8),
-
                   Row(
                     children: [
                       Text(
@@ -195,9 +194,7 @@ class _AnnonceDetailView extends StatelessWidget {
                     Text(l10n.priceNegotiable,
                         style: TextStyle(
                             color: Colors.grey.shade600, fontSize: 13)),
-
                   const Divider(height: 32),
-
                   _SectionTitle(title: l10n.features),
                   _InfoRow(
                       icon: Icons.pets,
@@ -247,6 +244,8 @@ class _AnnonceDetailView extends StatelessWidget {
                         value: '${annonce.favoritesCount}'),
 
                   const Divider(height: 32),
+                  const NativeAdWidget(adUnitId: _adUnitId),
+                  const Divider(height: 32),
 
                   _SectionTitle(title: l10n.location),
                   _InfoRow(
@@ -264,9 +263,7 @@ class _AnnonceDetailView extends StatelessWidget {
                         icon: Icons.place_outlined,
                         label: l10n.preciseAddress,
                         value: annonce.addressLabel!),
-
                   const Divider(height: 32),
-
                   _SectionTitle(title: l10n.services),
                   if (annonce.deliveryAvailable)
                     _InfoRow(
@@ -285,9 +282,7 @@ class _AnnonceDetailView extends StatelessWidget {
                     Text(l10n.noServiceAvailable,
                         style: TextStyle(
                             color: Colors.grey.shade500, fontSize: 13)),
-
                   const Divider(height: 32),
-
                   _SectionTitle(title: l10n.description),
                   Text(
                     annonce.description?.isNotEmpty == true
@@ -296,7 +291,6 @@ class _AnnonceDetailView extends StatelessWidget {
                     style:
                     theme.textTheme.bodyMedium?.copyWith(height: 1.5),
                   ),
-
                   const SizedBox(height: 100),
                 ],
               ),

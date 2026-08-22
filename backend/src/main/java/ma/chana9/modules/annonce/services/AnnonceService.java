@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import ma.chana9.modules.annonce.dto.*;
 import ma.chana9.modules.annonce.entities.*;
 import ma.chana9.modules.annonce.repositories.*;
+import ma.chana9.modules.user.User;
 import ma.chana9.modules.user.UserRepository;
 import ma.chana9.shared.config.AnnonceConstants;
 import ma.chana9.shared.constants.ErrorKeys;
@@ -40,6 +41,8 @@ public class AnnonceService {
 
 	@Transactional
 	public AnnonceResponse create(AnnonceRequest request, UUID sellerId) {
+		User seller = userRepository.findById(sellerId)
+				.orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, ErrorKeys.User.NOT_FOUND));
 		Annonce annonce = Annonce.builder()
 				.title(request.title())
 				.description(request.description())
@@ -53,7 +56,7 @@ public class AnnonceService {
 				.deliveryAvailable(request.deliveryAvailable())
 				.deliveryPrice(request.deliveryPrice())
 				.location(buildPoint(request.latitude(), request.longitude()))
-				.sellerId(sellerId)
+				.seller(seller)
 				.status(AnnonceStatus.ACTIVE)
 				.build();
 		Annonce saved = annonceRepository.save(annonce);
@@ -139,9 +142,6 @@ public class AnnonceService {
 		annonce.setTopLotExpiresAt(LocalDateTime.now().plusDays(durationDays));
 		return annonceMapper.toResponse(annonceRepository.save(annonce));
 	}
-
-	// ── Favoris ───────────────────────────────────────────────────────────────
-
 	@Transactional
 	public void addFavorite(UUID annonceId, UUID buyerId) {
 		if (favoriteRepository.existsByBuyerIdAndAnnonceId(buyerId, annonceId)) {
@@ -178,7 +178,7 @@ public class AnnonceService {
 	public AnnonceReportResponse report(UUID annonceId, UUID reporterId, AnnonceReportRequest request) {
 		Annonce annonce = findOrThrow(annonceId);
 
-		if (annonce.getSellerId().equals(reporterId)) {
+		if (annonce.getSeller().getId().equals(reporterId)) {
 			throw new ApiException(HttpStatus.FORBIDDEN, ErrorKeys.Report.OWN_ANNONCE);
 		}
 
@@ -208,8 +208,6 @@ public class AnnonceService {
 		return toReportResponse(saved);
 	}
 
-	// ── Alertes ───────────────────────────────────────────────────────────────
-
 	@Transactional
 	public AnnonceAlert createAlert(UUID buyerId, AnnonceAlertRequest request) {
 		return annonceAlertRepository.save(AnnonceAlert.builder()
@@ -233,7 +231,6 @@ public class AnnonceService {
 		return annonceAlertRepository.findByBuyerId(buyerId);
 	}
 
-	// ── Helpers ───────────────────────────────────────────────────────────────
 
 	private void notifyMatchingAlerts(Annonce annonce) {
 		long matchCount = annonceAlertRepository.countMatchingAlerts(annonce);
@@ -249,7 +246,7 @@ public class AnnonceService {
 
 	private Annonce findOwnedOrThrow(UUID id, UUID sellerId) {
 		Annonce annonce = findOrThrow(id);
-		if (!annonce.getSellerId().equals(sellerId)) {
+		if (!annonce.getSeller().getId().equals(sellerId)) {
 			throw new ApiException(HttpStatus.FORBIDDEN, ErrorKeys.Annonce.FORBIDDEN);
 		}
 		return annonce;
