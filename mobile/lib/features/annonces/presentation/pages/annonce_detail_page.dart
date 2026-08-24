@@ -83,6 +83,8 @@ class _AnnonceDetailView extends StatelessWidget {
     );
     final isOwner = currentUser != null && currentUser.id == annonce.seller.id;
 
+    final hasServices = annonce.deliveryAvailable || annonce.boardingAvailable == true;
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -142,6 +144,7 @@ class _AnnonceDetailView extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // En-tête : Titre & Badges d'état
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -172,6 +175,26 @@ class _AnnonceDetailView extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 8),
+
+                  // Statistique sociales discrètes (Vues & Favoris)
+                  Row(
+                    children: [
+                      if (annonce.viewsCount != null) ...[
+                        Icon(Icons.visibility_outlined, size: 14, color: Colors.grey.shade600),
+                        const SizedBox(width: 4),
+                        Text('${annonce.viewsCount}', style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
+                        const SizedBox(width: 12),
+                      ],
+                      if (annonce.favoritesCount != null) ...[
+                        Icon(Icons.favorite_border, size: 14, color: Colors.grey.shade600),
+                        const SizedBox(width: 4),
+                        Text('${annonce.favoritesCount}', style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
+                      ],
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+
+                  // Prix & Négociation
                   Row(
                     children: [
                       Text(
@@ -191,62 +214,22 @@ class _AnnonceDetailView extends StatelessWidget {
                     ],
                   ),
                   if (annonce.priceNegotiable)
-                    Text(l10n.priceNegotiable,
-                        style: TextStyle(
-                            color: Colors.grey.shade600, fontSize: 13)),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 2),
+                      child: Text(l10n.priceNegotiable,
+                          style: TextStyle(
+                              color: Colors.grey.shade600, fontSize: 13)),
+                    ),
+
                   const Divider(height: 32),
+
+                  // Section Caractéristiques (Sous forme de Grille UI Moderne)
                   _SectionTitle(title: l10n.features),
-                  _InfoRow(
-                      icon: Icons.pets,
-                      label: l10n.breed,
-                      value: annonce.breed.localizedLabel(context)),
-                  if (annonce.gender != null)
-                    _InfoRow(
-                        icon: Icons.transgender,
-                        label: l10n.gender,
-                        value: annonce.gender!.name == 'male'
-                            ? l10n.male
-                            : l10n.female),
-                  if (annonce.ageMonths != null)
-                    _InfoRow(
-                        icon: Icons.calendar_today_outlined,
-                        label: l10n.age,
-                        value: '${annonce.ageMonths} ${l10n.months}'),
-                  if (annonce.weightKg != null)
-                    _InfoRow(
-                        icon: Icons.monitor_weight_outlined,
-                        label: l10n.weight,
-                        value: '${annonce.weightKg} ${l10n.kg}'),
-                  if (annonce.dentition != null)
-                    _InfoRow(
-                        icon: Icons.info_outline,
-                        label: l10n.dentition,
-                        value: annonce.dentition!.localizedDisplayName(context)),
-                  if (annonce.headCount != null)
-                    _InfoRow(
-                        icon: Icons.group_outlined,
-                        label: l10n.headCount,
-                        value: '${annonce.headCount} ${l10n.heads}'),
-                  if (annonce.onssaTagNumber != null)
-                    _InfoRow(
-                        icon: Icons.verified_outlined,
-                        label: l10n.onssa,
-                        value: annonce.onssaTagNumber!),
-                  if (annonce.viewsCount != null)
-                    _InfoRow(
-                        icon: Icons.visibility_outlined,
-                        label: l10n.views,
-                        value: '${annonce.viewsCount}'),
-                  if (annonce.favoritesCount != null)
-                    _InfoRow(
-                        icon: Icons.favorite_border,
-                        label: l10n.favorites,
-                        value: '${annonce.favoritesCount}'),
+                  _buildFeaturesGrid(context, l10n),
 
                   const Divider(height: 32),
-                  const NativeAdWidget(adUnitId: _adUnitId),
-                  const Divider(height: 32),
 
+                  // Section Localisation
                   _SectionTitle(title: l10n.location),
                   _InfoRow(
                       icon: Icons.location_on_outlined,
@@ -263,26 +246,28 @@ class _AnnonceDetailView extends StatelessWidget {
                         icon: Icons.place_outlined,
                         label: l10n.preciseAddress,
                         value: annonce.addressLabel!),
+
+                  // Section Services (Masquée si vide)
+                  if (hasServices) ...[
+                    const Divider(height: 32),
+                    _SectionTitle(title: l10n.services),
+                    if (annonce.deliveryAvailable)
+                      _InfoRow(
+                          icon: Icons.local_shipping_outlined,
+                          label: l10n.delivery,
+                          value:
+                          '${l10n.available}${annonce.deliveryPrice != null ? ' — ${annonce.deliveryPrice!.toStringAsFixed(0)} ${l10n.mad}' : ''}'),
+                    if (annonce.boardingAvailable == true)
+                      _InfoRow(
+                          icon: Icons.home_outlined,
+                          label: l10n.boarding,
+                          value:
+                          '${l10n.available}${annonce.boardingDailyPrice != null ? ' — ${annonce.boardingDailyPrice!.toStringAsFixed(0)} ${l10n.mad}/${l10n.daysAgo(1)}' : ''}'),
+                  ],
+
                   const Divider(height: 32),
-                  _SectionTitle(title: l10n.services),
-                  if (annonce.deliveryAvailable)
-                    _InfoRow(
-                        icon: Icons.local_shipping_outlined,
-                        label: l10n.delivery,
-                        value:
-                        '${l10n.available}${annonce.deliveryPrice != null ? ' — ${annonce.deliveryPrice!.toStringAsFixed(0)} ${l10n.mad}' : ''}'),
-                  if (annonce.boardingAvailable == true)
-                    _InfoRow(
-                        icon: Icons.home_outlined,
-                        label: l10n.boarding,
-                        value:
-                        '${l10n.available}${annonce.boardingDailyPrice != null ? ' — ${annonce.boardingDailyPrice!.toStringAsFixed(0)} ${l10n.mad}/${l10n.daysAgo(1)}' : ''}'),
-                  if (!annonce.deliveryAvailable &&
-                      annonce.boardingAvailable != true)
-                    Text(l10n.noServiceAvailable,
-                        style: TextStyle(
-                            color: Colors.grey.shade500, fontSize: 13)),
-                  const Divider(height: 32),
+
+                  // Section Description
                   _SectionTitle(title: l10n.description),
                   Text(
                     annonce.description?.isNotEmpty == true
@@ -291,6 +276,12 @@ class _AnnonceDetailView extends StatelessWidget {
                     style:
                     theme.textTheme.bodyMedium?.copyWith(height: 1.5),
                   ),
+
+                  const Divider(height: 32),
+
+                  // Publicité déplacée en bas du contenu
+                  const NativeAdWidget(adUnitId: _adUnitId),
+
                   const SizedBox(height: 100),
                 ],
               ),
@@ -300,6 +291,68 @@ class _AnnonceDetailView extends StatelessWidget {
       ),
       bottomNavigationBar:
       isOwner ? null : _buildBottomContact(theme, l10n, context),
+    );
+  }
+
+  // Grille des caractéristiques sous forme de puces/cartes UI
+  Widget _buildFeaturesGrid(BuildContext context, AppLocalizations l10n) {
+    final List<Widget> items = [];
+
+    items.add(_FeatureCard(
+        icon: Icons.pets,
+        label: l10n.breed,
+        value: annonce.breed.localizedLabel(context)));
+
+    if (annonce.gender != null) {
+      items.add(_FeatureCard(
+          icon: Icons.transgender,
+          label: l10n.gender,
+          value: annonce.gender!.name == 'male' ? l10n.male : l10n.female));
+    }
+
+    if (annonce.ageMonths != null) {
+      items.add(_FeatureCard(
+          icon: Icons.calendar_today_outlined,
+          label: l10n.age,
+          value: '${annonce.ageMonths} ${l10n.months}'));
+    }
+
+    if (annonce.weightKg != null) {
+      items.add(_FeatureCard(
+          icon: Icons.monitor_weight_outlined,
+          label: l10n.weight,
+          value: '${annonce.weightKg} ${l10n.kg}'));
+    }
+
+    if (annonce.dentition != null) {
+      items.add(_FeatureCard(
+          icon: Icons.info_outline,
+          label: l10n.dentition,
+          value: annonce.dentition!.localizedDisplayName(context)));
+    }
+
+    if (annonce.headCount != null) {
+      items.add(_FeatureCard(
+          icon: Icons.group_outlined,
+          label: l10n.headCount,
+          value: '${annonce.headCount} ${l10n.heads}'));
+    }
+
+    if (annonce.onssaTagNumber != null) {
+      items.add(_FeatureCard(
+          icon: Icons.verified_outlined,
+          label: l10n.onssa,
+          value: annonce.onssaTagNumber!));
+    }
+
+    return GridView.count(
+      crossAxisCount: 2,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      crossAxisSpacing: 10,
+      mainAxisSpacing: 10,
+      childAspectRatio: 2.5,
+      children: items,
     );
   }
 
@@ -397,6 +450,63 @@ class _AnnonceDetailView extends StatelessWidget {
             },
             child: Text(l10n.deleteAnnonce,
                 style: const TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// Composant Carte pour les caractéristiques
+class _FeatureCard extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+
+  const _FeatureCard({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade100,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.grey.shade300),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, size: 20, color: Theme.of(context).colorScheme.primary),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: Colors.grey.shade600,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
           ),
         ],
       ),
