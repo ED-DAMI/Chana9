@@ -1,49 +1,41 @@
 package ma.chana9.modules.notification;
 
-import java.time.LocalDateTime;
-
-import ma.chana9.modules.user.OtpCodeRepository;
-import org.springframework.stereotype.Service;
-
 import lombok.RequiredArgsConstructor;
 import ma.chana9.config.OtpConfig;
 import ma.chana9.modules.user.OtpCode;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
 public class OtpService {
 
-    private final OtpCodeRepository otpCodeRepository;
     private final WhatsAppService whatsAppService;
     private final OtpConfig otpConfig;
 
-    public void sendOtp(String phone) {
-        otpCodeRepository.deleteByPhone(phone);
-
+    public OtpCode createOtp(String phone) {
         String code = generateCode();
-        LocalDateTime expiresAt = LocalDateTime.now().plusMinutes(otpConfig.getTtlMinutes());
+        LocalDateTime expiresAt = LocalDateTime.now().plusMinutes(otpConfig.getExpirationMinutes());
 
-        OtpCode otpCode = OtpCode.builder()
+        whatsAppService.sendOtp(phone, code);
+
+        return OtpCode.builder()
                 .phone(phone)
                 .code(code)
                 .expiresAt(expiresAt)
+                .used(false)
                 .build();
-
-        otpCodeRepository.save(otpCode);
-        whatsAppService.sendOtp(phone, code);
     }
 
-    public boolean verifyOtp(String phone, String code) {
-        return otpCodeRepository.findByPhoneAndCode(phone, code)
-                .filter(otp -> otp.getExpiresAt().isAfter(LocalDateTime.now()))
-                .map(otp -> {
-                    otpCodeRepository.delete(otp);
-                    return true;
-                })
-                .orElse(false);
+    public boolean isValid(OtpCode otpCode, String submittedCode) {
+        return otpCode.getCode().equals(submittedCode)
+                && otpCode.getExpiresAt().isAfter(LocalDateTime.now())
+                && !otpCode.getUsed();
     }
 
     private String generateCode() {
-        return String.format("%06d", new java.util.Random().nextInt(999999));
+        return String.format("%06d", new Random().nextInt(999999));
     }
 }
