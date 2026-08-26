@@ -8,6 +8,9 @@ android {
     namespace = "com.example.ma_chana9_app"
     compileSdk = 36
 
+    // ✅ CORRECTION ICI : Ajout de la version du NDK requise par le plugin jni
+    ndkVersion = "28.2.13676358"
+
     defaultConfig {
         applicationId = "com.example.ma_chana9_app"
         minSdk = flutter.minSdkVersion
