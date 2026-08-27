@@ -40,6 +40,14 @@ public class WhatsAppService {
                                             "parameters", List.of(
                                                     Map.of("type", "text", "text", otpCode)
                                             )
+                                    ),
+                                    Map.of(
+                                            "type", "button",
+                                            "sub_type", "url",
+                                            "index", "0",
+                                            "parameters", List.of(
+                                                    Map.of("type", "text", "text", otpCode)
+                                            )
                                     )
                             )
                     )
@@ -56,7 +64,8 @@ public class WhatsAppService {
                     request, HttpResponse.BodyHandlers.ofString()
             );
 
-            if (response.statusCode() != 200) {
+            if (response.statusCode() >= 400) {
+                System.err.println("Erreur API Meta (" + response.statusCode() + ") : " + response.body());
                 throw new ApiException(HttpStatus.SERVICE_UNAVAILABLE, "error.whatsapp.send_failed");
             }
 
