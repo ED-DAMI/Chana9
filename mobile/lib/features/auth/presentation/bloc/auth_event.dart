@@ -15,8 +15,8 @@ abstract class AuthEvent with _$AuthEvent {
     String? region,
   }) = _Register;
   const factory AuthEvent.changePassword({
-    required String currentPassword,
-    required String newPassword,
+      required String currentPassword,
+      required String newPassword,
   }) = _ChangePassword;
   const factory AuthEvent.logout() = _Logout;
 }
@@ -24,8 +24,8 @@ abstract class AuthEvent with _$AuthEvent {
 
 const factory AuthEvent.requestPasswordReset({required String phone}) =_RequestPasswordReset;
 const factory AuthEvent.verifyResetOtp({
-  required String phone,
-  required String otp,
+    required String phone,
+    required String otp,
 }) =_VerifyResetOtp;
 const factory AuthEvent.resetPassword({
     required String phone,

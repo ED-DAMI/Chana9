@@ -247,5 +247,15 @@
 "alreadyInFavorites": "Déjà ajouté aux favoris",
 "roleUser": "Utilisateur",
 "roleUserPremium": "Utilisateur Premium",
-"roleAdmin": "Administrateur"
+"roleAdmin": "Administrateur",
+"forgotPassword": "Mot de passe oublié ?",
+"resetPassword": "Réinitialiser le mot de passe",
+"sendOtp": "Envoyer le code",
+"otpSent": "Code envoyé sur votre téléphone",
+"otpCode": "Code de vérification",
+"otpVerify": "Vérifier",
+"newPasswordSet": "Mot de passe réinitialisé avec succès",
+"phoneNotFound": "Numéro de téléphone introuvable",
+"invalidOtp": "Code invalide ou expiré",
+"resendOtp": "Renvoyer le code"
 }
