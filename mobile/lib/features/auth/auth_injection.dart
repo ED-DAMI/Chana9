@@ -23,7 +23,9 @@ void registerAuthDependencies(GetIt sl) {
       tokenStorage: sl<TokenStorage>(),
     ),
   );
-
+  sl.registerLazySingleton(() => RequestPasswordReset(sl<AuthRepository>()));
+  sl.registerLazySingleton(() => VerifyResetOtp(sl<AuthRepository>()));
+  sl.registerLazySingleton(() => ResetPassword(sl<AuthRepository>()));
   sl.registerLazySingleton(() => Login(sl<AuthRepository>()));
   sl.registerLazySingleton(() => Register(sl<AuthRepository>()));
   sl.registerLazySingleton(() => Logout(sl<AuthRepository>()));

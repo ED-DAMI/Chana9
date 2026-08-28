@@ -36,6 +36,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<_Register>(_onRegister);
     on<_ChangePassword>(_onChangePassword);
     on<_Logout>(_onLogout);
+    on<_RequestPasswordReset>(_onRequestPasswordReset);
+    on<_VerifyResetOtp>(_onVerifyResetOtp);
+    on<_ResetPassword>(_onResetPassword);
   }
 
   Future<void> _onCheckStatus(
@@ -119,6 +122,41 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     result.fold(
           (f) => emit(AuthState.failure(f.message)),
           (_) => emit(const AuthState.unauthenticated()),
+    );
+  }
+  Future<void> _onRequestPasswordReset(
+      _RequestPasswordReset event, Emitter<AuthState> emit) async {
+    emit(const AuthState.loading());
+    final result = await requestPasswordReset(
+        RequestPasswordResetParams(phone: event.phone));
+    result.fold(
+          (f) => emit(AuthState.failure(f.message)),
+          (_) => emit(const AuthState.otpSent()),
+    );
+  }
+
+  Future<void> _onVerifyResetOtp(
+      _VerifyResetOtp event, Emitter<AuthState> emit) async {
+    emit(const AuthState.loading());
+    final result = await verifyResetOtp(
+        VerifyResetOtpParams(phone: event.phone, otp: event.otp));
+    result.fold(
+          (f) => emit(AuthState.failure(f.message)),
+          (_) => emit(const AuthState.otpVerified()),
+    );
+  }
+
+  Future<void> _onResetPassword(
+      _ResetPassword event, Emitter<AuthState> emit) async {
+    emit(const AuthState.loading());
+    final result = await resetPassword(ResetPasswordParams(
+      phone: event.phone,
+      otp: event.otp,
+      newPassword: event.newPassword,
+    ));
+    result.fold(
+          (f) => emit(AuthState.failure(f.message)),
+          (_) => emit(const AuthState.resetSuccess()),
     );
   }
 }
