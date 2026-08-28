@@ -10,6 +10,9 @@ import 'domain/usecases/get_current_user.dart';
 import 'domain/usecases/login.dart';
 import 'domain/usecases/logout.dart';
 import 'domain/usecases/register.dart';
+import 'domain/usecases/request_password_reset.dart';
+import 'domain/usecases/reset_password.dart';
+import 'domain/usecases/verify_reset_otp.dart';
 import 'presentation/bloc/auth_bloc.dart';
 
 void registerAuthDependencies(GetIt sl) {
@@ -23,7 +26,9 @@ void registerAuthDependencies(GetIt sl) {
       tokenStorage: sl<TokenStorage>(),
     ),
   );
-
+  sl.registerLazySingleton(() => RequestPasswordReset(sl<AuthRepository>()));
+  sl.registerLazySingleton(() => VerifyResetOtp(sl<AuthRepository>()));
+  sl.registerLazySingleton(() => ResetPassword(sl<AuthRepository>()));
   sl.registerLazySingleton(() => Login(sl<AuthRepository>()));
   sl.registerLazySingleton(() => Register(sl<AuthRepository>()));
   sl.registerLazySingleton(() => Logout(sl<AuthRepository>()));
@@ -38,5 +43,8 @@ void registerAuthDependencies(GetIt sl) {
     checkAuthStatus: sl(),
     changePassword: sl(),
     tokenStorage: sl(),
+    requestPasswordReset: sl(),
+    verifyResetOtp: sl(),
+    resetPassword: sl(),
   ));
 }

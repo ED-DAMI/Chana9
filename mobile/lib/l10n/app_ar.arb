@@ -232,5 +232,15 @@
     "alreadyInFavorites": "تمت الإضافة إلى المفضلة مسبقاً",
     "roleUser": "مستخدم",
     "roleUserPremium": "مستخدم مميز",
-    "roleAdmin": "مسؤول"
+    "roleAdmin": "مسؤول",
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "resetPassword": "إعادة تعيين كلمة المرور",
+    "sendOtp": "إرسال الرمز",
+    "otpSent": "تم إرسال الرمز إلى هاتفك",
+    "otpCode": "رمز التحقق",
+    "otpVerify": "تحقق",
+    "newPasswordSet": "تم إعادة تعيين كلمة المرور بنجاح",
+    "phoneNotFound": "رقم الهاتف غير موجود",
+    "invalidOtp": "الرمز غير صالح أو منتهي الصلاحية",
+    "resendOtp": "إعادة إرسال الرمز"
    }

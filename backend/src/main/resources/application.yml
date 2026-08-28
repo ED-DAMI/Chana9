@@ -48,3 +48,9 @@ logging:
     ma.chana9: DEBUG
     org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver: DEBUG
     org.springframework.web: DEBUG
+whatsApp:
+  phone-number-id: 1294072650457349
+  access-token: EAGNDnmTFZAxkBSZAXU80jUVfSfphiqnGYZAAC4ENM8M44wpv24jjXQxO62PROSqKSKdF40FqUdoZCAANKsCbCxfARo8eVB7TZBwIIKyOAIdNKJvcW5CoH2d27DSIeua2cmlOim98EiSyv8EunFxb3ijnNKVjXAyZBsxYQVuZAADExZCtxQ0jQXCiKr2RDfN8XqSfsne9yHhKlupPKADYxfScDgHDl5NgXVO7aSaTP8WZBkk4PUXvvsjYPvuoeMGrZAr9bZBfSNoliAcNZBOkB4juICRJgUNbcAZDZD
+  api-version: v19.0
+  template-name: hello_world
+  template-language: fr

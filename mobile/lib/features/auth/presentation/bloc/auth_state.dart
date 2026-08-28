@@ -8,4 +8,7 @@ abstract class AuthState with _$AuthState {
   const factory AuthState.unauthenticated() = _Unauthenticated;
   const factory AuthState.passwordSuccess() = _PasswordSuccess;
   const factory AuthState.failure(String message) = _Failure;
+  const factory AuthState.otpSent() = _OtpSent;
+  const factory AuthState.otpVerified() = _OtpVerified;
+  const factory AuthState.resetSuccess() = _ResetSuccess;
 }

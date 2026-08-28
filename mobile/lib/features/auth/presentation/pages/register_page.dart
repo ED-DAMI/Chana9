@@ -3,8 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ma_chana9_app/l10n/app_localizations.dart';
 import 'package:ma_chana9_app/shared/localization/locale_labels.dart';
 import '../bloc/auth_bloc.dart';
-import '../widgets/phone_field.dart';
 import '../widgets/password_field.dart';
+import '../widgets/phone_field.dart';
+
 
 class RegisterPage extends StatefulWidget {
   final VoidCallback? onRegisterSuccess;

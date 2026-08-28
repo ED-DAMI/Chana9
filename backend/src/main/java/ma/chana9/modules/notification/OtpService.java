@@ -1,36 +1,41 @@
 package ma.chana9.modules.notification;
 
-import java.security.SecureRandom;
-import java.time.LocalDateTime;
-
-import org.springframework.stereotype.Service;
-
 import lombok.RequiredArgsConstructor;
 import ma.chana9.config.OtpConfig;
 import ma.chana9.modules.user.OtpCode;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
 public class OtpService {
 
-    private static final SecureRandom RANDOM = new SecureRandom();
-
+    private final WhatsAppService whatsAppService;
     private final OtpConfig otpConfig;
 
     public OtpCode createOtp(String phone) {
-        OtpCode otpCode = new OtpCode();
-        otpCode.setPhone(phone);
-        otpCode.setCode(generateCode());
-        otpCode.setUsed(false);
-        otpCode.setExpiresAt(LocalDateTime.now().plusMinutes(otpConfig.getExpirationMinutes()));
-        return otpCode;
+        String code = generateCode();
+        LocalDateTime expiresAt = LocalDateTime.now().plusMinutes(otpConfig.getExpirationMinutes());
+
+        whatsAppService.sendOtp(phone, code);
+
+        return OtpCode.builder()
+                .phone(phone)
+                .code(code)
+                .expiresAt(expiresAt)
+                .used(false)
+                .build();
     }
 
-    public boolean isValid(OtpCode otpCode, String code) {
-        return !otpCode.getUsed() && otpCode.getExpiresAt().isAfter(LocalDateTime.now()) && otpCode.getCode().equals(code);
+    public boolean isValid(OtpCode otpCode, String submittedCode) {
+        return otpCode.getCode().equals(submittedCode)
+                && otpCode.getExpiresAt().isAfter(LocalDateTime.now())
+                && !otpCode.getUsed();
     }
 
     private String generateCode() {
-        return "%06d".formatted(RANDOM.nextInt(1_000_000));
+        return String.format("%06d", new Random().nextInt(999999));
     }
 }

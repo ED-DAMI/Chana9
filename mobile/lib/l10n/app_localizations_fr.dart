@@ -704,4 +704,34 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get roleAdmin => 'Administrateur';
+
+  @override
+  String get forgotPassword => 'Mot de passe oublié ?';
+
+  @override
+  String get resetPassword => 'Réinitialiser le mot de passe';
+
+  @override
+  String get sendOtp => 'Envoyer le code';
+
+  @override
+  String get otpSent => 'Code envoyé sur votre téléphone';
+
+  @override
+  String get otpCode => 'Code de vérification';
+
+  @override
+  String get otpVerify => 'Vérifier';
+
+  @override
+  String get newPasswordSet => 'Mot de passe réinitialisé avec succès';
+
+  @override
+  String get phoneNotFound => 'Numéro de téléphone introuvable';
+
+  @override
+  String get invalidOtp => 'Code invalide ou expiré';
+
+  @override
+  String get resendOtp => 'Renvoyer le code';
 }
