@@ -703,4 +703,34 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get roleAdmin => 'مسؤول';
+
+  @override
+  String get forgotPassword => 'نسيت كلمة المرور؟';
+
+  @override
+  String get resetPassword => 'إعادة تعيين كلمة المرور';
+
+  @override
+  String get sendOtp => 'إرسال الرمز';
+
+  @override
+  String get otpSent => 'تم إرسال الرمز إلى هاتفك';
+
+  @override
+  String get otpCode => 'رمز التحقق';
+
+  @override
+  String get otpVerify => 'تحقق';
+
+  @override
+  String get newPasswordSet => 'تم إعادة تعيين كلمة المرور بنجاح';
+
+  @override
+  String get phoneNotFound => 'رقم الهاتف غير موجود';
+
+  @override
+  String get invalidOtp => 'الرمز غير صالح أو منتهي الصلاحية';
+
+  @override
+  String get resendOtp => 'إعادة إرسال الرمز';
 }

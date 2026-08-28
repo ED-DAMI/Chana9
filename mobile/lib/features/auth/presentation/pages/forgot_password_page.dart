@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ma_chana9_app/l10n/app_localizations.dart';
 import '../bloc/auth_bloc.dart';
+import '../widgets/password_field.dart';
+import '../widgets/phone_field.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
