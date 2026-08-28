@@ -25,7 +25,7 @@ public class Chana9Application {
     public static void main(String[] args) {
         SpringApplication.run(Chana9Application.class, args);
     }
-    @Bean
+
      CommandLineRunner start(OtpService service){
         return args -> service.createOtp("0653995347");
    }
