@@ -8,6 +8,9 @@ import '../../domain/usecases/login.dart';
 import '../../domain/usecases/logout.dart';
 import '../../domain/usecases/register.dart';
 import '../../domain/usecases/change_password.dart';
+import '../../domain/usecases/request_password_reset.dart';
+import '../../domain/usecases/reset_password.dart';
+import '../../domain/usecases/verify_reset_otp.dart';
 
 part 'auth_bloc.freezed.dart';
 part 'auth_event.dart';
@@ -21,6 +24,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final CheckAuthStatus checkAuthStatus;
   final ChangePassword changePassword;
   final TokenStorage tokenStorage;
+  final RequestPasswordReset requestPasswordReset;
+  final VerifyResetOtp verifyResetOtp;
+  final ResetPassword resetPassword;
 
   AuthBloc({
     required this.login,
@@ -30,6 +36,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required this.checkAuthStatus,
     required this.changePassword,
     required this.tokenStorage,
+    required this.requestPasswordReset,
+    required this.verifyResetOtp,
+    required this.resetPassword,
   }) : super(const AuthState.initial()) {
     on<_CheckStatus>(_onCheckStatus);
     on<_Login>(_onLogin);
@@ -160,3 +169,4 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
   }
 }
+
