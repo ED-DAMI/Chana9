@@ -1477,6 +1477,66 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Administrateur'**
   String get roleAdmin;
+
+  /// No description provided for @forgotPassword.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mot de passe oublié ?'**
+  String get forgotPassword;
+
+  /// No description provided for @resetPassword.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réinitialiser le mot de passe'**
+  String get resetPassword;
+
+  /// No description provided for @sendOtp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoyer le code'**
+  String get sendOtp;
+
+  /// No description provided for @otpSent.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code envoyé sur votre téléphone'**
+  String get otpSent;
+
+  /// No description provided for @otpCode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code de vérification'**
+  String get otpCode;
+
+  /// No description provided for @otpVerify.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vérifier'**
+  String get otpVerify;
+
+  /// No description provided for @newPasswordSet.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mot de passe réinitialisé avec succès'**
+  String get newPasswordSet;
+
+  /// No description provided for @phoneNotFound.
+  ///
+  /// In fr, this message translates to:
+  /// **'Numéro de téléphone introuvable'**
+  String get phoneNotFound;
+
+  /// No description provided for @invalidOtp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code invalide ou expiré'**
+  String get invalidOtp;
+
+  /// No description provided for @resendOtp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Renvoyer le code'**
+  String get resendOtp;
 }
 
 class _AppLocalizationsDelegate

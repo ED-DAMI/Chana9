@@ -1,174 +1,171 @@
 #!/bin/bash
 
-# ============================================================
-#  Chana9 — Issues GitHub : Amélioration UI/UX & Adresse
-#  Repo : ED-DAMI/Chana9
-#  Périmètre :
-#    - Refonte du formulaire de création d'annonce (Icônes)
-#    - Structuration & stockage de l'adresse lisible
-#  Prérequis : gh CLI installé + authentifié (gh auth login)
-# ============================================================
-
 REPO="ED-DAMI/Chana9"
 
-echo "🚀 Création des issues UI/UX & Adresse pour $REPO..."
+echo "Creating labels..."
+gh label create "user-story" --repo "$REPO" --color "0075ca" --force
+gh label create "auth" --repo "$REPO" --color "e4e669" --force
+gh label create "backend" --repo "$REPO" --color "d93f0b" --force
+gh label create "mobile" --repo "$REPO" --color "0e8a16" --force
+
 echo ""
-
-# ------------------------------------------------------------
-# LABELS
-# ------------------------------------------------------------
-echo "🏷️  Création des labels..."
-
-gh label create "feature"      --color "0075ca" --description "Nouvelle fonctionnalité"          --repo $REPO 2>/dev/null || true
-gh label create "ui/ux"        --color "a2eeef" --description "Amélioration interface & expérience" --repo $REPO 2>/dev/null || true
-gh label create "flutter"      --color "54c5f8" --description "Couche Flutter / mobile"           --repo $REPO 2>/dev/null || true
-gh label create "backend"      --color "f9d0c4" --description "Nécessite un endpoint backend"     --repo $REPO 2>/dev/null || true
-gh label create "database"     --color "0052cc" --description "Modifications base de données"      --repo $REPO 2>/dev/null || true
-
-echo "✅ Labels prêts"
-echo ""
-
-# ------------------------------------------------------------
-# MILESTONE
-# ------------------------------------------------------------
-echo "📌 Création du milestone UI/UX & Navigation v1..."
-
-gh api repos/$REPO/milestones \
-  --method POST \
-  -f title="UI/UX & Address Enhancements v1" \
-  -f description="Ajout des icônes dans la création d'annonce et structuration des adresses lisibles" \
-  -f state="open" 2>/dev/null || true
-
-echo "✅ Milestone prêt"
-echo ""
-
-# ============================================================
-# ISSUE 1 — Flutter : Icônes dans le Stepper & Formulaire
-# ============================================================
-echo "📝 Issue 1 : Integration des icônes dans la création d'annonce..."
-
+echo "Creating US-AUTH-02: Réinitialisation du mot de passe par OTP..."
 gh issue create \
-  --repo $REPO \
-  --title "[FLUTTER] UI/UX — Intégration des icônes dans le formulaire de création d'annonce" \
-  --label "ui/ux,flutter" \
-  --milestone "UI/UX & Address Enhancements v1" \
-  --body "## 🎯 Objectif
-Enrichir la lisibilité visuelle du formulaire de création d'une nouvelle annonce en ajoutant des icônes dédiées dans le Stepper et sur chaque champ de saisie (*prefixIcon*).
+  --repo "$REPO" \
+  --title "feat(auth): US-AUTH-02 — Réinitialisation du mot de passe par OTP" \
+  --label "user-story,auth" \
+  --body "## User Story
+En tant qu'utilisateur de Chana9,
+Je veux pouvoir réinitialiser mon mot de passe via un code OTP envoyé sur mon téléphone,
+Afin de récupérer l'accès à mon compte si j'ai oublié mon mot de passe.
 
-## 📋 Modifications UI
+---
 
-### 1. Stepper Global
-Remplacer/accoupler les numéros d'étapes avec des icônes :
-- **Étape 1 (Photos) :** \`Icons.photo_camera_rounded\`
-- **Étape 2 (L'animal) :** \`Icons.pets_rounded\`
-- **Étape 3 (Prix & Détails) :** \`Icons.sell_rounded\`
-- **Étape 4 (Localisation) :** \`Icons.location_on_rounded\`
+## Flux complet
 
-### 2. Étape 2 (L'animal) — Prefix Icons
-- **Race :** \`Icons.category_outlined\`
-- **Sexe :** Boutons segmentés avec \`Icons.male\` et \`Icons.female\`
-- **Âge (mois) :** \`Icons.calendar_today_outlined\`
-- **Poids (kg) :** \`Icons.scale_outlined\`
-- **Dentition :** \`Icons.format_list_bulleted\`
-- **Nombre de têtes :** \`Icons.groups_outlined\`
-- **ONSSA :** \`Icons.verified_outlined\`
-- **Éligible aux aides :** \`Icons.volunteer_activism_outlined\`
-
-### 3. Étape 3 (Prix & Détails)
-- **Titre :** \`Icons.title_rounded\`
-- **Prix :** Suffixe \`MAD\` + \`Icons.payments_outlined\`
-- **Prix négociable :** \`Icons.handshake_outlined\`
-- **Description :** \`Icons.description_outlined\`
-
-### 4. Étape 4 (Localisation)
-- **Région :** \`Icons.map_outlined\`
-- **Ville :** \`Icons.location_city_outlined\`
-- **Adresse précise :** \`Icons.pin_drop_outlined\`
-- **Livraison :** \`Icons.local_shipping_outlined\`
-
-## 📁 Fichiers impactés
 \`\`\`
-lib/features/announcements/presentation/pages/create_announcement_page.dart
-lib/features/announcements/presentation/widgets/
+Étape 1 : L'utilisateur clique sur « Mot de passe oublié »
+Étape 2 : Il saisit son numéro de téléphone
+Étape 3 : Le système envoie un code OTP à 6 chiffres par SMS
+Étape 4 : L'utilisateur saisit le code OTP reçu
+Étape 5 : Le système valide le code OTP
+Étape 6 : L'utilisateur saisit son nouveau mot de passe (+ confirmation)
+Étape 7 : Le mot de passe est mis à jour, toutes les sessions actives sont révoquées
+Étape 8 : L'utilisateur est redirigé vers la page de connexion
+\`\`\`
+
+---
+
+## Critères d'Acceptation
+
+### CA 1 — Demande de réinitialisation
+- [ ] L'utilisateur accède à la page « Mot de passe oublié » depuis la page de connexion
+- [ ] Il saisit son numéro de téléphone marocain (format +212XXXXXXXXX ou 06XXXXXXXX)
+- [ ] Si le numéro est inconnu → message d'erreur \`error.auth.phone-not-found\`
+- [ ] Si le numéro est connu → un OTP à 6 chiffres est généré et envoyé par SMS
+- [ ] L'OTP est valide pendant **5 minutes** uniquement
+- [ ] Un seul OTP actif à la fois par numéro (l'ancien est invalidé si nouvelle demande)
+- [ ] Limite anti-spam : max **3 demandes par heure** par numéro
+
+### CA 2 — Saisie et validation de l'OTP
+- [ ] L'utilisateur saisit le code OTP reçu par SMS
+- [ ] Si le code est incorrect → message d'erreur \`error.auth.invalid-otp\`
+- [ ] Si le code est expiré → message d'erreur \`error.auth.token-expired\`
+- [ ] Si 5 tentatives incorrectes consécutives → OTP invalidé, nouvelle demande requise
+- [ ] Si le code est correct → l'utilisateur accède à l'étape de nouveau mot de passe
+
+### CA 3 — Nouveau mot de passe
+- [ ] L'utilisateur saisit son nouveau mot de passe
+- [ ] Validation : minimum 8 caractères, au moins 1 chiffre
+- [ ] L'utilisateur confirme le nouveau mot de passe (les deux doivent correspondre)
+- [ ] Si confirmation incorrecte → message \`error.auth.password-mismatch\`
+- [ ] Le nouveau mot de passe ne peut pas être identique à l'ancien
+- [ ] Après validation → le mot de passe est mis à jour en base (bcrypt)
+
+### CA 4 — Sécurité post-réinitialisation
+- [ ] Toutes les sessions actives (refresh tokens) sont révoquées après réinitialisation
+- [ ] L'OTP est marqué comme utilisé et ne peut plus être réutilisé
+- [ ] Un audit log est créé avec l'action \`PASSWORD_RESET\`
+- [ ] L'utilisateur est redirigé vers \`/login\` avec un message de succès
+
+### CA 5 — Gestion des erreurs réseau
+- [ ] Si le SMS ne peut pas être envoyé → message d'erreur clair
+- [ ] Si le réseau est indisponible → message \`Pas de connexion internet\`
+- [ ] Bouton \`Renvoyer le code\` disponible après 60 secondes (countdown)
+
+---
+
+## Tâches techniques
+
+### Backend
+- [ ] \`POST /api/v1/auth/forgot-password\` — déjà existant, vérifier implémentation
+- [ ] \`POST /api/v1/auth/reset-password\` — déjà existant, vérifier implémentation
+- [ ] Ajouter champ \`attempts\` sur \`OtpCode\` pour limiter les tentatives
+- [ ] Ajouter rate limiting : max 3 OTP/heure par numéro
+- [ ] Valider que le nouveau mot de passe ≠ ancien mot de passe
+- [ ] Révoquer tous les refresh tokens après reset (\`revokeAllUserTokens\`)
+- [ ] Logger l'action \`PASSWORD_RESET\` dans \`audit_log\`
+- [ ] Ajouter clés i18n manquantes : \`error.auth.password-mismatch\`, \`error.auth.otp-max-attempts\`, \`error.auth.otp-rate-limit\`
+
+### Flutter
+- [ ] \`ForgotPasswordPage\` — saisie du numéro de téléphone
+- [ ] \`OtpVerificationPage\` — saisie du code OTP à 6 chiffres + countdown 60s
+- [ ] \`ResetPasswordPage\` — saisie + confirmation du nouveau mot de passe
+- [ ] \`AuthRemoteDataSource\` — méthodes \`sendOtp()\` et \`resetPassword()\`
+- [ ] \`AuthRepository\` + \`AuthRepositoryImpl\` — ajouter les 2 méthodes
+- [ ] UseCases : \`SendResetOtp\` · \`VerifyOtp\` · \`ResetPassword\`
+- [ ] \`AuthBloc\` — ajouter events : \`SendOtpEvent\`, \`VerifyOtpEvent\`, \`ResetPasswordEvent\`
+- [ ] Countdown 60s avec \`Timer.periodic\` sur \`OtpVerificationPage\`
+- [ ] Auto-focus sur les 6 champs OTP (style code SMS)
+- [ ] Masquer/afficher le mot de passe (icône œil)
+
+### Navigation GoRouter
+- [ ] \`/forgot-password\` → \`ForgotPasswordPage\`
+- [ ] \`/otp-verification\` → \`OtpVerificationPage\`
+- [ ] \`/reset-password\` → \`ResetPasswordPage\`
+
+---
+
+## Maquette flux
+
+\`\`\`
+LoginPage
+  └── [Mot de passe oublié ?]
+        └── ForgotPasswordPage
+              └── [Envoyer le code]
+                    └── OtpVerificationPage
+                          ├── [Saisir OTP] ──✅──► ResetPasswordPage
+                          │                              └── [Valider] → LoginPage ✅
+                          └── [Renvoyer] (après 60s)
+\`\`\`
+
+---
+
+## Entité OtpCode (existante — vérifier les champs)
+
+\`\`\`
+otp_codes
+  id            UUID
+  phone         String
+  code          String (haché)
+  used          Boolean
+  attempts      Integer       ← à ajouter si manquant
+  expires_at    Timestamp
+  created_at    Timestamp
+\`\`\`
+
+---
+
+## Endpoints
+
+| Méthode | Endpoint | Description |
+|---|---|---|
+| POST | \`/api/v1/auth/forgot-password\` | Envoie OTP par SMS |
+| POST | \`/api/v1/auth/reset-password\` | Valide OTP + met à jour le mot de passe |
+
+### Request — forgot-password
+\`\`\`json
+{ \"phone\": \"0612345678\" }
+\`\`\`
+
+### Request — reset-password
+\`\`\`json
+{
+  \"phone\": \"0612345678\",
+  \"otp\": \"483920\",
+  \"newPassword\": \"motdepasse123\",
+  \"confirmPassword\": \"motdepasse123\"
+}
+\`\`\`
+
+### Response — succès
+\`\`\`json
+{
+  \"success\": true,
+  \"message\": \"Votre mot de passe a été réinitialisé avec succès.\",
+  \"data\": null
+}
 \`\`\`"
 
-echo "✅ Issue 1 créée"
 echo ""
-
-# ============================================================
-# ISSUE 2 — Database & Backend : Migration Schéma Adresse Lisible
-# ============================================================
-echo "📝 Issue 2 : Migration DB pour adresse lisible..."
-
-gh issue create \
-  --repo $REPO \
-  --title "[BACKEND] DB — Structuration de l'adresse lisible (Formatted Address & Landmark)" \
-  --label "feature,backend,database" \
-  --milestone "UI/UX & Address Enhancements v1" \
-  --body "## 🎯 Objectif
-Mettre à jour le schéma de la base de données pour prendre en compte les adresses sous forme textuelle lisible (points de repère, douar, instructions) en plus du Plus Code et des coordonnées GPS.
-
-## 📋 Changements Schema (Liquibase \`018-address-enhancements.yaml\`)
-
-\`\`\`sql
--- Extension de la table addresses
-ALTER TABLE addresses
-  ADD COLUMN formatted_address VARCHAR(255) NULL,
-  ADD COLUMN landmark          VARCHAR(255) NULL,
-  ADD COLUMN district_or_douar VARCHAR(100) NULL;
-\`\`\`
-
-## 📋 Tâches
-- [ ] Créer le changelog Liquibase \`018-address-enhancements.yaml\`
-- [ ] Mettre à jour l'entité \`Address.java\` dans la couche domain
-- [ ] Mettre à jour les DTOs \`AddressRequest\` et \`AddressResponse\`
-- [ ] Mettre à jour les Mappers (MapStruct)
-
-## 📁 Fichiers à modifier
-\`\`\`
-src/main/resources/db/changelog/018-address-enhancements.yaml
-ma.chana9.modules.announcement.domain.Address.java
-ma.chana9.modules.announcement.dto.AddressRequest.java
-\`\`\`"
-
-echo "✅ Issue 2 créée"
-echo ""
-
-# ============================================================
-# ISSUE 3 — Flutter : Composant Saisie d'Adresse Complexe
-# ============================================================
-echo "📝 Issue 3 : Formulaire de localisation lisible..."
-
-gh issue create \
-  --repo $REPO \
-  --title "[FLUTTER] UI — Composant de saisie d'adresse lisible avec point de repère" \
-  --label "ui/ux,flutter" \
-  --milestone "UI/UX & Address Enhancements v1" \
-  --body "## 🎯 Objectif
-Concevoir l'interface à l'étape 4 pour permettre à l'utilisateur de saisir son adresse de manière lisible (champ texte libre / point de repère) couplé au Plus Code/GPS.
-
-## 📋 Tâches UI
-
-- [ ] Champ **Région** (Dropdown avec \`Icons.map\`)
-- [ ] Champ **Ville** (Dropdown avec \`Icons.location_city\`)
-- [ ] Champ **Quartier / Douar** (TextField optionnel)
-- [ ] Champ **Point de repère / Détail lisible** (Ex: *\"Près de la mosquée, porte verte\"*)
-- [ ] Intégration du bouton GPS **\"Position OK / Détecter\"** pour remplir automatiquement le Plus Code
-- [ ] Génération dynamique du \`formatted_address\` à envoyer au backend
-
-## 📁 Fichiers à créer / modifier
-\`\`\`
-lib/features/announcements/presentation/widgets/location_step_form.dart
-lib/features/announcements/domain/entities/address.dart
-\`\`\`"
-
-echo "✅ Issue 3 créée"
-echo ""
-
-# ============================================================
-# RÉSUMÉ
-# ============================================================
-echo "═══════════════════════════════════════════════════════"
-echo "✅  TOUTES LES ISSUES ONT ÉTÉ CRÉÉES !"
-echo "═══════════════════════════════════════════════════════"
-echo "🔗 Voir les issues : https://github.com/$REPO/issues"
+echo "✅ Issue US-AUTH-02 créée sur $REPO"

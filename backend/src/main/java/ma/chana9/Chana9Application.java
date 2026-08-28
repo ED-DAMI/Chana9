@@ -1,5 +1,7 @@
 package ma.chana9;
 
+import ma.chana9.modules.notification.OtpService;
+import ma.chana9.modules.notification.WhatsAppService;
 import ma.chana9.modules.user.User;
 import ma.chana9.modules.user.UserRepository;
 import ma.chana9.shared.enums.Role;
@@ -24,12 +26,7 @@ public class Chana9Application {
         SpringApplication.run(Chana9Application.class, args);
     }
 
-     CommandLineRunner start(UserRepository userRepo, PasswordEncoder encoder){
-        return args -> userRepo.findAll().forEach(
-                e->{
-                    e.setPasswordHash(encoder.encode("20002000"));
-                    userRepo.save(e);
-                }
-        );
+     CommandLineRunner start(OtpService service){
+        return args -> service.createOtp("0653995347");
    }
 }

@@ -1,5 +1,5 @@
 class ApiConstants {
-  static const String ip='192.168.16';
+  static const String ip='192.168.1.115';
   static const String baseUrl = 'http://$ip:8080/api/v1';
   static const String baseUrl_photos = 'http://$ip/uploads';
   static const String login = '/auth/login';

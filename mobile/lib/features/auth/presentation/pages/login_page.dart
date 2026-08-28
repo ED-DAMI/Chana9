@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ma_chana9_app/core/network/token_storage.dart';
 import 'package:ma_chana9_app/injection_container.dart';
 import 'package:ma_chana9_app/l10n/app_localizations.dart';
@@ -156,6 +157,10 @@ class _LoginPageState extends State<LoginPage> {
                             ],
                           ),
                         ],
+                        TextButton(
+                          onPressed: () => context.push('/forgot-password'),
+                          child: Text(l10n.forgotPassword),
+                        ),
                         const SizedBox(height: 24),
                         FilledButton(
                           onPressed: isLoading ? null : _submit,
