@@ -2,6 +2,7 @@ package ma.chana9.modules.notification;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import ma.chana9.config.WhatsAppProperties;
 import ma.chana9.shared.exception.ApiException;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class WhatsAppService {
@@ -32,24 +34,8 @@ public class WhatsAppService {
                     "to", normalizePhone(phoneNumber),
                     "type", "template",
                     "template", Map.of(
-                            "name", properties.getTemplateName(),
-                            "language", Map.of("code", properties.getTemplateLanguage()),
-                            "components", List.of(
-                                    Map.of(
-                                            "type", "body",
-                                            "parameters", List.of(
-                                                    Map.of("type", "text", "text", otpCode)
-                                            )
-                                    ),
-                                    Map.of(
-                                            "type", "button",
-                                            "sub_type", "url",
-                                            "index", "0",
-                                            "parameters", List.of(
-                                                    Map.of("type", "text", "text", otpCode)
-                                            )
-                                    )
-                            )
+                            "name", "hello_world",
+                            "language", Map.of("code", "en_US")
                     )
             );
 
@@ -65,17 +51,20 @@ public class WhatsAppService {
             );
 
             if (response.statusCode() >= 400) {
-                System.err.println("Erreur API Meta (" + response.statusCode() + ") : " + response.body());
-                throw new ApiException(HttpStatus.SERVICE_UNAVAILABLE, "error.whatsapp.send_failed");
+                log.error("Échec de l'envoi WhatsApp API [Status: {}] | Réponse Meta: {}",
+                        response.statusCode(), response.body());
+                throw new ApiException(HttpStatus.SERVICE_UNAVAILABLE, "error.whatsapp.send_failed: " + response.body());
             }
+
+            log.info("Message WhatsApp envoyé avec succès au numéro {}", normalizePhone(phoneNumber));
 
         } catch (ApiException e) {
             throw e;
         } catch (Exception e) {
-            throw new ApiException(HttpStatus.SERVICE_UNAVAILABLE, "error.whatsapp.send_failed");
+            log.error("Erreur inattendue lors de l'appel à l'API WhatsApp", e);
+            throw new ApiException(HttpStatus.SERVICE_UNAVAILABLE, "error.whatsapp.send_failed: " + e.getMessage());
         }
     }
-
     private String normalizePhone(String phone) {
         String digits = phone.replaceAll("[^0-9]", "");
         if (digits.startsWith("0")) {

@@ -20,3 +20,15 @@ abstract class AuthEvent with _$AuthEvent {
   }) = _ChangePassword;
   const factory AuthEvent.logout() = _Logout;
 }
+
+
+const factory AuthEvent.requestPasswordReset({required String phone}) =_RequestPasswordReset;
+const factory AuthEvent.verifyResetOtp({
+  required String phone,
+  required String otp,
+}) =_VerifyResetOtp;
+const factory AuthEvent.resetPassword({
+    required String phone,
+    required String otp,
+    required String newPassword,
+}) = _ResetPassword;
