@@ -13,11 +13,17 @@ abstract class AuthRemoteDataSource {
   Future<void> logout(String refreshToken);
   Future<void> revokeAll();
   Future<void> changePassword(ChangePasswordRequestModel request);
+  Future<void> requestPasswordReset(String phone);
+  Future<void> verifyOtp(String phone, String otp);
+  Future<void> resetPassword({
+    required String phone,
+    required String otp,
+    required String newPassword,
+  });
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final DioClient dioClient;
-
   AuthRemoteDataSourceImpl(this.dioClient);
 
   @override
@@ -65,6 +71,38 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     await dioClient.put(
       ApiConstants.changePassword,
       data: request.toJson(),
+    );
+  }
+
+  @override
+  Future<void> requestPasswordReset(String phone) async {
+    await dioClient.post(
+      ApiConstants.forgotPassword,
+      data: {'phone': phone},
+    );
+  }
+
+  @override
+  Future<void> verifyOtp(String phone, String otp) async {
+    await dioClient.post(
+      ApiConstants.verifyOtp,
+      data: {'phone': phone, 'otp': otp},
+    );
+  }
+
+  @override
+  Future<void> resetPassword({
+    required String phone,
+    required String otp,
+    required String newPassword,
+  }) async {
+    await dioClient.post(
+      ApiConstants.forgotPassword,
+      data: {
+        'phone': phone,
+        'otp': otp,
+        'newPassword': newPassword,
+      },
     );
   }
 }
