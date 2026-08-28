@@ -20,7 +20,7 @@ abstract class AuthRepository {
   });
   Future<Either<Failure, Unit>> requestPasswordReset(String phone);
   Future<Either<Failure, Unit>> verifyOtp(String phone, String otp);
-  Future<Either<Failure, Unit>> resetPassword({                      /
+  Future<Either<Failure, Unit>> resetPassword({
     required String phone,
     required String otp,
     required String newPassword,

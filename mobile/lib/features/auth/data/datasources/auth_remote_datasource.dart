@@ -24,6 +24,7 @@ abstract class AuthRemoteDataSource {
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final DioClient dioClient;
+
   AuthRemoteDataSourceImpl(this.dioClient);
 
   @override
