@@ -16,6 +16,7 @@ import 'features/annonces/presentation/pages/annonce_list_page.dart';
 import 'features/annonces/presentation/pages/favorites_page.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/pages/change_password_page.dart';
+import 'features/auth/presentation/pages/forgot_password_page.dart';
 import 'features/auth/presentation/pages/login_page.dart';
 import 'features/auth/presentation/pages/splash_page.dart';
 import 'features/profile/presentation/pages/my_annonces_page.dart';
@@ -167,6 +168,10 @@ final GoRouter _router = GoRouter(
     ShellRoute(
       builder: (context, state, child) => _ShellPage(child: child),
       routes: [
+        GoRoute(
+          path: '/forgot-password',
+          builder: (context, state) => const ForgotPasswordPage(),
+        ),
         GoRoute(
           path: '/annonces',
           builder: (context, state) => const AnnonceListPage(),
