@@ -49,6 +49,7 @@ import org.springframework.stereotype.Service;
 public class TokenService {
 
     private static final SecureRandom SECURE_RANDOM = new SecureRandom();
+    private static final long GRACE_PERIOD_SECONDS = 15;
 
     private final JwtConfig jwtConfig;
     private final SecurityProperties securityProperties;
@@ -65,8 +66,8 @@ public class TokenService {
                 .claim(SecurityConstants.TOKEN_CLAIM_PHONE, user.getPhone())
                 .claim(SecurityConstants.TOKEN_CLAIM_ROLE, user.getRole().name())
                 .id(UUID.randomUUID().toString())
-            .issuedAt(java.util.Date.from(now))
-            .expiration(java.util.Date.from(now.plusMillis(jwtConfig.getAccessExpiration())))
+                .issuedAt(java.util.Date.from(now))
+                .expiration(java.util.Date.from(now.plusMillis(jwtConfig.getAccessExpiration())))
                 .signWith(secretKey(), Jwts.SIG.HS512)
                 .compact();
     }
@@ -74,7 +75,6 @@ public class TokenService {
     @Transactional
     public String generateRefreshToken(User user, HttpServletRequest request) {
         String rawToken = generateRawRefreshToken();
-        LocalDateTime now = LocalDateTime.now();
         RefreshToken refreshToken = RefreshToken.builder()
                 .user(user)
                 .tokenHash(hashToken(rawToken))
@@ -82,7 +82,7 @@ public class TokenService {
                 .userAgent(request != null ? request.getHeader(HttpHeaders.USER_AGENT) : null)
                 .ipAddress(extractIpAddress(request))
                 .isRevoked(false)
-            .expiresAt(LocalDateTime.ofInstant(Instant.now().plusMillis(jwtConfig.getRefreshExpiration()), ZoneId.systemDefault()))
+                .expiresAt(LocalDateTime.ofInstant(Instant.now().plusMillis(jwtConfig.getRefreshExpiration()), ZoneId.systemDefault()))
                 .build();
         refreshTokenRepository.save(refreshToken);
         enforceRefreshTokenLimit(user.getId());
@@ -95,8 +95,32 @@ public class TokenService {
             throw new InvalidTokenException();
         }
         String tokenHash = hashToken(rawRefreshToken);
-        RefreshToken refreshToken = refreshTokenRepository.findByTokenHashAndIsRevokedFalse(tokenHash)
+
+        RefreshToken refreshToken = refreshTokenRepository.findByTokenHash(tokenHash)
                 .orElseThrow(InvalidTokenException::new);
+
+        if (refreshToken.isRevoked()) {
+            LocalDateTime lastUsed = refreshToken.getLastUsedAt();
+            if (lastUsed != null && lastUsed.plusSeconds(GRACE_PERIOD_SECONDS).isAfter(LocalDateTime.now())) {
+                User user = refreshToken.getUser();
+                String accessToken = generateAccessToken(user);
+                String newRefreshToken = generateRefreshToken(user, request);
+                return new AuthResponse(accessToken, newRefreshToken, jwtConfig.getAccessExpiration(), jwtConfig.getRefreshExpiration(), userMapper.toDto(user), MessageKeys.Auth.TOKEN_REFRESHED);
+            }
+
+            UUID userId = refreshToken.getUser().getId();
+            revokeAllUserTokens(userId, BlacklistReason.SUSPICIOUS_ACTIVITY);
+
+            String authHeader = request != null ? request.getHeader(HttpHeaders.AUTHORIZATION) : null;
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                try {
+                    blacklistAccessToken(authHeader.substring(7), BlacklistReason.SUSPICIOUS_ACTIVITY);
+                } catch (Exception ignored) {}
+            }
+
+            auditService.logFailure(AuditAction.TOKEN_REFRESHED, userId, AuditConstants.TOKEN_ENTITY, request);
+            throw new SecurityException(ErrorKeys.Auth.DEVICE_FINGERPRINT_MISMATCH);
+        }
 
         if (refreshToken.getExpiresAt().isBefore(LocalDateTime.now())) {
             throw new TokenExpiredException();
@@ -116,7 +140,7 @@ public class TokenService {
         String accessToken = generateAccessToken(user);
         String newRefreshToken = generateRefreshToken(user, request);
         auditService.logSuccess(AuditAction.TOKEN_REFRESHED, user.getId(), AuditConstants.TOKEN_ENTITY, refreshToken.getId().toString());
-        return new AuthResponse(accessToken, newRefreshToken,jwtConfig.getAccessExpiration(),jwtConfig.getRefreshExpiration(),userMapper.toDto(user), MessageKeys.Auth.TOKEN_REFRESHED);
+        return new AuthResponse(accessToken, newRefreshToken, jwtConfig.getAccessExpiration(), jwtConfig.getRefreshExpiration(), userMapper.toDto(user), MessageKeys.Auth.TOKEN_REFRESHED);
     }
 
     @Transactional
@@ -124,7 +148,7 @@ public class TokenService {
         if (rawToken == null || rawToken.isBlank()) {
             throw new InvalidTokenException();
         }
-        RefreshToken refreshToken = refreshTokenRepository.findByTokenHashAndIsRevokedFalse(hashToken(rawToken))
+        RefreshToken refreshToken = refreshTokenRepository.findByTokenHash(hashToken(rawToken))
                 .orElseThrow(InvalidTokenException::new);
         refreshToken.setRevoked(true);
         refreshToken.setLastUsedAt(LocalDateTime.now());
@@ -197,9 +221,8 @@ public class TokenService {
 
     public String computeDeviceFingerprint(HttpServletRequest request) {
         String userAgent = normalize(request != null ? request.getHeader(HttpHeaders.USER_AGENT) : null);
-        String ipAddress = normalize(extractIpAddress(request));
         String acceptLanguage = normalize(request != null ? request.getHeader(HttpHeaders.ACCEPT_LANGUAGE) : null);
-        return hashToken("%s|%s|%s".formatted(userAgent, ipAddress, acceptLanguage));
+        return hashToken("%s|%s".formatted(userAgent, acceptLanguage));
     }
 
     public String hashToken(String rawToken) {
