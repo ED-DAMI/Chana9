@@ -8,12 +8,15 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Base64;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import ma.chana9.config.JwtConfig;
 import ma.chana9.config.SecurityProperties;
 
@@ -23,7 +26,6 @@ import ma.chana9.modules.user.UserMapper;
 import ma.chana9.modules.user.UserRepository;
 import ma.chana9.shared.audit.service.AuditService;
 import ma.chana9.shared.constants.AuditConstants;
-import ma.chana9.shared.constants.ErrorKeys;
 import ma.chana9.shared.constants.MessageKeys;
 import ma.chana9.shared.constants.SecurityConstants;
 import ma.chana9.shared.enums.AuditAction;
@@ -44,12 +46,16 @@ import javax.crypto.SecretKey;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TokenService {
 
     private static final SecureRandom SECURE_RANDOM = new SecureRandom();
-    private static final long GRACE_PERIOD_SECONDS = 15;
+    private static final long GRACE_PERIOD_SECONDS = 15L;
+    private static final String HASH_ALGORITHM = "SHA-256";
+    private static final String BEARER_PREFIX = "Bearer ";
+    private static final String HEADER_X_FORWARDED_FOR = "X-Forwarded-For";
 
     private final JwtConfig jwtConfig;
     private final SecurityProperties securityProperties;
@@ -66,8 +72,8 @@ public class TokenService {
                 .claim(SecurityConstants.TOKEN_CLAIM_PHONE, user.getPhone())
                 .claim(SecurityConstants.TOKEN_CLAIM_ROLE, user.getRole().name())
                 .id(UUID.randomUUID().toString())
-                .issuedAt(java.util.Date.from(now))
-                .expiration(java.util.Date.from(now.plusMillis(jwtConfig.getAccessExpiration())))
+                .issuedAt(Date.from(now))
+                .expiration(Date.from(now.plusMillis(jwtConfig.getAccessExpiration())))
                 .signWith(secretKey(), Jwts.SIG.HS512)
                 .compact();
     }
@@ -91,46 +97,17 @@ public class TokenService {
 
     @Transactional
     public AuthResponse rotateRefreshToken(String rawRefreshToken, HttpServletRequest request) {
-        if (rawRefreshToken == null || rawRefreshToken.isBlank()) {
-            throw new InvalidTokenException();
-        }
-        String tokenHash = hashToken(rawRefreshToken);
+        validateRawToken(rawRefreshToken);
 
+        String tokenHash = hashToken(rawRefreshToken);
         RefreshToken refreshToken = refreshTokenRepository.findByTokenHash(tokenHash)
                 .orElseThrow(InvalidTokenException::new);
 
         if (refreshToken.isRevoked()) {
-            LocalDateTime lastUsed = refreshToken.getLastUsedAt();
-            if (lastUsed != null && lastUsed.plusSeconds(GRACE_PERIOD_SECONDS).isAfter(LocalDateTime.now())) {
-                User user = refreshToken.getUser();
-                String accessToken = generateAccessToken(user);
-                String newRefreshToken = generateRefreshToken(user, request);
-                return new AuthResponse(accessToken, newRefreshToken, jwtConfig.getAccessExpiration(), jwtConfig.getRefreshExpiration(), userMapper.toDto(user), MessageKeys.Auth.TOKEN_REFRESHED);
-            }
-
-            UUID userId = refreshToken.getUser().getId();
-            revokeAllUserTokens(userId, BlacklistReason.SUSPICIOUS_ACTIVITY);
-
-            String authHeader = request != null ? request.getHeader(HttpHeaders.AUTHORIZATION) : null;
-            if (authHeader != null && authHeader.startsWith("Bearer ")) {
-                try {
-                    blacklistAccessToken(authHeader.substring(7), BlacklistReason.SUSPICIOUS_ACTIVITY);
-                } catch (Exception ignored) {}
-            }
-
-            auditService.logFailure(AuditAction.TOKEN_REFRESHED, userId, AuditConstants.TOKEN_ENTITY, request);
-            throw new SecurityException(ErrorKeys.Auth.DEVICE_FINGERPRINT_MISMATCH);
+            return handleRevokedToken(refreshToken, request);
         }
 
-        if (refreshToken.getExpiresAt().isBefore(LocalDateTime.now())) {
-            throw new TokenExpiredException();
-        }
-
-        String requestFingerprint = computeDeviceFingerprint(request);
-        if (!requestFingerprint.equals(refreshToken.getDeviceFingerprint())) {
-            revokeAllUserTokens(refreshToken.getUser().getId(), BlacklistReason.SUSPICIOUS_ACTIVITY);
-            throw new SecurityException(ErrorKeys.Auth.DEVICE_FINGERPRINT_MISMATCH);
-        }
+        validateTokenValidityAndDevice(refreshToken, request);
 
         refreshToken.setRevoked(true);
         refreshToken.setLastUsedAt(LocalDateTime.now());
@@ -143,11 +120,58 @@ public class TokenService {
         return new AuthResponse(accessToken, newRefreshToken, jwtConfig.getAccessExpiration(), jwtConfig.getRefreshExpiration(), userMapper.toDto(user), MessageKeys.Auth.TOKEN_REFRESHED);
     }
 
-    @Transactional
-    public void revokeRefreshToken(String rawToken, UUID userId, BlacklistReason reason) {
+    private void validateRawToken(String rawToken) {
         if (rawToken == null || rawToken.isBlank()) {
             throw new InvalidTokenException();
         }
+    }
+
+    private AuthResponse handleRevokedToken(RefreshToken refreshToken, HttpServletRequest request) {
+        LocalDateTime lastUsed = refreshToken.getLastUsedAt();
+        if (lastUsed != null && lastUsed.plusSeconds(GRACE_PERIOD_SECONDS).isAfter(LocalDateTime.now())) {
+            User user = refreshToken.getUser();
+            String accessToken = generateAccessToken(user);
+            String newRefreshToken = generateRefreshToken(user, request);
+            return new AuthResponse(accessToken, newRefreshToken, jwtConfig.getAccessExpiration(), jwtConfig.getRefreshExpiration(), userMapper.toDto(user), MessageKeys.Auth.TOKEN_REFRESHED);
+        }
+
+        UUID userId = refreshToken.getUser().getId();
+        revokeAllUserTokens(userId, BlacklistReason.SUSPICIOUS_ACTIVITY);
+        blacklistIncomingAccessToken(request);
+
+        auditService.logFailure(AuditAction.TOKEN_REFRESHED, userId, AuditConstants.TOKEN_ENTITY, request);
+        throw new InvalidTokenException();
+    }
+
+    private void blacklistIncomingAccessToken(HttpServletRequest request) {
+        if (request == null) {
+            return;
+        }
+        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (authHeader != null && authHeader.startsWith(BEARER_PREFIX)) {
+            try {
+                blacklistAccessToken(authHeader.substring(BEARER_PREFIX.length()), BlacklistReason.SUSPICIOUS_ACTIVITY);
+            } catch (Exception e) {
+                log.debug("Impossible d'ajouter l'access token à la blacklist lors de la détection de vol : {}", e.getMessage());
+            }
+        }
+    }
+
+    private void validateTokenValidityAndDevice(RefreshToken refreshToken, HttpServletRequest request) {
+        if (refreshToken.getExpiresAt().isBefore(LocalDateTime.now())) {
+            throw new TokenExpiredException();
+        }
+
+        String requestFingerprint = computeDeviceFingerprint(request);
+        if (!requestFingerprint.equals(refreshToken.getDeviceFingerprint())) {
+            revokeAllUserTokens(refreshToken.getUser().getId(), BlacklistReason.SUSPICIOUS_ACTIVITY);
+            throw new InvalidTokenException();
+        }
+    }
+
+    @Transactional
+    public void revokeRefreshToken(String rawToken, UUID userId, BlacklistReason reason) {
+        validateRawToken(rawToken);
         RefreshToken refreshToken = refreshTokenRepository.findByTokenHash(hashToken(rawToken))
                 .orElseThrow(InvalidTokenException::new);
         refreshToken.setRevoked(true);
@@ -158,9 +182,7 @@ public class TokenService {
 
     @Transactional
     public void blacklistAccessToken(String rawAccessToken, BlacklistReason reason) {
-        if (rawAccessToken == null || rawAccessToken.isBlank()) {
-            throw new InvalidTokenException();
-        }
+        validateRawToken(rawAccessToken);
         Claims claims = extractClaimsAllowExpired(rawAccessToken);
         String tokenHash = claims.getId();
         if (tokenHash == null || tokenBlacklistRepository.existsByTokenHash(tokenHash)) {
@@ -215,6 +237,7 @@ public class TokenService {
             Claims claims = parseClaims(token);
             return claims.getExpiration() != null && claims.getExpiration().toInstant().isAfter(Instant.now()) && !tokenBlacklistRepository.existsByTokenHash(claims.getId());
         } catch (JwtException | IllegalArgumentException exception) {
+            log.trace("Token invalide : {}", exception.getMessage());
             return false;
         }
     }
@@ -227,11 +250,11 @@ public class TokenService {
 
     public String hashToken(String rawToken) {
         try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            MessageDigest digest = MessageDigest.getInstance(HASH_ALGORITHM);
             byte[] bytes = digest.digest(rawToken.getBytes(StandardCharsets.UTF_8));
             return toHex(bytes);
         } catch (NoSuchAlgorithmException exception) {
-            throw new IllegalStateException(exception);
+            throw new IllegalStateException("Algorithme de hashage indisponible", exception);
         }
     }
 
@@ -258,8 +281,8 @@ public class TokenService {
             return;
         }
         tokens.stream()
-                .sorted(java.util.Comparator.comparing(RefreshToken::getCreatedAt))
-                .limit(tokens.size() - maxActiveTokens)
+                .sorted(Comparator.comparing(RefreshToken::getCreatedAt))
+                .limit((long) tokens.size() - maxActiveTokens)
                 .forEach(token -> {
                     token.setRevoked(true);
                     token.setLastUsedAt(LocalDateTime.now());
@@ -296,7 +319,7 @@ public class TokenService {
         if (request == null) {
             return null;
         }
-        String forwarded = request.getHeader("X-Forwarded-For");
+        String forwarded = request.getHeader(HEADER_X_FORWARDED_FOR);
         if (forwarded != null && !forwarded.isBlank()) {
             return forwarded.split(",")[0].trim();
         }
