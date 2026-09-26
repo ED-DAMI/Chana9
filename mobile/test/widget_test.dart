@@ -5,25 +5,50 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:ma_chana9_app/main.dart';
+import 'package:ma_chana9_app/core/error/failure.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
+  test('fromDioException_whenUnauthorized_shouldCreateUnauthorizedFailure', () {
+    final exception = DioException(
+      requestOptions: RequestOptions(path: '/auth'),
+      response: Response(statusCode: 401, requestOptions: RequestOptions(path: '/auth')),
+      type: DioExceptionType.badResponse,
+    );
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    final failure = Failure.fromDioException(exception);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    expect(failure, const Failure.unauthorized());
+    expect(failure.message, 'Session expirée, veuillez vous reconnecter');
+  });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  test('fromDioException_whenServerReturnsMessage_shouldPreserveMessageAndStatus', () {
+    final exception = DioException(
+      requestOptions: RequestOptions(path: '/annonces'),
+      response: Response(
+        statusCode: 422,
+        data: {'message': 'Prix invalide'},
+        requestOptions: RequestOptions(path: '/annonces'),
+      ),
+      type: DioExceptionType.badResponse,
+    );
+
+    final failure = Failure.fromDioException(exception);
+
+    expect(failure.message, 'Prix invalide');
+    expect(failure.statusCode, 422);
+  });
+
+  test('fromDioException_whenConnectionTimesOut_shouldCreateNetworkFailure', () {
+    final exception = DioException(
+      requestOptions: RequestOptions(path: '/annonces'),
+      type: DioExceptionType.connectionTimeout,
+    );
+
+    final failure = Failure.fromDioException(exception);
+
+    expect(failure, const Failure.network('Délai de connexion dépassé'));
   });
 }
