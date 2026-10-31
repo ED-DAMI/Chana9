@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ma_chana9_app/features/annonces/presentation/bloc/annonce_detail_bloc.dart';
+import 'package:ma_chana9_app/features/annonces/presentation/bloc/annonce_share/annonce_share_bloc.dart';
+import 'package:ma_chana9_app/features/annonces/presentation/bloc/annonce_share/annonce_share_event.dart';
+import 'package:ma_chana9_app/features/annonces/presentation/widgets/annonce_share_bottom_sheet.dart';
 import 'package:ma_chana9_app/features/annonces/presentation/pages/report_sheet.dart';
 import 'package:ma_chana9_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:ma_chana9_app/shared/enums/annonce_status.dart';
@@ -19,9 +22,14 @@ class AnnonceDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return BlocProvider(
-      create: (context) => sl<AnnonceDetailBloc>()
-        ..add(AnnonceDetailEvent.load(annonceId)),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => sl<AnnonceDetailBloc>()
+            ..add(AnnonceDetailEvent.load(annonceId)),
+        ),
+        BlocProvider(create: (_) => sl<AnnonceShareBloc>()),
+      ],
       child: BlocConsumer<AnnonceDetailBloc, AnnonceDetailState>(
         listener: (context, state) {
           state.whenOrNull(
@@ -95,6 +103,25 @@ class _AnnonceDetailView extends StatelessWidget {
               background: AnnoncePhotoCarousel(annonce: annonce, height: 350),
             ),
             actions: [
+              IconButton(
+                icon: const Icon(Icons.share_outlined),
+                onPressed: () {
+                  context
+                      .read<AnnonceShareBloc>()
+                      .add(AnnonceShareEvent.shareRequested(annonce));
+                  showModalBottomSheet<void>(
+                    context: context,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(20)),
+                    ),
+                    builder: (_) => BlocProvider.value(
+                      value: context.read<AnnonceShareBloc>(),
+                      child: AnnonceShareBottomSheet(annonce: annonce),
+                    ),
+                  );
+                },
+              ),
               if (!isOwner)
                 IconButton(
                   icon: const Icon(Icons.favorite_border),
