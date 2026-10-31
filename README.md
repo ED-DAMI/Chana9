@@ -13,6 +13,7 @@
 - [Features implémentées](#features-implémentées)
 - [Installation](#installation)
 - [Configuration](#configuration)
+- [CI/CD](#cicd)
 - [Génération de code](#génération-de-code)
 - [Conventions](#conventions)
 - [Roadmap](#roadmap)
@@ -420,6 +421,30 @@ ios/Runner/GoogleService-Info.plist
 | `LocalDate` | `String` (ISO yyyy-MM-dd) |
 | `LocalDateTime` | `DateTime?` |
 | `Boolean` | `bool?` |
+
+---
+
+## CI/CD
+
+Les workflows GitHub Actions sont disponibles dans [.github/workflows/](./.github/workflows/).
+
+- `CI` s'exécute sur les pull requests, ainsi que sur `main` et `develop` :
+  - tests Maven du backend avec Java 21 ;
+  - formatage, analyse et tests Flutter ;
+  - build de validation de l'image Docker backend.
+- `CD` publie l'image backend dans GitHub Container Registry (`ghcr.io`) pour les tags
+  `v*.*.*` ou lors d'un lancement manuel.
+
+Pour publier une version :
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+Le workflow CD utilise automatiquement `GITHUB_TOKEN`. Aucun secret supplémentaire
+n'est requis pour publier dans le registre du dépôt, sous réserve que les permissions
+de packages soient activées dans les paramètres GitHub.
 
 ---
 
