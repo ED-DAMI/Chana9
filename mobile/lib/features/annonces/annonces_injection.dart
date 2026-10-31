@@ -25,6 +25,8 @@ import 'domain/usecases/suspend_annonce.dart';
 import 'domain/usecases/update_annonce.dart';
 import 'presentation/bloc/annonce_bloc.dart';
 import 'presentation/bloc/annonce_detail_bloc.dart';
+import 'presentation/bloc/annonce_share/annonce_share_bloc.dart';
+import 'domain/usecases/share_annonce_usecase.dart';
 
 void registerAnnoncesDependencies(GetIt sl) {
   sl.registerLazySingleton<AnnonceRemoteDataSource>(
@@ -56,6 +58,7 @@ void registerAnnoncesDependencies(GetIt sl) {
   sl.registerLazySingleton(() => DeleteAlert(sl<AnnonceRepository>()));
   sl.registerLazySingleton(() => GetAlertsByBuyer(sl<AnnonceRepository>()));
   sl.registerLazySingleton(() => UploadMedia(sl<AnnonceRepository>()));
+  sl.registerLazySingleton(() => ShareAnnonce());
 
   sl.registerFactory(() => AnnonceBloc(
     searchAnnonces: sl(),
@@ -81,4 +84,5 @@ void registerAnnoncesDependencies(GetIt sl) {
     deleteAnnonce: sl(),
     updateAnnonce: sl(),
   ));
+  sl.registerFactory(() => AnnonceShareBloc(shareAnnonce: sl()));
 }

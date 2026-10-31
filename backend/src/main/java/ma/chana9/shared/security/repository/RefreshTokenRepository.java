@@ -24,9 +24,6 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, UUID
 
     void deleteByExpiresAtBefore(LocalDateTime now);
 
-    boolean existsByTokenHashAndDeviceFingerprint(String hash, String fingerprint);
 
-    void deleteByUserId(UUID userId);
-
-    RefreshToken findByUserId(UUID userId);
+    Optional<RefreshToken> findByTokenHash(String tokenHash);
 }

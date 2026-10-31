@@ -24,10 +24,6 @@ public class StorageProperties {
         return getAnnoncesDir(annonceId) + "/original";
     }
 
-    public String getAnnonceThumbnailDir(String annonceId) {
-        return getAnnoncesDir(annonceId) + "/thumbnail";
-    }
-
     public String getUserDir(String userId) {
         return rootDir + "/users/" + userId;
     }
